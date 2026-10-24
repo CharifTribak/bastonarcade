@@ -259,9 +259,9 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 @keyframes dkhit{from{transform:translate(3px,3px)}to{transform:none}}
 
 /* ---- bûcherons ---- */
-#ljWrap,.ljhead,#ljCut,#ljGo{width:min(100%,50vh,560px)}
+#ljWrap,.ljhead,#ljCutWrap,#ljGo{width:min(100%,50vh,560px)}
 #ljTop{display:block;width:100%;height:auto;aspect-ratio:1;touch-action:none;user-select:none;-webkit-user-select:none;cursor:crosshair;border:3px solid #000;box-shadow:6px 6px 0 #000}
-#ljCut{display:block;height:auto;aspect-ratio:600/260;touch-action:none;user-select:none;-webkit-user-select:none;border:3px solid #000;box-shadow:6px 6px 0 #000}
+#ljCut{display:block;width:100%;height:auto;aspect-ratio:600/260;touch-action:none;user-select:none;-webkit-user-select:none;border:3px solid #000;box-shadow:6px 6px 0 #000}
 #ljGo{height:58px;font-size:26px}
 #ljHead{font-size:clamp(17px,4.4vw,26px)}
 
@@ -727,7 +727,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
       <div class="toast pm" id="ljToast" aria-live="polite"></div>
     </div>
     <button id="ljGo" class="big" hidden>🪓 Valider la direction</button>
-    <canvas id="ljCut" width="600" height="260" aria-label="Le tronc vu de côté"></canvas>
+    <div class="nvwrap" id="ljCutWrap"><canvas id="ljCut" width="600" height="260" aria-label="Le tronc vu de côté"></canvas></div>
     <ul class="nvplayers" id="ljPlayers"></ul>
     <p class="hint" id="ljHelp" style="text-align:center"></p>
   </div>
@@ -916,7 +916,7 @@ const GAME_DESC = {
   tank:'Combat de chars à deux par char : l\'un pilote, l\'autre oriente la tourelle et tire (un obus toutes les 1,5 s). Les équipages sont tirés au sort, des robots complètent. Interdit de se parler : il faut se comprendre en jouant. Deux forêts cachent les chars qui y entrent, murs, caisses et rochers arrêtent les obus. 3 vies par char, le dernier char debout gagne.',
   sheep:'Les bergers, en coopération : vous êtes des chiens de berger et devez rabattre le troupeau dans l\'enclos avant le coucher du soleil (regardez sa course dans le ciel). Les moutons fuient les chiens et ont du caractère : le peureux file, le gourmand broute les fleurs, l\'agneau suit sa mère. « Ouaf ! » fait détaler. Des loups sortent du bois : chassez-les à deux. 6 journées de plus en plus dures (plus de moutons et de loups, journées plus courtes) ; une manche ratée et c\'est fini. Seul, un chien robot vous aide.',
   drakkar:'Drakkars, en coopération : tout le salon rame dans le même drakkar et fait la course contre celui des robots jusqu\'en Angleterre. Un coup de rame par coup de tambour, en alternant GAUCHE et DROITE. Les coups de chacun s\'affichent chez tous pour se caler ensemble. Plus l\'équipage est synchro, plus le drakkar file, et le tambour accélère.',
-  lumber:'Concours de bûcherons, tronçonneuse en main : vu du dessus, choisissez où tombe votre arbre (visez la croix rouge), puis sciez le tronc vu de côté en suivant les pointillés. Plus la coupe est droite, plus l\'arbre tombe là où vous l\'avez décidé. Écraser une maison, une voiture ou un autre arbre élimine. Trois manches de plus en plus dures, tout le monde joue en même temps.',
+  lumber:'Concours de bûcherons, tronçonneuse en main : vu du dessus, choisissez où tombe votre arbre sans rien écraser, puis abattez-le comme un vrai, en suivant les pointillés : les deux coupes de l\'entaille, puis le trait d\'abattage. Plus les coupes sont droites, plus l\'arbre tombe là où vous l\'avez décidé. Écraser une maison, une voiture ou un autre arbre élimine. Trois manches de plus en plus dures, tout le monde joue en même temps.',
   derby:'Course de chevaux : tout le monde reçoit la même série de figures à tracer. Chaque figure réussie fait avancer votre cheval, plus loin si elle est complexe et bien tracée. Le premier à la ligne gagne.'
 };
 
@@ -6623,10 +6623,10 @@ function botMoleSees(m){
 
 // ================= BÛCHERONS : choose where your tree falls, saw along the dotted line, crush nothing =================
 // Every player gets the same garden each round (same seed) and plays at the same time. The fall direction is aimed
-// from above, then the felling cut is sawn on the trunk seen from the side: the straighter the cut, the closer the
-// tree falls to the chosen axis. Crushing anything (house, car, tree…) eliminates. Three rounds, harder each time.
+// from above, then the trunk is felled like a real one, seen from the side: the two cuts of the notch on the fall side,
+// then the back cut, a little higher, leaving a hinge. The straighter the cuts, the closer the tree falls to the chosen axis. Crushing anything (house, car, tree…) eliminates. Three rounds, harder each time.
 // The host recomputes every fall from the field, so all screens agree.
-const LJ_S = 540, LJ_ROUNDS = 3, LJ_AIM = 15, LJ_CUT = 12, LJ_CROWN = 26, LJ_MULT = [1, 1.5, 2];
+const LJ_S = 540, LJ_ROUNDS = 3, LJ_AIM = 15, LJ_CUT = 16, LJ_CROWN = 26, LJ_MULT = [1, 1.5, 2];
 const LJ_CW = 600, LJ_CH = 260, LJ_GROUND = 214;
 let HLJ = null, LJ = null;
 
@@ -6682,7 +6682,7 @@ function ljField(seed, r){
     return true;
   };
   // flankers: obstacles just outside the corridor, near its far end (none in round 1)
-  const nFlank = [0, 2, 3][r];
+  const nFlank = [1, 2, 3][r];
   for (let i = 0, tries = 0; i < nFlank && tries < 80; tries++){
     const t = .55 + R()*.45, side = i % 2 ? 1 : -1, kind = ['car', 'shed', 'tree', 'kennel', 'green'][Math.floor(R()*5)];
     const probe = make(kind, 0, 0), half = probe.r || Math.max(probe.w, probe.h)/2;
@@ -6690,15 +6690,17 @@ function ljField(seed, r){
     const cx = sx + Math.cos(ta)*L*t - Math.sin(ta)*off*side, cy = sy + Math.sin(ta)*L*t + Math.cos(ta)*off*side;
     const o = make(kind, cx, cy); if (ok(o)){ obs.push(o); i++; }
   }
-  const nAll = [4, 6, 8][r];
+  const nAll = [6, 7, 9][r];
   const order = ['house', 'car', 'tree', 'pool', 'shed', 'fence', 'kennel', 'green', 'tree', 'car'];
   for (let tries = 0; obs.length < nAll && tries < 400; tries++){
     const kind = tries < 20 ? order[obs.length % order.length] : kinds[Math.floor(R()*kinds.length)];
     const o = make(kind, M + R()*(S - 2*M), M + R()*(S - 2*M)); if (ok(o)) obs.push(o);
   }
   const wind = r === 2 ? (R() < .5 ? -1 : 1) * Math.round(3 + R()*3) : 0;
-  const slope = [0, (R() - .5)*14, (R() - .5)*26][r], W = [170, 210, 250][r], spd = [170, 155, 140][r];
-  return { seed, r, L, sx, sy, ta, tx, ty, corr, obs, wind, slope, W, spd };
+  const W = [170, 205, 240][r], spd = [165, 150, 135][r];
+  const slope = (R() < .5 ? -1 : 1) * [2 + R()*2, 4 + R()*2, 6 + R()*3][r];          // back cut: straight, slightly tilted
+  const notch = [40, 45, 50][r] + (R() - .5)*6;                                        // opening of the notch, degrees
+  return { seed, r, L, sx, sy, ta, corr, obs, wind, slope, notch, W, spd };
 }
 // where the tree lands for a fall angle (degrees); hit = index of the first obstacle crushed, or -1
 function ljFall(F, aDeg){
@@ -6712,12 +6714,13 @@ function ljFall(F, aDeg){
   });
   return { crown, tip:[F.sx + cx*F.L, F.sy + cy*F.L], hit };
 }
-function ljPoints(F, aDeg, prec){
+function ljPoints(F, aDeg, prec, aim){
   const f = ljFall(F, aDeg);
-  if (f.hit >= 0) return { pts:0, hit:f.hit, d:0 };
-  const d = Math.hypot(f.crown[0] - F.tx, f.crown[1] - F.ty);
-  const tp = 60 * ljClamp(1 - (d - 10)/140, 0, 1), pp = 40 * ljClamp(prec, 0, 1);
-  return { pts:Math.round((tp + pp) * LJ_MULT[F.r]), hit:-1, d };
+  if (f.hit >= 0) return { pts:0, hit:f.hit, dev:0 };
+  let dev = Math.abs(((aDeg - F.wind - aim) % 360 + 540) % 360 - 180);            // how far the fall strayed from the axis you chose (wind aside)
+  if (!isFinite(dev)) dev = 30;
+  const pts = 20 + 40 * ljClamp(prec, 0, 1) + 40 * ljClamp(1 - dev/12, 0, 1);
+  return { pts:Math.round(pts * LJ_MULT[F.r]), hit:-1, dev };
 }
 
 // ---- host side ----
@@ -6733,31 +6736,33 @@ function lumberHostStart(){
 const ljIn = id => H.stats[id] && !H.stats[id].out && !H.stats[id].left;
 function ljNextRound(){
   HLJ.r++;
-  if (HLJ.r >= LJ_ROUNDS || !players.some(p => ljIn(p.id))) return lumberFinish();
+  if (HLJ.r >= LJ_ROUNDS || !players.some(p => !p.bot && ljIn(p.id))) return lumberFinish();   // only robots left: no point watching them
   const seed = Math.floor(Math.random() * 2**31);
   HLJ.F = ljField(seed, HLJ.r); HLJ.done = {}; HLJ.closed = false;
   HLJ.list = players.filter(p => ljIn(p.id)).map(p => p.id);
   broadcast({ t:'lj_round', r:HLJ.r, seed, alive:HLJ.list });
-  for (const id of HLJ.list) if (players.find(p => p.id === id && p.bot)) ljLater(() => botLumber(id), 2400 + (5 + Math.random()*9)*1000);
+  for (const id of HLJ.list) if (players.find(p => p.id === id && p.bot)) ljLater(() => botLumber(id), 2400 + (3 + Math.random()*4)*1000);
   const r = HLJ.r;
   ljLater(() => { if (HLJ.r === r) ljCloseRound(); }, 2400 + (LJ_AIM + LJ_CUT + 6)*1000);
 }
 function lumberDone(id, m){
   if (!HLJ || HLJ.closed || (m.r|0) !== HLJ.r || HLJ.done[id] || !HLJ.list.includes(id) || !ljIn(id)) return;
-  const a = +m.a, prec = ljClamp(+m.prec || 0, 0, 1);
+  const a = +m.a, prec = ljClamp(+m.prec || 0, 0, 1), aim = isFinite(+m.aim) ? +m.aim : a;
   if (!isFinite(a)) return;
-  const res = ljPoints(HLJ.F, a, prec), st = H.stats[id];
+  const res = ljPoints(HLJ.F, a, prec, aim), st = H.stats[id];
   HLJ.done[id] = true;
   st.pts += res.pts; st.prec += prec; st.precN++;
   if (res.hit >= 0) st.out = true; else st.rounds++;
-  broadcast({ t:'lj_res', id, r:HLJ.r, a:Math.round(a*10)/10, prec:Math.round(prec*100)/100, hit:res.hit, pts:res.pts, tot:st.pts });
-  if (HLJ.list.every(i => HLJ.done[i] || (H.stats[i] && H.stats[i].left))){ const r = HLJ.r; ljLater(() => { if (HLJ.r === r) ljCloseRound(); }, 3800); }
+  broadcast({ t:'lj_res', id, r:HLJ.r, a:Math.round(a*10)/10, prec:Math.round(prec*100)/100, hit:res.hit, pts:res.pts, tot:st.pts, dev:Math.round(res.dev*10)/10 });
+  if (!players.find(p => p.id === id && p.bot) && HLJ.list.every(i => HLJ.done[i] || players.find(p => p.id === i && p.bot) || H.stats[i].left))
+    for (const b of HLJ.list) if (!HLJ.done[b] && players.find(p => p.id === b && p.bot)) botLumber(b);   // everyone has cut: the robots stop dawdling
+  if (HLJ.list.every(i => HLJ.done[i] || (H.stats[i] && H.stats[i].left))){ const r = HLJ.r; ljLater(() => { if (HLJ.r === r) ljCloseRound(); }, 3000); }
 }
 function ljCloseRound(){
   if (HLJ.closed) return;
   HLJ.closed = true;
   broadcast({ t:'lj_sum', r:HLJ.r, rows:players.map(p => ({ id:p.id, tot:H.stats[p.id].pts, out:H.stats[p.id].out, left:H.stats[p.id].left, done:!!HLJ.done[p.id] })) });
-  ljLater(ljNextRound, 5200);
+  ljLater(ljNextRound, players.some(p => !p.bot && ljIn(p.id)) ? 4200 : 1500);
 }
 function lumberFinish(){
   if (!H || H.over) return;
@@ -6784,9 +6789,9 @@ function lumberDrop(id){
 function botLumber(id){
   if (!HLJ || HLJ.closed || !ljIn(id)) return;
   const F = HLJ.F, R = Math.random;
-  const aim = F.ta*180/Math.PI - F.wind*.7 + ljGauss(R)*2.2;
+  const aim = F.ta*180/Math.PI - F.wind*.7 + ljGauss(R)*2.2;   // the robot knows where the free corridor is
   const prec = ljClamp(.62 + R()*.33 - F.r*.04, 0, 1);
-  lumberDone(id, { r:F.r, a:aim + ljGauss(R)*ljSigma(prec) + F.wind, prec });
+  lumberDone(id, { r:F.r, a:aim + ljGauss(R)*ljSigma(prec) + F.wind, prec, aim });
 }
 
 // ---- my view ----
@@ -6799,7 +6804,7 @@ function startLumber(m){
   for (const p of players) LJ.tot[p.id] = 0;
   ljHead('Préparation…'); ljTimer(''); ljMsg(''); renderLjPlayers();
   $('ljGo').hidden = true;
-  $('ljHelp').textContent = 'Visez la croix rouge : touchez le terrain pour choisir où tombe l\'arbre, puis validez. Ensuite, sciez le tronc en suivant les pointillés (gardez le doigt appuyé et glissez vers la droite). Plus la coupe est droite, plus l\'arbre respecte votre direction. Écraser quoi que ce soit élimine. Clavier : ← → viser, Entrée valider, Espace scier, ↑ ↓ corriger.';
+  $('ljHelp').textContent = 'Touchez le jardin pour choisir où tombe l\'arbre, sans rien écraser, puis validez. Ensuite, abattez-le comme un vrai bûcheron, en suivant les pointillés dans l\'ordre : les deux coupes de l\'entaille (1 et 2), puis le trait d\'abattage (3). Posez le doigt sur le rond jaune et glissez. Plus les coupes sont droites, plus l\'arbre suit votre direction. Clavier : ← → viser, Entrée valider, Espace scier, ↑ ↓ corriger.';
 }
 const ljMsg = big => { const m = $('ljMsg'); m.textContent = ''; if (big){ const s = document.createElement('strong'); s.textContent = big; m.append(s); } };
 let ljToastT = null;
@@ -6822,7 +6827,7 @@ function lumberRecv(m){
     case 'lj_round': {
       if (phase === 'count'){ phase = 'play'; ljMsg(''); }
       LJ.r = m.r|0; LJ.F = ljField(m.seed|0, LJ.r); LJ.bg = null; LJ.bark = null; LJ.crushed = new Set();
-      LJ.others = new Map(); LJ.fall = null; LJ.saw = null; LJ.sum = null;
+      LJ.others = new Map(); LJ.fall = null; LJ.saw = null; LJ.sum = null; LJ.plan = null;
       LJ.alive = (m.alive || []).includes(me.id);
       LJ.aim = Math.round((LJ.F.ta*180/Math.PI + 180 + (Math.random() - .5)*120)) % 360;   // starts pointing elsewhere: aiming is your job
       LJ.ph = 'intro'; LJ.t = 2.2;
@@ -6835,8 +6840,9 @@ function lumberRecv(m){
       LJ.tot[m.id] = m.tot|0;
       if (m.hit >= 0) LJ.out[m.id] = true;
       if (m.id === me.id){
-        if (m.hit < 0){ ljToast('+' + (m.pts|0) + ' points'); if (m.pts >= 80 * LJ_MULT[LJ.r]) sfx('finish'); }
+        if (m.hit < 0){ ljToast('+' + (m.pts|0) + ' points'); if (m.pts >= 85 * LJ_MULT[LJ.r]) sfx('finish'); }
       } else LJ.others.set(m.id, { a:+m.a, hit:m.hit|0, pts:m.pts|0, k:0, shown:false });
+      if (m.id === me.id && LJ.fall) LJ.fall.dev = +m.dev;
       renderLjPlayers();
       break;
     }
@@ -6861,30 +6867,41 @@ function ljToAim(){
   $('ljGo').hidden = false;
   ljHead('Choisissez où tombe l\'arbre', true);
 }
+// the three cuts, in order: notch top (sloping), notch bottom (level), then the back cut from the other side
+function ljCutPlan(F){
+  const x0 = (LJ_CW - F.W)/2, x1 = x0 + F.W, yb = LJ_GROUND - 64, d = F.W*.32, P = [x1 - d, yb];
+  const topY = yb - d*Math.tan(F.notch*Math.PI/180);
+  const hinge = F.W*.1, by = yb - 8, E = [P[0] - hinge, by];
+  const sl = Math.tan(F.slope*Math.PI/180);
+  const seg = (A, B, ext) => { const L = Math.hypot(B[0] - A[0], B[1] - A[1]), u = [(B[0] - A[0])/L, (B[1] - A[1])/L]; return { A:[A[0] - u[0]*ext, A[1] - u[1]*ext], B, u, n:[-u[1], u[0]], L:L + ext }; };
+  return { x0, x1, yb, P, topY, E, segs:[seg([x1, topY], P, 14), seg([x1, yb], P, 14), seg([x0, by - (E[0] - x0)*sl], E, 14)] };
+}
 function ljToCut(){
   if (LJ.ph !== 'aim') return;
   LJ.ph = 'cut'; LJ.t = LJ_CUT;
   $('ljGo').hidden = true;
-  const F = LJ.F, x0 = (LJ_CW - F.W)/2;
-  LJ.saw = { x:x0 - 14, y:ljLineY(x0 - 14), tx:null, ty:null, on:false, dev:0, len:0, path:[], dust:[] };
-  ljHead('Sciez le long des pointillés !', true);
+  LJ.plan = ljCutPlan(LJ.F);
+  LJ.saw = { i:0, t:0, off:0, on:false, px:null, py:null, dev:0, paths:[[], [], []], dust:[], wedge:null };
+  ljCutHead();
   sfx('cord'); setTimeout(() => { if (LJ && LJ.ph === 'cut') sawStart(); }, 450);
   $('ljCut').scrollIntoView({ block:'nearest', behavior:'smooth' });
 }
-const ljLineY = x => LJ_GROUND - 70 + (x - LJ_CW/2) * Math.tan(LJ.F.slope*Math.PI/180);
+function ljCutHead(){ ljHead(['Entaille : coupe du haut (1/3)', 'Entaille : coupe du bas (2/3)', 'Trait d\'abattage (3/3)'][LJ.saw.i] || '', true); }
+const ljSawPos = S => { const g = LJ.plan.segs[Math.min(S.i, 2)], t = S.i > 2 ? g.L : S.t; return [g.A[0] + g.u[0]*t + g.n[0]*S.off, g.A[1] + g.u[1]*t + g.n[1]*S.off]; };
 function ljFinishCut(timeout){
-  const F = LJ.F, S = LJ.saw, x0 = (LJ_CW - F.W)/2;
-  // the part of the trunk left uncut counts as a very poor cut
-  const cut = ljClamp(S.x - x0, 0, F.W), rest = F.W - cut;
-  const dev = (S.dev + rest*15) / Math.max(1, F.W);
+  const F = LJ.F, S = LJ.saw, segs = LJ.plan.segs;
+  // uncut length counts as a very poor cut
+  let total = 0, rest = 0;
+  segs.forEach((g, i) => { total += g.L; if (i > S.i) rest += g.L; else if (i === S.i) rest += Math.max(0, g.L - S.t); });
+  const dev = (S.dev + rest*15) / Math.max(1, total);
   const prec = ljClamp(1 - Math.max(0, dev - 1.5)/14, 0, 1);
   const a = Math.round((LJ.aim + ljGauss(Math.random)*ljSigma(prec) + F.wind)*10)/10;   // rounded like the host's copy, so both find the same landing
-  LJ.ph = 'fall'; LJ.fall = { a, k:0, prec, done:false, timeout };
+  LJ.ph = 'fall'; LJ.fall = { a, k:0, prec, done:false, timeout, dev:null };
   sawStop(); sfx('creak');
   boom('ATTENTION, ÇA TOMBE !', { size:30, x:.5, y:.3, pal:BOOM_COLORS[2], ms:1400 });
   ljHead('Coupe précise à ' + Math.round(prec*100) + ' %');
   if (timeout) ljToast('Trop lent : l\'arbre tombe tout seul !');
-  toHost({ t:'lj_done', r:LJ.r, a:Math.round(a*10)/10, prec:Math.round(prec*100)/100 });
+  toHost({ t:'lj_done', r:LJ.r, a, prec:Math.round(prec*100)/100, aim:Math.round(LJ.aim*10)/10 });
 }
 function ljLanded(a, mine, id){
   const f = ljFall(LJ.F, a);
@@ -6897,8 +6914,8 @@ function ljLanded(a, mine, id){
     if (mine){ ljMsg('Écrasé ! Éliminé'); ljHead('Éliminé : vous regardez la suite'); const el = $('ljWrap'); el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); }
     else { const p = players.find(x => x.id === id); if (p) ljToast(p.name + ' a tout écrasé !'); }
   } else if (mine){
-    const d = Math.hypot(f.crown[0] - LJ.F.tx, f.crown[1] - LJ.F.ty);
-    boom(d < 22 ? 'EN PLEIN DANS LA CROIX !' : d < 70 ? 'BIEN JOUÉ !' : 'BOUM !', { size:30, x:f.crown[0]/LJ_S, y:f.crown[1]/LJ_S, pal:BOOM_COLORS[d < 22 ? 0 : 1], ms:1200, wrap:$('ljWrap') });
+    const dev = Math.abs(((a - LJ.F.wind - LJ.aim) % 360 + 540) % 360 - 180);
+    boom(dev < 2 ? 'PILE DANS L\'AXE !' : dev < 6 ? 'BIEN JOUÉ !' : 'BOUM !', { size:30, x:f.crown[0]/LJ_S, y:f.crown[1]/LJ_S, pal:BOOM_COLORS[dev < 2 ? 0 : 1], ms:1200, wrap:$('ljWrap') });
   }
 }
 
@@ -6916,9 +6933,9 @@ function ljCutPoint(e){ const r = ljCut.getBoundingClientRect(); return [(e.clie
 ljCut.addEventListener('pointerdown', e => {
   if (!LJ || LJ.ph !== 'cut' || !LJ.saw) return;
   e.preventDefault(); ljCut.setPointerCapture(e.pointerId);
-  const [x, y] = ljCutPoint(e); LJ.saw.on = true; LJ.saw.tx = x; LJ.saw.ty = y;
+  const [x, y] = ljCutPoint(e); LJ.saw.on = true; LJ.saw.px = x; LJ.saw.py = y;
 });
-ljCut.addEventListener('pointermove', e => { if (LJ && LJ.saw && LJ.saw.on){ const [x, y] = ljCutPoint(e); LJ.saw.tx = x; LJ.saw.ty = y; } });
+ljCut.addEventListener('pointermove', e => { if (LJ && LJ.saw && LJ.saw.on){ const [x, y] = ljCutPoint(e); LJ.saw.px = x; LJ.saw.py = y; } });
 for (const ev of ['pointerup', 'pointercancel']) ljCut.addEventListener(ev, () => { if (LJ && LJ.saw) LJ.saw.on = false; });
 $('ljGo').onclick = () => ljToCut();
 addEventListener('keydown', e => {
@@ -6944,26 +6961,29 @@ function lumberFrame(dtMs, now){
     if (LJ.t <= 0) ljToCut();
   } else if (LJ.ph === 'cut'){
     LJ.t -= dt; ljTimer('⏱ ' + Math.max(0, Math.ceil(LJ.t)) + ' s');
-    const S = LJ.saw, x0 = (LJ_CW - F.W)/2, x1 = x0 + F.W;
-    const keyCut = LJ.keys[' '] || LJ.keys.ArrowRight;
-    if (LJ.keys.ArrowUp) S.y -= 60*dt;
-    if (LJ.keys.ArrowDown) S.y += 60*dt;
+    const S = LJ.saw, g = LJ.plan.segs[S.i];
+    const keyCut = LJ.keys[' '] || LJ.keys.ArrowRight || LJ.keys.ArrowLeft;
+    const steer = (LJ.keys.ArrowDown ? 1 : 0) - (LJ.keys.ArrowUp ? 1 : 0);
+    if (steer) S.off += steer * 55 * dt * (g.n[1] >= 0 ? 1 : -1);
     let adv = 0;
-    if (S.on && S.tx != null){
-      S.y += (ljClamp(S.ty, 20, LJ_GROUND - 4) - S.y) * Math.min(1, dt*14);
-      if (S.tx > S.x) adv = Math.min(S.tx - S.x, F.spd*dt);
+    if (S.on && S.px != null){
+      const bx = g.A[0] + g.u[0]*S.t, by = g.A[1] + g.u[1]*S.t, rx = S.px - bx, ry = S.py - by;
+      const along = rx*g.u[0] + ry*g.u[1], perp = rx*g.n[0] + ry*g.n[1];
+      S.off += (ljClamp(perp, -60, 60) - S.off) * Math.min(1, dt*14);
+      if (along > 0) adv = Math.min(along, F.spd*dt);
     } else if (keyCut) adv = F.spd*dt;
-    const cutting = adv > 0 && S.x + adv > x0;
     if (adv > 0){
-      const from = Math.max(S.x, x0), to = Math.min(S.x + adv, x1);
-      if (to > from) S.dev += Math.abs(S.y - ljLineY((from + to)/2)) * (to - from);
-      S.x += adv;
-      if (S.x > x0){ S.path.push([Math.min(S.x, x1), S.y]); if (S.path.length > 400) S.path.splice(0, S.path.length - 400); }
-      if (cutting && Math.random() < .8) for (let i = 0; i < 2; i++) S.dust.push({ x:Math.min(S.x, x1) - 4, y:S.y + 2, vx:-40 - Math.random()*80, vy:-30 + Math.random()*90, t:0 });
+      adv = Math.min(adv, g.L - S.t);
+      S.dev += Math.abs(S.off) * adv; S.t += adv;
+      const [px, py] = ljSawPos(S);
+      if (S.t > 14){ S.paths[S.i].push([px, py]); if (Math.random() < .8) for (let i = 0; i < 2; i++) S.dust.push({ x:px, y:py + 2, vx:-g.u[0]*60 + (Math.random() - .5)*70, vy:-30 + Math.random()*90, t:0 }); }
     }
-    sawLoad(cutting ? 1 : S.on || keyCut ? .5 : 0);
-    if (S.x >= x1) ljFinishCut(false);
-    else if (LJ.t <= 0) ljFinishCut(true);
+    sawLoad(adv > 0 && S.t > 14 ? 1 : S.on || keyCut ? .5 : 0);
+    if (S.t >= g.L - .01){
+      S.i++; S.t = 0; S.off = 0; S.on = false;                     // next cut: lift the finger and start again from its yellow dot
+      if (S.i === 2){ S.wedge = { t:0 }; sfx('thud'); boom('ENTAILLE !', { size:20, x:.85, y:.16, pal:BOOM_COLORS[1], ms:900, wrap:$('ljCutWrap') }); }
+      if (S.i > 2) ljFinishCut(false); else { ljCutHead(); sfx('ok'); }
+    } else if (LJ.t <= 0) ljFinishCut(true);
   } else if (LJ.ph === 'fall'){
     LJ.fall.k = Math.min(1, LJ.fall.k + dt/1.5);
     if (LJ.fall.k >= 1 && !LJ.fall.done){ LJ.fall.done = true; ljLanded(LJ.fall.a, true, me.id); LJ.ph = 'wait'; ljTimer(''); setTimeout(() => { if (LJ && LJ.ph === 'wait') ljHead('En attente des autres bûcherons…'); }, 1600); }
@@ -6975,6 +6995,7 @@ function lumberFrame(dtMs, now){
     if (o.k < 1){ o.k = Math.min(1, o.k + dt/1.5); if (o.k >= 1) ljLanded(o.a, false, id); }
   }
   if (LJ.saw) for (const d of LJ.saw.dust){ d.t += dt; d.x += d.vx*dt; d.y += d.vy*dt; d.vy += 260*dt; }
+  if (LJ.saw && LJ.saw.wedge) LJ.saw.wedge.t += dt;
   if (LJ.saw) LJ.saw.dust = LJ.saw.dust.filter(d => d.t < .6);
   drawLumberTop(now); drawLumberCut(now);
 }
@@ -7097,10 +7118,6 @@ function drawLumberTop(now){
     if (o.r){ ctx.beginPath(); ctx.arc(o.x, o.y, o.r, 0, Math.PI*2); ctx.fill(); } else ctx.fillRect(o.x, o.y, o.w, o.h);
     ctx.restore();
   }
-  // target cross
-  const pulse = 1 + Math.sin(now/220)*.08;
-  ctx.strokeStyle = '#fff'; ctx.lineWidth = 3; ctx.setLineDash([6, 5]); ctx.beginPath(); ctx.arc(F.tx, F.ty, 22*pulse, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
-  for (const [w, c] of [[11, '#000'], [6, '#E6262B']]){ ctx.strokeStyle = c; ctx.lineWidth = w; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(F.tx - 11, F.ty - 11); ctx.lineTo(F.tx + 11, F.ty + 11); ctx.moveTo(F.tx + 11, F.ty - 11); ctx.lineTo(F.tx - 11, F.ty + 11); ctx.stroke(); }
   // the others' trees, in their colours
   for (const [id, o] of LJ.others){
     if (!o.k) continue;
@@ -7164,8 +7181,8 @@ function ljBark(F){
   ctx.beginPath(); ctx.moveTo(x1, -5); ctx.lineTo(x1, LJ_GROUND - 20); ctx.quadraticCurveTo(x1 + 4, LJ_GROUND - 4, x1 + 26, LJ_GROUND + 2); ctx.stroke();
   return cv;
 }
-function ljChainsaw(ctx, x, y, tilt, now, on){
-  ctx.save(); ctx.translate(x, y); ctx.rotate(tilt + (on ? Math.sin(now/18)*.02 : 0));
+function ljChainsaw(ctx, x, y, tilt, now, on, flip){
+  ctx.save(); ctx.translate(x, y); ctx.rotate(tilt + (on ? Math.sin(now/18)*.02 : 0)); if (flip) ctx.scale(1, -1);   // going left: handle stays on top
   // bar (points right, its tip is the cutting point)
   ctx.fillStyle = '#B9C0C8'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5;
   ctx.beginPath(); ctx.moveTo(-74, -7); ctx.lineTo(-4, -6); ctx.arc(-4, 0, 6, -Math.PI/2, Math.PI/2); ctx.lineTo(-74, 7); ctx.closePath(); ctx.fill(); ctx.stroke();
@@ -7180,40 +7197,67 @@ function ljChainsaw(ctx, x, y, tilt, now, on){
   if (on){ ctx.fillStyle = 'rgba(160,160,160,.5)'; ctx.beginPath(); ctx.arc(-134 - (now/8 % 14), -6, 5 + (now/40 % 4), 0, Math.PI*2); ctx.fill(); }
   ctx.restore();
 }
+function ljPoly(ctx, pts){ ctx.beginPath(); pts.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); }
 function drawLumberCut(now){
   const ctx = ljCctx, F = LJ.F;
   if (!F){ ctx.fillStyle = '#DDF2FF'; ctx.fillRect(0, 0, LJ_CW, LJ_CH); return; }
   if (!LJ.bark) LJ.bark = ljBark(F);
   ctx.drawImage(LJ.bark, 0, 0);
-  const x0 = (LJ_CW - F.W)/2, x1 = x0 + F.W;
-  const showLine = ['aim', 'cut', 'intro'].includes(LJ.ph) && LJ.alive;
-  if (showLine || LJ.saw){
+  const plan = LJ.plan || (LJ.plan = ljCutPlan(F)), S = LJ.saw, segs = plan.segs, cur = S ? S.i : 0;
+  const notchOpen = S && S.wedge;
+  if (notchOpen){                                    // the wedge is out: a dark notch in the trunk, the piece tumbles down
+    ctx.fillStyle = '#2A1A0C'; ljPoly(ctx, [[plan.x1, plan.topY], plan.P, [plan.x1, plan.yb]]); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5; ctx.stroke();
+    const k = Math.min(1, S.wedge.t/.9);
+    if (k < 1){
+      ctx.save(); ctx.globalAlpha = 1 - k*.4;
+      ctx.translate(plan.x1 + 20*k, k*k*90); ctx.rotate(k*.9); ctx.translate(-plan.x1, 0);
+      ctx.fillStyle = '#C89A5B'; ljPoly(ctx, [[plan.x1, plan.topY], plan.P, [plan.x1, plan.yb]]); ctx.closePath(); ctx.fill(); ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5; ctx.stroke();
+      ctx.restore();
+    }
+  }
+  const showPlan = (['aim', 'cut', 'intro'].includes(LJ.ph) && LJ.alive) || S;
+  if (showPlan){
     ctx.lineCap = 'round';
-    ctx.strokeStyle = '#000'; ctx.lineWidth = 6; ctx.setLineDash([10, 9]); ctx.beginPath(); ctx.moveTo(x0 - 24, ljLineY(x0 - 24)); ctx.lineTo(x1 + 24, ljLineY(x1 + 24)); ctx.stroke();
-    ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(x0 - 24, ljLineY(x0 - 24)); ctx.lineTo(x1 + 24, ljLineY(x1 + 24)); ctx.stroke();
-    ctx.setLineDash([]);
+    segs.forEach((g, i) => {
+      if (S && i < cur) return;                      // already cut: its kerf is drawn below
+      const active = !S || i === cur;
+      ctx.globalAlpha = active ? 1 : .45;
+      ctx.strokeStyle = '#000'; ctx.lineWidth = 6; ctx.setLineDash([10, 9]); ljPoly(ctx, [g.A, g.B]); ctx.stroke();
+      ctx.strokeStyle = active && S ? '#FFD21F' : '#FFFFFF'; ctx.lineWidth = 3; ljPoly(ctx, [g.A, g.B]); ctx.stroke();
+      ctx.setLineDash([]);
+      // numbered start dot
+      const pulse = S && i === cur && !S.on ? 1 + Math.sin(now/160)*.18 : 1;
+      ctx.fillStyle = active ? '#FFD21F' : '#FFFFFF'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.arc(g.A[0], g.A[1], 11*pulse, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#000'; ctx.font = '15px Bangers, Impact, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(String(i + 1), g.A[0], g.A[1] + 1); ctx.textBaseline = 'alphabetic';
+      ctx.globalAlpha = 1;
+    });
   }
-  const S = LJ.saw;
-  if (S && S.path.length > 1){                       // the kerf actually cut
-    ctx.strokeStyle = '#1E1208'; ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(x0, S.path[0][1]);
-    for (const [x, y] of S.path) ctx.lineTo(x, y); ctx.stroke();
-  }
+  if (S) S.paths.forEach(path => {                   // the kerfs actually cut
+    if (path.length < 2) return;
+    ctx.strokeStyle = '#1E1208'; ctx.lineWidth = 5; ljPoly(ctx, path); ctx.stroke();
+  });
   if (S) for (const d of S.dust){ ctx.globalAlpha = 1 - d.t/.6; ctx.fillStyle = '#E8C38A'; ctx.fillRect(d.x, d.y, 3, 3); } ctx.globalAlpha = 1;
-  if (S && LJ.ph === 'cut') ljChainsaw(ctx, S.x, S.y, Math.atan2(ljLineY(S.x + 10) - ljLineY(S.x), 10), now, S.on || LJ.keys[' '] || LJ.keys.ArrowRight);
+  if (S && LJ.ph === 'cut' && cur <= 2){
+    const g = segs[cur], [px, py] = ljSawPos(S);
+    ljChainsaw(ctx, px, py, Math.atan2(g.u[1], g.u[0]), now, S.on || LJ.keys[' '] || LJ.keys.ArrowRight || LJ.keys.ArrowLeft, g.u[0] < 0);
+    if (!S.on && S.t === 0){
+      ctx.font = '19px Bangers, Impact, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 4; ctx.strokeStyle = '#000'; ctx.fillStyle = '#fff';
+      const tx = ljClamp(g.A[0], 90, LJ_CW - 90), ty = Math.max(24, g.A[1] - 26);
+      const t = cur === 2 ? 'POSEZ LE DOIGT SUR LE 3 ET GLISSEZ →' : 'POSEZ LE DOIGT SUR LE ' + (cur + 1) + ' ET GLISSEZ ←';
+      ctx.strokeText(t, tx, ty); ctx.fillText(t, tx, ty);
+    }
+  }
   if (LJ.ph === 'aim' && LJ.alive){
     ctx.font = '22px Bangers, Impact, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 4; ctx.strokeStyle = '#000'; ctx.fillStyle = '#FFD21F';
     ctx.strokeText('D\'ABORD, VISEZ AU-DESSUS ↑', LJ_CW/2, 40); ctx.fillText('D\'ABORD, VISEZ AU-DESSUS ↑', LJ_CW/2, 40);
   }
-  if (LJ.ph === 'cut' && S && !S.on && S.x < x0){
-    ctx.font = '20px Bangers, Impact, sans-serif'; ctx.textAlign = 'left'; ctx.lineWidth = 4; ctx.strokeStyle = '#000'; ctx.fillStyle = '#fff';
-    ctx.strokeText('APPUYEZ ET GLISSEZ →', 12, 30); ctx.fillText('APPUYEZ ET GLISSEZ →', 12, 30);
-  }
-  if (LJ.fall && LJ.ph !== 'cut'){                   // the trunk leans away once cut
-    const k = Math.min(1, LJ.fall.k*1.4);
-    ctx.save(); ctx.globalAlpha = .9; ctx.fillStyle = 'rgba(221,242,255,' + (k*.85) + ')'; ctx.fillRect(0, 0, LJ_CW, ljLineY(LJ_CW/2) - 4); ctx.restore();
+  if (LJ.fall && LJ.ph !== 'cut'){
     ctx.font = '24px Bangers, Impact, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 4; ctx.strokeStyle = '#000'; ctx.fillStyle = '#FFD21F';
     const txt = 'COUPE PRÉCISE À ' + Math.round(LJ.fall.prec*100) + ' %';
-    ctx.strokeText(txt, LJ_CW/2, 50); ctx.fillText(txt, LJ_CW/2, 50);
+    ctx.strokeText(txt, LJ_CW/2, 40); ctx.fillText(txt, LJ_CW/2, 40);
   }
 }
 
