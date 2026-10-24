@@ -6643,7 +6643,10 @@ const LJ_KINDS = {
   pool:   { w:[70, 92], h:[44, 56] },
   kennel: { w:[24, 28], h:[20, 24] },
   fence:  { w:[90, 120], h:[8, 8] },
-  green:  { w:[54, 66], h:[36, 44] }
+  green:  { w:[54, 66], h:[36, 44] },
+  wire:   { w:[120, 200], h:[6, 6] },
+  wall:   { w:[80, 140], h:[12, 12] },
+  road:   { w:[540, 540], h:[46, 46] }
 };
 const LJ_CAR_COLS = ['#E8202A', '#1E5BFF', '#FFD21F', '#F0F0F0', '#8E44FF', '#FF8A1F'];
 function ljShapeDist(o, px, py){                          // distance from a point to an obstacle (negative inside)
@@ -6654,7 +6657,7 @@ function ljShapeDist(o, px, py){                          // distance from a poi
 }
 function ljField(seed, r){
   const R = rng32(seed), S = LJ_S, M = 34;
-  const L = [190, 222, 250][r], corr = [80, 58, 46][r];
+  const L = [190, 222, 250][r], corr = [64, 50, 42][r];
   let sx = 0, sy = 0, ta = 0, tx = 0, ty = 0;
   for (let k = 0; k < 200; k++){
     sx = 120 + R()*(S - 240); sy = 120 + R()*(S - 240); ta = R()*Math.PI*2;
@@ -6667,12 +6670,12 @@ function ljField(seed, r){
     const K = LJ_KINDS[kind], rr = (a) => a[0] + R()*(a[1] - a[0]);
     if (K.r){ const rad = rr(K.r); return { k:kind, x:cx, y:cy, r:rad }; }
     let w = rr(K.w), h = rr(K.h);
-    if ((kind === 'car' || kind === 'fence' || kind === 'green') && R() < .5) [w, h] = [h, w];
+    if (['car', 'fence', 'green', 'wire', 'wall', 'road'].includes(kind) && R() < .5) [w, h] = [h, w];
     return { k:kind, x:cx - w/2, y:cy - h/2, w, h, col:LJ_CAR_COLS[Math.floor(R()*LJ_CAR_COLS.length)] };
   };
   const ok = o => {
     const bx0 = o.r ? o.x - o.r : o.x, by0 = o.r ? o.y - o.r : o.y, bx1 = o.r ? o.x + o.r : o.x + o.w, by1 = o.r ? o.y + o.r : o.y + o.h;
-    if (bx0 < M - 20 || by0 < M - 20 || bx1 > S - M + 20 || by1 > S - M + 20) return false;
+    if (o.k !== 'road' && (bx0 < M - 20 || by0 < M - 20 || bx1 > S - M + 20 || by1 > S - M + 20)) return false;   // a road crosses the whole garden
     if (ljShapeDist(o, sx, sy) < 46) return false;                                        // room around the tree
     for (let d = 0; d <= L + 6; d += 6) if (ljShapeDist(o, sx + Math.cos(ta)*d, sy + Math.sin(ta)*d) < corr) return false;   // the aimed corridor stays clear
     for (const p of obs){                                                                  // no overlap between obstacles
@@ -6681,23 +6684,32 @@ function ljField(seed, r){
     }
     return true;
   };
-  // flankers: obstacles just outside the corridor, near its far end (none in round 1)
-  const nFlank = [1, 2, 3][r];
+  // a road across the garden, when it can avoid the free corridor
+  if (R() < [.6, .8, 1][r]) for (let k = 0; k < 40; k++){
+    const v = R() < .5, pos = 40 + R()*(S - 126);
+    const o = v ? { k:'road', x:pos, y:0, w:46, h:S } : { k:'road', x:0, y:pos, w:S, h:46 };
+    if (ok(o)){ obs.push(o); break; }
+  }
+  // flankers: obstacles just outside the corridor, near its far end
+  const nFlank = [2, 3, 4][r];
   for (let i = 0, tries = 0; i < nFlank && tries < 80; tries++){
-    const t = .55 + R()*.45, side = i % 2 ? 1 : -1, kind = ['car', 'shed', 'tree', 'kennel', 'green'][Math.floor(R()*5)];
+    const t = .55 + R()*.45, side = i % 2 ? 1 : -1, kind = ['car', 'shed', 'tree', 'kennel', 'green', 'tree', 'wall'][Math.floor(R()*7)];
     const probe = make(kind, 0, 0), half = probe.r || Math.max(probe.w, probe.h)/2;
     const off = corr + half + 2 + R()*10;
     const cx = sx + Math.cos(ta)*L*t - Math.sin(ta)*off*side, cy = sy + Math.sin(ta)*L*t + Math.cos(ta)*off*side;
     const o = make(kind, cx, cy); if (ok(o)){ obs.push(o); i++; }
   }
-  const nAll = [6, 7, 9][r];
-  const order = ['house', 'car', 'tree', 'pool', 'shed', 'fence', 'kennel', 'green', 'tree', 'car'];
-  for (let tries = 0; obs.length < nAll && tries < 400; tries++){
-    const kind = tries < 20 ? order[obs.length % order.length] : kinds[Math.floor(R()*kinds.length)];
+  const nAll = [16, 20, 24][r];
+  const order = ['house', 'car', 'tree', 'wire', 'pool', 'tree', 'wall', 'shed', 'tree', 'fence', 'car', 'kennel', 'green', 'tree', 'wire', 'wall'];
+  kinds.splice(kinds.indexOf('road'), 1);
+  for (let tries = 0; obs.length < nAll && tries < 900; tries++){
+    const kind = tries < 60 ? order[obs.length % order.length] : kinds[Math.floor(R()*kinds.length)];
     const o = make(kind, M + R()*(S - 2*M), M + R()*(S - 2*M)); if (ok(o)) obs.push(o);
   }
+  // the hedge round the garden counts too: a crown landing in it ends up at the neighbours'
+  obs.push({ k:'hedge', x:-60, y:-60, w:S + 120, h:66 }, { k:'hedge', x:-60, y:S - 6, w:S + 120, h:66 }, { k:'hedge', x:-60, y:-60, w:66, h:S + 120 }, { k:'hedge', x:S - 6, y:-60, w:66, h:S + 120 });
   const wind = r === 2 ? (R() < .5 ? -1 : 1) * Math.round(3 + R()*3) : 0;
-  const W = [170, 205, 240][r], spd = [165, 150, 135][r];
+  const W = [260, 300, 340][r], spd = [165, 150, 135][r];
   const slope = (R() < .5 ? -1 : 1) * [2 + R()*2, 4 + R()*2, 6 + R()*3][r];          // back cut: straight, slightly tilted
   const notch = [40, 45, 50][r] + (R() - .5)*6;                                        // opening of the notch, degrees
   return { seed, r, L, sx, sy, ta, corr, obs, wind, slope, notch, W, spd };
@@ -6804,7 +6816,7 @@ function startLumber(m){
   for (const p of players) LJ.tot[p.id] = 0;
   ljHead('Préparation…'); ljTimer(''); ljMsg(''); renderLjPlayers();
   $('ljGo').hidden = true;
-  $('ljHelp').textContent = 'Touchez le jardin pour choisir où tombe l\'arbre, sans rien écraser, puis validez. Ensuite, abattez-le comme un vrai bûcheron, en suivant les pointillés dans l\'ordre : les deux coupes de l\'entaille (1 et 2), puis le trait d\'abattage (3). Posez le doigt sur le rond jaune et glissez. Plus les coupes sont droites, plus l\'arbre suit votre direction. Clavier : ← → viser, Entrée valider, Espace scier, ↑ ↓ corriger.';
+  $('ljHelp').textContent = 'Touchez le jardin pour choisir où tombe l\'arbre, sans rien écraser, puis validez. Ensuite, abattez-le comme un vrai bûcheron, en suivant les pointillés : l\'entaille d\'un seul geste (1 : on descend le long du biais puis on ressort par le bas), puis le trait d\'abattage (2). Posez le doigt sur le rond jaune et glissez. Plus les coupes sont droites, plus l\'arbre suit votre direction. Clavier : ← → viser, Entrée valider, Espace scier, ↑ ↓ corriger.';
 }
 const ljMsg = big => { const m = $('ljMsg'); m.textContent = ''; if (big){ const s = document.createElement('strong'); s.textContent = big; m.append(s); } };
 let ljToastT = null;
@@ -6874,7 +6886,8 @@ function ljCutPlan(F){
   const hinge = F.W*.1, by = yb - 8, E = [P[0] - hinge, by];
   const sl = Math.tan(F.slope*Math.PI/180);
   const seg = (A, B, ext) => { const L = Math.hypot(B[0] - A[0], B[1] - A[1]), u = [(B[0] - A[0])/L, (B[1] - A[1])/L]; return { A:[A[0] - u[0]*ext, A[1] - u[1]*ext], B, u, n:[-u[1], u[0]], L:L + ext }; };
-  return { x0, x1, yb, P, topY, E, segs:[seg([x1, topY], P, 14), seg([x1, yb], P, 14), seg([x0, by - (E[0] - x0)*sl], E, 14)] };
+  // the notch is one gesture: down the slope to the tip of the triangle, then straight back out along the bottom
+  return { x0, x1, yb, P, topY, E, segs:[seg([x1, topY], P, 14), seg(P, [x1 + 14, yb], 0), seg([x0, by - (E[0] - x0)*sl], E, 14)] };
 }
 function ljToCut(){
   if (LJ.ph !== 'aim') return;
@@ -6886,7 +6899,7 @@ function ljToCut(){
   sfx('cord'); setTimeout(() => { if (LJ && LJ.ph === 'cut') sawStart(); }, 450);
   $('ljCut').scrollIntoView({ block:'nearest', behavior:'smooth' });
 }
-function ljCutHead(){ ljHead(['Entaille : coupe du haut (1/3)', 'Entaille : coupe du bas (2/3)', 'Trait d\'abattage (3/3)'][LJ.saw.i] || '', true); }
+function ljCutHead(){ ljHead(['Entaille (1/2)', 'Entaille (1/2)', 'Trait d\'abattage (2/2)'][LJ.saw.i] || '', true); }
 const ljSawPos = S => { const g = LJ.plan.segs[Math.min(S.i, 2)], t = S.i > 2 ? g.L : S.t; return [g.A[0] + g.u[0]*t + g.n[0]*S.off, g.A[1] + g.u[1]*t + g.n[1]*S.off]; };
 function ljFinishCut(timeout){
   const F = LJ.F, S = LJ.saw, segs = LJ.plan.segs;
@@ -6909,8 +6922,8 @@ function ljLanded(a, mine, id){
   if (f.hit >= 0){
     const o = LJ.F.obs[f.hit]; LJ.crushed.add(f.hit);
     setTimeout(() => sfx('crash', o.k), 120);
-    boom({ house:'CRAAAC !', car:'SCRONCH !', tree:'CRAC !', pool:'PLOUF !', shed:'BADABOUM !', kennel:'OUAF ?!', fence:'CRAC !', green:'CRISTAL !' }[o.k] || 'CRAC !',
-      { size:34, x:o.r ? o.x/LJ_S : (o.x + o.w/2)/LJ_S, y:o.r ? o.y/LJ_S : (o.y + o.h/2)/LJ_S, pal:BOOM_COLORS[2], ms:1300, wrap:$('ljWrap') });
+    boom({ house:'CRAAAC !', car:'SCRONCH !', tree:'CRAC !', pool:'PLOUF !', shed:'BADABOUM !', kennel:'OUAF ?!', fence:'CRAC !', green:'CRISTAL !', road:'TUUUT !', wire:'DZOING !', wall:'BAOUM !', hedge:'CHEZ LE VOISIN !' }[o.k] || 'CRAC !',
+      { size:34, x:ljClamp(o.r ? o.x/LJ_S : (o.x + o.w/2)/LJ_S, .15, .85), y:ljClamp(o.r ? o.y/LJ_S : (o.y + o.h/2)/LJ_S, .1, .9), pal:BOOM_COLORS[2], ms:1300, wrap:$('ljWrap') });
     if (mine){ ljMsg('Écrasé ! Éliminé'); ljHead('Éliminé : vous regardez la suite'); const el = $('ljWrap'); el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); }
     else { const p = players.find(x => x.id === id); if (p) ljToast(p.name + ' a tout écrasé !'); }
   } else if (mine){
@@ -6980,9 +6993,10 @@ function lumberFrame(dtMs, now){
     }
     sawLoad(adv > 0 && S.t > 14 ? 1 : S.on || keyCut ? .5 : 0);
     if (S.t >= g.L - .01){
-      S.i++; S.t = 0; S.off = 0; S.on = false;                     // next cut: lift the finger and start again from its yellow dot
+      S.i++; S.t = 0; S.off = 0;
+      if (S.i !== 1) S.on = false;                                 // after the notch: lift the finger and start the back cut from its dot
       if (S.i === 2){ S.wedge = { t:0 }; sfx('thud'); boom('ENTAILLE !', { size:20, x:.85, y:.16, pal:BOOM_COLORS[1], ms:900, wrap:$('ljCutWrap') }); }
-      if (S.i > 2) ljFinishCut(false); else { ljCutHead(); sfx('ok'); }
+      if (S.i > 2) ljFinishCut(false); else { ljCutHead(); if (S.i === 2) sfx('ok'); }
     } else if (LJ.t <= 0) ljFinishCut(true);
   } else if (LJ.ph === 'fall'){
     LJ.fall.k = Math.min(1, LJ.fall.k + dt/1.5);
@@ -7018,7 +7032,39 @@ function ljRect(ctx, o, fill, rad){
 function ljObstacle(ctx, o){
   ctx.save(); ctx.lineJoin = 'round';
   const hz = !o.r && o.w >= o.h;
-  if (o.k === 'tree'){ ctx.fillStyle = 'rgba(0,0,0,.18)'; ctx.beginPath(); ctx.arc(o.x + 5, o.y + 6, o.r, 0, Math.PI*2); ctx.fill(); ljLumpy(ctx, o.x, o.y, o.r, '#3E8E41', '#62B865'); }
+  if (o.k === 'road'){
+    ctx.fillStyle = '#C9C9C2'; ctx.fillRect(o.x - (hz ? 0 : 5), o.y - (hz ? 5 : 0), o.w + (hz ? 0 : 10), o.h + (hz ? 10 : 0));   // pavements
+    ctx.fillStyle = '#5C5F66'; ctx.fillRect(o.x, o.y, o.w, o.h);
+    ctx.fillStyle = halftone(ctx, .12); ctx.fillRect(o.x, o.y, o.w, o.h);
+    ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.beginPath();
+    if (hz){ ctx.moveTo(0, o.y - 5); ctx.lineTo(LJ_S, o.y - 5); ctx.moveTo(0, o.y + o.h + 5); ctx.lineTo(LJ_S, o.y + o.h + 5); }
+    else { ctx.moveTo(o.x - 5, 0); ctx.lineTo(o.x - 5, LJ_S); ctx.moveTo(o.x + o.w + 5, 0); ctx.lineTo(o.x + o.w + 5, LJ_S); }
+    ctx.stroke();
+    ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 3; ctx.setLineDash([16, 12]); ctx.beginPath();
+    if (hz){ ctx.moveTo(0, o.y + o.h/2); ctx.lineTo(LJ_S, o.y + o.h/2); } else { ctx.moveTo(o.x + o.w/2, 0); ctx.lineTo(o.x + o.w/2, LJ_S); }
+    ctx.stroke(); ctx.setLineDash([]);
+  } else if (o.k === 'wire'){
+    ctx.strokeStyle = '#6B7076'; ctx.lineWidth = 1.2; ctx.beginPath();          // the mesh
+    const len = hz ? o.w : o.h;
+    for (let t = 0; t < len; t += 6){
+      if (hz){ ctx.moveTo(o.x + t, o.y); ctx.lineTo(o.x + t + 6, o.y + o.h); ctx.moveTo(o.x + t + 6, o.y); ctx.lineTo(o.x + t, o.y + o.h); }
+      else { ctx.moveTo(o.x, o.y + t); ctx.lineTo(o.x + o.w, o.y + t + 6); ctx.moveTo(o.x, o.y + t + 6); ctx.lineTo(o.x + o.w, o.y + t); }
+    }
+    ctx.stroke();
+    ctx.strokeStyle = '#000'; ctx.lineWidth = 2; ctx.strokeRect(o.x, o.y, o.w, o.h);
+    ctx.fillStyle = '#2F3338';
+    for (let t = 0; t <= len; t += 30) ctx.fillRect(hz ? o.x + Math.min(t, len) - 3 : o.x - 2, hz ? o.y - 2 : o.y + Math.min(t, len) - 3, hz ? 6 : o.w + 4, hz ? o.h + 4 : 6);
+  } else if (o.k === 'wall'){
+    ljRect(ctx, o, '#BDB6A8');
+    ctx.strokeStyle = 'rgba(0,0,0,.4)'; ctx.lineWidth = 1.5; ctx.beginPath();
+    const len = hz ? o.w : o.h;
+    for (let t = 14, k = 0; t < len; t += 14, k++){
+      if (hz){ ctx.moveTo(o.x + t, o.y + (k % 2 ? o.h/2 : 0)); ctx.lineTo(o.x + t, o.y + (k % 2 ? o.h : o.h/2)); }
+      else { ctx.moveTo(o.x + (k % 2 ? o.w/2 : 0), o.y + t); ctx.lineTo(o.x + (k % 2 ? o.w : o.w/2), o.y + t); }
+    }
+    if (hz){ ctx.moveTo(o.x, o.y + o.h/2); ctx.lineTo(o.x + o.w, o.y + o.h/2); } else { ctx.moveTo(o.x + o.w/2, o.y); ctx.lineTo(o.x + o.w/2, o.y + o.h); }
+    ctx.stroke();
+  } else if (o.k === 'tree'){ ctx.fillStyle = 'rgba(0,0,0,.18)'; ctx.beginPath(); ctx.arc(o.x + 5, o.y + 6, o.r, 0, Math.PI*2); ctx.fill(); ljLumpy(ctx, o.x, o.y, o.r, '#3E8E41', '#62B865'); }
   else if (o.k === 'house'){
     ctx.fillStyle = 'rgba(0,0,0,.2)'; ctx.fillRect(o.x + 6, o.y + 7, o.w, o.h);
     ljRect(ctx, o, '#C8553D');
@@ -7085,7 +7131,7 @@ function ljBackground(F){
   // hedge around the garden
   ctx.strokeStyle = '#2F6B2F'; ctx.lineWidth = 10; ctx.strokeRect(5, 5, LJ_S - 10, LJ_S - 10);
   ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.strokeRect(1.5, 1.5, LJ_S - 3, LJ_S - 3);
-  for (const o of F.obs) ljObstacle(ctx, o);
+  for (const o of [...F.obs].sort((a, b) => (b.k === 'road') - (a.k === 'road'))) if (o.k !== 'hedge') ljObstacle(ctx, o);   // roads underneath
   return cv;
 }
 function ljFallenTree(ctx, F, aDeg, k, col, mine){
@@ -7114,7 +7160,7 @@ function drawLumberTop(now){
   if (!LJ.bg) LJ.bg = ljBackground(F);
   ctx.drawImage(LJ.bg, 0, 0);
   for (const i of LJ.crushed){                      // crushed things: dark, cracked
-    const o = F.obs[i]; ctx.save(); ctx.globalAlpha = .55; ctx.fillStyle = '#222';
+    const o = F.obs[i]; if (o.k === 'hedge') continue; ctx.save(); ctx.globalAlpha = .55; ctx.fillStyle = '#222';
     if (o.r){ ctx.beginPath(); ctx.arc(o.x, o.y, o.r, 0, Math.PI*2); ctx.fill(); } else ctx.fillRect(o.x, o.y, o.w, o.h);
     ctx.restore();
   }
@@ -7221,17 +7267,18 @@ function drawLumberCut(now){
     ctx.lineCap = 'round';
     segs.forEach((g, i) => {
       if (S && i < cur) return;                      // already cut: its kerf is drawn below
-      const active = !S || i === cur;
+      const active = !S || i === cur || (cur === 0 && i === 1);
       ctx.globalAlpha = active ? 1 : .45;
       ctx.strokeStyle = '#000'; ctx.lineWidth = 6; ctx.setLineDash([10, 9]); ljPoly(ctx, [g.A, g.B]); ctx.stroke();
       ctx.strokeStyle = active && S ? '#FFD21F' : '#FFFFFF'; ctx.lineWidth = 3; ljPoly(ctx, [g.A, g.B]); ctx.stroke();
       ctx.setLineDash([]);
+      if (i === 1){ ctx.globalAlpha = 1; return; }   // the notch's second leg starts where the first ends: no dot of its own
       // numbered start dot
       const pulse = S && i === cur && !S.on ? 1 + Math.sin(now/160)*.18 : 1;
       ctx.fillStyle = active ? '#FFD21F' : '#FFFFFF'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
       ctx.beginPath(); ctx.arc(g.A[0], g.A[1], 11*pulse, 0, Math.PI*2); ctx.fill(); ctx.stroke();
       ctx.fillStyle = '#000'; ctx.font = '15px Bangers, Impact, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText(String(i + 1), g.A[0], g.A[1] + 1); ctx.textBaseline = 'alphabetic';
+      ctx.fillText(i ? '2' : '1', g.A[0], g.A[1] + 1); ctx.textBaseline = 'alphabetic';
       ctx.globalAlpha = 1;
     });
   }
@@ -7243,10 +7290,10 @@ function drawLumberCut(now){
   if (S && LJ.ph === 'cut' && cur <= 2){
     const g = segs[cur], [px, py] = ljSawPos(S);
     ljChainsaw(ctx, px, py, Math.atan2(g.u[1], g.u[0]), now, S.on || LJ.keys[' '] || LJ.keys.ArrowRight || LJ.keys.ArrowLeft, g.u[0] < 0);
-    if (!S.on && S.t === 0){
+    if (!S.on && (S.t === 0 || cur === 1)){
       ctx.font = '19px Bangers, Impact, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 4; ctx.strokeStyle = '#000'; ctx.fillStyle = '#fff';
       const tx = ljClamp(g.A[0], 90, LJ_CW - 90), ty = Math.max(24, g.A[1] - 26);
-      const t = cur === 2 ? 'POSEZ LE DOIGT SUR LE 3 ET GLISSEZ →' : 'POSEZ LE DOIGT SUR LE ' + (cur + 1) + ' ET GLISSEZ ←';
+      const t = cur === 2 ? 'POSEZ LE DOIGT SUR LE 2 ET GLISSEZ →' : cur === 0 ? 'DOIGT SUR LE 1 : DESCENDEZ, PUIS RESSORTEZ →' : 'CONTINUEZ VERS LA DROITE →';
       ctx.strokeText(t, tx, ty); ctx.fillText(t, tx, ty);
     }
   }
@@ -7391,6 +7438,9 @@ const SFX = {
   crash:  k => {
     if (k === 'car'){ noise(.5, .35, 3500, 200, 0, .8); tone(140, .4, 'sawtooth', .1, 60); for (let i = 0; i < 8; i++) tone(i % 2 ? 720 : 960, .17, 'square', .05, null, .45 + i*.2); }
     else if (k === 'house' || k === 'green'){ noise(.6, .35, 6500, 400); for (let i = 0; i < 9; i++) tone(1800 + Math.random()*2600, .16, 'sine', .04, null, .05 + i*.045); tone(90, .5, 'sawtooth', .08, 45); }
+    else if (k === 'road'){ noise(.4, .3, 4000, 300); tone(440, .55, 'square', .06, null, .25); tone(554, .55, 'square', .05, null, .25); tone(440, .3, 'square', .06, null, .95); tone(554, .3, 'square', .05, null, .95); }
+    else if (k === 'wire'){ noise(.5, .25, 7000, 1500, 0, 2); for (let i = 0; i < 6; i++) tone(1400 + i*90, .2, 'triangle', .03, 900, i*.05); }
+    else if (k === 'wall'){ noise(.45, .35, 2500, 120); tone(80, .35, 'sine', .3, 40); noise(.3, .15, 6000, 1000, .1); }
     else if (k === 'pool'){ noise(.9, .3, 4500, 200, 0, 2); tone(700, .25, 'sine', .06, 200, .05); }
     else if (k === 'shed'){ tone(310, .6, 'square', .06, 290); tone(460, .6, 'square', .05, 440, .02); noise(.4, .3, 3000, 300); }
     else if (k === 'kennel'){ noise(.3, .3, 4000, 400); tone(520, .07, 'square', .09, 300, .3); tone(470, .09, 'square', .08, 260, .42); tone(900, .4, 'sine', .05, 500, .6); }
