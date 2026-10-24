@@ -4592,45 +4592,118 @@ function kabaddiDrop(id){
 }
 
 // ---- robot ----
+// Robots play like a real team (Pro Kabaddi doctrine). In defence, each raid hands out roles: the two corners hang
+// back to lure the raider deep, then close in together (a chain) once both are near; one cover becomes the "gate"
+// between the raider and the midline; a lone defender being hunted backs off until help arrives; with little breath
+// left in the raider, nobody dives in any more and they wall off the line. In attack: a feint to one side, then the
+// most isolated defender, usually one touch only, and the way home goes round whoever blocks it.
+function kbDefRoles(){
+  const defs = HKB.defs.filter(id => HKB.pos[id]).sort((a, b) => HKB.pos[a][0] - HKB.pos[b][0]);
+  const roles = {};
+  defs.forEach((id, i) => roles[id] = i === 0 ? 'cornerL' : i === defs.length - 1 ? 'cornerR' : 'cover');
+  const covers = defs.filter(id => roles[id] === 'cover');
+  if (covers.length) roles[covers[Math.floor(covers.length/2)]] = 'gate';
+  else if (defs.length) roles[defs[defs.length - 1]] = 'gate';                // only two defenders: the right corner also guards the line
+  return roles;
+}
 function botKabaddi(dt){
   if (!BOT || !BOT.kb) return;
-  const R = HKB.pos[HKB.raider];
+  const R = HKB.pos[HKB.raider], P = HKB.pos;
+  if (BOT.kbRaid !== HKB.k){ BOT.kb = {}; BOT.kbRaid = HKB.k; BOT.kbRoles = kbDefRoles(); BOT.kbFeint = Math.random() < .5 ? -1 : 1; BOT.kbT0 = HKB.t; }
+  const roles = BOT.kbRoles || {};
+  const yMax = HKB.crossed ? KB_MID - KB_R - 1 : KB_MID - KB_GAP - KB_R - 1;          // how close to the line defenders may stand
+  const near = (id, d) => P[id] && R && Math.hypot(P[id][0] - R[0], P[id][1] - R[1]) < d;
+  const depth = R ? KB_MID - R[1] : 0;
   for (const p of players){
-    if (!p.bot || !HKB.IN[p.id] || !HKB.pos[p.id]) continue;
-    const id = p.id, S = BOT.kb[id] || (BOT.kb[id] = { T:Math.random()*.3, home:false, ang:Math.random()*Math.PI*2, keen:.55 + Math.random()*.4 });
+    if (!p.bot || !HKB.IN[p.id] || !P[p.id]) continue;
+    const id = p.id, S = BOT.kb[id] || (BOT.kb[id] = { T:Math.random()*.3 });
     S.T -= dt;
     if (S.T > 0) continue;
-    S.T = .24 + Math.random()*.16;                   // reacts a few times per second, not every frame
-    const I = HKB.IN[id], me2 = HKB.pos[id];
+    S.T = .2 + Math.random()*.12;                     // about a quarter of a second to react: people still get chances
+    const I = HKB.IN[id], me2 = P[id];
     I.kx = I.ky = 0;
-    if (HKB.raider === id){
-      I.hold = true;
-      const free = HKB.defs.filter(d => !HKB.touched.has(d) && HKB.pos[d]);
-      const near = HKB.defs.filter(d => HKB.pos[d] && Math.hypot(HKB.pos[d][0] - me2[0], HKB.pos[d][1] - me2[1]) < 70).length;
-      const goHome = HKB.crossed && (HKB.breath < 2.8 || (HKB.touched.size >= 1 && (near >= 2 || HKB.breath < 4 || Math.random() < .15)) || !free.length);
-      if (goHome || S.home){ S.home = HKB.crossed; I.tx = me2[0] + (Math.random() - .5)*40; I.ty = KB_H - 80; }
-      else if (!HKB.crossed){                            // enter where the defence is thinnest
-        let bx = KB_W/2, bs = -1;
-        for (let x = 50; x <= KB_W - 50; x += 20){ const d = Math.min(...HKB.defs.map(q => HKB.pos[q] ? Math.abs(HKB.pos[q][0] - x) : 999)); if (d > bs){ bs = d; bx = x; } }
-        I.tx = bx; I.ty = KB_MID - 50;
-      } else {
-        let best = null, bd = 1e9;
-        for (const d of free){ const q = HKB.pos[d], dd = Math.hypot(q[0] - me2[0], q[1] - me2[1]); if (dd < bd){ bd = dd; best = q; } }
-        if (best){ I.tx = best[0] + (Math.random() - .5)*20; I.ty = best[1] + 10; }
-      }
+    if (HKB.raider === id){ kbBotRaid(I, me2, S); continue; }
+    I.hold = false;
+    if (!R){ I.tx = me2[0]; I.ty = me2[1]; continue; }
+    const role = roles[id] || 'cover', side = role === 'cornerL' ? -1 : role === 'cornerR' ? 1 : 0;
+    const held = HKB.grip.has(id);
+    let tx, ty;
+    if (!HKB.crossed){
+      // waiting: a wide, deep half-circle that invites the raider in
+      if (role === 'cornerL'){ tx = 48; ty = KB_MID - 220; }
+      else if (role === 'cornerR'){ tx = KB_W - 48; ty = KB_MID - 220; }
+      else { const covers = HKB.defs.filter(d => roles[d] !== 'cornerL' && roles[d] !== 'cornerR'), k = covers.indexOf(id);
+        tx = KB_W*(k + 1)/(covers.length + 1) + (R[0] - KB_W/2)*.3; ty = KB_MID - 190; }
+    } else if (HKB.breath < 2){
+      // out of breath soon: don't dive, just wall off the way home
+      const ws = HKB.defs.filter(d => P[d]).sort((a, b) => P[a][0] - P[b][0]), k = ws.indexOf(id);
+      tx = R[0] + (k - (ws.length - 1)/2)*40; ty = Math.min(yMax, R[1] + 46);
+    } else if (held){
+      tx = R[0] + (me2[0] - R[0])*.5; ty = R[1] - 70;   // holding on: drag him back into our half, as in an ankle hold
+    } else if (role === 'gate' && depth < 100 && !HKB.grip.size){
+      tx = R[0] + (R[0] < KB_W/2 ? 70 : -70); ty = Math.min(R[1] - 20, KB_MID - 150);   // raider still near the line: slide alongside him, out of reach
+    } else if (role === 'gate'){
+      tx = R[0] + (Math.random() - .5)*10; ty = Math.min(yMax, R[1] + 58);              // raider in deep: stand between him and the midline
+    } else if (side){
+      const other = HKB.defs.find(d => d !== id && (roles[d] === 'cornerL' || roles[d] === 'cornerR'));
+      const ready = (HKB.grip.size > 0 && near(id, 170)) || ((depth > 110 || HKB.touched.size > 0) && near(id, 140) && (!other || near(other, 170)));   // someone already holds him: everybody piles in
+      if (ready){ tx = R[0] + side*8; ty = R[1] + 4; }                              // the chain closes in, both sides at once
+      else { tx = R[0] + side*95; ty = R[1] - 25; }                                 // stage on its flank, out of reach
     } else {
-      S.home = false;
-      I.hold = false;
-      const i = HKB.defs.indexOf(id), dR = R ? Math.hypot(R[0] - me2[0], R[1] - me2[1]) : 999;
-      // each robot defender closes in from its own side, and not always at once: a human raider still has a chance
-      if (R && HKB.crossed && dR < 190 && Math.random() < S.keen){
-        const ox = Math.cos(S.ang)*26, oy = Math.abs(Math.sin(S.ang))*-18;
-        I.tx = R[0] + ox + (Math.random() - .5)*24; I.ty = Math.min(KB_MID - KB_R, R[1] + oy);
-      } else if (R && R[1] < KB_MID + 80){
-        I.tx = me2[0] + (R[0] - me2[0])*.35; I.ty = KB_MID - 90 + (i % 2)*30;    // shadows the raider, keeps its line
-      } else { I.tx = KB_W*(i + 1)/(HKB.defs.length + 1); I.ty = KB_MID - 75; }
+      tx = me2[0] + (R[0] - me2[0])*.5; ty = KB_MID - 190;                          // spare cover: follows across, stays back
     }
+    // the defender being hunted backs off when nobody is there to help
+    if (!held && HKB.crossed && HKB.breath >= 2 && near(id, 150) && !HKB.grip.size && depth < 150 && me2[1] > 70){
+      const helpers = HKB.defs.filter(d => d !== id && P[d] && Math.hypot(P[d][0] - me2[0], P[d][1] - me2[1]) < 90).length;
+      const chaining = side && near(id, 120) && HKB.grip.size > 0;
+      if (!helpers && !chaining && role !== 'gate'){
+        const dx = me2[0] - R[0], dy = me2[1] - R[1], L = Math.hypot(dx, dy) || 1;
+        tx = me2[0] + dx/L*80; ty = me2[1] + dy/L*80 - 60;                         // backs off, deeper: the raider has to follow into the trap
+      }
+    }
+    I.tx = ljClamp(tx, KB_R, KB_W - KB_R); I.ty = ljClamp(ty, KB_R, yMax);
   }
+}
+function kbBotRaid(I, me2, S){
+  I.hold = true;
+  const P = HKB.pos, defs = HKB.defs.filter(d => P[d]);
+  const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
+  // held: pull straight away from whoever holds, towards home
+  if (HKB.grip.size){
+    let gx = 0, gy = 0; for (const d of HKB.grip.keys()) if (P[d]){ gx += P[d][0]; gy += P[d][1]; }
+    gx /= HKB.grip.size; gy /= HKB.grip.size;
+    const dx = me2[0] - gx, dy = me2[1] - gy + 30, L = Math.hypot(dx, dy) || 1;
+    I.tx = me2[0] + dx/L*90; I.ty = me2[1] + dy/L*90; return;
+  }
+  const spread = defs.length > 1 ? Math.min(...defs.map(a => Math.min(...defs.filter(b => b !== a).map(b => dist(P[a], P[b]))))) : 999;
+  const greedy = spread > 120 && HKB.breath > 3.5;
+  const goHome = HKB.crossed && (S.home || HKB.breath < 2.8 || (HKB.touched.size >= 1 && !greedy) || HKB.touched.size >= 3);
+  if (goHome){
+    S.home = true;
+    // way home: round the defender that stands in the way
+    const block = defs.filter(d => P[d][1] > me2[1] - 10 && Math.abs(P[d][0] - me2[0]) < 70).sort((a, b) => P[a][1] - P[b][1])[0];
+    let x = me2[0];
+    if (block){ const dir = P[block][0] > me2[0] ? -1 : 1; x = me2[0] + dir*90; if (x < 40 || x > KB_W - 40) x = me2[0] - dir*90; }
+    I.tx = ljClamp(x, KB_R, KB_W - KB_R); I.ty = KB_H - 80; return;
+  }
+  S.home = false;
+  const free = defs.filter(d => !HKB.touched.has(d));
+  // the most isolated defender, not too far, preferably near the line
+  let best = null, bs = -1e9;
+  for (const d of free){
+    const others = defs.filter(o => o !== d), iso = others.length ? Math.min(...others.map(o => dist(P[d], P[o]))) : 200;
+    const sc = iso - dist(P[d], me2)*.35 + P[d][1]*.15;
+    if (sc > bs){ bs = sc; best = d; }
+  }
+  if (!HKB.crossed){
+    // feint: show one side first, then cross towards the chosen defender
+    const tFeint = HKB.t - (BOT.kbT0 || 0) < 1.1;
+    if (tFeint){ I.tx = KB_W/2 + BOT.kbFeint*120; I.ty = KB_MID + 30; }
+    else { I.tx = best ? P[best][0] : KB_W/2; I.ty = KB_MID - 40; }
+    return;
+  }
+  if (best){ I.tx = P[best][0] + (Math.random() - .5)*16; I.ty = P[best][1] + 12; }
+  else { S.home = true; I.ty = KB_H - 80; I.tx = me2[0]; }
 }
 
 // ---- my view ----
