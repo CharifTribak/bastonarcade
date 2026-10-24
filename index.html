@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Baston Arcade</title>
-<meta name="description" content="Treize jeux multijoueurs dans le navigateur : Gravats, Les Gardiens, Derby, Armada, Tape-taupe, Curling, Chaises musicales, Code secret, Kabaddi, Balle au prisonnier, Chars, Les bergers et Drakkars. Un salon, un code, de 1 à 5 joueurs.">
+<meta name="description" content="Quatorze jeux multijoueurs dans le navigateur : Gravats, Les Gardiens, Derby, Armada, Tape-taupe, Curling, Chaises musicales, Code secret, Kabaddi, Balle au prisonnier, Chars, Les bergers, Drakkars et Bûcherons. Un salon, un code, de 1 à 5 joueurs.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Baston Arcade">
-<meta property="og:description" content="Treize jeux multijoueurs dans le navigateur. Créez un salon, partagez le code, et que le meilleur gagne.">
+<meta property="og:description" content="Quatorze jeux multijoueurs dans le navigateur. Créez un salon, partagez le code, et que le meilleur gagne.">
 <meta property="og:image" content="https://bastonarcade.com/img/share.jpg?v=2">
 <meta property="og:url" content="https://bastonarcade.com/">
 <link rel="canonical" href="https://bastonarcade.com/">
@@ -258,6 +258,13 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .dkbtns button.hit{animation:dkhit .15s}
 @keyframes dkhit{from{transform:translate(3px,3px)}to{transform:none}}
 
+/* ---- bûcherons ---- */
+#ljWrap,.ljhead,#ljCut,#ljGo{width:min(100%,50vh,560px)}
+#ljTop{display:block;width:100%;height:auto;aspect-ratio:1;touch-action:none;user-select:none;-webkit-user-select:none;cursor:crosshair;border:3px solid #000;box-shadow:6px 6px 0 #000}
+#ljCut{display:block;height:auto;aspect-ratio:600/260;touch-action:none;user-select:none;-webkit-user-select:none;border:3px solid #000;box-shadow:6px 6px 0 #000}
+#ljGo{height:58px;font-size:26px}
+#ljHead{font-size:clamp(17px,4.4vw,26px)}
+
 /* ---- curling ---- */
 .curl{display:flex;flex-direction:column;align-items:center;gap:10px;max-width:560px;margin:0 auto}
 .cuhead{width:min(100%,52vh,440px)}
@@ -390,7 +397,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
 <section id="scrMenu" class="center">
   <div class="card">
     <h1 class="logosvg" data-appname><svg viewBox="0 0 520 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Baston Arcade"><polygon points="260,8 292,62 352,22 356,86 428,58 404,118 494,120 438,166 508,214 428,226 456,292 384,270 372,322 318,276 262,318 222,270 156,306 152,248 76,262 104,206 18,184 92,148 36,92 116,94 102,30 172,62 204,8 228,58" fill="#000" transform="translate(7,7)"/><polygon points="260,8 292,62 352,22 356,86 428,58 404,118 494,120 438,166 508,214 428,226 456,292 384,270 372,322 318,276 262,318 222,270 156,306 152,248 76,262 104,206 18,184 92,148 36,92 116,94 102,30 172,62 204,8 228,58" fill="#E6262B" stroke="#000" stroke-width="5" stroke-linejoin="round"/><g transform="rotate(-6 260 168)"><text x="264" y="196" text-anchor="middle" font-family="Bangers, Impact, sans-serif" font-size="112" letter-spacing="3" fill="#000">BASTON !</text><text x="258" y="190" text-anchor="middle" font-family="Bangers, Impact, sans-serif" font-size="112" letter-spacing="3" fill="#fff" stroke="#000" stroke-width="6" paint-order="stroke" stroke-linejoin="round">BASTON !</text><text x="383" y="252" text-anchor="end" font-family="Bangers, Impact, sans-serif" font-size="52" letter-spacing="6" fill="#000">ARCADE</text><text x="379" y="248" text-anchor="end" font-family="Bangers, Impact, sans-serif" font-size="52" letter-spacing="6" fill="#FFD93B" stroke="#000" stroke-width="5" paint-order="stroke" stroke-linejoin="round">ARCADE</text></g><path d="M60 46 l26 14 M44 76 l30 6 M462 260 l-26 -12 M476 232 l-30 -4" stroke="#000" stroke-width="5" stroke-linecap="round"/></svg></h1>
-    <p class="tagline">Treize jeux, de 1 à 5 joueurs</p>
+    <p class="tagline">Quatorze jeux, de 1 à 5 joueurs</p>
     <div class="field">
       <label for="nameIn">Votre nom</label>
       <input id="nameIn" maxlength="14" autocomplete="nickname" placeholder="Votre nom">
@@ -410,7 +417,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
     <button id="btnBoard" class="ghost">Classement général</button>
     <button id="btnSound" class="ghost">Son : activé</button>
     <button id="btnLang" class="ghost" translate="no">English</button>
-    <p class="hint" id="menuHint">Créez un salon, partagez le code, puis choisissez le jeu : Gravats, Les Gardiens, Derby, Armada, Tape-taupe, Curling, Chaises musicales, Code secret, Kabaddi, Balle au prisonnier, Chars, Les bergers ou Drakkars. De 1 à 5 joueurs.</p>
+    <p class="hint" id="menuHint">Créez un salon, partagez le code, puis choisissez le jeu : Gravats, Les Gardiens, Derby, Armada, Tape-taupe, Curling, Chaises musicales, Code secret, Kabaddi, Balle au prisonnier, Chars, Les bergers, Drakkars ou Bûcherons. De 1 à 5 joueurs.</p>
     <p class="legal"><a href="legal.html">Mentions légales et confidentialité</a></p>
   </div>
 </section>
@@ -445,6 +452,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
       <button data-g="tank" aria-pressed="false"><img src="img/tank.jpg" alt=""><span>Chars</span></button>
       <button data-g="sheep" aria-pressed="false"><img src="img/sheep.jpg" alt=""><span>Bergers</span></button>
       <button data-g="drakkar" aria-pressed="false"><img src="img/drakkar.jpg" alt=""><span>Drakkars</span></button>
+      <button data-g="lumber" aria-pressed="false"><img src="img/lumber.jpg" alt=""><span>Bûcherons</span></button>
     </div>
     <div class="field">
       <label id="lobbyCount">Joueurs</label>
@@ -709,6 +717,22 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
   </div>
 </section>
 
+<!-- BÛCHERONS -->
+<section id="scrLumber" hidden>
+  <div class="naval">
+    <div class="nvhead ljhead"><div class="nvturn" id="ljHead">Bûcherons</div><div class="dkchips"><span class="cuend" id="ljWind" hidden></span><span class="cuend" id="ljTime" hidden></span></div></div>
+    <div class="nvwrap" id="ljWrap">
+      <canvas id="ljTop" width="540" height="540" aria-label="Le jardin vu du dessus"></canvas>
+      <div class="msg pm" id="ljMsg"></div>
+      <div class="toast pm" id="ljToast" aria-live="polite"></div>
+    </div>
+    <button id="ljGo" class="big" hidden>🪓 Valider la direction</button>
+    <canvas id="ljCut" width="600" height="260" aria-label="Le tronc vu de côté"></canvas>
+    <ul class="nvplayers" id="ljPlayers"></ul>
+    <p class="hint" id="ljHelp" style="text-align:center"></p>
+  </div>
+</section>
+
 <!-- RANKING -->
 <div class="overlay" id="scrEnd" hidden>
   <div class="card" style="max-width:480px">
@@ -748,6 +772,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
       <button data-f="tank" aria-pressed="false">Chars</button>
       <button data-f="sheep" aria-pressed="false">Bergers</button>
       <button data-f="drakkar" aria-pressed="false">Drakkars</button>
+      <button data-f="lumber" aria-pressed="false">Bûcherons</button>
     </div>
     <div class="rank"><table>
       <thead><tr id="lbHead"></tr></thead>
@@ -876,7 +901,7 @@ let D = null;                   // derby state
 let NV = null, HN = null;       // armada: my view / host's full map
 let BOT = null;                  // host-side robot when someone plays alone
 let ML = null, HM = null;       // tape-taupe: my view / host referee
-const GAME_NAMES = { tetris:'Gravats', pong:'Les Gardiens', derby:'Derby', naval:'Armada', mole:'Tape-taupe', curling:'Curling', chairs:'Chaises musicales', master:'Code secret', kabaddi:'Kabaddi', dodge:'Balle au prisonnier', tank:'Chars', sheep:'Les bergers', drakkar:'Drakkars' };
+const GAME_NAMES = { tetris:'Gravats', pong:'Les Gardiens', derby:'Derby', naval:'Armada', mole:'Tape-taupe', curling:'Curling', chairs:'Chaises musicales', master:'Code secret', kabaddi:'Kabaddi', dodge:'Balle au prisonnier', tank:'Chars', sheep:'Les bergers', drakkar:'Drakkars', lumber:'Bûcherons' };
 const GAME_DESC = {
   tetris:'Empilez des pièces de 2, 3 et 5 briques. Chaque ligne effacée envoie des briques fendues à vos adversaires. Effacez une ligne collée à une brique fendue : elle éclate et repart chez son expéditeur.',
   pong:'Chaque joueur garde un but avec 5 vies. Le terrain suit le nombre de joueurs : carré à 2, hexagone à 3, octogone à 4, décagone à 5. Deux ballons à partir de 3 joueurs. Le but d\'un joueur éliminé se ferme.',
@@ -891,12 +916,13 @@ const GAME_DESC = {
   tank:'Combat de chars à deux par char : l\'un pilote, l\'autre oriente la tourelle et tire (un obus toutes les 1,5 s). Les équipages sont tirés au sort, des robots complètent. Interdit de se parler : il faut se comprendre en jouant. Deux forêts cachent les chars qui y entrent, murs, caisses et rochers arrêtent les obus. 3 vies par char, le dernier char debout gagne.',
   sheep:'Les bergers, en coopération : vous êtes des chiens de berger et devez rabattre le troupeau dans l\'enclos avant le coucher du soleil (regardez sa course dans le ciel). Les moutons fuient les chiens et ont du caractère : le peureux file, le gourmand broute les fleurs, l\'agneau suit sa mère. « Ouaf ! » fait détaler. Des loups sortent du bois : chassez-les à deux. 6 journées de plus en plus dures (plus de moutons et de loups, journées plus courtes) ; une manche ratée et c\'est fini. Seul, un chien robot vous aide.',
   drakkar:'Drakkars, en coopération : tout le salon rame dans le même drakkar et fait la course contre celui des robots jusqu\'en Angleterre. Un coup de rame par coup de tambour, en alternant GAUCHE et DROITE. Les coups de chacun s\'affichent chez tous pour se caler ensemble. Plus l\'équipage est synchro, plus le drakkar file, et le tambour accélère.',
+  lumber:'Concours de bûcherons, tronçonneuse en main : vu du dessus, choisissez où tombe votre arbre (visez la croix rouge), puis sciez le tronc vu de côté en suivant les pointillés. Plus la coupe est droite, plus l\'arbre tombe là où vous l\'avez décidé. Écraser une maison, une voiture ou un autre arbre élimine. Trois manches de plus en plus dures, tout le monde joue en même temps.',
   derby:'Course de chevaux : tout le monde reçoit la même série de figures à tracer. Chaque figure réussie fait avancer votre cheval, plus loin si elle est complexe et bien tracée. Le premier à la ligne gagne.'
 };
 
 const cleanName = s => String(s || '').replace(/[\u0000-\u001f<>]/g,'').trim().slice(0,14) || (LANG === 'en' ? 'Player' : 'Joueur');
 const genCode = () => { const a='ABCDEFGHJKMNPQRSTUVWXYZ23456789'; let s=''; for(let i=0;i<4;i++) s+=a[Math.floor(Math.random()*a.length)]; return s; };
-const show = id => { for (const s of ['scrMenu','scrLobby','scrGame','scrPong','scrDerby','scrNaval','scrMole','scrCurl','scrChairs','scrMaster','scrKabaddi','scrDodge','scrTank','scrSheep','scrDrakkar']) $(s).hidden = s !== id; if (id === 'scrKabaddi') try { window.scrollTo(0, 0); } catch(_){} document.documentElement.classList.toggle('joyon', ['scrKabaddi','scrDodge','scrTank','scrSheep'].includes(id)); };
+const show = id => { for (const s of ['scrMenu','scrLobby','scrGame','scrPong','scrDerby','scrNaval','scrMole','scrCurl','scrChairs','scrMaster','scrKabaddi','scrDodge','scrTank','scrSheep','scrDrakkar','scrLumber']) $(s).hidden = s !== id; if (id === 'scrKabaddi') try { window.scrollTo(0, 0); } catch(_){} document.documentElement.classList.toggle('joyon', ['scrKabaddi','scrDodge','scrTank','scrSheep'].includes(id)); };
 const store = { get(k){ try { return localStorage.getItem(k); } catch(_) { return null; } }, set(k,v){ try { localStorage.setItem(k,v); } catch(_){} } };
 
 $('nameIn').value = store.get('tm-name') || ((LANG === 'en' ? 'Player' : 'Joueur') + Math.floor(Math.random()*90+10));
@@ -908,7 +934,7 @@ function teardown(){
   if (HN && HN.timer) clearTimeout(HN.timer);
   if (HM) moleClearTimers();
   if (HC) clearTimeout(HC.timer);
-  HC = null; CU = null; mcClear(); HMC = null; MC = null; mmClear(); HMM = null; MM = null; kbClear(); HKB = null; KB = null; dbClear(); HDB = null; DB = null; tkClear(); HTK = null; TK = null; shClear(); HSH = null; SHV = null; dkClear(); HDK = null; DK = null;
+  HC = null; CU = null; mcClear(); HMC = null; MC = null; mmClear(); HMM = null; MM = null; kbClear(); HKB = null; KB = null; dbClear(); HDB = null; DB = null; tkClear(); HTK = null; TK = null; shClear(); HSH = null; SHV = null; dkClear(); HDK = null; ljClear(); HLJ = null; LJ = null; sawStop(); DK = null;
   CHAT.length = 0; renderChat();
   net = null; H = null; G = null; PG = null; D = null; NV = null; HN = null; cur = null; me.host = false; me.id = null; players = []; opps.clear();
 }
@@ -1094,7 +1120,7 @@ function hostDrop(conn){
   net.conns.delete(id);
   if (phase === 'lobby'){ const p = players.find(x => x.id === id); players = players.filter(p => p.id !== id); sendLobby(false); if (p) chatSys(p.name + ' a quitté le salon'); return; }
   if (H && H.alive.has(id)){
-    if (H.game === 'pong') pongDrop(id); else if (H.game === 'curling') curlDrop(id); else if (H.game === 'chairs') chairsDrop(id); else if (H.game === 'master') masterDrop(id); else if (H.game === 'kabaddi') kabaddiDrop(id); else if (H.game === 'dodge') dodgeDrop(id); else if (H.game === 'tank') tankDrop(id); else if (H.game === 'sheep') sheepDrop(id); else if (H.game === 'drakkar') drakkarDrop(id); else if (H.game === 'derby') derbyDrop(id); else if (H.game === 'naval') navalDrop(id); else if (H.game === 'mole') moleDrop(id); else hostHandle(id, { t:'dead', left:true });
+    if (H.game === 'pong') pongDrop(id); else if (H.game === 'curling') curlDrop(id); else if (H.game === 'chairs') chairsDrop(id); else if (H.game === 'master') masterDrop(id); else if (H.game === 'kabaddi') kabaddiDrop(id); else if (H.game === 'dodge') dodgeDrop(id); else if (H.game === 'tank') tankDrop(id); else if (H.game === 'sheep') sheepDrop(id); else if (H.game === 'drakkar') drakkarDrop(id); else if (H.game === 'lumber') lumberDrop(id); else if (H.game === 'derby') derbyDrop(id); else if (H.game === 'naval') navalDrop(id); else if (H.game === 'mole') moleDrop(id); else hostHandle(id, { t:'dead', left:true });
   }
 }
 
@@ -1143,6 +1169,7 @@ function hostStart(){
   if (gameKind === 'tank') return tankHostStart();
   if (gameKind === 'sheep') return sheepHostStart();
   if (gameKind === 'drakkar') return drakkarHostStart();
+  if (gameKind === 'lumber') return lumberHostStart();
   unannounce();                                   // a started game leaves the public list at once
   broadcast({ t:'start', players, game:gameKind, seed:Math.floor(Math.random() * 2**31) });
 }
@@ -1187,6 +1214,8 @@ function hostHandle(id, m){
     navalFire(id, m.x|0, m.y|0);
   } else if (m.t === 'dp'){
     derbyProgress(id, m);
+  } else if (m.t === 'lj_done'){
+    lumberDone(id, m);
   } else if (m.t === 'dk_stroke'){
     drakkarStroke(id, m.k, m.off, m.s);
   } else if (m.t === 'dk_tap'){
@@ -1250,9 +1279,9 @@ function clientRecv(m){
     case 'lobby':
       players = Array.isArray(m.players) ? m.players : [];
       if (m.you) me.id = m.you;
-      if (['tetris','pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar'].includes(m.game)) gameKind = m.game;
+      if (['tetris','pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber'].includes(m.game)) gameKind = m.game;
       if (phase === 'menu' || phase === 'lobby' || m.back){
-        phase = 'lobby'; $('scrEnd').hidden = true; G = null; PG = null; D = null; NV = null; ML = null; CU = null; MC = null; MM = null; KB = null; DB = null; TK = null; SHV = null; DK = null; cur = null; show('scrLobby'); renderLobby();
+        phase = 'lobby'; $('scrEnd').hidden = true; G = null; PG = null; D = null; NV = null; ML = null; CU = null; MC = null; MM = null; KB = null; DB = null; TK = null; SHV = null; DK = null; if (LJ){ LJ = null; sawStop(); } cur = null; show('scrLobby'); renderLobby();
       }
       break;
     case 'nv_start': startNaval(m); break;
@@ -1277,7 +1306,8 @@ function clientRecv(m){
     case 'tk_s': case 'tk_ev': tankRecv(m); break;
     case 'sh_round': case 'sh_s': case 'sh_res': case 'sh_ev': sheepRecv(m); break;
     case 'dk_beat': case 'dk_s': case 'dk_tap': case 'dk_end': case 'dk_ev': drakkarRecv(m); break;
-    case 'start': if (m.game === 'drakkar') startDrakkar(m); else if (m.game === 'sheep') startSheep(m); else if (m.game === 'tank') startTank(m); else if (m.game === 'dodge') startDodge(m); else if (m.game === 'kabaddi') startKabaddi(m); else if (m.game === 'master') startMaster(m); else if (m.game === 'chairs') startChairs(m); else if (m.game === 'curling') startCurling(m); else if (m.game === 'pong') startPong(m.players); else if (m.game === 'derby') startDerby(m.players, m.seed|0); else startGame(m.players); break;
+    case 'lj_round': case 'lj_res': case 'lj_sum': case 'lj_left': lumberRecv(m); break;
+    case 'start': if (m.game === 'lumber') startLumber(m); else if (m.game === 'drakkar') startDrakkar(m); else if (m.game === 'sheep') startSheep(m); else if (m.game === 'tank') startTank(m); else if (m.game === 'dodge') startDodge(m); else if (m.game === 'kabaddi') startKabaddi(m); else if (m.game === 'master') startMaster(m); else if (m.game === 'chairs') startChairs(m); else if (m.game === 'curling') startCurling(m); else if (m.game === 'pong') startPong(m.players); else if (m.game === 'derby') startDerby(m.players, m.seed|0); else startGame(m.players); break;
     case 'dr': derbyRemote(m); break;
     case 'ps': pongState(m); break;
     case 'pg': pongGoalFx(m.side|0); break;
@@ -1566,7 +1596,7 @@ function showEnd(ranking, game){
   phase = 'end';
   if (G) G.p = null;
   if (PG) PG.ph = 'over';
-  const pong = game === 'pong', derby = game === 'derby', naval = game === 'naval', mole = game === 'mole', curl = game === 'curling', chairs = game === 'chairs', master = game === 'master', kab = game === 'kabaddi', dodge = game === 'dodge', tank = game === 'tank', coop = game === 'sheep', viking = game === 'drakkar';
+  const pong = game === 'pong', derby = game === 'derby', naval = game === 'naval', mole = game === 'mole', curl = game === 'curling', chairs = game === 'chairs', master = game === 'master', kab = game === 'kabaddi', dodge = game === 'dodge', tank = game === 'tank', coop = game === 'sheep', viking = game === 'drakkar', lumber = game === 'lumber';
   if (ML) ML.over = true;
   if (NV) NV.over = true;
   if (D) D.over = true;
@@ -1578,11 +1608,12 @@ function showEnd(ranking, game){
   if (TK) TK.over = true;
   if (SHV) SHV.over = true;
   if (DK) DK.over = true;
+  if (LJ){ LJ.over = true; LJ.ph = 'end'; sawStop(); }
   const hd = $('rankHead'); hd.textContent = '';
-  for (const h of ['#','Joueur', ...(viking ? ['Rôle','Coups','Synchro'] : coop ? ['Manches','Moutons','Ouaf'] : tank ? ['Char','Rôle','Touches'] : dodge ? ['Vies','Touches','Arrêts'] : kab ? ['Points','Raids réussis','Plaquages'] : master ? ['Points','Trouvés','Essais'] : chairs ? ['Vies','Chaises','Réflexe'] : curl ? ['Points','Maison','Meilleure'] : pong ? ['Vies','Arrêts'] : derby ? ['Figures','Distance','Temps'] : naval ? ['Tirs','Touchés','À flot'] : mole ? ['Points','Tapées','Échappées'] : ['Lignes','Briques','Score'])]){
+  for (const h of ['#','Joueur', ...(lumber ? ['Points','Précision','Manches'] : viking ? ['Rôle','Coups','Synchro'] : coop ? ['Manches','Moutons','Ouaf'] : tank ? ['Char','Rôle','Touches'] : dodge ? ['Vies','Touches','Arrêts'] : kab ? ['Points','Raids réussis','Plaquages'] : master ? ['Points','Trouvés','Essais'] : chairs ? ['Vies','Chaises','Réflexe'] : curl ? ['Points','Maison','Meilleure'] : pong ? ['Vies','Arrêts'] : derby ? ['Figures','Distance','Temps'] : naval ? ['Tirs','Touchés','À flot'] : mole ? ['Points','Tapées','Échappées'] : ['Lignes','Briques','Score'])]){
     const th = document.createElement('th'); th.textContent = h; hd.append(th);
   }
-  $('rankNote').textContent = viking ? 'Course en équipe. « Synchro » : coups de rame donnés en rythme avec le tambour.' : coop ? 'Partie en équipe : tout le monde partage le score. « Moutons » : moutons rentrés au total, « Ouaf » : aboiements.' : tank ? 'Les deux membres d\'un équipage partagent la même place. « Touches » : obus du canonnier qui ont fait mouche.' : dodge ? '« Touches » : balles qui ont atteint un adversaire. « Arrêts » : balles attrapées.' : kab ? '« Raids réussis » : raids rentrés avec au moins un défenseur touché. « Plaquages » : attaquants retenus jusqu\'au bout du souffle.' : master ? '« Trouvés » : codes trouvés. « Essais » : total des essais sur la partie.' : chairs ? '« Chaises » : chaises gagnées. « Réflexe » : votre plus rapide, de l\'arrêt du disque à la chaise.' : curl ? '« Maison » : pierres dans la maison en fin de mène. « Meilleure » : pierre la plus proche du centre.' : mole ? '« Tapées » : taupes adverses tapées. « Échappées » : vos taupes que personne n\'a eues.' : naval ? '« À flot » : cases de bateau encore intactes à la fin.' : pong ? '« Arrêts » : ballons repoussés par le gardien.' : derby ? '« Temps » : durée pour franchir la ligne, pour ceux qui l\'ont franchie.' : '« Briques » : nombre de briques envoyées aux adversaires.';
+  $('rankNote').textContent = lumber ? '« Précision » : moyenne de vos coupes. « Manches » : manches finies sans rien écraser. Un joueur qui écrase quelque chose est éliminé.' : viking ? 'Course en équipe. « Synchro » : coups de rame donnés en rythme avec le tambour.' : coop ? 'Partie en équipe : tout le monde partage le score. « Moutons » : moutons rentrés au total, « Ouaf » : aboiements.' : tank ? 'Les deux membres d\'un équipage partagent la même place. « Touches » : obus du canonnier qui ont fait mouche.' : dodge ? '« Touches » : balles qui ont atteint un adversaire. « Arrêts » : balles attrapées.' : kab ? '« Raids réussis » : raids rentrés avec au moins un défenseur touché. « Plaquages » : attaquants retenus jusqu\'au bout du souffle.' : master ? '« Trouvés » : codes trouvés. « Essais » : total des essais sur la partie.' : chairs ? '« Chaises » : chaises gagnées. « Réflexe » : votre plus rapide, de l\'arrêt du disque à la chaise.' : curl ? '« Maison » : pierres dans la maison en fin de mène. « Meilleure » : pierre la plus proche du centre.' : mole ? '« Tapées » : taupes adverses tapées. « Échappées » : vos taupes que personne n\'a eues.' : naval ? '« À flot » : cases de bateau encore intactes à la fin.' : pong ? '« Arrêts » : ballons repoussés par le gardien.' : derby ? '« Temps » : durée pour franchir la ligne, pour ceux qui l\'ont franchie.' : '« Briques » : nombre de briques envoyées aux adversaires.';
   const tb = $('rankBody'); tb.textContent = '';
   (ranking || []).forEach(r => {
     const tr = document.createElement('tr'); if (r.place === 1) tr.className = 'win';
@@ -1591,7 +1622,8 @@ function showEnd(ranking, game){
     const d = document.createElement('span'); d.className = 'dot'; d.style.background = r.color;
     const s = document.createElement('span'); s.textContent = r.name + (r.id === me.id ? ' (vous)' : '') + (r.left ? ' · parti' : '');
     w.append(d, s); nm.append(w);
-    if (viking) tr.append(td(r.win ? '★' : '–'), nm, td(r.role || ''), td(r.strokes|0), td((r.sync|0) + ' %'));
+    if (lumber) tr.append(td(r.place), nm, td(r.pts|0), td((r.sync|0) + ' %'), td((r.rounds|0) + '/' + LJ_ROUNDS + (r.out ? ' ✗' : '')));
+    else if (viking) tr.append(td(r.win ? '★' : '–'), nm, td(r.role || ''), td(r.strokes|0), td((r.sync|0) + ' %'));
     else if (coop) tr.append(td('★'), nm, td(r.rounds|0), td(r.sheep|0), td(r.barks|0));
     else if (tank) tr.append(td(r.place), nm, td(r.tank|0), td(r.role || ''), td(r.hits|0));
     else if (dodge) tr.append(td(r.place), nm, td(r.lives|0), td(r.hits|0), td(r.catches|0));
@@ -1615,7 +1647,7 @@ function showEnd(ranking, game){
   $('winPanel').style.background = viking ? (iWon ? '#3DDC97' : '#8A84B0') : coop ? '#3DDC97' : win ? win.color : '#FFD93B';
   $('winName').textContent = viking ? (iWon ? 'L\'Angleterre est à vous !' : 'Les autres Vikings arrivent avant vous') : coop ? 'Score d\'équipe : ' + ((win && win.score) | 0) : win ? (iWon ? 'Vous gagnez !' : win.name + ' gagne !') : '';
   $('myPlace').textContent = viking ? 'Drakkars' + (iWon && win.t ? ' · ' + fmtSec(win.t) : '') : coop ? 'Les bergers · ' + ((win && win.rounds) | 0) + '/' + SH_ROUNDS + ' manches réussies' : (GAME_NAMES[game] || 'Gravats') + (mine ? ' · vous finissez ' + (mine.place === 1 ? '1er' : mine.place + 'e') + ' sur ' + ranking.length : '');
-  (viking ? drakkarMsg : coop ? sheepMsg : tank ? tankMsg : dodge ? dodgeMsg : kab ? kabaddiMsg : master ? masterMsg : chairs ? chairsMsg : curl ? curlMsg : pong ? pongMsg : derby ? derbyMsg : naval ? navalMsg : mole ? moleMsg : setMsg)('', '');
+  (lumber ? ljMsg : viking ? drakkarMsg : coop ? sheepMsg : tank ? tankMsg : dodge ? dodgeMsg : kab ? kabaddiMsg : master ? masterMsg : chairs ? chairsMsg : curl ? curlMsg : pong ? pongMsg : derby ? derbyMsg : naval ? navalMsg : mole ? moleMsg : setMsg)('', '');
   $('btnAgain').hidden = false;
   $('endHint').textContent = me.host ? 'Tout le monde revient au salon : relancez le même jeu ou choisissez-en un autre.' : 'Vous attendrez au salon que le créateur relance.';
   saveGame(ranking, game);
@@ -1819,7 +1851,7 @@ function release(a){
 const KEYMAP = { arrowleft:'left', arrowright:'right', arrowdown:'down', arrowup:'rotr', x:'rotr', z:'rotl', w:'rotl', control:'rotl', ' ':'drop', c:'hold', shift:'hold' };
 addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT') return;
-  if (cur === 'curl' || cur === 'chairs' || cur === 'master' || cur === 'kabaddi' || cur === 'dodge' || cur === 'tank' || cur === 'sheep' || cur === 'drakkar') return;
+  if (cur === 'curl' || cur === 'chairs' || cur === 'master' || cur === 'kabaddi' || cur === 'dodge' || cur === 'tank' || cur === 'sheep' || cur === 'drakkar' || cur === 'lumber') return;
   if (cur === 'pong'){ const k = PKEYS[e.key.toLowerCase()]; if (k){ e.preventDefault(); pin[k] = true; } return; }
   const a = KEYMAP[e.key.toLowerCase()]; if (!a) return;
   e.preventDefault();
@@ -6589,11 +6621,647 @@ function botMoleSees(m){
 }
 
 
+// ================= BÛCHERONS : choose where your tree falls, saw along the dotted line, crush nothing =================
+// Every player gets the same garden each round (same seed) and plays at the same time. The fall direction is aimed
+// from above, then the felling cut is sawn on the trunk seen from the side: the straighter the cut, the closer the
+// tree falls to the chosen axis. Crushing anything (house, car, tree…) eliminates. Three rounds, harder each time.
+// The host recomputes every fall from the field, so all screens agree.
+const LJ_S = 540, LJ_ROUNDS = 3, LJ_AIM = 15, LJ_CUT = 12, LJ_CROWN = 26, LJ_MULT = [1, 1.5, 2];
+const LJ_CW = 600, LJ_CH = 260, LJ_GROUND = 214;
+let HLJ = null, LJ = null;
+
+const ljGauss = R => { const u = Math.max(1e-6, R()), v = R(); return Math.sqrt(-2*Math.log(u)) * Math.cos(2*Math.PI*v); };
+const ljSigma = prec => 1.5 + (1 - prec) * 22;           // degrees of random deviation for a given cut precision
+const ljClamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+// ---- the garden of a round ----
+const LJ_KINDS = {
+  house:  { w:[84, 104], h:[62, 78] },
+  shed:   { w:[44, 56], h:[36, 46] },
+  car:    { w:[52, 58], h:[26, 30] },
+  tree:   { r:[20, 28] },
+  pool:   { w:[70, 92], h:[44, 56] },
+  kennel: { w:[24, 28], h:[20, 24] },
+  fence:  { w:[90, 120], h:[8, 8] },
+  green:  { w:[54, 66], h:[36, 44] }
+};
+const LJ_CAR_COLS = ['#E8202A', '#1E5BFF', '#FFD21F', '#F0F0F0', '#8E44FF', '#FF8A1F'];
+function ljShapeDist(o, px, py){                          // distance from a point to an obstacle (negative inside)
+  if (o.r) return Math.hypot(px - o.x, py - o.y) - o.r;
+  const dx = Math.max(o.x - px, 0, px - (o.x + o.w)), dy = Math.max(o.y - py, 0, py - (o.y + o.h));
+  if (!dx && !dy) return -Math.min(px - o.x, o.x + o.w - px, py - o.y, o.y + o.h - py);
+  return Math.hypot(dx, dy);
+}
+function ljField(seed, r){
+  const R = rng32(seed), S = LJ_S, M = 34;
+  const L = [190, 222, 250][r], corr = [80, 58, 46][r];
+  let sx = 0, sy = 0, ta = 0, tx = 0, ty = 0;
+  for (let k = 0; k < 200; k++){
+    sx = 120 + R()*(S - 240); sy = 120 + R()*(S - 240); ta = R()*Math.PI*2;
+    tx = sx + Math.cos(ta)*(L - LJ_CROWN); ty = sy + Math.sin(ta)*(L - LJ_CROWN);
+    if (tx > 50 && tx < S - 50 && ty > 50 && ty < S - 50) break;
+  }
+  const obs = [];
+  const kinds = Object.keys(LJ_KINDS);
+  const make = (kind, cx, cy) => {
+    const K = LJ_KINDS[kind], rr = (a) => a[0] + R()*(a[1] - a[0]);
+    if (K.r){ const rad = rr(K.r); return { k:kind, x:cx, y:cy, r:rad }; }
+    let w = rr(K.w), h = rr(K.h);
+    if ((kind === 'car' || kind === 'fence' || kind === 'green') && R() < .5) [w, h] = [h, w];
+    return { k:kind, x:cx - w/2, y:cy - h/2, w, h, col:LJ_CAR_COLS[Math.floor(R()*LJ_CAR_COLS.length)] };
+  };
+  const ok = o => {
+    const bx0 = o.r ? o.x - o.r : o.x, by0 = o.r ? o.y - o.r : o.y, bx1 = o.r ? o.x + o.r : o.x + o.w, by1 = o.r ? o.y + o.r : o.y + o.h;
+    if (bx0 < M - 20 || by0 < M - 20 || bx1 > S - M + 20 || by1 > S - M + 20) return false;
+    if (ljShapeDist(o, sx, sy) < 46) return false;                                        // room around the tree
+    for (let d = 0; d <= L + 6; d += 6) if (ljShapeDist(o, sx + Math.cos(ta)*d, sy + Math.sin(ta)*d) < corr) return false;   // the aimed corridor stays clear
+    for (const p of obs){                                                                  // no overlap between obstacles
+      const qx0 = p.r ? p.x - p.r : p.x, qy0 = p.r ? p.y - p.r : p.y, qx1 = p.r ? p.x + p.r : p.x + p.w, qy1 = p.r ? p.y + p.r : p.y + p.h;
+      if (bx0 < qx1 + 10 && bx1 > qx0 - 10 && by0 < qy1 + 10 && by1 > qy0 - 10) return false;
+    }
+    return true;
+  };
+  // flankers: obstacles just outside the corridor, near its far end (none in round 1)
+  const nFlank = [0, 2, 3][r];
+  for (let i = 0, tries = 0; i < nFlank && tries < 80; tries++){
+    const t = .55 + R()*.45, side = i % 2 ? 1 : -1, kind = ['car', 'shed', 'tree', 'kennel', 'green'][Math.floor(R()*5)];
+    const probe = make(kind, 0, 0), half = probe.r || Math.max(probe.w, probe.h)/2;
+    const off = corr + half + 2 + R()*10;
+    const cx = sx + Math.cos(ta)*L*t - Math.sin(ta)*off*side, cy = sy + Math.sin(ta)*L*t + Math.cos(ta)*off*side;
+    const o = make(kind, cx, cy); if (ok(o)){ obs.push(o); i++; }
+  }
+  const nAll = [4, 6, 8][r];
+  const order = ['house', 'car', 'tree', 'pool', 'shed', 'fence', 'kennel', 'green', 'tree', 'car'];
+  for (let tries = 0; obs.length < nAll && tries < 400; tries++){
+    const kind = tries < 20 ? order[obs.length % order.length] : kinds[Math.floor(R()*kinds.length)];
+    const o = make(kind, M + R()*(S - 2*M), M + R()*(S - 2*M)); if (ok(o)) obs.push(o);
+  }
+  const wind = r === 2 ? (R() < .5 ? -1 : 1) * Math.round(3 + R()*3) : 0;
+  const slope = [0, (R() - .5)*14, (R() - .5)*26][r], W = [170, 210, 250][r], spd = [170, 155, 140][r];
+  return { seed, r, L, sx, sy, ta, tx, ty, corr, obs, wind, slope, W, spd };
+}
+// where the tree lands for a fall angle (degrees); hit = index of the first obstacle crushed, or -1
+function ljFall(F, aDeg){
+  const a = aDeg*Math.PI/180, cx = Math.cos(a), cy = Math.sin(a);
+  const crown = [F.sx + cx*(F.L - LJ_CROWN), F.sy + cy*(F.L - LJ_CROWN)];
+  let hit = -1;
+  F.obs.forEach((o, i) => {
+    if (hit >= 0) return;
+    if (ljShapeDist(o, crown[0], crown[1]) < LJ_CROWN - 3) hit = i;
+    for (let d = 18; d < F.L - 40 && hit < 0; d += 5) if (ljShapeDist(o, F.sx + cx*d, F.sy + cy*d) < 6) hit = i;
+  });
+  return { crown, tip:[F.sx + cx*F.L, F.sy + cy*F.L], hit };
+}
+function ljPoints(F, aDeg, prec){
+  const f = ljFall(F, aDeg);
+  if (f.hit >= 0) return { pts:0, hit:f.hit, d:0 };
+  const d = Math.hypot(f.crown[0] - F.tx, f.crown[1] - F.ty);
+  const tp = 60 * ljClamp(1 - (d - 10)/140, 0, 1), pp = 40 * ljClamp(prec, 0, 1);
+  return { pts:Math.round((tp + pp) * LJ_MULT[F.r]), hit:-1, d };
+}
+
+// ---- host side ----
+function ljLater(fn, ms){ const g = HLJ; const t = setTimeout(() => { if (HLJ === g && H && !H.over) fn(); }, ms); HLJ.timers.push(t); }
+function ljClear(){ if (HLJ) HLJ.timers.forEach(t => clearTimeout(t)); }
+function lumberHostStart(){
+  H.stats = {};
+  for (const p of players) H.stats[p.id] = { pts:0, prec:0, precN:0, rounds:0, out:false, left:false };
+  HLJ = { timers:[], r:-1, F:null, done:{}, closed:true };
+  broadcast({ t:'start', players, game:'lumber' });
+  ljLater(ljNextRound, 3200);
+}
+const ljIn = id => H.stats[id] && !H.stats[id].out && !H.stats[id].left;
+function ljNextRound(){
+  HLJ.r++;
+  if (HLJ.r >= LJ_ROUNDS || !players.some(p => ljIn(p.id))) return lumberFinish();
+  const seed = Math.floor(Math.random() * 2**31);
+  HLJ.F = ljField(seed, HLJ.r); HLJ.done = {}; HLJ.closed = false;
+  HLJ.list = players.filter(p => ljIn(p.id)).map(p => p.id);
+  broadcast({ t:'lj_round', r:HLJ.r, seed, alive:HLJ.list });
+  for (const id of HLJ.list) if (players.find(p => p.id === id && p.bot)) ljLater(() => botLumber(id), 2400 + (5 + Math.random()*9)*1000);
+  const r = HLJ.r;
+  ljLater(() => { if (HLJ.r === r) ljCloseRound(); }, 2400 + (LJ_AIM + LJ_CUT + 6)*1000);
+}
+function lumberDone(id, m){
+  if (!HLJ || HLJ.closed || (m.r|0) !== HLJ.r || HLJ.done[id] || !HLJ.list.includes(id) || !ljIn(id)) return;
+  const a = +m.a, prec = ljClamp(+m.prec || 0, 0, 1);
+  if (!isFinite(a)) return;
+  const res = ljPoints(HLJ.F, a, prec), st = H.stats[id];
+  HLJ.done[id] = true;
+  st.pts += res.pts; st.prec += prec; st.precN++;
+  if (res.hit >= 0) st.out = true; else st.rounds++;
+  broadcast({ t:'lj_res', id, r:HLJ.r, a:Math.round(a*10)/10, prec:Math.round(prec*100)/100, hit:res.hit, pts:res.pts, tot:st.pts });
+  if (HLJ.list.every(i => HLJ.done[i] || (H.stats[i] && H.stats[i].left))){ const r = HLJ.r; ljLater(() => { if (HLJ.r === r) ljCloseRound(); }, 3800); }
+}
+function ljCloseRound(){
+  if (HLJ.closed) return;
+  HLJ.closed = true;
+  broadcast({ t:'lj_sum', r:HLJ.r, rows:players.map(p => ({ id:p.id, tot:H.stats[p.id].pts, out:H.stats[p.id].out, left:H.stats[p.id].left, done:!!HLJ.done[p.id] })) });
+  ljLater(ljNextRound, 5200);
+}
+function lumberFinish(){
+  if (!H || H.over) return;
+  H.over = true; ljClear();
+  const ids = Object.keys(H.stats).sort((a, b) => {
+    const A = H.stats[a], B = H.stats[b];
+    if (A.left !== B.left) return A.left ? 1 : -1;
+    return B.rounds - A.rounds || B.pts - A.pts;
+  });
+  const ranking = ids.map((pid, i) => {
+    const p = players.find(x => x.id === pid) || { name:'?', color:'#888' }, st = H.stats[pid];
+    return { id:pid, name:p.name, color:p.color, place:i + 1, pts:st.pts, rounds:st.rounds, out:st.out, left:st.left, sync:st.precN ? Math.round(100*st.prec/st.precN) : 0 };
+  });
+  setTimeout(() => broadcast({ t:'end', ranking, game:'lumber' }), 900);
+}
+function lumberDrop(id){
+  if (!H || H.over || !H.stats[id]) return;
+  H.stats[id].left = true;
+  broadcast({ t:'lj_left', id });
+  if (!players.some(p => !p.bot && !H.stats[p.id].left)) return lumberFinish();
+  if (HLJ && !HLJ.closed && HLJ.list.every(i => HLJ.done[i] || H.stats[i].left)){ const r = HLJ.r; ljLater(() => { if (HLJ.r === r) ljCloseRound(); }, 2000); }
+}
+// robot lumberjack: aims at the cross (half-compensating the wind) and saws more or less straight
+function botLumber(id){
+  if (!HLJ || HLJ.closed || !ljIn(id)) return;
+  const F = HLJ.F, R = Math.random;
+  const aim = F.ta*180/Math.PI - F.wind*.7 + ljGauss(R)*2.2;
+  const prec = ljClamp(.62 + R()*.33 - F.r*.04, 0, 1);
+  lumberDone(id, { r:F.r, a:aim + ljGauss(R)*ljSigma(prec) + F.wind, prec });
+}
+
+// ---- my view ----
+const ljTop = $('ljTop'), ljTctx = ljTop.getContext('2d'), ljCut = $('ljCut'), ljCctx = ljCut.getContext('2d');
+function startLumber(m){
+  lastCountShown = null;
+  players = m.players; cur = 'lumber'; G = null; PG = null; D = null; phase = 'count';
+  $('scrEnd').hidden = true; show('scrLumber');
+  LJ = { r:-1, F:null, ph:'wait', count:3, t:0, aim:-90, alive:true, tot:{}, out:{}, others:new Map(), fall:null, saw:null, over:false, keys:{}, sum:null, bg:null, bark:null, crushed:new Set() };
+  for (const p of players) LJ.tot[p.id] = 0;
+  ljHead('Préparation…'); ljTimer(''); ljMsg(''); renderLjPlayers();
+  $('ljGo').hidden = true;
+  $('ljHelp').textContent = 'Visez la croix rouge : touchez le terrain pour choisir où tombe l\'arbre, puis validez. Ensuite, sciez le tronc en suivant les pointillés (gardez le doigt appuyé et glissez vers la droite). Plus la coupe est droite, plus l\'arbre respecte votre direction. Écraser quoi que ce soit élimine. Clavier : ← → viser, Entrée valider, Espace scier, ↑ ↓ corriger.';
+}
+const ljMsg = big => { const m = $('ljMsg'); m.textContent = ''; if (big){ const s = document.createElement('strong'); s.textContent = big; m.append(s); } };
+let ljToastT = null;
+function ljToast(t){ const el = $('ljToast'); el.textContent = t; el.classList.add('on'); clearTimeout(ljToastT); ljToastT = setTimeout(() => el.classList.remove('on'), 2200); }
+function ljHead(t, mine){ const el = $('ljHead'); el.textContent = t; el.classList.toggle('mine', !!mine); }
+function ljTimer(t){ const el = $('ljTime'); el.textContent = t; el.hidden = !t; }
+function renderLjPlayers(){
+  const ul = $('ljPlayers'); ul.textContent = '';
+  for (const p of players){
+    const li = document.createElement('li'); if (LJ.out[p.id] || p.left) li.classList.add('dead');
+    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color;
+    const t = document.createElement('span'); const n = LJ.tot[p.id] | 0;
+    t.textContent = p.name + (p.id === me.id ? ' (vous)' : '') + ' · ' + n + ' pt' + (n > 1 ? 's' : '') + (LJ.out[p.id] ? ' · écrasé' : '');
+    li.append(d, t); ul.append(li);
+  }
+}
+function lumberRecv(m){
+  if (!LJ) return;
+  switch (m.t){
+    case 'lj_round': {
+      if (phase === 'count'){ phase = 'play'; ljMsg(''); }
+      LJ.r = m.r|0; LJ.F = ljField(m.seed|0, LJ.r); LJ.bg = null; LJ.bark = null; LJ.crushed = new Set();
+      LJ.others = new Map(); LJ.fall = null; LJ.saw = null; LJ.sum = null;
+      LJ.alive = (m.alive || []).includes(me.id);
+      LJ.aim = Math.round((LJ.F.ta*180/Math.PI + 180 + (Math.random() - .5)*120)) % 360;   // starts pointing elsewhere: aiming is your job
+      LJ.ph = 'intro'; LJ.t = 2.2;
+      boom('MANCHE ' + (LJ.r + 1) + '/' + LJ_ROUNDS, { size:40, x:.5, y:.4, pal:BOOM_COLORS[0], ms:1500 });
+      ljHead(LJ.alive ? 'Manche ' + (LJ.r + 1) + '/' + LJ_ROUNDS : 'Éliminé : vous regardez la suite');
+      ljChips();
+      break;
+    }
+    case 'lj_res': {
+      LJ.tot[m.id] = m.tot|0;
+      if (m.hit >= 0) LJ.out[m.id] = true;
+      if (m.id === me.id){
+        if (m.hit < 0){ ljToast('+' + (m.pts|0) + ' points'); if (m.pts >= 80 * LJ_MULT[LJ.r]) sfx('finish'); }
+      } else LJ.others.set(m.id, { a:+m.a, hit:m.hit|0, pts:m.pts|0, k:0, shown:false });
+      renderLjPlayers();
+      break;
+    }
+    case 'lj_sum': {
+      for (const r of m.rows || []){ LJ.tot[r.id] = r.tot|0; if (r.out) LJ.out[r.id] = true; }
+      LJ.ph = LJ.alive && !LJ.out[me.id] ? 'sum' : 'out'; LJ.sum = m.rows;
+      if (LJ.saw) sawStop();
+      ljHead(LJ.r + 1 < LJ_ROUNDS ? 'Fin de la manche ' + (LJ.r + 1) : 'Fin de la partie'); ljTimer('');
+      renderLjPlayers();
+      break;
+    }
+    case 'lj_left': { const p = players.find(x => x.id === m.id); if (p){ p.left = true; ljToast(p.name + ' a quitté la partie'); renderLjPlayers(); } break; }
+  }
+}
+function ljChips(){
+  const F = LJ.F; if (!F) return;
+  $('ljWind').hidden = !F.wind;
+  $('ljWind').textContent = F.wind ? 'Vent ' + (F.wind > 0 ? '↻ +' : '↺ −') + Math.abs(F.wind) + '°' : '';
+}
+function ljToAim(){
+  LJ.ph = 'aim'; LJ.t = LJ_AIM;
+  $('ljGo').hidden = false;
+  ljHead('Choisissez où tombe l\'arbre', true);
+}
+function ljToCut(){
+  if (LJ.ph !== 'aim') return;
+  LJ.ph = 'cut'; LJ.t = LJ_CUT;
+  $('ljGo').hidden = true;
+  const F = LJ.F, x0 = (LJ_CW - F.W)/2;
+  LJ.saw = { x:x0 - 14, y:ljLineY(x0 - 14), tx:null, ty:null, on:false, dev:0, len:0, path:[], dust:[] };
+  ljHead('Sciez le long des pointillés !', true);
+  sfx('cord'); setTimeout(() => { if (LJ && LJ.ph === 'cut') sawStart(); }, 450);
+  $('ljCut').scrollIntoView({ block:'nearest', behavior:'smooth' });
+}
+const ljLineY = x => LJ_GROUND - 70 + (x - LJ_CW/2) * Math.tan(LJ.F.slope*Math.PI/180);
+function ljFinishCut(timeout){
+  const F = LJ.F, S = LJ.saw, x0 = (LJ_CW - F.W)/2;
+  // the part of the trunk left uncut counts as a very poor cut
+  const cut = ljClamp(S.x - x0, 0, F.W), rest = F.W - cut;
+  const dev = (S.dev + rest*15) / Math.max(1, F.W);
+  const prec = ljClamp(1 - Math.max(0, dev - 1.5)/14, 0, 1);
+  const a = Math.round((LJ.aim + ljGauss(Math.random)*ljSigma(prec) + F.wind)*10)/10;   // rounded like the host's copy, so both find the same landing
+  LJ.ph = 'fall'; LJ.fall = { a, k:0, prec, done:false, timeout };
+  sawStop(); sfx('creak');
+  boom('ATTENTION, ÇA TOMBE !', { size:30, x:.5, y:.3, pal:BOOM_COLORS[2], ms:1400 });
+  ljHead('Coupe précise à ' + Math.round(prec*100) + ' %');
+  if (timeout) ljToast('Trop lent : l\'arbre tombe tout seul !');
+  toHost({ t:'lj_done', r:LJ.r, a:Math.round(a*10)/10, prec:Math.round(prec*100)/100 });
+}
+function ljLanded(a, mine, id){
+  const f = ljFall(LJ.F, a);
+  sfx('treefall');
+  if (f.hit >= 0){
+    const o = LJ.F.obs[f.hit]; LJ.crushed.add(f.hit);
+    setTimeout(() => sfx('crash', o.k), 120);
+    boom({ house:'CRAAAC !', car:'SCRONCH !', tree:'CRAC !', pool:'PLOUF !', shed:'BADABOUM !', kennel:'OUAF ?!', fence:'CRAC !', green:'CRISTAL !' }[o.k] || 'CRAC !',
+      { size:34, x:o.r ? o.x/LJ_S : (o.x + o.w/2)/LJ_S, y:o.r ? o.y/LJ_S : (o.y + o.h/2)/LJ_S, pal:BOOM_COLORS[2], ms:1300, wrap:$('ljWrap') });
+    if (mine){ ljMsg('Écrasé ! Éliminé'); ljHead('Éliminé : vous regardez la suite'); const el = $('ljWrap'); el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); }
+    else { const p = players.find(x => x.id === id); if (p) ljToast(p.name + ' a tout écrasé !'); }
+  } else if (mine){
+    const d = Math.hypot(f.crown[0] - LJ.F.tx, f.crown[1] - LJ.F.ty);
+    boom(d < 22 ? 'EN PLEIN DANS LA CROIX !' : d < 70 ? 'BIEN JOUÉ !' : 'BOUM !', { size:30, x:f.crown[0]/LJ_S, y:f.crown[1]/LJ_S, pal:BOOM_COLORS[d < 22 ? 0 : 1], ms:1200, wrap:$('ljWrap') });
+  }
+}
+
+// ---- input ----
+function ljTopPoint(e){ const r = ljTop.getBoundingClientRect(); return [(e.clientX - r.left)/r.width*LJ_S, (e.clientY - r.top)/r.height*LJ_S]; }
+function ljAimAt(e){
+  if (!LJ || LJ.ph !== 'aim') return;
+  const [x, y] = ljTopPoint(e);
+  if (Math.hypot(x - LJ.F.sx, y - LJ.F.sy) < 8) return;
+  LJ.aim = Math.atan2(y - LJ.F.sy, x - LJ.F.sx)*180/Math.PI;
+}
+ljTop.addEventListener('pointerdown', e => { if (LJ && LJ.ph === 'aim'){ e.preventDefault(); ljTop.setPointerCapture(e.pointerId); ljAimAt(e); } });
+ljTop.addEventListener('pointermove', e => { if (ljTop.hasPointerCapture(e.pointerId) || e.pointerType === 'mouse' && e.buttons) ljAimAt(e); });
+function ljCutPoint(e){ const r = ljCut.getBoundingClientRect(); return [(e.clientX - r.left)/r.width*LJ_CW, (e.clientY - r.top)/r.height*LJ_CH]; }
+ljCut.addEventListener('pointerdown', e => {
+  if (!LJ || LJ.ph !== 'cut' || !LJ.saw) return;
+  e.preventDefault(); ljCut.setPointerCapture(e.pointerId);
+  const [x, y] = ljCutPoint(e); LJ.saw.on = true; LJ.saw.tx = x; LJ.saw.ty = y;
+});
+ljCut.addEventListener('pointermove', e => { if (LJ && LJ.saw && LJ.saw.on){ const [x, y] = ljCutPoint(e); LJ.saw.tx = x; LJ.saw.ty = y; } });
+for (const ev of ['pointerup', 'pointercancel']) ljCut.addEventListener(ev, () => { if (LJ && LJ.saw) LJ.saw.on = false; });
+$('ljGo').onclick = () => ljToCut();
+addEventListener('keydown', e => {
+  if (cur !== 'lumber' || !LJ || e.target.tagName === 'INPUT') return;
+  const k = e.key;
+  if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '].includes(k)) e.preventDefault();
+  LJ.keys[k] = true;
+  if (LJ.ph === 'aim' && (k === 'Enter' || k === ' ') && !e.repeat) ljToCut();
+});
+addEventListener('keyup', e => { if (LJ) LJ.keys[e.key] = false; });
+
+// ---- loop ----
+function lumberFrame(dtMs, now){
+  if (!LJ) return;
+  const dt = dtMs/1000, F = LJ.F;
+  if (phase === 'count'){ LJ.count -= dt; if (LJ.count > 0) countBeep(Math.ceil(LJ.count)); else countBeep(0); }
+  if (LJ.ph === 'intro'){ LJ.t -= dt; if (LJ.t <= 0){ if (LJ.alive) ljToAim(); else { LJ.ph = 'out'; } } }
+  else if (LJ.ph === 'aim'){
+    LJ.t -= dt;
+    if (LJ.keys.ArrowLeft) LJ.aim -= 70*dt;
+    if (LJ.keys.ArrowRight) LJ.aim += 70*dt;
+    ljTimer('⏱ ' + Math.max(0, Math.ceil(LJ.t)) + ' s');
+    if (LJ.t <= 0) ljToCut();
+  } else if (LJ.ph === 'cut'){
+    LJ.t -= dt; ljTimer('⏱ ' + Math.max(0, Math.ceil(LJ.t)) + ' s');
+    const S = LJ.saw, x0 = (LJ_CW - F.W)/2, x1 = x0 + F.W;
+    const keyCut = LJ.keys[' '] || LJ.keys.ArrowRight;
+    if (LJ.keys.ArrowUp) S.y -= 60*dt;
+    if (LJ.keys.ArrowDown) S.y += 60*dt;
+    let adv = 0;
+    if (S.on && S.tx != null){
+      S.y += (ljClamp(S.ty, 20, LJ_GROUND - 4) - S.y) * Math.min(1, dt*14);
+      if (S.tx > S.x) adv = Math.min(S.tx - S.x, F.spd*dt);
+    } else if (keyCut) adv = F.spd*dt;
+    const cutting = adv > 0 && S.x + adv > x0;
+    if (adv > 0){
+      const from = Math.max(S.x, x0), to = Math.min(S.x + adv, x1);
+      if (to > from) S.dev += Math.abs(S.y - ljLineY((from + to)/2)) * (to - from);
+      S.x += adv;
+      if (S.x > x0){ S.path.push([Math.min(S.x, x1), S.y]); if (S.path.length > 400) S.path.splice(0, S.path.length - 400); }
+      if (cutting && Math.random() < .8) for (let i = 0; i < 2; i++) S.dust.push({ x:Math.min(S.x, x1) - 4, y:S.y + 2, vx:-40 - Math.random()*80, vy:-30 + Math.random()*90, t:0 });
+    }
+    sawLoad(cutting ? 1 : S.on || keyCut ? .5 : 0);
+    if (S.x >= x1) ljFinishCut(false);
+    else if (LJ.t <= 0) ljFinishCut(true);
+  } else if (LJ.ph === 'fall'){
+    LJ.fall.k = Math.min(1, LJ.fall.k + dt/1.5);
+    if (LJ.fall.k >= 1 && !LJ.fall.done){ LJ.fall.done = true; ljLanded(LJ.fall.a, true, me.id); LJ.ph = 'wait'; ljTimer(''); setTimeout(() => { if (LJ && LJ.ph === 'wait') ljHead('En attente des autres bûcherons…'); }, 1600); }
+  }
+  // the others' trees fall once mine is down (or when I only watch)
+  const watching = ['wait', 'sum', 'out'].includes(LJ.ph);
+  for (const [id, o] of LJ.others){
+    if (!watching) continue;
+    if (o.k < 1){ o.k = Math.min(1, o.k + dt/1.5); if (o.k >= 1) ljLanded(o.a, false, id); }
+  }
+  if (LJ.saw) for (const d of LJ.saw.dust){ d.t += dt; d.x += d.vx*dt; d.y += d.vy*dt; d.vy += 260*dt; }
+  if (LJ.saw) LJ.saw.dust = LJ.saw.dust.filter(d => d.t < .6);
+  drawLumberTop(now); drawLumberCut(now);
+}
+
+// ---- drawing: garden seen from above ----
+function ljLumpy(ctx, x, y, r, c1, c2, n){
+  const pts = [[0, 0, r*.62]];
+  for (let i = 0; i < (n || 7); i++){ const a = i*2*Math.PI/(n || 7); pts.push([Math.cos(a)*r*.52, Math.sin(a)*r*.52, r*.5]); }
+  ctx.strokeStyle = '#000'; ctx.lineWidth = 5;
+  for (const [dx, dy, rr] of pts){ ctx.beginPath(); ctx.arc(x + dx, y + dy, rr, 0, Math.PI*2); ctx.stroke(); }
+  ctx.fillStyle = c1;
+  for (const [dx, dy, rr] of pts){ ctx.beginPath(); ctx.arc(x + dx, y + dy, rr, 0, Math.PI*2); ctx.fill(); }
+  ctx.fillStyle = c2;
+  for (const [dx, dy, rr] of pts.slice(1)){ ctx.beginPath(); ctx.arc(x + dx - rr*.25, y + dy - rr*.3, rr*.45, 0, Math.PI*2); ctx.fill(); }
+}
+function ljRect(ctx, o, fill, rad){
+  ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(o.x, o.y, o.w, o.h, rad || 0); else ctx.rect(o.x, o.y, o.w, o.h);
+  ctx.fillStyle = fill; ctx.fill(); ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.stroke();
+}
+function ljObstacle(ctx, o){
+  ctx.save(); ctx.lineJoin = 'round';
+  const hz = !o.r && o.w >= o.h;
+  if (o.k === 'tree'){ ctx.fillStyle = 'rgba(0,0,0,.18)'; ctx.beginPath(); ctx.arc(o.x + 5, o.y + 6, o.r, 0, Math.PI*2); ctx.fill(); ljLumpy(ctx, o.x, o.y, o.r, '#3E8E41', '#62B865'); }
+  else if (o.k === 'house'){
+    ctx.fillStyle = 'rgba(0,0,0,.2)'; ctx.fillRect(o.x + 6, o.y + 7, o.w, o.h);
+    ljRect(ctx, o, '#C8553D');
+    ctx.save(); ctx.beginPath(); ctx.rect(o.x, o.y, o.w, o.h); ctx.clip();
+    ctx.fillStyle = '#A8402B'; if (hz) ctx.fillRect(o.x, o.y + o.h/2, o.w, o.h/2); else ctx.fillRect(o.x + o.w/2, o.y, o.w/2, o.h);
+    ctx.strokeStyle = 'rgba(0,0,0,.25)'; ctx.lineWidth = 1.5; ctx.beginPath();
+    if (hz) for (let y = o.y + 7; y < o.y + o.h; y += 7){ ctx.moveTo(o.x, y); ctx.lineTo(o.x + o.w, y); }
+    else for (let x = o.x + 7; x < o.x + o.w; x += 7){ ctx.moveTo(x, o.y); ctx.lineTo(x, o.y + o.h); }
+    ctx.stroke(); ctx.restore();
+    ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.beginPath();
+    if (hz){ ctx.moveTo(o.x, o.y + o.h/2); ctx.lineTo(o.x + o.w, o.y + o.h/2); } else { ctx.moveTo(o.x + o.w/2, o.y); ctx.lineTo(o.x + o.w/2, o.y + o.h); }
+    ctx.stroke();
+    ljRect(ctx, { x:o.x + o.w*.68, y:o.y + o.h*.16, w:12, h:12 }, '#8A8A8A');
+  } else if (o.k === 'shed'){
+    ljRect(ctx, o, '#8E99A3');
+    ctx.strokeStyle = 'rgba(0,0,0,.3)'; ctx.lineWidth = 1.5; ctx.beginPath();
+    for (let x = o.x + 5; x < o.x + o.w; x += 6){ ctx.moveTo(x, o.y + 2); ctx.lineTo(x, o.y + o.h - 2); }
+    ctx.stroke();
+  } else if (o.k === 'car'){
+    ctx.fillStyle = '#111';
+    const wl = hz ? [[o.x + 8, o.y - 3], [o.x + o.w - 18, o.y - 3], [o.x + 8, o.y + o.h - 3], [o.x + o.w - 18, o.y + o.h - 3]]
+                  : [[o.x - 3, o.y + 8], [o.x + o.w - 3, o.y + 8], [o.x - 3, o.y + o.h - 18], [o.x + o.w - 3, o.y + o.h - 18]];
+    for (const [x, y] of wl) ctx.fillRect(x, y, hz ? 10 : 6, hz ? 6 : 10);
+    ljRect(ctx, o, o.col, 8);
+    const g = hz ? { x:o.x + o.w*.18, y:o.y + 4, w:o.w*.18, h:o.h - 8 } : { x:o.x + 4, y:o.y + o.h*.18, w:o.w - 8, h:o.h*.18 };
+    ljRect(ctx, g, '#2B3A55', 3);
+    const rw = hz ? { x:o.x + o.w*.42, y:o.y + 5, w:o.w*.32, h:o.h - 10 } : { x:o.x + 5, y:o.y + o.h*.42, w:o.w - 10, h:o.h*.32 };
+    ctx.fillStyle = 'rgba(255,255,255,.35)'; ctx.fillRect(rw.x, rw.y, rw.w, rw.h);
+  } else if (o.k === 'pool'){
+    ljRect(ctx, o, '#FFFFFF', 10);
+    ljRect(ctx, { x:o.x + 6, y:o.y + 6, w:o.w - 12, h:o.h - 12 }, '#4FC3F7', 7);
+    ctx.strokeStyle = 'rgba(255,255,255,.8)'; ctx.lineWidth = 2;
+    for (let i = 0; i < 3; i++){ ctx.beginPath(); const y = o.y + 16 + i*((o.h - 30)/2); for (let x = o.x + 12; x < o.x + o.w - 12; x += 4) ctx.lineTo(x, y + Math.sin(x/5)*2); ctx.stroke(); }
+  } else if (o.k === 'kennel'){
+    ljRect(ctx, o, '#B5651D');
+    ctx.strokeStyle = '#000'; ctx.lineWidth = 2; ctx.beginPath();
+    if (hz){ ctx.moveTo(o.x, o.y + o.h/2); ctx.lineTo(o.x + o.w, o.y + o.h/2); } else { ctx.moveTo(o.x + o.w/2, o.y); ctx.lineTo(o.x + o.w/2, o.y + o.h); }
+    ctx.stroke();
+    ctx.fillStyle = '#E6262B'; ctx.beginPath(); ctx.arc(o.x + o.w + 7, o.y + o.h - 4, 5, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+  } else if (o.k === 'fence'){
+    ljRect(ctx, o, '#C9935A');
+    ctx.fillStyle = '#7A4E25';
+    for (let i = 0; i <= 6; i++){ const t = i/6; ctx.fillRect(hz ? o.x + t*(o.w - 6) : o.x - 1, hz ? o.y - 1 : o.y + t*(o.h - 6), hz ? 6 : o.w + 2, hz ? o.h + 2 : 6); }
+  } else if (o.k === 'green'){
+    ljRect(ctx, o, 'rgba(200,240,250,.85)', 3);
+    ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.lineWidth = 1.5; ctx.beginPath();
+    for (let x = o.x + 11; x < o.x + o.w; x += 11){ ctx.moveTo(x, o.y); ctx.lineTo(x, o.y + o.h); }
+    for (let y = o.y + 11; y < o.y + o.h; y += 11){ ctx.moveTo(o.x, y); ctx.lineTo(o.x + o.w, y); }
+    ctx.stroke();
+    ctx.fillStyle = '#5DB35F'; for (let i = 0; i < 4; i++){ ctx.beginPath(); ctx.arc(o.x + 10 + i*(o.w - 20)/3, o.y + o.h/2, 4, 0, Math.PI*2); ctx.fill(); }
+  }
+  ctx.restore();
+}
+function ljBackground(F){
+  const cv = document.createElement('canvas'); cv.width = cv.height = LJ_S;
+  const ctx = cv.getContext('2d'), R = rng32(F.seed ^ 0x5bd1e995);
+  ctx.fillStyle = '#76C04F'; ctx.fillRect(0, 0, LJ_S, LJ_S);
+  ctx.fillStyle = '#82CA5B';                                       // mowing stripes
+  ctx.save(); ctx.translate(LJ_S/2, LJ_S/2); ctx.rotate(.5); for (let x = -LJ_S; x < LJ_S; x += 60) ctx.fillRect(x, -LJ_S, 30, LJ_S*2); ctx.restore();
+  ctx.fillStyle = halftone(ctx, .07); ctx.fillRect(0, 0, LJ_S, LJ_S);
+  ctx.strokeStyle = 'rgba(30,90,30,.45)'; ctx.lineWidth = 1.5;     // grass tufts
+  for (let i = 0; i < 140; i++){ const x = R()*LJ_S, y = R()*LJ_S; ctx.beginPath(); ctx.moveTo(x - 3, y - 4); ctx.lineTo(x, y); ctx.lineTo(x + 3, y - 4); ctx.stroke(); }
+  for (let i = 0; i < 40; i++){ const x = R()*LJ_S, y = R()*LJ_S; ctx.fillStyle = ['#FFFFFF', '#FFD21F', '#FF5FC8'][i % 3]; ctx.beginPath(); ctx.arc(x, y, 2.2, 0, Math.PI*2); ctx.fill(); }
+  // hedge around the garden
+  ctx.strokeStyle = '#2F6B2F'; ctx.lineWidth = 10; ctx.strokeRect(5, 5, LJ_S - 10, LJ_S - 10);
+  ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.strokeRect(1.5, 1.5, LJ_S - 3, LJ_S - 3);
+  for (const o of F.obs) ljObstacle(ctx, o);
+  return cv;
+}
+function ljFallenTree(ctx, F, aDeg, k, col, mine){
+  const a = aDeg*Math.PI/180, e = k*k, len = F.L*e, cx = Math.cos(a), cy = Math.sin(a);
+  if (k < 1){                                       // still standing for a moment: the crown shrinks into the fall
+    const sr = 34*(1 - e) + LJ_CROWN*e;
+    ctx.fillStyle = 'rgba(0,0,0,.2)'; ctx.beginPath(); ctx.arc(F.sx + cx*len + 6, F.sy + cy*len + 6, sr, 0, Math.PI*2); ctx.fill();
+  }
+  const ex = F.sx + cx*Math.max(0, len - LJ_CROWN), ey = F.sy + cy*Math.max(0, len - LJ_CROWN);
+  ctx.lineCap = 'round';
+  ctx.strokeStyle = '#000'; ctx.lineWidth = 15; ctx.beginPath(); ctx.moveTo(F.sx, F.sy); ctx.lineTo(ex, ey); ctx.stroke();
+  ctx.strokeStyle = '#8B5A2B'; ctx.lineWidth = 9; ctx.beginPath(); ctx.moveTo(F.sx, F.sy); ctx.lineTo(ex, ey); ctx.stroke();
+  ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.lineWidth = 1.5; ctx.setLineDash([6, 7]); ctx.beginPath(); ctx.moveTo(F.sx, F.sy); ctx.lineTo(ex, ey); ctx.stroke(); ctx.setLineDash([]);
+  const r = 34*(1 - e) + LJ_CROWN*e;
+  ljLumpy(ctx, F.sx + cx*Math.max(0, len - LJ_CROWN), F.sy + cy*Math.max(0, len - LJ_CROWN), r, mine ? '#2E7D32' : '#4E8F52', mine ? '#5CB860' : '#7DB77F');
+  if (col){ ctx.strokeStyle = col; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(F.sx + cx*Math.max(0, len - LJ_CROWN), F.sy + cy*Math.max(0, len - LJ_CROWN), r + 4, 0, Math.PI*2); ctx.stroke(); }
+}
+function ljStump(ctx, F){
+  ctx.fillStyle = '#D9B57A'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.arc(F.sx, F.sy, 10, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+  ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(F.sx, F.sy, 6, 0, Math.PI*2); ctx.arc(F.sx, F.sy, 3, 0, Math.PI*2); ctx.stroke();
+}
+function drawLumberTop(now){
+  const ctx = ljTctx, F = LJ.F;
+  if (!F){ ctx.fillStyle = '#76C04F'; ctx.fillRect(0, 0, LJ_S, LJ_S); return; }
+  if (!LJ.bg) LJ.bg = ljBackground(F);
+  ctx.drawImage(LJ.bg, 0, 0);
+  for (const i of LJ.crushed){                      // crushed things: dark, cracked
+    const o = F.obs[i]; ctx.save(); ctx.globalAlpha = .55; ctx.fillStyle = '#222';
+    if (o.r){ ctx.beginPath(); ctx.arc(o.x, o.y, o.r, 0, Math.PI*2); ctx.fill(); } else ctx.fillRect(o.x, o.y, o.w, o.h);
+    ctx.restore();
+  }
+  // target cross
+  const pulse = 1 + Math.sin(now/220)*.08;
+  ctx.strokeStyle = '#fff'; ctx.lineWidth = 3; ctx.setLineDash([6, 5]); ctx.beginPath(); ctx.arc(F.tx, F.ty, 22*pulse, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+  for (const [w, c] of [[11, '#000'], [6, '#E6262B']]){ ctx.strokeStyle = c; ctx.lineWidth = w; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(F.tx - 11, F.ty - 11); ctx.lineTo(F.tx + 11, F.ty + 11); ctx.moveTo(F.tx + 11, F.ty - 11); ctx.lineTo(F.tx - 11, F.ty + 11); ctx.stroke(); }
+  // the others' trees, in their colours
+  for (const [id, o] of LJ.others){
+    if (!o.k) continue;
+    const p = players.find(x => x.id === id);
+    ctx.globalAlpha = .9; ljFallenTree(ctx, F, o.a, o.k, p ? p.color : '#888', false); ctx.globalAlpha = 1;
+  }
+  const mineFell = LJ.fall;
+  if (mineFell) ljFallenTree(ctx, F, mineFell.a, mineFell.k, null, true);
+  ljStump(ctx, F);
+  if (!mineFell && LJ.alive && LJ.ph !== 'out'){
+    if (LJ.ph === 'aim' || LJ.ph === 'cut'){       // planned fall: arrow and dashed footprint
+      const a = LJ.aim*Math.PI/180, cx = Math.cos(a), cy = Math.sin(a), ex = F.sx + cx*(F.L - LJ_CROWN), ey = F.sy + cy*(F.L - LJ_CROWN);
+      ctx.save(); ctx.setLineDash([8, 6]); ctx.lineWidth = 3; ctx.strokeStyle = '#FFF';
+      ctx.beginPath(); ctx.moveTo(F.sx + cx*36, F.sy + cy*36); ctx.lineTo(ex, ey); ctx.stroke();
+      ctx.beginPath(); ctx.arc(ex, ey, LJ_CROWN, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+      const hx = F.sx + cx*70, hy = F.sy + cy*70;
+      ctx.beginPath(); ctx.moveTo(hx + cx*14, hy + cy*14); ctx.lineTo(hx - cx*6 - cy*11, hy - cy*6 + cx*11); ctx.lineTo(hx - cx*6 + cy*11, hy - cy*6 - cx*11); ctx.closePath();
+      ctx.fillStyle = '#FFD21F'; ctx.fill(); ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.stroke();
+      ctx.restore();
+    }
+    ctx.fillStyle = 'rgba(0,0,0,.2)'; ctx.beginPath(); ctx.arc(F.sx + 6, F.sy + 7, 34, 0, Math.PI*2); ctx.fill();
+    ljLumpy(ctx, F.sx, F.sy, 34, '#2E7D32', '#5CB860', 8);
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 3; ctx.setLineDash([6, 5]); ctx.beginPath(); ctx.arc(F.sx, F.sy, 42, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+  }
+  if (F.wind){                                       // wind sock in a corner
+    ctx.save(); ctx.translate(36, 36);
+    ctx.fillStyle = '#fff'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(0, 0, 24, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.rotate(Math.sin(now/300)*.15); ctx.font = '22px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#000';
+    ctx.fillText(F.wind > 0 ? '↻' : '↺', 0, 1); ctx.restore();
+  }
+}
+
+// ---- drawing: the trunk seen from the side ----
+function ljBark(F){
+  const cv = document.createElement('canvas'); cv.width = LJ_CW; cv.height = LJ_CH;
+  const ctx = cv.getContext('2d'), R = rng32(F.seed ^ 0x2545f491), x0 = (LJ_CW - F.W)/2, x1 = x0 + F.W;
+  const sky = ctx.createLinearGradient(0, 0, 0, LJ_GROUND); sky.addColorStop(0, '#8FD3FF'); sky.addColorStop(1, '#DDF2FF');
+  ctx.fillStyle = sky; ctx.fillRect(0, 0, LJ_CW, LJ_GROUND);
+  ctx.fillStyle = 'rgba(255,255,255,.9)';
+  for (let i = 0; i < 3; i++){ const x = 40 + R()*520, y = 20 + R()*60; for (const [dx, dy, r] of [[0, 0, 14], [14, -6, 16], [30, 0, 13]]){ ctx.beginPath(); ctx.arc(x + dx, y + dy, r, 0, Math.PI*2); ctx.fill(); } }
+  ctx.fillStyle = '#76C04F'; ctx.fillRect(0, LJ_GROUND, LJ_CW, LJ_CH - LJ_GROUND);
+  ctx.fillStyle = halftone(ctx, .08); ctx.fillRect(0, LJ_GROUND, LJ_CW, LJ_CH - LJ_GROUND);
+  ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(0, LJ_GROUND); ctx.lineTo(LJ_CW, LJ_GROUND); ctx.stroke();
+  // trunk with flared roots
+  ctx.beginPath(); ctx.moveTo(x0, -5); ctx.lineTo(x0, LJ_GROUND - 20); ctx.quadraticCurveTo(x0 - 4, LJ_GROUND - 4, x0 - 26, LJ_GROUND + 2);
+  ctx.lineTo(x1 + 26, LJ_GROUND + 2); ctx.quadraticCurveTo(x1 + 4, LJ_GROUND - 4, x1, LJ_GROUND - 20); ctx.lineTo(x1, -5); ctx.closePath();
+  ctx.fillStyle = '#8B5A2B'; ctx.fill();
+  ctx.save(); ctx.clip();
+  for (let i = 0; i < 46; i++){                      // bark grooves
+    const x = x0 - 20 + R()*(F.W + 40), w = 2 + R()*5;
+    ctx.fillStyle = R() < .5 ? 'rgba(60,35,15,.55)' : 'rgba(190,140,90,.35)';
+    ctx.beginPath(); ctx.moveTo(x, -5);
+    for (let y = -5; y < LJ_GROUND + 5; y += 18) ctx.lineTo(x + Math.sin(y/23 + i)*3, y);
+    ctx.lineTo(x + w, LJ_GROUND + 5); ctx.lineTo(x + w, -5); ctx.fill();
+  }
+  for (let i = 0; i < 3; i++){ const x = x0 + 20 + R()*(F.W - 40), y = 20 + R()*90; ctx.fillStyle = '#5A3A1A'; ctx.beginPath(); ctx.ellipse(x, y, 9, 13, 0, 0, Math.PI*2); ctx.fill(); ctx.strokeStyle = '#3A2410'; ctx.lineWidth = 2; ctx.stroke(); }
+  ctx.fillStyle = halftone(ctx, .12); ctx.fillRect(x0 - 30, 0, F.W + 60, LJ_GROUND);
+  ctx.restore();
+  ctx.strokeStyle = '#000'; ctx.lineWidth = 4;
+  ctx.beginPath(); ctx.moveTo(x0, -5); ctx.lineTo(x0, LJ_GROUND - 20); ctx.quadraticCurveTo(x0 - 4, LJ_GROUND - 4, x0 - 26, LJ_GROUND + 2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x1, -5); ctx.lineTo(x1, LJ_GROUND - 20); ctx.quadraticCurveTo(x1 + 4, LJ_GROUND - 4, x1 + 26, LJ_GROUND + 2); ctx.stroke();
+  return cv;
+}
+function ljChainsaw(ctx, x, y, tilt, now, on){
+  ctx.save(); ctx.translate(x, y); ctx.rotate(tilt + (on ? Math.sin(now/18)*.02 : 0));
+  // bar (points right, its tip is the cutting point)
+  ctx.fillStyle = '#B9C0C8'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.moveTo(-74, -7); ctx.lineTo(-4, -6); ctx.arc(-4, 0, 6, -Math.PI/2, Math.PI/2); ctx.lineTo(-74, 7); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.strokeStyle = '#333'; ctx.lineWidth = 2; ctx.setLineDash([3, 3]); ctx.lineDashOffset = on ? -now/12 : 0;
+  ctx.beginPath(); ctx.moveTo(-74, -8.5); ctx.lineTo(-4, -8.5); ctx.moveTo(-74, 8.5); ctx.lineTo(-4, 8.5); ctx.stroke(); ctx.setLineDash([]);
+  // engine body and handle
+  ctx.fillStyle = '#FF8A1F'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
+  ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(-128, -20, 58, 38, 9); else ctx.rect(-128, -20, 58, 38); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#333'; ctx.fillRect(-120, -12, 22, 6);
+  ctx.strokeStyle = '#222'; ctx.lineWidth = 6; ctx.beginPath(); ctx.arc(-104, -22, 16, Math.PI, 2*Math.PI); ctx.stroke();
+  ctx.strokeStyle = '#000'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(-104, -22, 19, Math.PI, 2*Math.PI); ctx.stroke();
+  if (on){ ctx.fillStyle = 'rgba(160,160,160,.5)'; ctx.beginPath(); ctx.arc(-134 - (now/8 % 14), -6, 5 + (now/40 % 4), 0, Math.PI*2); ctx.fill(); }
+  ctx.restore();
+}
+function drawLumberCut(now){
+  const ctx = ljCctx, F = LJ.F;
+  if (!F){ ctx.fillStyle = '#DDF2FF'; ctx.fillRect(0, 0, LJ_CW, LJ_CH); return; }
+  if (!LJ.bark) LJ.bark = ljBark(F);
+  ctx.drawImage(LJ.bark, 0, 0);
+  const x0 = (LJ_CW - F.W)/2, x1 = x0 + F.W;
+  const showLine = ['aim', 'cut', 'intro'].includes(LJ.ph) && LJ.alive;
+  if (showLine || LJ.saw){
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = '#000'; ctx.lineWidth = 6; ctx.setLineDash([10, 9]); ctx.beginPath(); ctx.moveTo(x0 - 24, ljLineY(x0 - 24)); ctx.lineTo(x1 + 24, ljLineY(x1 + 24)); ctx.stroke();
+    ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(x0 - 24, ljLineY(x0 - 24)); ctx.lineTo(x1 + 24, ljLineY(x1 + 24)); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+  const S = LJ.saw;
+  if (S && S.path.length > 1){                       // the kerf actually cut
+    ctx.strokeStyle = '#1E1208'; ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(x0, S.path[0][1]);
+    for (const [x, y] of S.path) ctx.lineTo(x, y); ctx.stroke();
+  }
+  if (S) for (const d of S.dust){ ctx.globalAlpha = 1 - d.t/.6; ctx.fillStyle = '#E8C38A'; ctx.fillRect(d.x, d.y, 3, 3); } ctx.globalAlpha = 1;
+  if (S && LJ.ph === 'cut') ljChainsaw(ctx, S.x, S.y, Math.atan2(ljLineY(S.x + 10) - ljLineY(S.x), 10), now, S.on || LJ.keys[' '] || LJ.keys.ArrowRight);
+  if (LJ.ph === 'aim' && LJ.alive){
+    ctx.font = '22px Bangers, Impact, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 4; ctx.strokeStyle = '#000'; ctx.fillStyle = '#FFD21F';
+    ctx.strokeText('D\'ABORD, VISEZ AU-DESSUS ↑', LJ_CW/2, 40); ctx.fillText('D\'ABORD, VISEZ AU-DESSUS ↑', LJ_CW/2, 40);
+  }
+  if (LJ.ph === 'cut' && S && !S.on && S.x < x0){
+    ctx.font = '20px Bangers, Impact, sans-serif'; ctx.textAlign = 'left'; ctx.lineWidth = 4; ctx.strokeStyle = '#000'; ctx.fillStyle = '#fff';
+    ctx.strokeText('APPUYEZ ET GLISSEZ →', 12, 30); ctx.fillText('APPUYEZ ET GLISSEZ →', 12, 30);
+  }
+  if (LJ.fall && LJ.ph !== 'cut'){                   // the trunk leans away once cut
+    const k = Math.min(1, LJ.fall.k*1.4);
+    ctx.save(); ctx.globalAlpha = .9; ctx.fillStyle = 'rgba(221,242,255,' + (k*.85) + ')'; ctx.fillRect(0, 0, LJ_CW, ljLineY(LJ_CW/2) - 4); ctx.restore();
+    ctx.font = '24px Bangers, Impact, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 4; ctx.strokeStyle = '#000'; ctx.fillStyle = '#FFD21F';
+    const txt = 'COUPE PRÉCISE À ' + Math.round(LJ.fall.prec*100) + ' %';
+    ctx.strokeText(txt, LJ_CW/2, 50); ctx.fillText(txt, LJ_CW/2, 50);
+  }
+}
+
+// ---- the chainsaw engine: a continuous sound while the cut lasts ----
+const SAW = { n:null };
+function sawStart(){
+  const c = sndCtx(); if (!c || SAW.n) return;
+  const t = c.currentTime;
+  const master = c.createGain(); master.gain.setValueAtTime(.0001, t); master.gain.exponentialRampToValueAtTime(.08, t + .25);
+  const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 1700;
+  const o1 = c.createOscillator(); o1.type = 'sawtooth'; o1.frequency.value = 62;
+  const o2 = c.createOscillator(); o2.type = 'square'; o2.frequency.value = 124;
+  const g2 = c.createGain(); g2.gain.value = .35;
+  const lfo = c.createOscillator(); lfo.frequency.value = 23; const lg = c.createGain(); lg.gain.value = 7;
+  lfo.connect(lg); lg.connect(o1.frequency); lg.connect(o2.frequency);
+  const n = Math.floor(c.sampleRate), buf = c.createBuffer(1, n, c.sampleRate), d = buf.getChannelData(0);
+  for (let i = 0; i < n; i++) d[i] = Math.random()*2 - 1;
+  const ns = c.createBufferSource(); ns.buffer = buf; ns.loop = true;
+  const bp = c.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 2800; bp.Q.value = .9;
+  const ng = c.createGain(); ng.gain.value = .05;
+  o1.connect(lp); o2.connect(g2).connect(lp); lp.connect(master); ns.connect(bp).connect(ng).connect(master); master.connect(c.destination);
+  o1.start(t); o2.start(t); lfo.start(t); ns.start(t);
+  SAW.n = { c, master, o1, o2, ng, lp, load:-1 };
+}
+function sawLoad(v){
+  const s = SAW.n; if (!s || s.load === v) return;
+  s.load = v; const t = s.c.currentTime;
+  const f = v >= 1 ? 118 : v > 0 ? 92 : 62;
+  s.o1.frequency.setTargetAtTime(f, t, .08); s.o2.frequency.setTargetAtTime(f*2, t, .08);
+  s.ng.gain.setTargetAtTime(v >= 1 ? .55 : v > 0 ? .2 : .05, t, .06);
+  s.lp.frequency.setTargetAtTime(v >= 1 ? 3200 : 1700, t, .08);
+}
+function sawStop(){
+  const s = SAW.n; if (!s) return;
+  SAW.n = null;
+  try {
+    const t = s.c.currentTime;
+    s.master.gain.cancelScheduledValues(t); s.master.gain.setValueAtTime(Math.max(.0001, s.master.gain.value), t); s.master.gain.exponentialRampToValueAtTime(.0001, t + .35);
+    s.o1.frequency.setTargetAtTime(35, t, .12);
+    setTimeout(() => { try { s.master.disconnect(); } catch(_){} }, 600);
+  } catch(_){}
+}
+
 // ================= comic sound effects in bursts =================
 const BOOM_COLORS = [['#FFD93B','#E6262B'], ['#FFFFFF','#1E5BFF'], ['#E6262B','#FFFFFF'], ['#1E5BFF','#FFD93B']];
 function gameWrap(){
   return cur === 'tetris' ? document.querySelector('#play .well') : cur === 'pong' ? $('pwrap') : cur === 'derby' ? $('padwrap')
-    : cur === 'naval' ? document.querySelector('#scrNaval .nvwrap') : cur === 'mole' ? $('mlWrap') : cur === 'curl' ? $('cuWrap') : cur === 'chairs' ? $('mcWrap') : cur === 'master' ? $('mmWrap') : cur === 'kabaddi' ? $('kbWrap') : cur === 'dodge' ? $('dbWrap') : cur === 'tank' ? $('tkWrap') : cur === 'sheep' ? $('shWrap') : cur === 'drakkar' ? $('dkWrap') : null;
+    : cur === 'naval' ? document.querySelector('#scrNaval .nvwrap') : cur === 'mole' ? $('mlWrap') : cur === 'curl' ? $('cuWrap') : cur === 'chairs' ? $('mcWrap') : cur === 'master' ? $('mmWrap') : cur === 'kabaddi' ? $('kbWrap') : cur === 'dodge' ? $('dbWrap') : cur === 'tank' ? $('tkWrap') : cur === 'sheep' ? $('shWrap') : cur === 'drakkar' ? $('dkWrap') : cur === 'lumber' ? $('ljWrap') : null;
 }
 // x, y: position in the wrap (0..1); size in px; pal: one of BOOM_COLORS
 function boom(text, o = {}){
@@ -6673,6 +7341,17 @@ const SFX = {
   chant:  i => tone([392, 330, 294][i || 0], .14, 'square', .035),
   bark:   () => { tone(520, .07, 'square', .09, 300); tone(470, .09, 'square', .08, 260, .11); },
   drum:   () => { tone(110, .25, 'sine', .35, 50); tone(240, .16, 'triangle', .28, 90); tone(480, .05, 'square', .07, 200); noise(.12, .32, 2200, 150, 0, .8); },
+  cord:   () => { noise(.09, .22, 3000, 500); noise(.09, .22, 3000, 500, .14); tone(48, .45, 'sawtooth', .12, 150, .28); noise(.3, .12, 1500, 300, .28); },
+  creak:  () => { tone(170, 1.1, 'sawtooth', .05, 70); tone(230, .7, 'triangle', .05, 110, .25); tone(120, .5, 'square', .025, 90, .6); noise(.14, .3, 4500, 700, .95, .7); },
+  treefall:() => { tone(55, .7, 'sine', .5, 28); tone(110, .3, 'triangle', .2, 50); noise(.55, .38, 1300, 60); noise(.9, .14, 7000, 1800, .05, .4); },
+  crash:  k => {
+    if (k === 'car'){ noise(.5, .35, 3500, 200, 0, .8); tone(140, .4, 'sawtooth', .1, 60); for (let i = 0; i < 8; i++) tone(i % 2 ? 720 : 960, .17, 'square', .05, null, .45 + i*.2); }
+    else if (k === 'house' || k === 'green'){ noise(.6, .35, 6500, 400); for (let i = 0; i < 9; i++) tone(1800 + Math.random()*2600, .16, 'sine', .04, null, .05 + i*.045); tone(90, .5, 'sawtooth', .08, 45); }
+    else if (k === 'pool'){ noise(.9, .3, 4500, 200, 0, 2); tone(700, .25, 'sine', .06, 200, .05); }
+    else if (k === 'shed'){ tone(310, .6, 'square', .06, 290); tone(460, .6, 'square', .05, 440, .02); noise(.4, .3, 3000, 300); }
+    else if (k === 'kennel'){ noise(.3, .3, 4000, 400); tone(520, .07, 'square', .09, 300, .3); tone(470, .09, 'square', .08, 260, .42); tone(900, .4, 'sine', .05, 500, .6); }
+    else { noise(.35, .32, 5000, 300); tone(130, .35, 'sawtooth', .08, 60); }
+  },
   win:    () => [523, 659, 784, 1047, 784, 1047].forEach((f, i) => tone(f, .18, 'square', .08, null, i*.11)),
   lose:   () => [392, 330, 262, 196].forEach((f, i) => tone(f, .22, 'triangle', .1, null, i*.16))
 };
@@ -6746,7 +7425,7 @@ function saveGame(ranking, game){
   if (!Array.isArray(ranking) || !ranking.length || lastSaved === ranking) return;
   lastSaved = ranking;
   const h = loadHist();
-  h.unshift({ at:Date.now(), game:['pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar'].includes(game) ? game : 'tetris', n:ranking.length,
+  h.unshift({ at:Date.now(), game:['pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber'].includes(game) ? game : 'tetris', n:ranking.length,
     p:ranking.map(r => ({ name:String(r.name).slice(0,14), color:r.color, place:r.place|0, sc:r.sc|0, ln:r.ln|0, sent:r.sent|0, score:r.score|0, sync:r.sync|0, lives:r.lives|0, seats:r.seats|0, catches:r.catches|0, tank:r.tank|0, role:String(r.role || '').slice(0, 8), hits:r.hits|0, pts:r.pts|0, whacks:r.whacks|0, shots:r.shots|0, afloat:r.afloat|0, shapes:r.shapes|0, d:Math.round(r.d||0), t:+r.t||0, me:r.id === me.id })) });
   store.set(HIST_KEY, JSON.stringify(h.slice(0, HIST_MAX)));
 }
@@ -6762,13 +7441,13 @@ function renderBoard(){
     a.games++; if (p.place === 1 && g.n > 1) a.wins++;
     a.pts += Math.max(0, g.n - p.place);                  // 1 point per player finished ahead of
     if (g.game === 'derby'){ if (p.t > 0 && (!a.bestT || p.t < a.bestT)) a.bestT = p.t; }
-    else a.best = Math.max(a.best, (g.game === 'pong' || g.game === 'naval') ? p.hits : g.game === 'mole' ? (p.whacks || 0) : g.game === 'curling' ? (p.pts || 0) : g.game === 'chairs' ? (p.seats || 0) : (g.game === 'dodge' || g.game === 'tank') ? (p.hits || 0) : g.game === 'sheep' ? (p.score || 0) : g.game === 'drakkar' ? (p.sync || 0) : (g.game === 'master' || g.game === 'kabaddi') ? (p.pts || 0) : p.sc);
+    else a.best = Math.max(a.best, (g.game === 'pong' || g.game === 'naval') ? p.hits : g.game === 'mole' ? (p.whacks || 0) : g.game === 'curling' ? (p.pts || 0) : g.game === 'chairs' ? (p.seats || 0) : (g.game === 'dodge' || g.game === 'tank') ? (p.hits || 0) : g.game === 'sheep' ? (p.score || 0) : g.game === 'drakkar' ? (p.sync || 0) : (g.game === 'master' || g.game === 'kabaddi' || g.game === 'lumber') ? (p.pts || 0) : p.sc);
     agg.set(k, a);
   }
   const rows = [...agg.values()].sort((x, y) => y.pts - x.pts || y.wins - x.wins || x.games - y.games);
   const showBest = lbFilter !== 'all';
   const hd = $('lbHead'); hd.textContent = '';
-  for (const t of ['#','Joueur','Parties','Victoires','Points', ...(showBest ? [lbFilter === 'pong' ? 'Arrêts max' : lbFilter === 'derby' ? 'Meilleur temps' : lbFilter === 'naval' ? 'Touchés max' : lbFilter === 'mole' ? 'Taupes tapées max' : lbFilter === 'curling' ? 'Points max' : lbFilter === 'chairs' ? 'Chaises max' : (lbFilter === 'dodge' || lbFilter === 'tank') ? 'Touches max' : lbFilter === 'sheep' ? 'Record d\'équipe' : lbFilter === 'drakkar' ? 'Synchro max (%)' : (lbFilter === 'master' || lbFilter === 'kabaddi') ? 'Points max' : 'Meilleur score'] : [])]){
+  for (const t of ['#','Joueur','Parties','Victoires','Points', ...(showBest ? [lbFilter === 'pong' ? 'Arrêts max' : lbFilter === 'derby' ? 'Meilleur temps' : lbFilter === 'naval' ? 'Touchés max' : lbFilter === 'mole' ? 'Taupes tapées max' : lbFilter === 'curling' ? 'Points max' : lbFilter === 'chairs' ? 'Chaises max' : (lbFilter === 'dodge' || lbFilter === 'tank') ? 'Touches max' : lbFilter === 'sheep' ? 'Record d\'équipe' : lbFilter === 'drakkar' ? 'Synchro max (%)' : (lbFilter === 'master' || lbFilter === 'kabaddi' || lbFilter === 'lumber') ? 'Points max' : 'Meilleur score'] : [])]){
     const th = document.createElement('th'); th.textContent = t; hd.append(th);
   }
   const tb = $('lbBody'); tb.textContent = '';
@@ -6827,6 +7506,7 @@ function frame(now){
   if (cur === 'tank') tankFrame(dt, now);
   if (cur === 'sheep') sheepFrame(dt, now);
   if (cur === 'drakkar') drakkarFrame(dt, now);
+  if (cur === 'lumber') lumberFrame(dt, now);
   if (cur === 'tetris' && G && phase === 'count'){
     G.count -= dt/1000;
     if (G.count <= 0){ phase = 'play'; setMsg('', ''); countBeep(0); }
@@ -6903,11 +7583,11 @@ $('btnQuit').onclick = () => toMenu('');
 function backToLobby(){
   if (me.host){
     if (H) H.over = true;
-    H = null; if (HC) clearTimeout(HC.timer); HC = null; mcClear(); HMC = null; mmClear(); HMM = null; kbClear(); HKB = null; dbClear(); HDB = null; tkClear(); HTK = null; shClear(); HSH = null; dkClear(); HDK = null;
+    H = null; if (HC) clearTimeout(HC.timer); HC = null; mcClear(); HMC = null; mmClear(); HMM = null; kbClear(); HKB = null; dbClear(); HDB = null; tkClear(); HTK = null; shClear(); HSH = null; dkClear(); HDK = null; ljClear(); HLJ = null;
     players = players.filter(p => p.id === 'h' || net.conns.has(p.id));
     sendLobby(true);                                       // everyone goes back
   } else {
-    phase = 'lobby'; $('scrEnd').hidden = true; G = null; PG = null; D = null; NV = null; ML = null; CU = null; MC = null; MM = null; KB = null; DB = null; TK = null; SHV = null; DK = null; cur = null;
+    phase = 'lobby'; $('scrEnd').hidden = true; G = null; PG = null; D = null; NV = null; ML = null; CU = null; MC = null; MM = null; KB = null; DB = null; TK = null; SHV = null; DK = null; if (LJ){ LJ = null; sawStop(); } cur = null;
     if (HM) moleClearTimers();
     show('scrLobby'); renderLobby();                      // wait there for the creator
   }
