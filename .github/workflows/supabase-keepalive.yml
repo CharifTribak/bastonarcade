@@ -1,0 +1,18 @@
+# Keeps the free Supabase project (public lobby list of Baston !) awake: a free project is paused
+# after 7 days without activity. Twice a week this reads one row, which counts as activity.
+name: Supabase keep-alive
+on:
+  schedule:
+    - cron: '17 6 * * 1,4'     # Monday and Thursday, 06:17 UTC
+  workflow_dispatch: {}
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read the lobby table
+        run: |
+          code=$(curl -s -o /dev/null -w '%{http_code}' \
+            "https://yxwwkjzcoglfctrbayzv.supabase.co/rest/v1/salons?select=code&limit=1" \
+            -H "apikey: sb_publishable_EWYQJy2-7-r41_9VT7gNPw_wB00imLH")
+          echo "Supabase answered HTTP $code"
+          test "$code" = "200"
