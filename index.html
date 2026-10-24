@@ -98,6 +98,8 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .plist{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
 .plist li{display:flex;align-items:center;gap:7px;padding:5px 12px 5px 6px;background:var(--panel);border:3px solid var(--line);border-radius:20px;font-weight:800}
 .tag{font-size:11px;color:var(--muted);font-weight:700}
+.solobtn{width:100%;font-size:16px;padding:12px}
+#scrLobby.solo .codebox,#scrLobby.solo #lobbyCodeHint,#scrLobby.solo #chatField{display:none}
 .lobbyfoot{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .big{height:64px;font-size:32px;box-shadow:6px 6px 0 var(--line)}
 
@@ -395,6 +397,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
     </div>
     <button id="btnCreate">Créer un salon</button>
     <label class="privbox" id="privBox" hidden><input type="checkbox" id="privIn"> Salon privé (ne pas l'afficher dans la liste)</label>
+    <button id="btnSolo" class="ghost solobtn">🎮 Jouer seul, sans salon</button>
     <div class="sep">ou rejoindre</div>
     <div class="row">
       <input id="codeIn" maxlength="4" placeholder="CODE" aria-label="Code du salon" autocomplete="off" autocapitalize="characters">
@@ -419,7 +422,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
       <h1 class="logosvg small" data-appname><svg viewBox="0 0 520 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Baston Arcade"><polygon points="260,8 292,62 352,22 356,86 428,58 404,118 494,120 438,166 508,214 428,226 456,292 384,270 372,322 318,276 262,318 222,270 156,306 152,248 76,262 104,206 18,184 92,148 36,92 116,94 102,30 172,62 204,8 228,58" fill="#000" transform="translate(7,7)"/><polygon points="260,8 292,62 352,22 356,86 428,58 404,118 494,120 438,166 508,214 428,226 456,292 384,270 372,322 318,276 262,318 222,270 156,306 152,248 76,262 104,206 18,184 92,148 36,92 116,94 102,30 172,62 204,8 228,58" fill="#E6262B" stroke="#000" stroke-width="5" stroke-linejoin="round"/><g transform="rotate(-6 260 168)"><text x="264" y="196" text-anchor="middle" font-family="Bangers, Impact, sans-serif" font-size="112" letter-spacing="3" fill="#000">BASTON !</text><text x="258" y="190" text-anchor="middle" font-family="Bangers, Impact, sans-serif" font-size="112" letter-spacing="3" fill="#fff" stroke="#000" stroke-width="6" paint-order="stroke" stroke-linejoin="round">BASTON !</text><text id="ARC" x="383" y="252" text-anchor="end" font-family="Bangers, Impact, sans-serif" font-size="52" letter-spacing="6" fill="#000">ARCADE</text><text x="379" y="248" text-anchor="end" font-family="Bangers, Impact, sans-serif" font-size="52" letter-spacing="6" fill="#FFD93B" stroke="#000" stroke-width="5" paint-order="stroke" stroke-linejoin="round">ARCADE</text></g><path d="M60 46 l26 14 M44 76 l30 6 M462 260 l-26 -12 M476 232 l-30 -4" stroke="#000" stroke-width="5" stroke-linecap="round"/></svg></h1>
       <div class="codebox"><div class="burst"><span>Code</span><b id="lobbyCode">----</b></div><button id="btnInvite" class="ghost invite" type="button">🔗 Copier le lien</button></div>
     </div>
-    <p class="hint">Les autres joueurs saisissent ce code depuis le menu, ou ouvrent le lien copié.</p>
+    <p class="hint" id="lobbyCodeHint">Les autres joueurs saisissent ce code depuis le menu, ou ouvrent le lien copié.</p>
     <div class="feature">
       <div class="caption" id="gameCaption">Le jeu choisi</div>
       <img id="gameArt" class="gameart" alt="" hidden>
@@ -448,7 +451,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
       <ul class="plist" id="lobbyList"></ul>
       <div class="colpick" id="colPick" role="group" aria-label="Votre couleur"></div>
     </div>
-    <div class="field">
+    <div class="field" id="chatField">
       <label for="chatIn">Discussion</label>
       <div class="chat">
         <div class="chatlog" id="chatLog" aria-live="polite"><p class="chatempty" id="chatEmpty">Dites bonjour aux autres joueurs.</p></div>
@@ -911,11 +914,22 @@ function teardown(){
 }
 function toMenu(msg){
   unannounce(); annKey = null;
+  $('scrLobby').classList.remove('solo'); $('btnLeaveLobby').textContent = 'Quitter le salon';
   teardown(); phase = 'menu'; $('scrEnd').hidden = true; show('scrMenu');
   $('btnCreate').disabled = false; $('btnJoin').disabled = false;
   if (msg) menuHint(msg, true);
 }
 
+// Solo: the same lobby and games, against robots, with no room and no network (nothing is announced, nobody can join).
+function soloCreate(){
+  readName();
+  net = { peer:null, code:'SOLO', conns:new Map(), solo:true };
+  me.host = true; me.id = 'h';
+  players = [{ id:'h', name:me.name, color:pickColor() }];
+  phase = 'lobby';
+  $('scrLobby').classList.add('solo'); $('btnLeaveLobby').textContent = 'Retour au menu';
+  show('scrLobby'); renderLobby();
+}
 function hostCreate(retry = 0){
   if (typeof Peer !== 'function') return menuHint('PeerJS n\'a pas pu se charger. Vérifiez la connexion.', true);
   const code = genCode();
@@ -1029,7 +1043,7 @@ async function supa(path, opts = {}){
 // the creator announces an open lobby every 30 s, and takes it down when the game starts or the lobby closes
 let annT = null, annCode = null, annKey = null;
 function announce(){
-  if (!SUPA_ON || !net || !me.host || phase !== 'lobby' || $('privIn').checked) return;
+  if (!SUPA_ON || !net || net.solo || !me.host || phase !== 'lobby' || $('privIn').checked) return;
   annCode = net.code;
   supa('salons?on_conflict=code', { method:'POST', headers:{ Prefer:'resolution=merge-duplicates' },
     body:JSON.stringify({ code:net.code, host:me.name, game:gameKind, players:players.length, updated_at:new Date().toISOString() }) });
@@ -1066,7 +1080,7 @@ async function keepAwake(on){
 setInterval(() => keepAwake(!!net && phase !== 'menu'), 5000);
 addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible') keepAwake(!!net && phase !== 'menu');
-  else if (net && me.host && phase !== 'menu') try { document.title = '⚠ Baston Arcade : salon en pause'; } catch(_){}
+  else if (net && !net.solo && me.host && phase !== 'menu') try { document.title = '⚠ Baston Arcade : salon en pause'; } catch(_){}
 });
 addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && document.title.startsWith('⚠')) document.title = 'Baston !'; });
 addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') lastPing = performance.now(); });
@@ -6851,6 +6865,7 @@ requestAnimationFrame(frame);
 function readName(){ me.name = cleanName($('nameIn').value); $('nameIn').value = me.name; store.set('tm-name', me.name); }
 const iceReady = () => Promise.race([icePromise, new Promise(r => setTimeout(r, 2500))]);     // wait briefly for the relay credentials
 $('btnCreate').onclick = async () => { readName(); $('btnCreate').disabled = true; $('btnJoin').disabled = true; menuHint('Ouverture du salon…'); await iceReady(); hostCreate(); };
+$('btnSolo').onclick = () => soloCreate();
 $('btnJoin').onclick = () => {
   const c = $('codeIn').value.trim().toUpperCase();
   if (!/^[A-Z0-9]{4}$/.test(c)) return menuHint('Le code fait 4 caractères.', true);
