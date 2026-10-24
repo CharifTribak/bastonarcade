@@ -916,7 +916,7 @@ const GAME_DESC = {
   tank:'Combat de chars à deux par char : l\'un pilote, l\'autre oriente la tourelle et tire (un obus toutes les 1,5 s). Les équipages sont tirés au sort, des robots complètent. Interdit de se parler : il faut se comprendre en jouant. Deux forêts cachent les chars qui y entrent, murs, caisses et rochers arrêtent les obus. 3 vies par char, le dernier char debout gagne.',
   sheep:'Les bergers, en coopération : vous êtes des chiens de berger et devez rabattre le troupeau dans l\'enclos avant le coucher du soleil (regardez sa course dans le ciel). Les moutons fuient les chiens et ont du caractère : le peureux file, le gourmand broute les fleurs, l\'agneau suit sa mère. « Ouaf ! » fait détaler. Des loups sortent du bois : chassez-les à deux. 6 journées de plus en plus dures (plus de moutons et de loups, journées plus courtes) ; une manche ratée et c\'est fini. Seul, un chien robot vous aide.',
   drakkar:'Drakkars, en coopération : tout le salon rame dans le même drakkar et fait la course contre celui des robots jusqu\'en Angleterre. Un coup de rame par coup de tambour, en alternant GAUCHE et DROITE. Les coups de chacun s\'affichent chez tous pour se caler ensemble. Plus l\'équipage est synchro, plus le drakkar file, et le tambour accélère.',
-  lumber:'Concours de bûcherons, tronçonneuse en main : vu du dessus, choisissez où tombe votre arbre sans rien écraser, puis abattez-le comme un vrai, en suivant les pointillés : les deux coupes de l\'entaille, puis le trait d\'abattage. Plus les coupes sont droites, plus l\'arbre tombe là où vous l\'avez décidé. Écraser une maison, une voiture ou un autre arbre élimine. Trois manches de plus en plus dures, tout le monde joue en même temps.',
+  lumber:'Concours de bûcherons, tronçonneuse en main : vu du dessus, choisissez où tombe votre arbre sans rien écraser, puis abattez-le comme un vrai, en suivant les pointillés : les deux coupes de l\'entaille, puis le trait d\'abattage. Plus les coupes sont droites, plus l\'arbre tombe là où vous l\'avez décidé, et viser une ouverture étroite rapporte un gros bonus. Écraser une maison, une voiture ou un autre arbre élimine. Trois manches de plus en plus dures, tout le monde joue en même temps.',
   derby:'Course de chevaux : tout le monde reçoit la même série de figures à tracer. Chaque figure réussie fait avancer votre cheval, plus loin si elle est complexe et bien tracée. Le premier à la ligne gagne.'
 };
 
@@ -6728,9 +6728,9 @@ function ljShapeDist(o, px, py){                          // distance from a poi
   if (!dx && !dy) return -Math.min(px - o.x, o.x + o.w - px, py - o.y, o.y + o.h - py);
   return Math.hypot(dx, dy);
 }
-function ljField(seed, r){
-  const R = rng32(seed), S = LJ_S, M = 34;
-  const L = [190, 222, 250][r], corr = [64, 50, 42][r];
+function ljFieldTry(R, seed, r){
+  const S = LJ_S, M = 34;
+  const L = [190, 222, 250][r], corr = [78, 66, 54][r];
   let sx = 0, sy = 0, ta = 0, tx = 0, ty = 0;
   for (let k = 0; k < 200; k++){
     sx = 120 + R()*(S - 240); sy = 120 + R()*(S - 240); ta = R()*Math.PI*2;
@@ -6787,6 +6787,37 @@ function ljField(seed, r){
   const notch = [40, 45, 50][r] + (R() - .5)*6;                                        // opening of the notch, degrees
   return { seed, r, L, sx, sy, ta, corr, obs, wind, slope, notch, W, spd };
 }
+// free openings around the tree, in degrees (0.5° steps): each is [start, width]
+function ljGaps(F){
+  const free = []; for (let k = 0; k < 720; k++) free.push(ljFall(F, k/2).hit < 0);
+  if (free.every(Boolean)) return [[0, 360]];
+  let k0 = free.indexOf(false); const gaps = [];
+  for (let n = 0, k = k0; n < 720; n++){
+    const i = (k0 + n) % 720;
+    if (free[i] && !free[(i + 719) % 720]){ let w = 0; while (free[(i + w) % 720] && w < 720) w++; gaps.push([i/2, w/2]); }
+  }
+  return gaps;
+}
+// width of the opening the tree landed in (0 if it crushed something)
+function ljGapAt(F, aDeg){
+  if (ljFall(F, aDeg).hit >= 0) return 0;
+  let lo = 0, hi = 0;
+  while (lo < 180 && ljFall(F, aDeg - lo - .5).hit < 0) lo += .5;
+  while (hi < 180 && ljFall(F, aDeg + hi + .5).hit < 0) hi += .5;
+  return lo + hi + .5;
+}
+// every garden keeps one wide opening (narrower each round) and at least one small one, worth a bonus
+const LJ_BIG = [30, 20, 12], LJ_SMALL = [9, 7, 6];
+function ljField(seed, r){
+  const R = rng32(seed);
+  let F = null;
+  for (let k = 0; k < 25; k++){
+    F = ljFieldTry(R, seed, r);
+    const g = ljGaps(F);
+    if (g.some(([, w]) => w >= LJ_BIG[r]) && g.some(([, w]) => w >= 2.5 && w <= LJ_SMALL[r])) break;
+  }
+  return F;
+}
 // where the tree lands for a fall angle (degrees); hit = index of the first obstacle crushed, or -1
 function ljFall(F, aDeg){
   const a = aDeg*Math.PI/180, cx = Math.cos(a), cy = Math.sin(a);
@@ -6804,8 +6835,9 @@ function ljPoints(F, aDeg, prec, aim){
   if (f.hit >= 0) return { pts:0, hit:f.hit, dev:0 };
   let dev = Math.abs(((aDeg - F.wind - aim) % 360 + 540) % 360 - 180);            // how far the fall strayed from the axis you chose (wind aside)
   if (!isFinite(dev)) dev = 30;
-  const pts = 20 + 40 * ljClamp(prec, 0, 1) + 40 * ljClamp(1 - dev/12, 0, 1);
-  return { pts:Math.round(pts * LJ_MULT[F.r]), hit:-1, dev };
+  const gap = ljGapAt(F, aDeg), bonus = 50 * ljClamp((22 - gap)/16, 0, 1);         // a fall threaded through a narrow opening is worth more
+  const pts = 20 + 40 * ljClamp(prec, 0, 1) + 40 * ljClamp(1 - dev/12, 0, 1) + bonus;
+  return { pts:Math.round(pts * LJ_MULT[F.r]), hit:-1, dev, gap, bonus:Math.round(bonus * LJ_MULT[F.r]) };
 }
 
 // ---- host side ----
@@ -6838,7 +6870,7 @@ function lumberDone(id, m){
   HLJ.done[id] = true;
   st.pts += res.pts; st.prec += prec; st.precN++;
   if (res.hit >= 0) st.out = true; else st.rounds++;
-  broadcast({ t:'lj_res', id, r:HLJ.r, a:Math.round(a*10)/10, prec:Math.round(prec*100)/100, hit:res.hit, pts:res.pts, tot:st.pts, dev:Math.round(res.dev*10)/10 });
+  broadcast({ t:'lj_res', id, r:HLJ.r, a:Math.round(a*10)/10, prec:Math.round(prec*100)/100, hit:res.hit, pts:res.pts, tot:st.pts, dev:Math.round(res.dev*10)/10, gap:res.gap || 0, bonus:res.bonus || 0 });
   if (!players.find(p => p.id === id && p.bot) && HLJ.list.every(i => HLJ.done[i] || players.find(p => p.id === i && p.bot) || H.stats[i].left))
     for (const b of HLJ.list) if (!HLJ.done[b] && players.find(p => p.id === b && p.bot)) botLumber(b);   // everyone has cut: the robots stop dawdling
   if (HLJ.list.every(i => HLJ.done[i] || (H.stats[i] && H.stats[i].left))){ const r = HLJ.r; ljLater(() => { if (HLJ.r === r) ljCloseRound(); }, 3000); }
@@ -6889,7 +6921,7 @@ function startLumber(m){
   for (const p of players) LJ.tot[p.id] = 0;
   ljHead('Préparation…'); ljTimer(''); ljMsg(''); renderLjPlayers();
   $('ljGo').hidden = true;
-  $('ljHelp').textContent = 'Touchez le jardin pour choisir où tombe l\'arbre, sans rien écraser, puis validez. Ensuite, abattez-le comme un vrai bûcheron, en suivant les pointillés : l\'entaille d\'un seul geste (1 : on descend le long du biais puis on ressort par le bas), puis le trait d\'abattage (2). Posez le doigt sur le rond jaune et glissez. Plus les coupes sont droites, plus l\'arbre suit votre direction. Clavier : ← → viser, Entrée valider, Espace scier, ↑ ↓ corriger.';
+  $('ljHelp').textContent = 'Touchez le jardin pour choisir où tombe l\'arbre, sans rien écraser, puis validez. Ensuite, abattez-le comme un vrai bûcheron, en suivant les pointillés : l\'entaille d\'un seul geste (1 : on descend le long du biais puis on ressort par le bas), puis le trait d\'abattage (2). Posez le doigt sur le rond jaune et glissez. Plus les coupes sont droites, plus l\'arbre suit votre direction. Faire tomber l\'arbre dans une ouverture étroite rapporte un gros bonus. Clavier : ← → viser, Entrée valider, Espace scier, ↑ ↓ corriger.';
 }
 const ljMsg = big => { const m = $('ljMsg'); m.textContent = ''; if (big){ const s = document.createElement('strong'); s.textContent = big; m.append(s); } };
 let ljToastT = null;
@@ -6925,7 +6957,7 @@ function lumberRecv(m){
       LJ.tot[m.id] = m.tot|0;
       if (m.hit >= 0) LJ.out[m.id] = true;
       if (m.id === me.id){
-        if (m.hit < 0){ ljToast('+' + (m.pts|0) + ' points'); if (m.pts >= 85 * LJ_MULT[LJ.r]) sfx('finish'); }
+        if (m.hit < 0){ ljToast('+' + (m.pts|0) + ' points' + (m.bonus > 0 ? ' · ouverture de ' + Math.round(m.gap) + '°, bonus +' + m.bonus : '')); if (m.bonus >= 25 * LJ_MULT[LJ.r]) sfx('finish'); }
       } else LJ.others.set(m.id, { a:+m.a, hit:m.hit|0, pts:m.pts|0, k:0, shown:false });
       if (m.id === me.id && LJ.fall) LJ.fall.dev = +m.dev;
       renderLjPlayers();
