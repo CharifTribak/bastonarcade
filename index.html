@@ -98,7 +98,23 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .plist{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
 .plist li{display:flex;align-items:center;gap:7px;padding:5px 12px 5px 6px;background:var(--panel);border:3px solid var(--line);border-radius:20px;font-weight:800}
 .tag{font-size:11px;color:var(--muted);font-weight:700}
-.solobtn{width:100%;font-size:16px;padding:12px}
+.choices{display:flex;flex-direction:column;gap:14px}
+.choice{width:100%;font-size:22px;padding:18px 12px}
+#btnMulti{background:var(--blue);color:#fff}
+.multi{display:flex;flex-direction:column;gap:12px}
+.backlink{align-self:flex-start;font-size:13px;padding:6px 10px}
+.hello{display:flex;align-items:center;justify-content:center;gap:6px;font-weight:800;font-size:17px}
+.hello button{font-size:15px;padding:2px 9px;margin-left:4px}
+#menuHint:empty{display:none}
+.iconbar{display:flex;justify-content:center;gap:12px}
+.iconbar button{width:48px;height:44px;padding:0;font-size:20px;font-weight:900}
+.strip{overflow:hidden;margin:0 -18px;border-top:3px solid var(--line);border-bottom:3px solid var(--line);background:#000}
+.striprun{display:flex;gap:3px;width:max-content;animation:stripgo 70s linear infinite}
+.striprun figure{margin:0;width:110px;position:relative;flex:none}
+.striprun img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+.striprun figcaption{position:absolute;left:0;right:0;bottom:0;background:rgba(0,0,0,.65);color:#fff;font-size:11px;font-weight:800;text-align:center;padding:2px}
+@keyframes stripgo{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.striprun{animation:none}.strip{overflow-x:auto}}
 #scrLobby.solo .codebox,#scrLobby.solo #lobbyCodeHint,#scrLobby.solo #chatField{display:none}
 .lobbyfoot{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .big{height:64px;font-size:32px;box-shadow:6px 6px 0 var(--line)}
@@ -282,6 +298,15 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .gpcard.mine{background:#FFF3B0;outline:4px solid var(--accent)}
 .gpcard.taken{opacity:.55}
 .gpcard i{font-style:normal;font-weight:900;color:#fff;padding:1px 8px;border:2px solid #000;border-radius:10px;margin-top:3px;text-shadow:0 1px 0 #000}
+@media (max-width:560px){
+  .gpgrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+  .gpcard{padding:6px 6px 7px;box-shadow:3px 3px 0 #000;border-width:2px;gap:2px}
+  .gpcard b{font-size:15px;padding-right:16px}
+  .gpcard small{display:none}
+  .gpcoat{top:5px;right:5px;width:16px;height:16px;border-width:3px}
+  .gpstars{font-size:10.5px;line-height:1.3;letter-spacing:-.02em}
+  .gpcard i{font-size:11px;padding:0 6px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+}
 #gpWrap,.gphead,.gpbtns{width:min(100%,56vh,540px)}
 #gpCv{display:block;width:100%;height:auto;aspect-ratio:540/600;border:3px solid #000;box-shadow:6px 6px 0 #000}
 .gpbtns{display:grid;grid-template-columns:1fr 1.5fr 1fr;gap:10px}
@@ -427,26 +452,35 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
   <div class="card">
     <h1 class="logosvg" data-appname><svg viewBox="0 0 520 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Baston Arcade"><polygon points="260,8 292,62 352,22 356,86 428,58 404,118 494,120 438,166 508,214 428,226 456,292 384,270 372,322 318,276 262,318 222,270 156,306 152,248 76,262 104,206 18,184 92,148 36,92 116,94 102,30 172,62 204,8 228,58" fill="#000" transform="translate(7,7)"/><polygon points="260,8 292,62 352,22 356,86 428,58 404,118 494,120 438,166 508,214 428,226 456,292 384,270 372,322 318,276 262,318 222,270 156,306 152,248 76,262 104,206 18,184 92,148 36,92 116,94 102,30 172,62 204,8 228,58" fill="#E6262B" stroke="#000" stroke-width="5" stroke-linejoin="round"/><g transform="rotate(-6 260 168)"><text x="264" y="196" text-anchor="middle" font-family="Bangers, Impact, sans-serif" font-size="112" letter-spacing="3" fill="#000">BASTON !</text><text x="258" y="190" text-anchor="middle" font-family="Bangers, Impact, sans-serif" font-size="112" letter-spacing="3" fill="#fff" stroke="#000" stroke-width="6" paint-order="stroke" stroke-linejoin="round">BASTON !</text><text x="383" y="252" text-anchor="end" font-family="Bangers, Impact, sans-serif" font-size="52" letter-spacing="6" fill="#000">ARCADE</text><text x="379" y="248" text-anchor="end" font-family="Bangers, Impact, sans-serif" font-size="52" letter-spacing="6" fill="#FFD93B" stroke="#000" stroke-width="5" paint-order="stroke" stroke-linejoin="round">ARCADE</text></g><path d="M60 46 l26 14 M44 76 l30 6 M462 260 l-26 -12 M476 232 l-30 -4" stroke="#000" stroke-width="5" stroke-linecap="round"/></svg></h1>
     <p class="tagline">Seize jeux, de 1 à 5 joueurs</p>
-    <div class="field">
+    <div class="hello" id="helloBox" hidden><span>Salut</span> <b id="helloName"></b><button id="btnName" class="ghost" type="button" aria-label="Changer de nom">✎</button></div>
+    <div class="field" id="nameField">
       <label for="nameIn">Votre nom</label>
       <input id="nameIn" maxlength="14" autocomplete="nickname" placeholder="Votre nom">
     </div>
-    <button id="btnCreate">Créer un salon</button>
-    <label class="privbox" id="privBox" hidden><input type="checkbox" id="privIn"> Salon privé (ne pas l'afficher dans la liste)</label>
-    <button id="btnSolo" class="ghost solobtn">🎮 Jouer seul, sans salon</button>
-    <div class="sep">ou rejoindre</div>
-    <div class="row">
-      <input id="codeIn" maxlength="4" placeholder="CODE" aria-label="Code du salon" autocomplete="off" autocapitalize="characters">
-      <button id="btnJoin" class="ghost">Entrer</button>
+    <div class="choices" id="menuMain">
+      <button id="btnSolo" class="choice" type="button">🎮 Jouer seul</button>
+      <button id="btnMulti" class="choice" type="button">👥 Jouer à plusieurs</button>
     </div>
+    <div class="multi" id="menuMulti" hidden>
+      <button id="btnCreate" type="button">Créer un salon</button>
+      <div class="sep">J'ai un code</div>
+      <div class="row">
+        <input id="codeIn" maxlength="4" placeholder="CODE" aria-label="Code du salon" autocomplete="off" autocapitalize="characters">
+        <button id="btnJoin" class="ghost" type="button">Entrer</button>
+      </div>
+      <button id="btnMultiBack" class="ghost backlink" type="button">← Retour</button>
+    </div>
+    <p class="hint" id="menuHint"></p>
     <div class="salons" id="salons" hidden>
       <div class="salonshead"><b>Salons ouverts</b><button id="btnSalons" class="ghost" aria-label="Actualiser">↻</button></div>
       <ul id="salonList"></ul>
     </div>
-    <button id="btnBoard" class="ghost">Classement général</button>
-    <button id="btnSound" class="ghost">Son : activé</button>
-    <button id="btnLang" class="ghost" translate="no">English</button>
-    <p class="hint" id="menuHint">Créez un salon, partagez le code, puis choisissez le jeu : Gravats, Les Gardiens, Derby, Armada, Tape-taupe, Curling, Chaises musicales, Code secret, Kabaddi, Balle au prisonnier, Chars, Les bergers, Drakkars, Bûcherons, Agility ou Galop. De 1 à 5 joueurs.</p>
+    <div class="strip" id="gameStrip" aria-hidden="true"><div class="striprun" id="gameStripRun"></div></div>
+    <div class="iconbar">
+      <button id="btnBoard" class="ghost" type="button" aria-label="Classement général" title="Classement général">🏆</button>
+      <button id="btnSound" class="ghost" type="button" aria-label="Son : activé" title="Son : activé">🔊</button>
+      <button id="btnLang" class="ghost" type="button" translate="no" aria-label="English" title="English">EN</button>
+    </div>
     <p class="legal"><a href="legal.html">Mentions légales et confidentialité</a></p>
   </div>
 </section>
@@ -459,6 +493,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
       <div class="codebox"><div class="burst"><span>Code</span><b id="lobbyCode">----</b></div><button id="btnInvite" class="ghost invite" type="button">🔗 Copier le lien</button></div>
     </div>
     <p class="hint" id="lobbyCodeHint">Les autres joueurs saisissent ce code depuis le menu, ou ouvrent le lien copié.</p>
+    <label class="privbox" id="privBox" hidden><input type="checkbox" id="privIn"> Salon privé (ne pas l'afficher dans la liste)</label>
     <div class="feature">
       <div class="caption" id="gameCaption">Le jeu choisi</div>
       <img id="gameArt" class="gameart" alt="" hidden>
@@ -996,6 +1031,25 @@ const show = id => { for (const s of ['scrMenu','scrLobby','scrGame','scrPong','
 const store = { get(k){ try { return localStorage.getItem(k); } catch(_) { return null; } }, set(k,v){ try { localStorage.setItem(k,v); } catch(_){} } };
 
 $('nameIn').value = store.get('tm-name') || ((LANG === 'en' ? 'Player' : 'Joueur') + Math.floor(Math.random()*90+10));
+// menu: a saved name shows as a greeting (✎ to change it); two choices, solo or with others
+function syncHello(edit){
+  const saved = store.get('tm-name');
+  $('helloBox').hidden = !saved || edit; $('nameField').hidden = !!saved && !edit;
+  if (saved) $('helloName').textContent = saved;
+}
+syncHello(false);
+$('btnName').onclick = () => { syncHello(true); $('nameIn').focus(); $('nameIn').select(); };
+const menuView = multi => { $('menuMain').hidden = multi; $('menuMulti').hidden = !multi; };
+$('btnMulti').onclick = () => { menuView(true); menuHint(''); };
+$('btnMultiBack').onclick = () => { menuView(false); menuHint(''); };
+(() => {
+  const run = $('gameStripRun'), items = [...document.querySelectorAll('#gamePick button')];
+  for (let k = 0; k < 2; k++) for (const b of items){
+    const f = document.createElement('figure'), im = document.createElement('img'), c = document.createElement('figcaption');
+    im.src = b.querySelector('img').getAttribute('src'); im.alt = ''; im.loading = 'lazy'; c.textContent = b.querySelector('span').textContent;
+    f.append(im, c); run.append(f);
+  }
+})();
 const menuHint = (t, err) => { $('menuHint').textContent = t; $('menuHint').classList.toggle('err', !!err); };
 
 // ================= networking (PeerJS star, host relays) =================
@@ -1013,7 +1067,8 @@ function toMenu(msg){
   $('scrLobby').classList.remove('solo'); $('btnLeaveLobby').textContent = 'Quitter le salon';
   teardown(); phase = 'menu'; $('scrEnd').hidden = true; show('scrMenu');
   $('btnCreate').disabled = false; $('btnJoin').disabled = false;
-  if (msg) menuHint(msg, true);
+  syncHello(false); menuView(!!msg);
+  if (msg) menuHint(msg, true); else menuHint('');
 }
 
 // Solo: the same lobby and games, against robots, with no room and no network (nothing is announced, nobody can join).
@@ -1163,8 +1218,9 @@ async function loadSalons(){
     li.append(c, info, b); ul.append(li);
   }
 }
-if (SUPA_ON){ $('salons').hidden = false; $('privBox').hidden = false; loadSalons(); setInterval(() => { if (phase === 'menu' && document.visibilityState === 'visible') loadSalons(); }, 15000); }
+if (SUPA_ON){ $('salons').hidden = false; loadSalons(); setInterval(() => { if (phase === 'menu' && document.visibilityState === 'visible') loadSalons(); }, 15000); }
 $('btnSalons').onclick = loadSalons;
+$('privIn').onchange = () => { if ($('privIn').checked) unannounce(); else announce(); };
 let lastPing = 0;
 let wakeLock = null;
 async function keepAwake(on){
@@ -1408,6 +1464,7 @@ function clientRecv(m){
 // ================= lobby UI =================
 function renderLobby(){
   $('lobbyCode').textContent = net ? net.code : '----';
+  $('privBox').hidden = !(SUPA_ON && me.host && net && !net.solo);
   $('lobbyCount').textContent = 'Joueurs ' + players.length + '/' + MAXP;
   const ul = $('lobbyList'); ul.textContent = '';
   players.forEach(p => {
@@ -8733,8 +8790,8 @@ function countBeep(n){
   if (n > 0){ sfx('count'); boom(String(n), { fixed:true, big:true, size:72, x:.5, y:.45, ms:900, pal:BOOM_COLORS[n % 2 ? 0 : 1] }); }
   else if (n === 0){ sfx('go'); boom('BASTON !', { fixed:true, big:true, size:Math.min(64, innerWidth / 7), x:.5, y:.45, ms:1100, rot:-6, pal:BOOM_COLORS[2] }); }
 }
-function syncSoundBtn(){ $('btnSound').textContent = 'Son : ' + (SND.on ? 'activé' : 'coupé'); }
-$('btnLang').textContent = LANG === 'fr' ? 'English' : 'Français';
+function syncSoundBtn(){ const b = $('btnSound'), l = SND.on ? 'Son : activé' : 'Son : coupé'; b.textContent = SND.on ? '🔊' : '🔇'; b.setAttribute('aria-label', l); b.title = l; }
+{ const b = $('btnLang'), l = LANG === 'fr' ? 'English' : 'Français'; b.textContent = LANG === 'fr' ? 'EN' : 'FR'; b.setAttribute('aria-label', l); b.title = l; }
 $('btnLang').onclick = () => { try { localStorage.setItem(LANG_KEY, LANG === 'fr' ? 'en' : 'fr'); } catch(_){} location.reload(); };
 $('btnSound').onclick = () => {
   SND.on = !SND.on; try { localStorage.setItem('tm-sound', SND.on ? '1' : '0'); } catch(_){}
@@ -8946,7 +9003,7 @@ $('btnInvite').onclick = async () => {
   try { c = (new URLSearchParams(location.search).get('salon') || '').trim().toUpperCase(); } catch(_){}
   if (!c || !/^[A-Z0-9]{4}$/.test(c)) return;
   try { history.replaceState(null, '', location.pathname); } catch(_){}   // a reload does not rejoin
-  $('codeIn').value = c;
+  $('codeIn').value = c; menuView(true);
   if (store.get('tm-name')) $('btnJoin').click();
   else { menuHint('Choisissez votre nom, puis touchez « Entrer » pour rejoindre le salon ' + c + '.'); $('nameIn').focus(); $('nameIn').select(); }
 })();
