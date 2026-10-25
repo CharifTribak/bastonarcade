@@ -7500,12 +7500,12 @@ const AG_DOGS = [
 const AG_NAMES = { jump:'Haie', tire:'Pneu', weave:'Slalom', tunnel:'Tunnel', walk:'Passerelle', table:'Table' };
 const AG_HELP = {
   run:'Le chien court tout seul : préparez-vous pour le prochain obstacle.',
-  jump:'HAIE : touchez l\'écran juste avant la barre pour sauter.',
-  tire:'PNEU : touchez au bon moment, la fenêtre est plus courte.',
-  weave:'SLALOM : tracez le zigzag d\'un seul trait, le premier piquet à gauche du chien.',
-  tunnel:'TUNNEL : posez le doigt sur le chien et suivez le tunnel.',
-  walk:'PASSERELLE : maintenez pour avancer, relâchez dans la zone jaune du bout.',
-  table:'TABLE : touchez pour « Couché ! », puis ne touchez plus pendant 3 s.',
+  jump:'HAIE : un seul tap, quand le cercle devient vert.',
+  tire:'PNEU : un seul tap, quand le cercle devient vert (fenêtre plus courte).',
+  weave:'SLALOM : refaites du doigt le zigzag montré en pointillés.',
+  tunnel:'TUNNEL : posez le doigt sur le chien et glissez le long du tunnel.',
+  walk:'PASSERELLE : restez appuyé, lâchez quand le chien est sur le jaune.',
+  table:'TABLE : un tap, puis ne touchez plus pendant 3 s.',
   done:'Arrivé ! On attend les autres chiens.'
 };
 let HAG = null, AG = null;
@@ -7842,7 +7842,9 @@ function agilityFrame(dtMs, now){
   // camera: follows the dog, a little ahead
   const dp = AG.follow ? { x:AG.follow.x, y:AG.follow.y, a:AG.follow.a ?? agPos(C, AG.d).a } : agPos(C, AG.mode === 'watch' ? agLeaderD() : AG.d);
   const tx = dp.x + Math.cos(dp.a)*55, ty = dp.y + Math.sin(dp.a)*55;
-  if (AG.mode !== 'weave'){ AG.cam.x += (tx - AG.cam.x)*Math.min(1, dt*4); AG.cam.y += (ty - AG.cam.y)*Math.min(1, dt*4); }   // frozen while the zigzag is drawn, so the line stays put under the finger
+  let cx = tx, cy = ty;
+  if (AG.mode === 'weave' && agUpcoming()){ const m = agPos(C, agUpcoming().s0 + 110); cx = m.x; cy = m.y; }   // the whole weave in view
+  if (!(AG.mode === 'weave' && AG.trace)){ AG.cam.x += (cx - AG.cam.x)*Math.min(1, dt*5); AG.cam.y += (cy - AG.cam.y)*Math.min(1, dt*5); }   // frozen while the zigzag is drawn, so the line stays put under the finger
   drawAgility(now, dp);
 }
 const agLeaderD = () => Math.max(0, ...[...AG.others.values()].map(o => o.d || 0));
@@ -8016,18 +8018,69 @@ function drawAgility(now, dp){
     }
     if (AG.mode === 'tunnel' && !AG.finger){ ctx.strokeStyle = '#FFD21F'; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(dp.x, dp.y, 30 + Math.sin(now/150)*4, 0, Math.PI*2); ctx.stroke(); }
   }
+  // gesture demos, drawn on the course itself: a ghost finger shows what to do
+  const finger = (x, y, press) => {
+    ctx.save(); ctx.translate(x, y);
+    ctx.fillStyle = 'rgba(255,255,255,.95)'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.arc(0, 0, press ? 9 : 12, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,255,255,.8)'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(0, 0, 18 + (now/40 % 10), 0, Math.PI*2); ctx.stroke();
+    ctx.restore();
+  };
+  const ob = agUpcoming();
+  if (ob && !AG.done && AG.mode === 'weave' && !AG.trace){
+    const P = agPoles(C, ob), pts = [[dp.x, dp.y]];
+    P.forEach((p, k) => { const sd = k % 2 ? -1 : 1; pts.push([p.x - Math.sin(ob.a)*sd*22, p.y + Math.cos(ob.a)*sd*22]); });
+    const e = agPos(C, ob.s1); pts.push([e.x, e.y]);
+    ctx.strokeStyle = 'rgba(255,255,255,.75)'; ctx.lineWidth = 5; ctx.setLineDash([2, 10]); ctx.lineCap = 'round';
+    ctx.beginPath(); pts.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.stroke(); ctx.setLineDash([]);
+    const k = (now % 2400)/2400 * (pts.length - 1), i = Math.floor(k), f = k - i, q0 = pts[i], q1 = pts[Math.min(i + 1, pts.length - 1)];
+    finger(q0[0] + (q1[0] - q0[0])*f, q0[1] + (q1[1] - q0[1])*f, true);
+  } else if (ob && !AG.done && AG.mode === 'tunnel' && !AG.finger){
+    const k = (now % 1800)/1800, p = agPos(C, AG.d + (ob.s1 - AG.d)*k);
+    finger(p.x, p.y, true);
+  } else if (ob && !AG.done && AG.mode === 'walk' && !AG.hold){
+    finger(dp.x, dp.y, Math.floor(now/400) % 2 === 0);
+  } else if (ob && !AG.done && AG.mode === 'run' && (ob.type === 'jump' || ob.type === 'tire') && !AG.res[ob.i] && ob.sx - AG.d < 170){
+    const p = agPos(C, ob.sx), win = ob.type === 'jump' ? [14, 62] : [22, 48], dist = ob.sx - AG.d;
+    if (dist >= win[0] && dist <= win[1]) finger(p.x, p.y, true);
+  }
   ctx.restore();
-  // big prompt for the moment
-  let prompt = '';
-  if (AG.mode === 'weave') prompt = 'TRACEZ LE ZIGZAG';
-  else if (AG.mode === 'tunnel' && !AG.finger) prompt = 'DOIGT SUR LE CHIEN, SUIVEZ LE TUNNEL';
-  else if (AG.mode === 'walk' && !AG.hold) prompt = 'MAINTENEZ POUR AVANCER';
-  else if (AG.mode === 'table' && AG.table === 'stand') prompt = 'TOUCHEZ : COUCHÉ !';
-  else if (AG.mode === 'table') prompt = 'NE TOUCHEZ PLUS…';
-  else if (AG.mode === 'run'){ const ob = agUpcoming(); if (ob && (ob.type === 'jump' || ob.type === 'tire') && ob.sx - AG.d < 170 && !AG.res[ob.i]) prompt = 'TOUCHEZ QUAND LE CERCLE EST VERT'; }
-  if (prompt){
-    ctx.font = '24px Bangers, Impact, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 5; ctx.strokeStyle = '#000'; ctx.fillStyle = '#fff';
-    ctx.strokeText(prompt, V/2, V - 24); ctx.fillText(prompt, V/2, V - 24);
+  // one simple instruction card at the bottom: an icon and a few words, green when it is the moment to act
+  let icon = '', txt = '', go = false;
+  if (!AG.done && phase === 'play' && AG.mode !== 'watch'){
+    if (AG.mode === 'weave'){ icon = '☝'; txt = AG.trace ? 'SUIS LES PIQUETS EN ZIGZAG' : 'TRACE LE ZIGZAG D\'UN TRAIT'; }
+    else if (AG.mode === 'tunnel'){ icon = '☝'; txt = AG.finger ? 'GLISSE JUSQU\'À LA SORTIE' : 'POSE LE DOIGT ET GLISSE'; }
+    else if (AG.mode === 'walk'){
+      const z = ob && AG.d >= ob.s1 - 55;
+      if (!AG.hold){ icon = '✋'; txt = 'APPUIE ET RESTE APPUYÉ'; }
+      else if (z){ icon = '🖐'; txt = 'LÂCHE !'; go = true; }
+      else { icon = '✋'; txt = 'GARDE APPUYÉ… LÂCHE SUR LE JAUNE'; }
+    } else if (AG.mode === 'table'){
+      if (AG.table === 'stand'){ icon = '👆'; txt = 'TAPE UNE FOIS'; go = true; }
+      else { icon = '🚫'; txt = 'NE TOUCHE PLUS : ' + Math.max(1, Math.ceil(AG.tableN)); }
+    } else if (AG.mode === 'run' && ob){
+      const dist = ob.s0 - AG.d;
+      if ((ob.type === 'jump' || ob.type === 'tire') && !AG.res[ob.i] && ob.sx - AG.d < 220){
+        const win = ob.type === 'jump' ? [14, 62] : [22, 48], dd = ob.sx - AG.d;
+        if (dd >= win[0] && dd <= win[1]){ icon = '👆'; txt = 'TAPE !'; go = true; }
+        else if (dd > win[1]){ icon = '👆'; txt = 'PRÊT… TAPE QUAND C\'EST VERT'; }
+      } else if (dist < 220 && dist > 0){
+        icon = { weave:'☝', tunnel:'☝', walk:'✋', table:'👆' }[ob.type] || '';
+        txt = { weave:'SLALOM : IL FAUDRA TRACER', tunnel:'TUNNEL : IL FAUDRA GLISSER', walk:'PASSERELLE : IL FAUDRA TENIR', table:'TABLE : TAPE PUIS ATTENDS' }[ob.type] || '';
+      }
+    }
+  }
+  if (txt){
+    const flash = go && Math.floor(now/180) % 2 === 0;
+    ctx.font = '26px Bangers, Impact, sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    const tw = ctx.measureText(txt).width, w = tw + 74, x = V/2 - w/2, y = V - 66;
+    ctx.fillStyle = go ? (flash ? '#3DDC97' : '#2BB57A') : '#FFFFFF'; ctx.strokeStyle = '#000'; ctx.lineWidth = 4;
+    ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x, y, w, 50, 25); else ctx.rect(x, y, w, 50); ctx.fill(); ctx.stroke();
+    ctx.font = '28px sans-serif'; ctx.fillStyle = '#000'; ctx.fillText(icon, x + 16, y + 26);
+    ctx.font = '26px Bangers, Impact, sans-serif'; ctx.fillStyle = go ? '#FFFFFF' : '#000';
+    if (go){ ctx.lineWidth = 4; ctx.strokeText(txt, x + 56, y + 27); }
+    ctx.fillText(txt, x + 56, y + 27);
+    ctx.textBaseline = 'alphabetic';
   }
 }
 
