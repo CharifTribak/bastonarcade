@@ -108,13 +108,18 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 #menuHint:empty{display:none}
 .iconbar{display:flex;justify-content:center;gap:12px}
 .iconbar button{width:48px;height:44px;padding:0;font-size:20px;font-weight:900}
-.strip{overflow:hidden;margin:0 -18px;border-top:3px solid var(--line);border-bottom:3px solid var(--line);background:#000}
-.striprun{display:flex;gap:3px;width:max-content;animation:stripgo 70s linear infinite}
-.striprun figure{margin:0;width:110px;position:relative;flex:none}
-.striprun img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
-.striprun figcaption{position:absolute;left:0;right:0;bottom:0;background:rgba(0,0,0,.65);color:#fff;font-size:11px;font-weight:800;text-align:center;padding:2px}
-@keyframes stripgo{to{transform:translateX(-50%)}}
-@media (prefers-reduced-motion:reduce){.striprun{animation:none}.strip{overflow-x:auto}}
+.strip{overflow-x:auto;overflow-y:hidden;margin:0 -18px;border-top:3px solid var(--line);border-bottom:3px solid var(--line);background:#000;scrollbar-width:none;cursor:grab;touch-action:pan-x;-webkit-overflow-scrolling:touch}
+.strip::-webkit-scrollbar{display:none}
+.strip.drag{cursor:grabbing}
+.striprun{display:flex;gap:3px;width:max-content}
+.striprun button{margin:0;width:110px;position:relative;flex:none;padding:0;border:0;box-shadow:none;background:#000;transform:none;user-select:none;-webkit-user-select:none}
+.striprun img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;pointer-events:none;-webkit-user-drag:none}
+.striprun span{position:absolute;left:0;right:0;bottom:0;background:rgba(0,0,0,.65);color:#fff;font-size:11px;font-weight:800;text-align:center;padding:2px;font-family:var(--body);letter-spacing:0}
+.gamepop{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.45);cursor:pointer}
+.gamepop[hidden]{display:none}
+.gamepop .feature{width:min(400px,100%);animation:popin .18s ease-out}
+.gamepop .featbody small{color:var(--muted);font-weight:800;font-size:12px}
+@keyframes popin{from{transform:scale(.9);opacity:0}}
 #scrLobby.solo .codebox,#scrLobby.solo #lobbyCodeHint,#scrLobby.solo #chatField{display:none}
 .lobbyfoot{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .big{height:64px;font-size:32px;box-shadow:6px 6px 0 var(--line)}
@@ -475,7 +480,8 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
       <div class="salonshead"><b>Salons ouverts</b><button id="btnSalons" class="ghost" aria-label="Actualiser">↻</button></div>
       <ul id="salonList"></ul>
     </div>
-    <div class="strip" id="gameStrip" aria-hidden="true"><div class="striprun" id="gameStripRun"></div></div>
+    <div class="strip" id="gameStrip" aria-label="Les jeux"><div class="striprun" id="gameStripRun"></div></div>
+    <div class="gamepop" id="gamePop" hidden><div class="feature"><img id="gamePopArt" class="gameart" alt=""><div class="featbody"><h2 id="gamePopTitle"></h2><p id="gamePopDesc"></p><small>Touchez pour fermer</small></div></div></div>
     <div class="iconbar">
       <button id="btnBoard" class="ghost" type="button" aria-label="Classement général" title="Classement général">🏆</button>
       <button id="btnSound" class="ghost" type="button" aria-label="Son : activé" title="Son : activé">🔊</button>
@@ -1042,13 +1048,54 @@ $('btnName').onclick = () => { syncHello(true); $('nameIn').focus(); $('nameIn')
 const menuView = multi => { $('menuMain').hidden = multi; $('menuMulti').hidden = !multi; };
 $('btnMulti').onclick = () => { menuView(true); menuHint(''); };
 $('btnMultiBack').onclick = () => { menuView(false); menuHint(''); };
+// the game strip: scrolls by itself, can be swiped or flung (mouse drag too), a tap opens the game's card, a second tap closes it
 (() => {
-  const run = $('gameStripRun'), items = [...document.querySelectorAll('#gamePick button')];
+  const strip = $('gameStrip'), run = $('gameStripRun'), pop = $('gamePop'), items = [...document.querySelectorAll('#gamePick button')];
   for (let k = 0; k < 2; k++) for (const b of items){
-    const f = document.createElement('figure'), im = document.createElement('img'), c = document.createElement('figcaption');
-    im.src = b.querySelector('img').getAttribute('src'); im.alt = ''; im.loading = 'lazy'; c.textContent = b.querySelector('span').textContent;
-    f.append(im, c); run.append(f);
+    const t = document.createElement('button'), im = document.createElement('img'), c = document.createElement('span');
+    t.type = 'button'; t.dataset.g = b.dataset.g; if (k) t.tabIndex = -1;
+    im.src = b.querySelector('img').getAttribute('src'); im.alt = ''; im.loading = 'lazy'; im.draggable = false; c.textContent = b.querySelector('span').textContent;
+    t.append(im, c); run.append(t);
   }
+  let pos = 0, last = 0, holdUntil = 0, vel = 0, drag = null, moved = false;
+  const half = () => run.scrollWidth/2;
+  const wrap = () => { const h = half(); if (h <= 0) return; if (pos >= h) pos -= h; else if (pos < 0) pos += h; strip.scrollLeft = pos; };
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const tick = now => {
+    const dt = Math.min(.05, (now - (last || now))/1000); last = now;
+    if (phase === 'menu' && !document.hidden && pop.hidden && !drag){
+      if (Math.abs(vel) > 5){ pos += vel*dt; vel *= Math.pow(.05, dt); wrap(); holdUntil = now + 2500; }   // fling, slowing down
+      else if (now > holdUntil && !still){ pos += 22*dt; wrap(); }                                      // gentle drift
+    }
+    requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+  // touch and trackpad: the browser scrolls natively; we follow and wrap round
+  strip.addEventListener('scroll', () => { if (Math.abs(strip.scrollLeft - pos) > 1){ pos = strip.scrollLeft; holdUntil = performance.now() + 2500; if (pos < 2){ pos += half(); strip.scrollLeft = pos; } else if (pos > half()*1.5) wrap(); } }, { passive:true });
+  strip.addEventListener('touchstart', () => { vel = 0; holdUntil = performance.now() + 4000; }, { passive:true });
+  // mouse: drag to scroll, release to fling
+  strip.addEventListener('pointerdown', e => {
+    if (e.pointerType !== 'mouse') return;
+    drag = { x:e.clientX, p:pos, t:performance.now(), lx:e.clientX }; moved = false; vel = 0; strip.classList.add('drag');
+  });
+  addEventListener('pointermove', e => {
+    if (!drag) return;
+    const now = performance.now(), dx = e.clientX - drag.x;
+    if (Math.abs(dx) > 6) moved = true;
+    const dtt = Math.max(1, now - drag.t)/1000; vel = -(e.clientX - drag.lx)/dtt; drag.lx = e.clientX; drag.t = now;
+    pos = drag.p - dx; wrap();
+  });
+  addEventListener('pointerup', () => { if (!drag) return; if (performance.now() - drag.t > 80) vel = 0; drag = null; strip.classList.remove('drag'); holdUntil = performance.now() + 2500; });
+  // tap: open the card; tap again (anywhere) to close
+  run.addEventListener('click', e => {
+    const t = e.target.closest('button'); if (!t) return;
+    if (moved){ moved = false; return; }
+    const g = t.dataset.g, img = items.find(b => b.dataset.g === g).querySelector('img').getAttribute('src');
+    $('gamePopArt').src = img; $('gamePopTitle').textContent = GAME_NAMES[g]; $('gamePopDesc').textContent = GAME_DESC[g];
+    pop.hidden = false; vel = 0; sfx('ok');
+  });
+  pop.addEventListener('click', () => { pop.hidden = true; holdUntil = performance.now() + 1500; });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && !pop.hidden) pop.hidden = true; });
 })();
 const menuHint = (t, err) => { $('menuHint').textContent = t; $('menuHint').classList.toggle('err', !!err); };
 
