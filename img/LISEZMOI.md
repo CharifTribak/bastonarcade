@@ -17,6 +17,6 @@ Déposez ici une image par jeu, au format 16:9 (1280×720 conseillé), en JPEG :
 - `drakkar.jpg`
 - `lumber.jpg` (Bûcherons)
 - `agility.jpg` (Agility)
-- `galop.jpg` (Galop, provisoire : copie de derby.jpg) (Drakkars)
+- `galop.jpg` (Galop)
 
 Le salon affiche automatiquement l'image du jeu choisi par le créateur. Sans image, rien ne s'affiche.
