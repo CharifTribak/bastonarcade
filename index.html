@@ -6894,7 +6894,7 @@ const LJ_CW = 600, LJ_CH = 260, LJ_GROUND = 214;
 let HLJ = null, LJ = null;
 
 const ljGauss = R => { const u = Math.max(1e-6, R()), v = R(); return Math.sqrt(-2*Math.log(u)) * Math.cos(2*Math.PI*v); };
-const ljSigma = prec => 1.5 + (1 - prec) * 22;           // degrees of random deviation for a given cut precision
+const ljSigma = prec => 1 + 55 * Math.pow(1 - ljClamp(prec, 0, 1), 1.5);   // degrees of random deviation: a clean cut barely strays, a sloppy one goes anywhere
 const ljClamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
 // ---- the garden of a round ----
@@ -6903,6 +6903,8 @@ const LJ_KINDS = {
   shed:   { w:[44, 56], h:[36, 46] },
   car:    { w:[52, 58], h:[26, 30] },
   tree:   { r:[20, 28] },
+  bush:   { r:[12, 18] },
+  rock:   { r:[10, 15] },
   pool:   { w:[70, 92], h:[44, 56] },
   kennel: { w:[24, 28], h:[20, 24] },
   fence:  { w:[90, 120], h:[8, 8] },
@@ -6956,17 +6958,17 @@ function ljFieldTry(R, seed, r){
   // flankers: obstacles just outside the corridor, near its far end
   const nFlank = [2, 3, 4][r];
   for (let i = 0, tries = 0; i < nFlank && tries < 80; tries++){
-    const t = .55 + R()*.45, side = i % 2 ? 1 : -1, kind = ['car', 'shed', 'tree', 'kennel', 'green', 'tree', 'wall'][Math.floor(R()*7)];
+    const t = .55 + R()*.45, side = i % 2 ? 1 : -1, kind = ['car', 'tree', 'bush', 'kennel', 'rock', 'tree', 'wall', 'bush', 'shed'][Math.floor(R()*9)];
     const probe = make(kind, 0, 0), half = probe.r || Math.max(probe.w, probe.h)/2;
     const off = corr + half + 2 + R()*10;
     const cx = sx + Math.cos(ta)*L*t - Math.sin(ta)*off*side, cy = sy + Math.sin(ta)*L*t + Math.cos(ta)*off*side;
     const o = make(kind, cx, cy); if (ok(o)){ obs.push(o); i++; }
   }
-  const nAll = [16, 20, 24][r];
-  const order = ['house', 'car', 'tree', 'wire', 'pool', 'tree', 'wall', 'shed', 'tree', 'fence', 'car', 'kennel', 'green', 'tree', 'wire', 'wall'];
+  const nAll = [22, 27, 32][r];
+  const order = ['house', 'tree', 'car', 'bush', 'tree', 'wire', 'rock', 'pool', 'tree', 'bush', 'wall', 'tree', 'shed', 'rock', 'tree', 'fence', 'bush', 'car', 'tree', 'kennel', 'green', 'tree', 'bush', 'wire', 'rock', 'wall'];
   kinds.splice(kinds.indexOf('road'), 1);
   for (let tries = 0; obs.length < nAll && tries < 900; tries++){
-    const kind = tries < 60 ? order[obs.length % order.length] : kinds[Math.floor(R()*kinds.length)];
+    const kind = tries < 60 ? order[obs.length % order.length] : R() < .5 ? ['tree', 'bush', 'rock'][Math.floor(R()*3)] : kinds[Math.floor(R()*kinds.length)];
     const o = make(kind, M + R()*(S - 2*M), M + R()*(S - 2*M)); if (ok(o)) obs.push(o);
   }
   // the hedge round the garden counts too: a crown landing in it ends up at the neighbours'
@@ -7020,14 +7022,26 @@ function ljFall(F, aDeg){
   });
   return { crown, tip:[F.sx + cx*F.L, F.sy + cy*F.L], hit };
 }
+// how close the fallen tree came to the nearest obstacle without touching it (garden pixels)
+function ljNear(F, aDeg){
+  const a = aDeg*Math.PI/180, cx = Math.cos(a), cy = Math.sin(a), f = ljFall(F, aDeg);
+  let near = 1e9;
+  for (const o of F.obs){
+    near = Math.min(near, ljShapeDist(o, f.crown[0], f.crown[1]) - (LJ_CROWN - 3));
+    for (let d = 18; d < F.L - 40; d += 5) near = Math.min(near, ljShapeDist(o, F.sx + cx*d, F.sy + cy*d) - 6);
+  }
+  return Math.max(0, near);
+}
 function ljPoints(F, aDeg, prec, aim){
   const f = ljFall(F, aDeg);
   if (f.hit >= 0) return { pts:0, hit:f.hit, dev:0 };
   let dev = Math.abs(((aDeg - F.wind - aim) % 360 + 540) % 360 - 180);            // how far the fall strayed from the axis you chose (wind aside)
   if (!isFinite(dev)) dev = 30;
   const gap = ljGapAt(F, aDeg), bonus = 50 * ljClamp((22 - gap)/16, 0, 1);         // a fall threaded through a narrow opening is worth more
-  const pts = 20 + 40 * ljClamp(prec, 0, 1) + 40 * ljClamp(1 - dev/12, 0, 1) + bonus;
-  return { pts:Math.round(pts * LJ_MULT[F.r]), hit:-1, dev, gap, bonus:Math.round(bonus * LJ_MULT[F.r]) };
+  // daring: landing right next to something without touching it, with a clean cut, earns a risk bonus
+  const near = ljNear(F, aDeg), risk = 70 * ljClamp((26 - near)/22, 0, 1) * ljClamp((prec - .55)/.35, 0, 1);
+  const pts = 20 + 40 * ljClamp(prec, 0, 1) + 40 * ljClamp(1 - dev/12, 0, 1) + bonus + risk;
+  return { pts:Math.round(pts * LJ_MULT[F.r]), hit:-1, dev, gap, near, bonus:Math.round(bonus * LJ_MULT[F.r]), risk:Math.round(risk * LJ_MULT[F.r]) };
 }
 
 // ---- host side ----
@@ -7060,7 +7074,7 @@ function lumberDone(id, m){
   HLJ.done[id] = true;
   st.pts += res.pts; st.prec += prec; st.precN++;
   if (res.hit >= 0) st.out = true; else st.rounds++;
-  broadcast({ t:'lj_res', id, r:HLJ.r, a:Math.round(a*10)/10, prec:Math.round(prec*100)/100, hit:res.hit, pts:res.pts, tot:st.pts, dev:Math.round(res.dev*10)/10, gap:res.gap || 0, bonus:res.bonus || 0 });
+  broadcast({ t:'lj_res', id, r:HLJ.r, a:Math.round(a*10)/10, prec:Math.round(prec*100)/100, hit:res.hit, pts:res.pts, tot:st.pts, dev:Math.round(res.dev*10)/10, gap:res.gap || 0, bonus:res.bonus || 0, risk:res.risk || 0, near:Math.round(res.near || 0) });
   if (!players.find(p => p.id === id && p.bot) && HLJ.list.every(i => HLJ.done[i] || players.find(p => p.id === i && p.bot) || H.stats[i].left))
     for (const b of HLJ.list) if (!HLJ.done[b] && players.find(p => p.id === b && p.bot)) botLumber(b);   // everyone has cut: the robots stop dawdling
   if (HLJ.list.every(i => HLJ.done[i] || (H.stats[i] && H.stats[i].left))){ const r = HLJ.r; ljLater(() => { if (HLJ.r === r) ljCloseRound(); }, 3000); }
@@ -7097,7 +7111,7 @@ function botLumber(id){
   if (!HLJ || HLJ.closed || !ljIn(id)) return;
   const F = HLJ.F, R = Math.random;
   const aim = F.ta*180/Math.PI - F.wind*.7 + ljGauss(R)*2.2;   // the robot knows where the free corridor is
-  const prec = ljClamp(.62 + R()*.33 - F.r*.04, 0, 1);
+  const prec = ljClamp(.72 + R()*.25 - F.r*.03, 0, 1);
   lumberDone(id, { r:F.r, a:aim + ljGauss(R)*ljSigma(prec) + F.wind, prec, aim });
 }
 
@@ -7111,7 +7125,7 @@ function startLumber(m){
   for (const p of players) LJ.tot[p.id] = 0;
   ljHead('Préparation…'); ljTimer(''); ljMsg(''); renderLjPlayers();
   $('ljGo').hidden = true;
-  $('ljHelp').textContent = 'Touchez le jardin pour choisir où tombe l\'arbre, sans rien écraser, puis validez. Ensuite, abattez-le comme un vrai bûcheron, en suivant les pointillés : l\'entaille d\'un seul geste (1 : on descend le long du biais puis on ressort par le bas), puis le trait d\'abattage (2). Posez le doigt sur le rond jaune et glissez. Plus les coupes sont droites, plus l\'arbre suit votre direction. Faire tomber l\'arbre dans une ouverture étroite rapporte un gros bonus. Clavier : ← → viser, Entrée valider, Espace scier, ↑ ↓ corriger.';
+  $('ljHelp').textContent = 'Touchez le jardin pour choisir où tombe l\'arbre, sans rien écraser, puis validez. Ensuite, abattez-le comme un vrai bûcheron, en suivant les pointillés : l\'entaille d\'un seul geste (1 : on descend le long du biais puis on ressort par le bas), puis le trait d\'abattage (2). Posez le doigt sur le rond jaune et glissez. Plus les coupes sont droites, plus l\'arbre suit votre direction. Faire tomber l\'arbre dans une ouverture étroite, ou au ras d\'un obstacle sans le toucher avec une coupe propre, rapporte un gros bonus. Clavier : ← → viser, Entrée valider, Espace scier, ↑ ↓ corriger.';
 }
 const ljMsg = big => { const m = $('ljMsg'); m.textContent = ''; if (big){ const s = document.createElement('strong'); s.textContent = big; m.append(s); } };
 let ljToastT = null;
@@ -7147,7 +7161,14 @@ function lumberRecv(m){
       LJ.tot[m.id] = m.tot|0;
       if (m.hit >= 0) LJ.out[m.id] = true;
       if (m.id === me.id){
-        if (m.hit < 0){ ljToast('+' + (m.pts|0) + ' points' + (m.bonus > 0 ? ' · ouverture de ' + Math.round(m.gap) + '°, bonus +' + m.bonus : '')); if (m.bonus >= 25 * LJ_MULT[LJ.r]) sfx('finish'); }
+        if (m.hit < 0){
+          const parts = ['+' + (m.pts|0) + ' points'];
+          if (m.bonus > 0) parts.push('ouverture de ' + Math.round(m.gap) + '°, bonus +' + m.bonus);
+          if (m.risk > 0) parts.push('frôlé à ' + Math.max(0, Math.round((m.near|0)/9)) + ' m, risque +' + m.risk);
+          ljToast(parts.join(' · '));
+          if (m.risk >= 30 * LJ_MULT[LJ.r]) boom('ÇA PASSE AU RAS !', { size:28, x:.5, y:.22, pal:BOOM_COLORS[0], ms:1300, wrap:$('ljWrap') });
+          if (m.bonus + m.risk >= 25 * LJ_MULT[LJ.r]) sfx('finish');
+        }
       } else LJ.others.set(m.id, { a:+m.a, hit:m.hit|0, pts:m.pts|0, k:0, shown:false });
       if (m.id === me.id && LJ.fall) LJ.fall.dev = +m.dev;
       renderLjPlayers();
@@ -7217,7 +7238,7 @@ function ljLanded(a, mine, id){
   if (f.hit >= 0){
     const o = LJ.F.obs[f.hit]; LJ.crushed.add(f.hit);
     setTimeout(() => sfx('crash', o.k), 120);
-    boom({ house:'CRAAAC !', car:'SCRONCH !', tree:'CRAC !', pool:'PLOUF !', shed:'BADABOUM !', kennel:'OUAF ?!', fence:'CRAC !', green:'CRISTAL !', road:'TUUUT !', wire:'DZOING !', wall:'BAOUM !', hedge:'CHEZ LE VOISIN !' }[o.k] || 'CRAC !',
+    boom({ house:'CRAAAC !', car:'SCRONCH !', tree:'CRAC !', pool:'PLOUF !', shed:'BADABOUM !', kennel:'OUAF ?!', fence:'CRAC !', green:'CRISTAL !', road:'TUUUT !', wire:'DZOING !', wall:'BAOUM !', hedge:'CHEZ LE VOISIN !', bush:'FROUCH !', rock:'CLONK !' }[o.k] || 'CRAC !',
       { size:34, x:ljClamp(o.r ? o.x/LJ_S : (o.x + o.w/2)/LJ_S, .15, .85), y:ljClamp(o.r ? o.y/LJ_S : (o.y + o.h/2)/LJ_S, .1, .9), pal:BOOM_COLORS[2], ms:1300, wrap:$('ljWrap') });
     if (mine){ ljMsg('Écrasé ! Éliminé'); ljHead('Éliminé : vous regardez la suite'); const el = $('ljWrap'); el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); }
     else { const p = players.find(x => x.id === id); if (p) ljToast(p.name + ' a tout écrasé !'); }
@@ -7359,6 +7380,12 @@ function ljObstacle(ctx, o){
     }
     if (hz){ ctx.moveTo(o.x, o.y + o.h/2); ctx.lineTo(o.x + o.w, o.y + o.h/2); } else { ctx.moveTo(o.x + o.w/2, o.y); ctx.lineTo(o.x + o.w/2, o.y + o.h); }
     ctx.stroke();
+  } else if (o.k === 'bush'){ ctx.fillStyle = 'rgba(0,0,0,.16)'; ctx.beginPath(); ctx.arc(o.x + 3, o.y + 4, o.r, 0, Math.PI*2); ctx.fill(); ljLumpy(ctx, o.x, o.y, o.r, '#2F7A3A', '#57A85C', 5);
+  } else if (o.k === 'rock'){
+    ctx.fillStyle = 'rgba(0,0,0,.2)'; ctx.beginPath(); ctx.ellipse(o.x + 3, o.y + 4, o.r, o.r*.8, 0, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); for (let i = 0; i < 7; i++){ const a = i*2*Math.PI/7, k = o.r*(.82 + .18*Math.sin(i*2.7 + o.r)); ctx[i ? 'lineTo' : 'moveTo'](o.x + Math.cos(a)*k, o.y + Math.sin(a)*k*.85); } ctx.closePath();
+    ctx.fillStyle = '#8D9299'; ctx.fill(); ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.stroke();
+    ctx.fillStyle = '#B9BEC4'; ctx.beginPath(); ctx.ellipse(o.x - o.r*.3, o.y - o.r*.3, o.r*.35, o.r*.22, -.5, 0, Math.PI*2); ctx.fill();
   } else if (o.k === 'tree'){ ctx.fillStyle = 'rgba(0,0,0,.18)'; ctx.beginPath(); ctx.arc(o.x + 5, o.y + 6, o.r, 0, Math.PI*2); ctx.fill(); ljLumpy(ctx, o.x, o.y, o.r, '#3E8E41', '#62B865'); }
   else if (o.k === 'house'){
     ctx.fillStyle = 'rgba(0,0,0,.2)'; ctx.fillRect(o.x + 6, o.y + 7, o.w, o.h);
@@ -8819,6 +8846,8 @@ const SFX = {
     else if (k === 'house' || k === 'green'){ noise(.6, .35, 6500, 400); for (let i = 0; i < 9; i++) tone(1800 + Math.random()*2600, .16, 'sine', .04, null, .05 + i*.045); tone(90, .5, 'sawtooth', .08, 45); }
     else if (k === 'road'){ noise(.4, .3, 4000, 300); tone(440, .55, 'square', .06, null, .25); tone(554, .55, 'square', .05, null, .25); tone(440, .3, 'square', .06, null, .95); tone(554, .3, 'square', .05, null, .95); }
     else if (k === 'wire'){ noise(.5, .25, 7000, 1500, 0, 2); for (let i = 0; i < 6; i++) tone(1400 + i*90, .2, 'triangle', .03, 900, i*.05); }
+    else if (k === 'rock'){ tone(160, .25, 'square', .12, 70); noise(.3, .3, 1800, 100); }
+    else if (k === 'bush'){ noise(.6, .25, 6000, 800, 0, .6); }
     else if (k === 'wall'){ noise(.45, .35, 2500, 120); tone(80, .35, 'sine', .3, 40); noise(.3, .15, 6000, 1000, .1); }
     else if (k === 'pool'){ noise(.9, .3, 4500, 200, 0, 2); tone(700, .25, 'sine', .06, 200, .05); }
     else if (k === 'shed'){ tone(310, .6, 'square', .06, 290); tone(460, .6, 'square', .05, 440, .02); noise(.4, .3, 3000, 300); }
