@@ -8525,11 +8525,11 @@ function drawGalop(now){
   // camera on my horse (or the leader), turned so that the race always goes up the screen
   const ref = GP.me >= 0 ? R[GP.me] : R.slice().sort((a, b) => b.s - a.s)[0];
   const rp = gpPos(ref.s, ref.lat);
-  const cx = rp.x + Math.cos(rp.h)*8, cy = rp.y + Math.sin(rp.h)*8;
+  const cx = rp.x, cy = rp.y;
   GP.camH = GP.camH == null ? rp.h : GP.camH + Math.atan2(Math.sin(rp.h - GP.camH), Math.cos(rp.h - GP.camH))*.12;
   ctx.save();
   ctx.fillStyle = '#5FA846'; ctx.fillRect(0, 0, W, Hh);
-  ctx.translate(W/2, Hh*.76); ctx.scale(GP_K, GP_K); ctx.rotate(-Math.PI/2 - GP.camH); ctx.translate(-cx, -cy);
+  ctx.translate(W/2, Hh*.6); ctx.scale(GP_K, GP_K); ctx.rotate(-Math.PI/2 - GP.camH); ctx.translate(-cx, -cy);
   // infield and surroundings
   ctx.fillStyle = '#4E9A3A'; ctx.fill(P.inner);
   // the turf course
@@ -8569,7 +8569,7 @@ function drawGalop(now){
   }
   ctx.restore();
   // names above the horses (upright)
-  const toScreen = (x, y) => { const dx = x - cx, dy = y - cy, a = -Math.PI/2 - GP.camH; return [W/2 + (dx*Math.cos(a) - dy*Math.sin(a))*GP_K, Hh*.76 + (dx*Math.sin(a) + dy*Math.cos(a))*GP_K]; };
+  const toScreen = (x, y) => { const dx = x - cx, dy = y - cy, a = -Math.PI/2 - GP.camH; return [W/2 + (dx*Math.cos(a) - dy*Math.sin(a))*GP_K, Hh*.6 + (dx*Math.sin(a) + dy*Math.cos(a))*GP_K]; };
   ctx.textAlign = 'center'; ctx.font = '900 11px Nunito, sans-serif'; ctx.lineWidth = 3; ctx.strokeStyle = '#000';
   R.forEach((h, i) => {
     const p = gpPos(h.s, h.lat), [sx, sy] = toScreen(p.x, p.y);
