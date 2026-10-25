@@ -322,6 +322,7 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 #gpA{background:var(--accent);color:#fff}
 #gpA.on{background:#9E1B1F}
 #gpTag.low{background:var(--accent);color:#fff}
+#gpWrap.stale #gpCv{filter:saturate(.35) brightness(.9)}
 #gpHead{font-size:clamp(18px,4.6vw,28px)}
 
 /* ---- curling ---- */
@@ -1301,6 +1302,14 @@ function sendLobby(back){
   if (me.host && phase === 'lobby'){ const k = players.length + gameKind; if (k !== annKey){ annKey = k; announce(); } }
   for (const [id, c] of net.conns) if (c.open) try { c.send({ t:'lobby', players, you:id, back, game:gameKind }); } catch(_){}
   clientRecv({ t:'lobby', players, you:'h', back, game:gameKind });
+}
+// position snapshots are sent often and each one replaces the last: to a phone on a weak connection, skip them while
+// its queue is still full instead of piling them up (a backlog delays everything else, pings included, by seconds)
+function snapCongested(c){ try { return (c.bufferSize || 0) > 0 || (c.dataChannel && c.dataChannel.bufferedAmount > 16384); } catch(_){ return false; } }
+function broadcastSnap(msg){
+  if (!net || !net.conns) return;
+  for (const [, c] of net.conns) if (c.open && !snapCongested(c)) try { c.send(msg); } catch(_){}
+  clientRecv(msg);
 }
 function broadcast(msg, exceptId){
   if (!net || !net.conns) return;
@@ -4755,7 +4764,7 @@ function kabaddiHostFrame(dt, now){
   for (let i = 0; i < n && HKB.ph === 'raid'; i++) kbStep(dt/n);
   if (now - HKB.lastSend > 33 && HKB.ph === 'raid'){
     HKB.lastSend = now;
-    broadcast({ t:'kb_s', p:kbSnap(), br:Math.round(HKB.breath*100)/100, cr:HKB.crossed ? 1 : 0, c:[...HKB.contact], hd:HKB.IN[HKB.raider] && HKB.IN[HKB.raider].hold ? 1 : 0 });
+    broadcastSnap({ t:'kb_s', p:kbSnap(), br:Math.round(HKB.breath*100)/100, cr:HKB.crossed ? 1 : 0, c:[...HKB.contact], hd:HKB.IN[HKB.raider] && HKB.IN[HKB.raider].hold ? 1 : 0 });
   }
 }
 function kabaddiFinish(){
@@ -5194,7 +5203,7 @@ function dodgeHostFrame(dt, now){
   if (now - HDB.lastSend > 33){
     HDB.lastSend = now;
     const r = v => Math.round(v);
-    broadcast({ t:'db_s', tl:Math.max(0, DB_TIME - HDB.t),
+    broadcastSnap({ t:'db_s', tl:Math.max(0, DB_TIME - HDB.t),
       p:players.filter(q => H.alive.has(q.id) && HDB.P[q.id]).map(q => { const p = HDB.P[q.id]; return [q.id, r(p.x), r(p.y), Math.round(Math.atan2(p.fy, p.fx)*100)/100, p.catchT > 0 ? 1 : 0, p.inv > 0 ? 1 : 0, H.stats[q.id].lives, p.cd > 0 ? 1 : 0]; }),
       b:HDB.balls.map(b => [r(b.x), r(b.y), b.st === 'live' ? 2 : b.st === 'held' ? 1 : 0]), ev:HDB.ev });
   }
@@ -5581,7 +5590,7 @@ function tankHostFrame(dt, now){
   if (now - HTK.lastSend > 33){
     HTK.lastSend = now;
     const r = v => Math.round(v*10)/10, ra = v => Math.round(v*100)/100;
-    broadcast({ t:'tk_s', tl:Math.max(0, TK_TIME - HTK.t),
+    broadcastSnap({ t:'tk_s', tl:Math.max(0, TK_TIME - HTK.t),
       k:HTK.tanks.map(t => [r(t.x), r(t.y), ra(t.a), ra(t.ta), t.lives, t.hid ? 1 : 0, Math.round(t.rel*10), t.inv > 0 ? 1 : 0, t.alive ? 1 : 0]),
       s:HTK.shells.map(s => [r(s.x), r(s.y)]) });
   }
@@ -6129,7 +6138,7 @@ function sheepHostFrame(dt, now){
   if (HSH.t >= HSH.day || remaining === 0) return shEndRound();
   if (now - HSH.lastSend > 40){
     HSH.lastSend = now; const r = Math.round;
-    broadcast({ t:'sh_s', p:HSH.t / HSH.day,
+    broadcastSnap({ t:'sh_s', p:HSH.t / HSH.day,
       d:Object.entries(HSH.dogs).map(([id, d]) => [id, r(d.x), r(d.y), Math.round(d.a*100)/100, d.mv|0, Math.ceil(d.cd*10)]),
       s:HSH.sheep.map(s => [r(s.x), r(s.y), s.gone ? 2 : s.in ? 1 : 0, s.eat ? 1 : 0]),
       w:HSH.wolves.filter(w => !w.out).map(w => [r(w.x), r(w.y), Math.round((w.a || 0)*100)/100, w.carry >= 0 ? 1 : 0, w.scare > 0 ? 1 : 0]) });
@@ -6464,7 +6473,7 @@ function drakkarHostFrame(dt, now){
   HDK.bv += (vb - HDK.bv) * Math.min(1, dt*.6); HDK.bd += HDK.bv*dt;
   if (now - HDK.lastSend > 66){
     HDK.lastSend = now;
-    broadcast({ t:'dk_s', d:Math.round(HDK.d*10)/10, bd:Math.round(HDK.bd*10)/10, v:Math.round(HDK.v*10)/10, ph:HDK.phases, bp:Math.round((HDK.bd*.9) % (Math.PI*2)*100)/100 });
+    broadcastSnap({ t:'dk_s', d:Math.round(HDK.d*10)/10, bd:Math.round(HDK.bd*10)/10, v:Math.round(HDK.v*10)/10, ph:HDK.phases, bp:Math.round((HDK.bd*.9) % (Math.PI*2)*100)/100 });
   }
   if (HDK.d >= DK_LEN || HDK.bd >= DK_LEN) drakkarFinish(HDK.d >= HDK.bd);
 }
@@ -8443,9 +8452,9 @@ function galopHostFrame(dt, now){
     for (let i = 0; i < n; i++) gpStep(dt/n);
     if (HGP.R.every(h => h.fin) || HGP.t > 200) galopFinish();
   }
-  if (now - HGP.lastSend > 50){
+  if (now - HGP.lastSend > 80){                       // 12.5 updates a second, whole numbers only: light enough for a weak 4G link
     HGP.lastSend = now;
-    broadcast({ t:'gp_s', k:Math.round(HGP.t*10)/10, r:HGP.R.map(h => [Math.round(h.s*10)/10, Math.round(h.lat*100)/100, Math.round(h.v*10)/10, Math.round(h.st),
+    broadcastSnap({ t:'gp_s', k:Math.round(HGP.t*10), r:HGP.R.map(h => [Math.round(h.s*10), Math.round(h.lat*100), Math.round(h.v*10), Math.round(h.st),
       (h.push && !h.tired ? 1 : 0) | (h.draft ? 2 : 0) | (h.blocked ? 4 : 0) | (h.tired ? 8 : 0) | (h.fin ? 16 : 0) | (h.brake && !h.push ? 32 : 0)]) });
   }
 }
@@ -8555,11 +8564,12 @@ function galopRecv(m){
     $('gpBtns').hidden = !mh;
     sfx('clack');
   }
-  else if (m.t === 'gp_go'){ GP.ph = 'race'; phase = 'play'; sfx('clack'); setTimeout(() => sfx('clack'), 90); boom('PARTIS !', { size:36, x:.5, y:.3, pal:BOOM_COLORS[2], ms:900 }); }
+  else if (m.t === 'gp_go'){ GP.ph = 'race'; GP.lastS = performance.now(); phase = 'play'; sfx('clack'); setTimeout(() => sfx('clack'), 90); boom('PARTIS !', { size:36, x:.5, y:.3, pal:BOOM_COLORS[2], ms:900 }); }
   else if (m.t === 'gp_s'){
     if (!GP.R) return;
-    GP.t = +m.k || 0;
-    m.r.forEach((a, i) => { const h = GP.R[i]; if (!h) return; h.ds = +a[0]; h.dl = +a[1]; h.v = +a[2]; h.st = a[3]|0; h.f = a[4]|0; });
+    if (!Array.isArray(m.r)) return;
+    GP.t = (+m.k || 0)/10; GP.lastS = performance.now();
+    m.r.forEach((a, i) => { const h = GP.R[i]; if (!h || !Array.isArray(a)) return; h.ds = (+a[0] || 0)/10; h.dl = (+a[1] || 0)/100; h.v = (+a[2] || 0)/10; h.st = a[3]|0; h.f = a[4]|0; });
   }
   else if (m.t === 'gp_fin'){
     GP.fin[m.id] = { place:m.place|0, time:+m.time };
@@ -8597,10 +8607,17 @@ function galopFrame(dtMs, now){
   }
   if (!GP.R) return;
   if (GP.ph === 'gates' && phase === 'count'){ GP.count -= dt; if (GP.count > 0) countBeep(Math.ceil(GP.count)); }
+  // a weak connection: after 0.6 s without news the horses stop guessing ahead, and the player is told
+  if (!me.host && GP.ph === 'race'){
+    const stale = !!GP.lastS && now - GP.lastS > 600;
+    if (stale !== !!GP.stale){ GP.stale = stale; $('gpWrap').classList.toggle('stale', stale); }
+    if (stale && now - GP.lastS > 2500 && !GP.staleT){ GP.staleT = true; gpToast('Connexion faible…'); }
+    if (!stale) GP.staleT = false;
+  }
   // smooth the host's positions (and move ahead between updates)
   for (const h of GP.R){
     const r = gpRail(GP_START + h.s), f = r.bend ? GP_RAD/(GP_RAD + h.lat + .8) : 1;
-    if (!me.host){ h.ds += h.v*f*dt; }
+    if (!me.host && !GP.stale){ h.ds += h.v*f*dt; }
     const src = me.host && HGP && HGP.R ? HGP.R.find(x => x.id === h.id) : null;
     if (src){ h.s = src.s; h.lat = src.lat; h.v = src.v; h.st = src.st; h.f = (src.push && !src.tired ? 1 : 0) | (src.draft ? 2 : 0) | (src.blocked ? 4 : 0) | (src.tired ? 8 : 0) | (src.fin ? 16 : 0) | (src.brake && !src.push ? 32 : 0); }
     else { h.s += (h.ds - h.s)*Math.min(1, dt*8); h.lat += (h.dl - h.lat)*Math.min(1, dt*8); }
@@ -9010,7 +9027,7 @@ function frame(now){
   if (cur === 'drakkar') drakkarFrame(dt, now);
   if (cur === 'lumber') lumberFrame(dt, now);
   if (cur === 'agility') agilityFrame(dt, now);
-  if (cur === 'galop') galopFrame(dt, now);
+  if (cur === 'galop') try { galopFrame(dt, now); } catch(e){ console.error(e); }   // one bad frame must not freeze the race
   if (cur === 'tetris' && G && phase === 'count'){
     G.count -= dt/1000;
     if (G.count <= 0){ phase = 'play'; setMsg('', ''); countBeep(0); }
