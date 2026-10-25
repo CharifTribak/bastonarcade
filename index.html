@@ -8145,7 +8145,7 @@ function drawAgility(now, dp){
 // the track by itself: the rider only moves left or right and asks for more speed, which burns stamina. Stamina comes
 // back slowly, faster in another horse's slipstream, slower with nobody in front. Tucked in behind a horse that
 // accelerates, you get a third of its acceleration for free and pay less for your own. The host simulates everything.
-const GP_HORSES = [
+let GP_HORSES = [
   { n:'Tonnerre',     s:[4, 2, 1], coat:'noir' },   { n:'Étincelle',  s:[4, 1, 2], coat:'alezan' },
   { n:'Sirocco',      s:[2, 4, 1], coat:'bai' },    { n:'Grand Large', s:[1, 4, 2], coat:'gris' },
   { n:'Feu Follet',   s:[2, 1, 4], coat:'alezan' }, { n:'Libellule',  s:[1, 2, 4], coat:'blanc' },
@@ -8161,6 +8161,20 @@ const GP_COATS = {
   blanc:  { body:'#F2EFE6', mane:'#D6D1C4', leg:'#C9C3B5' }
 };
 const GP_COAT_NAMES = { bai:'bai', alezan:'alezan', gris:'gris', noir:'noir', blanc:'blanc' };
+// each game: 30 horses are bred with fresh stats (always 7 stars in total, so they stay balanced), 20 of them race.
+// Each also has a hidden form of the day (+5 %, 0 or −5 % on acceleration, handling and stamina), known only to the host.
+const GP_NAMES = ['Tonnerre', 'Étincelle', 'Sirocco', 'Grand Large', 'Feu Follet', 'Libellule', 'Ouragan', 'Rafale', 'Mistral', 'Comète',
+  'Belle de Mai', 'Pampa', 'Tempête', 'Zéphyr', 'Bourrasque', 'Éclair', "Brise d'Avril", 'Nuage Noir', "Flèche d'Or", 'Cannelle',
+  'Galopin', 'Fleur de Sel', 'Vent du Nord', 'Sirène', 'Balthazar', 'Prince Noir', 'Mirabelle', 'Tornade', 'Calypso', 'Cerf-Volant'];
+const GP_SPREADS = [[4, 2, 1], [3, 3, 1], [3, 2, 2]], GP_BRED = 30, GP_SHOWN = 20;
+function gpBreed(){
+  const sh = a => { for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random()*(i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const coats = Object.keys(GP_COATS), names = sh(GP_NAMES.slice());
+  const bred = names.slice(0, GP_BRED).map(n => ({ n, s:sh(GP_SPREADS[Math.floor(Math.random()*3)].slice()), coat:coats[Math.floor(Math.random()*coats.length)],
+    form:[.95, 1, 1.05][Math.floor(Math.random()*3)] }));
+  const shown = sh(bred).slice(0, GP_SHOWN);
+  return { horses:shown.map(({ n, s, coat }) => ({ n, s, coat })), form:shown.map(x => x.form) };
+}
 // balanced by simulating hundreds of robot races: each star is worth about the same
 const GP_ACC = [0, 1.15, 1.45, 1.75, 2.05], GP_VMAX = [0, 36.17, 36.59, 37.01, 37.43], GP_LAT = [0, 1.7, 2.3, 2.9, 3.5];
 const GP_STR = 400, GP_RAD = 111.4, GP_LAP = 2*GP_STR + 2*Math.PI*GP_RAD, GP_DIST = 3000, GP_START = 300;
@@ -8186,7 +8200,7 @@ function gpPos(s, lat){
   const r = gpRail(GP_START + s), nx = -Math.sin(r.h), ny = Math.cos(r.h), d = lat + .8;
   return { x:r.x + nx*d, y:r.y + ny*d, h:r.h, bend:r.bend };
 }
-const gpStats = h => { const S = GP_HORSES[h].s; return { ak:GP_ACC[S[0]], vmax:GP_VMAX[S[1]], hand:GP_LAT[S[2]] }; };   // ak: acceleration, hand: sideways speed
+const gpStats = (h, fm = 1) => { const S = GP_HORSES[h].s; return { ak:GP_ACC[S[0]]*fm, vmax:GP_VMAX[S[1]], hand:GP_LAT[S[2]]*fm }; };   // ak: acceleration, hand: sideways speed
 const gpStars = n => '★'.repeat(n) + '☆'.repeat(4 - n);
 
 // ---- host: picking ----
@@ -8196,12 +8210,13 @@ function galopHostStart(){
   players = players.filter(p => !p.bot);
   H.alive = new Set(players.map(p => p.id)); H.n = players.length; H.stats = {};
   for (const p of players) H.stats[p.id] = { place:0, time:0, horse:-1, left:false };
-  HGP = { timers:[], ph:'pick', picks:{}, end:performance.now() + GP_PICK*1000, IN:{}, R:null, lastSend:0, t:0, order:[] };
-  broadcast({ t:'start', players, game:'galop' });
+  const B = gpBreed(); GP_HORSES = B.horses;
+  HGP = { timers:[], ph:'pick', picks:{}, end:performance.now() + GP_PICK*1000, IN:{}, R:null, lastSend:0, t:0, order:[], form:B.form };
+  broadcast({ t:'start', players, game:'galop', horses:GP_HORSES });
   gpPickSend();
   gpLater(gpRaceStart, GP_PICK*1000 + 400);
 }
-function gpPickSend(){ broadcast({ t:'gp_pick', picks:HGP.picks, left:Math.max(0, Math.round((HGP.end - performance.now())/1000)) }); }
+function gpPickSend(){ broadcast({ t:'gp_pick', horses:GP_HORSES, picks:HGP.picks, left:Math.max(0, Math.round((HGP.end - performance.now())/1000)) }); }
 function galopPick(id, h){
   if (!HGP || HGP.ph !== 'pick' || !H.stats[id]) return;
   h = h|0; if (h < 0 || h >= GP_HORSES.length) return;
@@ -8230,7 +8245,7 @@ function gpRaceStart(){
   // stalls drawn at random
   const order = runners.map((_, i) => i).sort(() => Math.random() - .5);
   runners.forEach((r, i) => { r.stall = order[i]; });
-  HGP.R = runners.map(r => ({ ...r, ...gpStats(r.h), s:0, lat:.4 + r.stall*GP_LANE, v:0, st:100, push:false, steer:0, acc:0, tired:false,
+  HGP.R = runners.map(r => ({ ...r, ...gpStats(r.h, HGP.form[r.h]), fm:HGP.form[r.h] || 1, s:0, lat:.4 + r.stall*GP_LANE, v:0, st:100, push:false, steer:0, acc:0, tired:false,
     draft:false, blocked:false, fin:0, place:0, thinkT:Math.random()*.2 }));
   for (const r of runners) if (!r.bot && H.stats[r.id]) H.stats[r.id].horse = r.h;
   broadcast({ t:'gp_race', runners });
@@ -8269,8 +8284,8 @@ function gpStep(dt){
     if (h.blocked) h.v = Math.min(h.v, A.v + (g - 2.2)*2.5);              // stuck behind: you cannot go through him
     h.acc = (h.v - v0)/dt;
     // stamina
-    if (push){ h.st -= (h.v < h.vmax - .05 ? 7 : 4.5) * (h.draft && A.push ? .65 : 1) * dt; if (h.st <= 0){ h.st = 0; h.tired = true; } }
-    else h.st = Math.min(100, h.st + (brake ? 6 : 1.1 * (h.draft ? 1.5 : 1) * (anyAhead ? 1 : .85)) * (h.bot ? 1 : 4/3) * dt);   // riders recover a third faster than robots
+    if (push){ h.st -= (h.v < h.vmax - .05 ? 7 : 4.5) * (h.draft && A.push ? .65 : 1) / h.fm * dt; if (h.st <= 0){ h.st = 0; h.tired = true; } }
+    else h.st = Math.min(100, h.st + (brake ? 6 : 1.1 * (h.draft ? 1.5 : 1) * (anyAhead ? 1 : .85)) * (h.bot ? 1 : 4/3) * h.fm * dt);   // riders recover a third faster than robots
     if (h.tired && h.st >= 20) h.tired = false;
     // sideways, blocked by a horse alongside
     if (h.steer && !h.fin){
@@ -8369,6 +8384,7 @@ const gpcv = $('gpCv'), gpctx = gpcv.getContext('2d');
 function startGalop(m){
   lastCountShown = null;
   players = m.players; cur = 'galop'; G = null; PG = null; D = null; phase = 'pick';
+  if (Array.isArray(m.horses) && m.horses.length) GP_HORSES = m.horses;
   $('scrEnd').hidden = true; show('scrGalop');
   GP = { ph:'pick', picks:{}, left:GP_PICK, R:null, view:null, me:-1, IN:{ l:false, r:false, a:false, b:false }, sent:'', count:0, t:0, fin:{}, over:false,
     hoofT:0, bell:false, cheer:false, tracks:null };
@@ -8397,7 +8413,7 @@ function renderGpPick(){
 }
 function galopRecv(m){
   if (!GP) return;
-  if (m.t === 'gp_pick'){ GP.picks = m.picks || {}; GP.left = m.left|0; GP.pickT = performance.now(); renderGpPick(); }
+  if (m.t === 'gp_pick'){ if (Array.isArray(m.horses) && m.horses.length) GP_HORSES = m.horses; GP.picks = m.picks || {}; GP.left = m.left|0; GP.pickT = performance.now(); renderGpPick(); }
   else if (m.t === 'gp_race'){
     GP.ph = 'gates'; phase = 'count'; GP.count = 3.4; lastCountShown = null;
     GP.R = m.runners.map(r => ({ ...r, s:0, lat:.4 + r.stall*GP_LANE, v:0, st:100, f:0, ds:0, dl:.4 + r.stall*GP_LANE, gait:Math.random()*6 }));
