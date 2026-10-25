@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Baston Arcade</title>
-<meta name="description" content="Quatorze jeux multijoueurs dans le navigateur : Gravats, Les Gardiens, Derby, Armada, Tape-taupe, Curling, Chaises musicales, Code secret, Kabaddi, Balle au prisonnier, Chars, Les bergers, Drakkars et Bûcherons. Un salon, un code, de 1 à 5 joueurs.">
+<meta name="description" content="Quinze jeux multijoueurs dans le navigateur : Gravats, Les Gardiens, Derby, Armada, Tape-taupe, Curling, Chaises musicales, Code secret, Kabaddi, Balle au prisonnier, Chars, Les bergers, Drakkars, Bûcherons et Agility. Un salon, un code, de 1 à 5 joueurs.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Baston Arcade">
-<meta property="og:description" content="Quatorze jeux multijoueurs dans le navigateur. Créez un salon, partagez le code, et que le meilleur gagne.">
+<meta property="og:description" content="Quinze jeux multijoueurs dans le navigateur. Créez un salon, partagez le code, et que le meilleur gagne.">
 <meta property="og:image" content="https://bastonarcade.com/img/share.jpg?v=2">
 <meta property="og:url" content="https://bastonarcade.com/">
 <link rel="canonical" href="https://bastonarcade.com/">
@@ -265,6 +265,12 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 #ljGo{height:58px;font-size:26px}
 #ljHead{font-size:clamp(17px,4.4vw,26px)}
 
+/* ---- agility ---- */
+#agWrap,.aghead{width:min(100%,64vh,600px)}
+#agCv{display:block;width:100%;height:auto;aspect-ratio:1;touch-action:none;user-select:none;-webkit-user-select:none;border:3px solid #000;box-shadow:6px 6px 0 #000}
+#agHead{font-size:clamp(17px,4.4vw,26px)}
+#agFaults.low{background:var(--accent);color:#fff}
+
 /* ---- curling ---- */
 .curl{display:flex;flex-direction:column;align-items:center;gap:10px;max-width:560px;margin:0 auto}
 .cuhead{width:min(100%,52vh,440px)}
@@ -397,7 +403,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
 <section id="scrMenu" class="center">
   <div class="card">
     <h1 class="logosvg" data-appname><svg viewBox="0 0 520 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Baston Arcade"><polygon points="260,8 292,62 352,22 356,86 428,58 404,118 494,120 438,166 508,214 428,226 456,292 384,270 372,322 318,276 262,318 222,270 156,306 152,248 76,262 104,206 18,184 92,148 36,92 116,94 102,30 172,62 204,8 228,58" fill="#000" transform="translate(7,7)"/><polygon points="260,8 292,62 352,22 356,86 428,58 404,118 494,120 438,166 508,214 428,226 456,292 384,270 372,322 318,276 262,318 222,270 156,306 152,248 76,262 104,206 18,184 92,148 36,92 116,94 102,30 172,62 204,8 228,58" fill="#E6262B" stroke="#000" stroke-width="5" stroke-linejoin="round"/><g transform="rotate(-6 260 168)"><text x="264" y="196" text-anchor="middle" font-family="Bangers, Impact, sans-serif" font-size="112" letter-spacing="3" fill="#000">BASTON !</text><text x="258" y="190" text-anchor="middle" font-family="Bangers, Impact, sans-serif" font-size="112" letter-spacing="3" fill="#fff" stroke="#000" stroke-width="6" paint-order="stroke" stroke-linejoin="round">BASTON !</text><text x="383" y="252" text-anchor="end" font-family="Bangers, Impact, sans-serif" font-size="52" letter-spacing="6" fill="#000">ARCADE</text><text x="379" y="248" text-anchor="end" font-family="Bangers, Impact, sans-serif" font-size="52" letter-spacing="6" fill="#FFD93B" stroke="#000" stroke-width="5" paint-order="stroke" stroke-linejoin="round">ARCADE</text></g><path d="M60 46 l26 14 M44 76 l30 6 M462 260 l-26 -12 M476 232 l-30 -4" stroke="#000" stroke-width="5" stroke-linecap="round"/></svg></h1>
-    <p class="tagline">Quatorze jeux, de 1 à 5 joueurs</p>
+    <p class="tagline">Quinze jeux, de 1 à 5 joueurs</p>
     <div class="field">
       <label for="nameIn">Votre nom</label>
       <input id="nameIn" maxlength="14" autocomplete="nickname" placeholder="Votre nom">
@@ -417,7 +423,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
     <button id="btnBoard" class="ghost">Classement général</button>
     <button id="btnSound" class="ghost">Son : activé</button>
     <button id="btnLang" class="ghost" translate="no">English</button>
-    <p class="hint" id="menuHint">Créez un salon, partagez le code, puis choisissez le jeu : Gravats, Les Gardiens, Derby, Armada, Tape-taupe, Curling, Chaises musicales, Code secret, Kabaddi, Balle au prisonnier, Chars, Les bergers, Drakkars ou Bûcherons. De 1 à 5 joueurs.</p>
+    <p class="hint" id="menuHint">Créez un salon, partagez le code, puis choisissez le jeu : Gravats, Les Gardiens, Derby, Armada, Tape-taupe, Curling, Chaises musicales, Code secret, Kabaddi, Balle au prisonnier, Chars, Les bergers, Drakkars, Bûcherons ou Agility. De 1 à 5 joueurs.</p>
     <p class="legal"><a href="legal.html">Mentions légales et confidentialité</a></p>
   </div>
 </section>
@@ -453,6 +459,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
       <button data-g="sheep" aria-pressed="false"><img src="img/sheep.jpg" alt=""><span>Bergers</span></button>
       <button data-g="drakkar" aria-pressed="false"><img src="img/drakkar.jpg" alt=""><span>Drakkars</span></button>
       <button data-g="lumber" aria-pressed="false"><img src="img/lumber.jpg" alt=""><span>Bûcherons</span></button>
+      <button data-g="agility" aria-pressed="false"><img src="img/agility.jpg" alt=""><span>Agility</span></button>
     </div>
     <div class="field">
       <label id="lobbyCount">Joueurs</label>
@@ -733,6 +740,20 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
   </div>
 </section>
 
+<!-- AGILITY -->
+<section id="scrAgility" hidden>
+  <div class="naval">
+    <div class="nvhead aghead"><div class="nvturn" id="agHead">Agility</div><div class="dkchips"><span class="cuend" id="agTime">⏱ 0,0 s</span><span class="cuend" id="agFaults">Fautes : 0</span></div></div>
+    <div class="nvwrap" id="agWrap">
+      <canvas id="agCv" width="600" height="600" aria-label="Le parcours d'agility"></canvas>
+      <div class="msg pm" id="agMsg"></div>
+      <div class="toast pm" id="agToast" aria-live="polite"></div>
+    </div>
+    <ul class="nvplayers" id="agPlayers"></ul>
+    <p class="hint" id="agHelp" style="text-align:center"></p>
+  </div>
+</section>
+
 <!-- RANKING -->
 <div class="overlay" id="scrEnd" hidden>
   <div class="card" style="max-width:480px">
@@ -773,6 +794,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
       <button data-f="sheep" aria-pressed="false">Bergers</button>
       <button data-f="drakkar" aria-pressed="false">Drakkars</button>
       <button data-f="lumber" aria-pressed="false">Bûcherons</button>
+      <button data-f="agility" aria-pressed="false">Agility</button>
     </div>
     <div class="rank"><table>
       <thead><tr id="lbHead"></tr></thead>
@@ -901,7 +923,7 @@ let D = null;                   // derby state
 let NV = null, HN = null;       // armada: my view / host's full map
 let BOT = null;                  // host-side robot when someone plays alone
 let ML = null, HM = null;       // tape-taupe: my view / host referee
-const GAME_NAMES = { tetris:'Gravats', pong:'Les Gardiens', derby:'Derby', naval:'Armada', mole:'Tape-taupe', curling:'Curling', chairs:'Chaises musicales', master:'Code secret', kabaddi:'Kabaddi', dodge:'Balle au prisonnier', tank:'Chars', sheep:'Les bergers', drakkar:'Drakkars', lumber:'Bûcherons' };
+const GAME_NAMES = { tetris:'Gravats', pong:'Les Gardiens', derby:'Derby', naval:'Armada', mole:'Tape-taupe', curling:'Curling', chairs:'Chaises musicales', master:'Code secret', kabaddi:'Kabaddi', dodge:'Balle au prisonnier', tank:'Chars', sheep:'Les bergers', drakkar:'Drakkars', lumber:'Bûcherons', agility:'Agility' };
 const GAME_DESC = {
   tetris:'Empilez des pièces de 2, 3 et 5 briques. Chaque ligne effacée envoie des briques fendues à vos adversaires. Effacez une ligne collée à une brique fendue : elle éclate et repart chez son expéditeur.',
   pong:'Chaque joueur garde un but avec 5 vies. Le terrain suit le nombre de joueurs : carré à 2, hexagone à 3, octogone à 4, décagone à 5. Deux ballons à partir de 3 joueurs. Le but d\'un joueur éliminé se ferme.',
@@ -917,12 +939,13 @@ const GAME_DESC = {
   sheep:'Les bergers, en coopération : vous êtes des chiens de berger et devez rabattre le troupeau dans l\'enclos avant le coucher du soleil (regardez sa course dans le ciel). Les moutons fuient les chiens et ont du caractère : le peureux file, le gourmand broute les fleurs, l\'agneau suit sa mère. « Ouaf ! » fait détaler. Des loups sortent du bois : chassez-les à deux. 6 journées de plus en plus dures (plus de moutons et de loups, journées plus courtes) ; une manche ratée et c\'est fini. Seul, un chien robot vous aide.',
   drakkar:'Drakkars, en coopération : tout le salon rame dans le même drakkar et fait la course contre celui des robots jusqu\'en Angleterre. Un coup de rame par coup de tambour, en alternant GAUCHE et DROITE. Les coups de chacun s\'affichent chez tous pour se caler ensemble. Plus l\'équipage est synchro, plus le drakkar file, et le tambour accélère.',
   lumber:'Concours de bûcherons, tronçonneuse en main : vu du dessus, choisissez où tombe votre arbre sans rien écraser, puis abattez-le comme un vrai, en suivant les pointillés : les deux coupes de l\'entaille, puis le trait d\'abattage. Plus les coupes sont droites, plus l\'arbre tombe là où vous l\'avez décidé, et viser une ouverture étroite rapporte un gros bonus. Écraser une maison, une voiture ou un autre arbre élimine. Trois manches de plus en plus dures, tout le monde joue en même temps.',
+  agility:'Concours d\'agility : chacun guide son chien sur le même parcours, en même temps. Entre les obstacles, le chien court seul. Haies et pneu : touchez au bon moment. Slalom : tracez le zigzag entre les piquets. Tunnel : suivez-le du doigt. Passerelle : maintenez, puis relâchez dans la zone jaune. Table : « Couché ! » puis ne touchez plus. Chaque faute coûte 5 s, le meilleur temps gagne.',
   derby:'Course de chevaux : tout le monde reçoit la même série de figures à tracer. Chaque figure réussie fait avancer votre cheval, plus loin si elle est complexe et bien tracée. Le premier à la ligne gagne.'
 };
 
 const cleanName = s => String(s || '').replace(/[\u0000-\u001f<>]/g,'').trim().slice(0,14) || (LANG === 'en' ? 'Player' : 'Joueur');
 const genCode = () => { const a='ABCDEFGHJKMNPQRSTUVWXYZ23456789'; let s=''; for(let i=0;i<4;i++) s+=a[Math.floor(Math.random()*a.length)]; return s; };
-const show = id => { for (const s of ['scrMenu','scrLobby','scrGame','scrPong','scrDerby','scrNaval','scrMole','scrCurl','scrChairs','scrMaster','scrKabaddi','scrDodge','scrTank','scrSheep','scrDrakkar','scrLumber']) $(s).hidden = s !== id; if (id === 'scrKabaddi') try { window.scrollTo(0, 0); } catch(_){} document.documentElement.classList.toggle('joyon', ['scrKabaddi','scrDodge','scrTank','scrSheep'].includes(id)); };
+const show = id => { for (const s of ['scrMenu','scrLobby','scrGame','scrPong','scrDerby','scrNaval','scrMole','scrCurl','scrChairs','scrMaster','scrKabaddi','scrDodge','scrTank','scrSheep','scrDrakkar','scrLumber','scrAgility']) $(s).hidden = s !== id; if (id === 'scrKabaddi') try { window.scrollTo(0, 0); } catch(_){} document.documentElement.classList.toggle('joyon', ['scrKabaddi','scrDodge','scrTank','scrSheep'].includes(id)); };
 const store = { get(k){ try { return localStorage.getItem(k); } catch(_) { return null; } }, set(k,v){ try { localStorage.setItem(k,v); } catch(_){} } };
 
 $('nameIn').value = store.get('tm-name') || ((LANG === 'en' ? 'Player' : 'Joueur') + Math.floor(Math.random()*90+10));
@@ -934,7 +957,7 @@ function teardown(){
   if (HN && HN.timer) clearTimeout(HN.timer);
   if (HM) moleClearTimers();
   if (HC) clearTimeout(HC.timer);
-  HC = null; CU = null; mcClear(); HMC = null; MC = null; mmClear(); HMM = null; MM = null; kbClear(); HKB = null; KB = null; dbClear(); HDB = null; DB = null; tkClear(); HTK = null; TK = null; shClear(); HSH = null; SHV = null; dkClear(); HDK = null; ljClear(); HLJ = null; LJ = null; sawStop(); DK = null;
+  HC = null; CU = null; mcClear(); HMC = null; MC = null; mmClear(); HMM = null; MM = null; kbClear(); HKB = null; KB = null; dbClear(); HDB = null; DB = null; tkClear(); HTK = null; TK = null; shClear(); HSH = null; SHV = null; dkClear(); HDK = null; ljClear(); HLJ = null; LJ = null; sawStop(); agClear(); HAG = null; AG = null; DK = null;
   CHAT.length = 0; renderChat();
   net = null; H = null; G = null; PG = null; D = null; NV = null; HN = null; cur = null; me.host = false; me.id = null; players = []; opps.clear();
 }
@@ -1120,7 +1143,7 @@ function hostDrop(conn){
   net.conns.delete(id);
   if (phase === 'lobby'){ const p = players.find(x => x.id === id); players = players.filter(p => p.id !== id); sendLobby(false); if (p) chatSys(p.name + ' a quitté le salon'); return; }
   if (H && H.alive.has(id)){
-    if (H.game === 'pong') pongDrop(id); else if (H.game === 'curling') curlDrop(id); else if (H.game === 'chairs') chairsDrop(id); else if (H.game === 'master') masterDrop(id); else if (H.game === 'kabaddi') kabaddiDrop(id); else if (H.game === 'dodge') dodgeDrop(id); else if (H.game === 'tank') tankDrop(id); else if (H.game === 'sheep') sheepDrop(id); else if (H.game === 'drakkar') drakkarDrop(id); else if (H.game === 'lumber') lumberDrop(id); else if (H.game === 'derby') derbyDrop(id); else if (H.game === 'naval') navalDrop(id); else if (H.game === 'mole') moleDrop(id); else hostHandle(id, { t:'dead', left:true });
+    if (H.game === 'pong') pongDrop(id); else if (H.game === 'curling') curlDrop(id); else if (H.game === 'chairs') chairsDrop(id); else if (H.game === 'master') masterDrop(id); else if (H.game === 'kabaddi') kabaddiDrop(id); else if (H.game === 'dodge') dodgeDrop(id); else if (H.game === 'tank') tankDrop(id); else if (H.game === 'sheep') sheepDrop(id); else if (H.game === 'drakkar') drakkarDrop(id); else if (H.game === 'lumber') lumberDrop(id); else if (H.game === 'agility') agilityDrop(id); else if (H.game === 'derby') derbyDrop(id); else if (H.game === 'naval') navalDrop(id); else if (H.game === 'mole') moleDrop(id); else hostHandle(id, { t:'dead', left:true });
   }
 }
 
@@ -1170,6 +1193,7 @@ function hostStart(){
   if (gameKind === 'sheep') return sheepHostStart();
   if (gameKind === 'drakkar') return drakkarHostStart();
   if (gameKind === 'lumber') return lumberHostStart();
+  if (gameKind === 'agility') return agilityHostStart();
   unannounce();                                   // a started game leaves the public list at once
   broadcast({ t:'start', players, game:gameKind, seed:Math.floor(Math.random() * 2**31) });
 }
@@ -1214,6 +1238,10 @@ function hostHandle(id, m){
     navalFire(id, m.x|0, m.y|0);
   } else if (m.t === 'dp'){
     derbyProgress(id, m);
+  } else if (m.t === 'ag_p'){
+    broadcast({ t:'ag_p', id, d:+m.d || 0 }, id);
+  } else if (m.t === 'ag_done'){
+    agilityDone(id, m);
   } else if (m.t === 'lj_done'){
     lumberDone(id, m);
   } else if (m.t === 'dk_stroke'){
@@ -1279,9 +1307,9 @@ function clientRecv(m){
     case 'lobby':
       players = Array.isArray(m.players) ? m.players : [];
       if (m.you) me.id = m.you;
-      if (['tetris','pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber'].includes(m.game)) gameKind = m.game;
+      if (['tetris','pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber','agility'].includes(m.game)) gameKind = m.game;
       if (phase === 'menu' || phase === 'lobby' || m.back){
-        phase = 'lobby'; $('scrEnd').hidden = true; G = null; PG = null; D = null; NV = null; ML = null; CU = null; MC = null; MM = null; KB = null; DB = null; TK = null; SHV = null; DK = null; if (LJ){ LJ = null; sawStop(); } cur = null; show('scrLobby'); renderLobby();
+        phase = 'lobby'; $('scrEnd').hidden = true; G = null; PG = null; D = null; NV = null; ML = null; CU = null; MC = null; MM = null; KB = null; DB = null; TK = null; SHV = null; DK = null; if (LJ){ LJ = null; sawStop(); } AG = null; cur = null; show('scrLobby'); renderLobby();
       }
       break;
     case 'nv_start': startNaval(m); break;
@@ -1307,7 +1335,8 @@ function clientRecv(m){
     case 'sh_round': case 'sh_s': case 'sh_res': case 'sh_ev': sheepRecv(m); break;
     case 'dk_beat': case 'dk_s': case 'dk_tap': case 'dk_end': case 'dk_ev': drakkarRecv(m); break;
     case 'lj_round': case 'lj_res': case 'lj_sum': case 'lj_left': lumberRecv(m); break;
-    case 'start': if (m.game === 'lumber') startLumber(m); else if (m.game === 'drakkar') startDrakkar(m); else if (m.game === 'sheep') startSheep(m); else if (m.game === 'tank') startTank(m); else if (m.game === 'dodge') startDodge(m); else if (m.game === 'kabaddi') startKabaddi(m); else if (m.game === 'master') startMaster(m); else if (m.game === 'chairs') startChairs(m); else if (m.game === 'curling') startCurling(m); else if (m.game === 'pong') startPong(m.players); else if (m.game === 'derby') startDerby(m.players, m.seed|0); else startGame(m.players); break;
+    case 'ag_p': case 'ag_done': case 'ag_left': agilityRecv(m); break;
+    case 'start': if (m.game === 'agility') startAgility(m); else if (m.game === 'lumber') startLumber(m); else if (m.game === 'drakkar') startDrakkar(m); else if (m.game === 'sheep') startSheep(m); else if (m.game === 'tank') startTank(m); else if (m.game === 'dodge') startDodge(m); else if (m.game === 'kabaddi') startKabaddi(m); else if (m.game === 'master') startMaster(m); else if (m.game === 'chairs') startChairs(m); else if (m.game === 'curling') startCurling(m); else if (m.game === 'pong') startPong(m.players); else if (m.game === 'derby') startDerby(m.players, m.seed|0); else startGame(m.players); break;
     case 'dr': derbyRemote(m); break;
     case 'ps': pongState(m); break;
     case 'pg': pongGoalFx(m.side|0); break;
@@ -1596,7 +1625,7 @@ function showEnd(ranking, game){
   phase = 'end';
   if (G) G.p = null;
   if (PG) PG.ph = 'over';
-  const pong = game === 'pong', derby = game === 'derby', naval = game === 'naval', mole = game === 'mole', curl = game === 'curling', chairs = game === 'chairs', master = game === 'master', kab = game === 'kabaddi', dodge = game === 'dodge', tank = game === 'tank', coop = game === 'sheep', viking = game === 'drakkar', lumber = game === 'lumber';
+  const pong = game === 'pong', derby = game === 'derby', naval = game === 'naval', mole = game === 'mole', curl = game === 'curling', chairs = game === 'chairs', master = game === 'master', kab = game === 'kabaddi', dodge = game === 'dodge', tank = game === 'tank', coop = game === 'sheep', viking = game === 'drakkar', lumber = game === 'lumber', agil = game === 'agility';
   if (ML) ML.over = true;
   if (NV) NV.over = true;
   if (D) D.over = true;
@@ -1609,11 +1638,12 @@ function showEnd(ranking, game){
   if (SHV) SHV.over = true;
   if (DK) DK.over = true;
   if (LJ){ LJ.over = true; LJ.ph = 'end'; sawStop(); }
+  if (AG){ AG.over = true; if (!AG.done) AG.mode = 'watch'; }
   const hd = $('rankHead'); hd.textContent = '';
-  for (const h of ['#','Joueur', ...(lumber ? ['Points','Précision','Manches'] : viking ? ['Rôle','Coups','Synchro'] : coop ? ['Manches','Moutons','Ouaf'] : tank ? ['Char','Rôle','Touches'] : dodge ? ['Vies','Touches','Arrêts'] : kab ? ['Points','Raids réussis','Plaquages'] : master ? ['Points','Trouvés','Essais'] : chairs ? ['Vies','Chaises','Réflexe'] : curl ? ['Points','Maison','Meilleure'] : pong ? ['Vies','Arrêts'] : derby ? ['Figures','Distance','Temps'] : naval ? ['Tirs','Touchés','À flot'] : mole ? ['Points','Tapées','Échappées'] : ['Lignes','Briques','Score'])]){
+  for (const h of ['#','Joueur', ...(agil ? ['Temps','Fautes','Total'] : lumber ? ['Points','Précision','Manches'] : viking ? ['Rôle','Coups','Synchro'] : coop ? ['Manches','Moutons','Ouaf'] : tank ? ['Char','Rôle','Touches'] : dodge ? ['Vies','Touches','Arrêts'] : kab ? ['Points','Raids réussis','Plaquages'] : master ? ['Points','Trouvés','Essais'] : chairs ? ['Vies','Chaises','Réflexe'] : curl ? ['Points','Maison','Meilleure'] : pong ? ['Vies','Arrêts'] : derby ? ['Figures','Distance','Temps'] : naval ? ['Tirs','Touchés','À flot'] : mole ? ['Points','Tapées','Échappées'] : ['Lignes','Briques','Score'])]){
     const th = document.createElement('th'); th.textContent = h; hd.append(th);
   }
-  $('rankNote').textContent = lumber ? '« Précision » : moyenne de vos coupes. « Manches » : manches finies sans rien écraser. Un joueur qui écrase quelque chose est éliminé.' : viking ? 'Course en équipe. « Synchro » : coups de rame donnés en rythme avec le tambour.' : coop ? 'Partie en équipe : tout le monde partage le score. « Moutons » : moutons rentrés au total, « Ouaf » : aboiements.' : tank ? 'Les deux membres d\'un équipage partagent la même place. « Touches » : obus du canonnier qui ont fait mouche.' : dodge ? '« Touches » : balles qui ont atteint un adversaire. « Arrêts » : balles attrapées.' : kab ? '« Raids réussis » : raids rentrés avec au moins un défenseur touché. « Plaquages » : attaquants retenus jusqu\'au bout du souffle.' : master ? '« Trouvés » : codes trouvés. « Essais » : total des essais sur la partie.' : chairs ? '« Chaises » : chaises gagnées. « Réflexe » : votre plus rapide, de l\'arrêt du disque à la chaise.' : curl ? '« Maison » : pierres dans la maison en fin de mène. « Meilleure » : pierre la plus proche du centre.' : mole ? '« Tapées » : taupes adverses tapées. « Échappées » : vos taupes que personne n\'a eues.' : naval ? '« À flot » : cases de bateau encore intactes à la fin.' : pong ? '« Arrêts » : ballons repoussés par le gardien.' : derby ? '« Temps » : durée pour franchir la ligne, pour ceux qui l\'ont franchie.' : '« Briques » : nombre de briques envoyées aux adversaires.';
+  $('rankNote').textContent = agil ? '« Total » : temps du parcours plus 5 s par faute. Un chien qui n\'a pas fini est classé après les autres.' : lumber ? '« Précision » : moyenne de vos coupes. « Manches » : manches finies sans rien écraser. Un joueur qui écrase quelque chose est éliminé.' : viking ? 'Course en équipe. « Synchro » : coups de rame donnés en rythme avec le tambour.' : coop ? 'Partie en équipe : tout le monde partage le score. « Moutons » : moutons rentrés au total, « Ouaf » : aboiements.' : tank ? 'Les deux membres d\'un équipage partagent la même place. « Touches » : obus du canonnier qui ont fait mouche.' : dodge ? '« Touches » : balles qui ont atteint un adversaire. « Arrêts » : balles attrapées.' : kab ? '« Raids réussis » : raids rentrés avec au moins un défenseur touché. « Plaquages » : attaquants retenus jusqu\'au bout du souffle.' : master ? '« Trouvés » : codes trouvés. « Essais » : total des essais sur la partie.' : chairs ? '« Chaises » : chaises gagnées. « Réflexe » : votre plus rapide, de l\'arrêt du disque à la chaise.' : curl ? '« Maison » : pierres dans la maison en fin de mène. « Meilleure » : pierre la plus proche du centre.' : mole ? '« Tapées » : taupes adverses tapées. « Échappées » : vos taupes que personne n\'a eues.' : naval ? '« À flot » : cases de bateau encore intactes à la fin.' : pong ? '« Arrêts » : ballons repoussés par le gardien.' : derby ? '« Temps » : durée pour franchir la ligne, pour ceux qui l\'ont franchie.' : '« Briques » : nombre de briques envoyées aux adversaires.';
   const tb = $('rankBody'); tb.textContent = '';
   (ranking || []).forEach(r => {
     const tr = document.createElement('tr'); if (r.place === 1) tr.className = 'win';
@@ -1622,7 +1652,8 @@ function showEnd(ranking, game){
     const d = document.createElement('span'); d.className = 'dot'; d.style.background = r.color;
     const s = document.createElement('span'); s.textContent = r.name + (r.id === me.id ? ' (vous)' : '') + (r.left ? ' · parti' : '');
     w.append(d, s); nm.append(w);
-    if (lumber) tr.append(td(r.place), nm, td(r.pts|0), td((r.sync|0) + ' %'), td((r.rounds|0) + '/' + LJ_ROUNDS + (r.out ? ' ✗' : '')));
+    if (agil) tr.append(td(r.place), nm, td(r.done ? fmtSec(Math.round(r.time*1000)) : '–'), td(r.done ? r.faults|0 : '–'), td(r.done ? fmtSec(Math.round(r.total*1000)) : 'abandon'));
+    else if (lumber) tr.append(td(r.place), nm, td(r.pts|0), td((r.sync|0) + ' %'), td((r.rounds|0) + '/' + LJ_ROUNDS + (r.out ? ' ✗' : '')));
     else if (viking) tr.append(td(r.win ? '★' : '–'), nm, td(r.role || ''), td(r.strokes|0), td((r.sync|0) + ' %'));
     else if (coop) tr.append(td('★'), nm, td(r.rounds|0), td(r.sheep|0), td(r.barks|0));
     else if (tank) tr.append(td(r.place), nm, td(r.tank|0), td(r.role || ''), td(r.hits|0));
@@ -1647,7 +1678,7 @@ function showEnd(ranking, game){
   $('winPanel').style.background = viking ? (iWon ? '#3DDC97' : '#8A84B0') : coop ? '#3DDC97' : win ? win.color : '#FFD93B';
   $('winName').textContent = viking ? (iWon ? 'L\'Angleterre est à vous !' : 'Les autres Vikings arrivent avant vous') : coop ? 'Score d\'équipe : ' + ((win && win.score) | 0) : win ? (iWon ? 'Vous gagnez !' : win.name + ' gagne !') : '';
   $('myPlace').textContent = viking ? 'Drakkars' + (iWon && win.t ? ' · ' + fmtSec(win.t) : '') : coop ? 'Les bergers · ' + ((win && win.rounds) | 0) + '/' + SH_ROUNDS + ' manches réussies' : (GAME_NAMES[game] || 'Gravats') + (mine ? ' · vous finissez ' + (mine.place === 1 ? '1er' : mine.place + 'e') + ' sur ' + ranking.length : '');
-  (lumber ? ljMsg : viking ? drakkarMsg : coop ? sheepMsg : tank ? tankMsg : dodge ? dodgeMsg : kab ? kabaddiMsg : master ? masterMsg : chairs ? chairsMsg : curl ? curlMsg : pong ? pongMsg : derby ? derbyMsg : naval ? navalMsg : mole ? moleMsg : setMsg)('', '');
+  (agil ? agMsg : lumber ? ljMsg : viking ? drakkarMsg : coop ? sheepMsg : tank ? tankMsg : dodge ? dodgeMsg : kab ? kabaddiMsg : master ? masterMsg : chairs ? chairsMsg : curl ? curlMsg : pong ? pongMsg : derby ? derbyMsg : naval ? navalMsg : mole ? moleMsg : setMsg)('', '');
   $('btnAgain').hidden = false;
   $('endHint').textContent = me.host ? 'Tout le monde revient au salon : relancez le même jeu ou choisissez-en un autre.' : 'Vous attendrez au salon que le créateur relance.';
   saveGame(ranking, game);
@@ -1851,7 +1882,7 @@ function release(a){
 const KEYMAP = { arrowleft:'left', arrowright:'right', arrowdown:'down', arrowup:'rotr', x:'rotr', z:'rotl', w:'rotl', control:'rotl', ' ':'drop', c:'hold', shift:'hold' };
 addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT') return;
-  if (cur === 'curl' || cur === 'chairs' || cur === 'master' || cur === 'kabaddi' || cur === 'dodge' || cur === 'tank' || cur === 'sheep' || cur === 'drakkar' || cur === 'lumber') return;
+  if (cur === 'curl' || cur === 'chairs' || cur === 'master' || cur === 'kabaddi' || cur === 'dodge' || cur === 'tank' || cur === 'sheep' || cur === 'drakkar' || cur === 'lumber' || cur === 'agility') return;
   if (cur === 'pong'){ const k = PKEYS[e.key.toLowerCase()]; if (k){ e.preventDefault(); pin[k] = true; } return; }
   const a = KEYMAP[e.key.toLowerCase()]; if (!a) return;
   e.preventDefault();
@@ -7453,11 +7484,558 @@ function sawStop(){
   } catch(_){}
 }
 
+// ================= AGILITY : guide your dog round the course, fastest clean run wins =================
+// Everyone runs the same course (same seed) at the same time, each on their own screen; the others show as faint
+// dogs. Between obstacles the dog runs on its own. Jumps and tyre: tap at the right moment. Weave poles: draw the
+// zigzag (first pole at the dog's left). Tunnel: trace it with your finger. Dog walk: hold to walk, let go inside the
+// yellow contact zone. Table: tap "down", then do not touch for 3 s. Each fault adds 5 s.
+const AG_SPEED = 230, AG_FAULT = 5, AG_LIMIT = 150, AG_VIEW = 600, AG_ZOOM = 1.3;   // the canvas shows 600/1.3 world px around the dog
+const AG_DOGS = [
+  { breed:'Border collie', body:'#1C1C22', head:'#1C1C22', mask:'#FFFFFF', ears:'semi', ear:'#1C1C22', tail:'#FFFFFF', spots:null, chest:'#FFFFFF' },
+  { breed:'Dalmatien', body:'#FFFFFF', head:'#FFFFFF', mask:null, ears:'drop', ear:'#1C1C22', tail:'#FFFFFF', spots:'#1C1C22', chest:null },
+  { breed:'Corgi', body:'#E2873A', head:'#E2873A', mask:'#FFFFFF', ears:'big', ear:'#E2873A', tail:null, spots:null, chest:'#FFFFFF' },
+  { breed:'Labrador', body:'#E3BE74', head:'#E3BE74', mask:null, ears:'drop', ear:'#C99A4E', tail:'#E3BE74', spots:null, chest:null },
+  { breed:'Husky', body:'#7D8793', head:'#7D8793', mask:'#FFFFFF', ears:'pointy', ear:'#5F6873', tail:'#7D8793', spots:null, chest:'#FFFFFF' }
+];
+const AG_NAMES = { jump:'Haie', tire:'Pneu', weave:'Slalom', tunnel:'Tunnel', walk:'Passerelle', table:'Table' };
+const AG_HELP = {
+  run:'Le chien court tout seul : préparez-vous pour le prochain obstacle.',
+  jump:'HAIE : touchez l\'écran juste avant la barre pour sauter.',
+  tire:'PNEU : touchez au bon moment, la fenêtre est plus courte.',
+  weave:'SLALOM : tracez le zigzag d\'un seul trait, le premier piquet à gauche du chien.',
+  tunnel:'TUNNEL : posez le doigt sur le chien et suivez le tunnel.',
+  walk:'PASSERELLE : maintenez pour avancer, relâchez dans la zone jaune du bout.',
+  table:'TABLE : touchez pour « Couché ! », puis ne touchez plus pendant 3 s.',
+  done:'Arrivé ! On attend les autres chiens.'
+};
+let HAG = null, AG = null;
+
+// ---- the course: legs of free running, each ending in an obstacle, turning in between ----
+function agCourseTry(R, seed){
+  const pool = ['tire', 'weave', 'tunnel', 'walk', 'table', 'jump', 'tire', 'jump'];
+  for (let i = pool.length - 1; i > 0; i--){ const j = Math.floor(R()*(i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
+  const types = ['jump', ...pool];
+  const pts = [[0, 0]], obs = [];
+  let x = 0, y = 0, a = -Math.PI/2, len = 0;
+  const step = (dist, turn) => {                    // walk forward, possibly curving, adding points every 8 px
+    const n = Math.max(1, Math.ceil(dist/8));
+    for (let k = 0; k < n; k++){ a += (turn || 0)/n; x += Math.cos(a)*dist/n; y += Math.sin(a)*dist/n; pts.push([x, y]); }
+    len += dist;
+  };
+  step(120);
+  types.forEach((type, i) => {
+    step(110 + R()*70, (R() < .5 ? -1 : 1) * (.5 + R()*.9));      // turning run-up
+    step(60);                                                    // straight approach
+    const s0 = len, ax = x, ay = y, ah = a;
+    if (type === 'jump' || type === 'tire') step(60);
+    else if (type === 'weave') step(6*36 + 30);
+    else if (type === 'tunnel') step(240, (R() < .5 ? -1 : 1) * (1.6 + R()*1.2));
+    else if (type === 'walk') step(300);
+    else if (type === 'table') step(70);
+    obs.push({ i, type, s0, s1:len, sx:s0 + (type === 'table' ? 35 : 30), x:ax, y:ay, a:ah });
+    step(40);
+  });
+  step(150);
+  // cumulative distances
+  const cum = [0]; for (let k = 1; k < pts.length; k++) cum.push(cum[k - 1] + Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][1] - pts[k - 1][1]));
+  return { seed, pts, cum, len:cum[cum.length - 1], obs };
+}
+// the course must never run back over itself: retry until every part stays clear of the others
+function agCourse(seed){
+  const R = rng32(seed);
+  let C = null;
+  for (let k = 0; k < 80; k++){
+    C = agCourseTry(R, seed);
+    let ok = true;
+    for (let i = 0; i < C.pts.length && ok; i += 2) for (let j = i + 2; j < C.pts.length; j += 2){
+      if (C.cum[j] - C.cum[i] < 300) continue;
+      if (Math.hypot(C.pts[i][0] - C.pts[j][0], C.pts[i][1] - C.pts[j][1]) < 110){ ok = false; break; }
+    }
+    if (ok) break;
+  }
+  return C;
+}
+function agPos(C, d){
+  d = Math.max(0, Math.min(C.len, d));
+  let lo = 0, hi = C.cum.length - 1;
+  while (hi - lo > 1){ const m = (lo + hi) >> 1; if (C.cum[m] <= d) lo = m; else hi = m; }
+  const p = C.pts[lo], q = C.pts[hi], seg = (C.cum[hi] - C.cum[lo]) || 1, t = (d - C.cum[lo]) / seg;
+  return { x:p[0] + (q[0] - p[0])*t, y:p[1] + (q[1] - p[1])*t, a:Math.atan2(q[1] - p[1], q[0] - p[0]) };
+}
+// weave poles of an obstacle, in world coordinates (6 poles on the path)
+function agPoles(C, ob){ const out = []; for (let k = 0; k < 6; k++) out.push(agPos(C, ob.s0 + 30 + k*36)); return out; }
+
+// ---- host side ----
+function agLater(fn, ms){ const g = HAG; const t = setTimeout(() => { if (HAG === g && H && !H.over) fn(); }, ms); HAG.timers.push(t); }
+function agClear(){ if (HAG) HAG.timers.forEach(t => clearTimeout(t)); }
+function agilityHostStart(){
+  H.stats = {};
+  for (const p of players) H.stats[p.id] = { time:0, faults:0, total:0, done:false, left:false };
+  const seed = Math.floor(Math.random() * 2**31);
+  HAG = { timers:[], seed, C:agCourse(seed), t0:performance.now() + 3200, bots:{}, lastSend:0 };
+  for (const p of players) if (p.bot) HAG.bots[p.id] = agBotPlan(HAG.C);
+  broadcast({ t:'start', players, game:'agility', seed });
+  agLater(agilityFinish, 3200 + AG_LIMIT*1000);
+}
+function agilityDone(id, m){
+  const st = H && H.stats[id]; if (!st || st.done || st.left) return;
+  st.done = true; st.time = Math.max(0, +m.time || 0); st.faults = Math.max(0, m.faults|0);
+  st.total = Math.round(st.time*10 + st.faults*AG_FAULT*10) / 10;
+  broadcast({ t:'ag_done', id, time:st.time, faults:st.faults, total:st.total });
+  if (Object.values(H.stats).every(s => s.done || s.left)) agLater(agilityFinish, 2500);
+}
+function agilityFinish(){
+  if (!H || H.over) return;
+  H.over = true; agClear();
+  const ids = Object.keys(H.stats).sort((a, b) => {
+    const A = H.stats[a], B = H.stats[b];
+    if (A.left !== B.left) return A.left ? 1 : -1;
+    if (A.done !== B.done) return A.done ? -1 : 1;
+    return A.total - B.total;
+  });
+  const ranking = ids.map((pid, i) => { const p = players.find(x => x.id === pid) || { name:'?', color:'#888' }, st = H.stats[pid];
+    return { id:pid, name:p.name, color:p.color, place:i + 1, ...st, t:st.done ? Math.round(st.total*1000) : 0 }; });
+  setTimeout(() => broadcast({ t:'end', ranking, game:'agility' }), 600);
+}
+function agilityDrop(id){
+  if (!H || H.over || !H.stats[id]) return;
+  H.stats[id].left = true; broadcast({ t:'ag_left', id });
+  if (!players.some(p => !p.bot && !H.stats[p.id].left)) return agilityFinish();
+  if (Object.values(H.stats).every(s => s.done || s.left)) agLater(agilityFinish, 1500);
+}
+// robot: runs the course with plausible times per obstacle and the odd fault
+function agBotPlan(C){
+  const R = Math.random, marks = [[0, 0]];
+  let t = 0, d = 0, faults = 0;
+  for (const ob of C.obs){
+    t += (ob.s0 - d)/AG_SPEED; d = ob.s0; marks.push([t, d]);
+    const extra = { jump:0, tire:0, weave:3.2 + R()*2.2, tunnel:1.6 + R()*1.4, walk:1.9 + R()*1.2, table:3.9 + R()*1.3 }[ob.type];
+    if (R() < { jump:.12, tire:.2, weave:.25, tunnel:0, walk:.2, table:0 }[ob.type]){ faults++; t += ob.type === 'jump' || ob.type === 'tire' ? .7 : 0; }
+    t += extra + (ob.s1 - ob.s0)/AG_SPEED; d = ob.s1; marks.push([t, d]);
+  }
+  t += (C.len - d)/AG_SPEED; marks.push([t, C.len]);
+  return { marks, total:t, faults, done:false };
+}
+function agilityHostFrame(now){
+  if (!HAG || !H || H.over) return;
+  const el = (now - HAG.t0)/1000;
+  if (el < 0 || now - HAG.lastSend < 300) return;
+  HAG.lastSend = now;
+  for (const [id, B] of Object.entries(HAG.bots)){
+    if (B.done || !H.stats[id]) continue;
+    if (el >= B.total){ B.done = true; agilityDone(id, { time:Math.round(B.total*10)/10, faults:B.faults }); continue; }
+    let k = 0; while (k < B.marks.length - 1 && B.marks[k + 1][0] <= el) k++;
+    const [t0, d0] = B.marks[k], [t1, d1] = B.marks[Math.min(k + 1, B.marks.length - 1)];
+    const d = t1 > t0 ? d0 + (d1 - d0)*(el - t0)/(t1 - t0) : d1;
+    broadcast({ t:'ag_p', id, d:Math.round(d) });
+  }
+}
+
+// ---- my run ----
+const agcv = $('agCv'), agctx = agcv.getContext('2d');
+function startAgility(m){
+  lastCountShown = null;
+  players = m.players; cur = 'agility'; G = null; PG = null; D = null; phase = 'count';
+  $('scrEnd').hidden = true; show('scrAgility');
+  const C = agCourse(m.seed|0), myIdx = Math.max(0, players.findIndex(p => p.id === me.id));
+  const spec = players.some(p => p.id === me.id);
+  AG = { C, d:0, mode:spec ? 'count' : 'watch', next:0, t:0, faults:0, count:3, cam:agPos(C, 0), trace:null, follow:null, hold:false, finger:null,
+    table:null, wait:0, jumpT:-1, knocked:{}, res:{}, others:new Map(), lastSend:0, done:false, dog:AG_DOGS[myIdx % AG_DOGS.length], over:false,
+    fx:[], keys:{}, stepT:0, walkSafe:false };
+  for (const p of players) if (p.id !== me.id) AG.others.set(p.id, { d:0, done:false, total:0, faults:0 });
+  agMsg(''); agHead(spec ? 'À vos marques…' : 'Spectateur'); agChips(); renderAgPlayers();
+  $('agHelp').textContent = 'Votre chien : ' + AG.dog.breed + '. ' + AG_HELP.run;
+}
+const agMsg = big => { const m = $('agMsg'); m.textContent = ''; if (big){ const s = document.createElement('strong'); s.textContent = big; m.append(s); } };
+let agToastT = null;
+function agToast(t){ const el = $('agToast'); el.textContent = t; el.classList.add('on'); clearTimeout(agToastT); agToastT = setTimeout(() => el.classList.remove('on'), 1800); }
+function agHead(t, mine){ const el = $('agHead'); el.textContent = t; el.classList.toggle('mine', !!mine); }
+const agFmt = s => (Math.round(s*10)/10).toLocaleString('fr-FR', { minimumFractionDigits:1, maximumFractionDigits:1 }) + ' s';
+function agChips(){
+  $('agTime').textContent = '⏱ ' + agFmt(AG.t);
+  $('agFaults').textContent = 'Fautes : ' + AG.faults;
+  $('agFaults').classList.toggle('low', AG.faults > 0);
+}
+function renderAgPlayers(){
+  const ul = $('agPlayers'); ul.textContent = '';
+  players.forEach((p, i) => {
+    const li = document.createElement('li'); if (p.left) li.classList.add('dead');
+    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color;
+    const o = p.id === me.id ? { d:AG.d, done:AG.done, total:AG.t + AG.faults*AG_FAULT, faults:AG.faults } : AG.others.get(p.id) || {};
+    const t = document.createElement('span');
+    t.textContent = p.name + (p.id === me.id ? ' (vous)' : '') + ' · ' + AG_DOGS[i % AG_DOGS.length].breed + ' · ' + (o.done ? agFmt(o.total) : Math.round(100*(o.d || 0)/AG.C.len) + ' %');
+    li.append(d, t); ul.append(li);
+  });
+}
+function agFault(why){
+  AG.faults++; sfx('fail'); agToast(why + ' : +' + AG_FAULT + ' s');
+  const el = $('agWrap'); el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake');
+}
+function agilityRecv(m){
+  if (!AG) return;
+  if (m.t === 'ag_p'){ const o = AG.others.get(m.id); if (o) o.d = +m.d || 0; }
+  else if (m.t === 'ag_done'){
+    const o = AG.others.get(m.id);
+    if (o){ o.done = true; o.total = +m.total; o.faults = m.faults|0; o.d = AG.C.len; const p = players.find(x => x.id === m.id); if (p) agToast(p.name + ' arrive : ' + agFmt(+m.total)); }
+    renderAgPlayers();
+  } else if (m.t === 'ag_left'){ const p = players.find(x => x.id === m.id); if (p){ p.left = true; renderAgPlayers(); } }
+}
+// what the obstacle ahead is, and the help that goes with it
+function agUpcoming(){ return AG.C.obs[AG.next] || null; }
+function agSetHelp(){
+  const ob = agUpcoming(), key = AG.done ? 'done' : AG.mode === 'run' || AG.mode === 'count' ? (ob && ob.s0 - AG.d < 260 ? ob.type : 'run') : AG.mode === 'weavego' ? 'weave' : AG.mode;
+  if (AG.helpKey === key) return;
+  AG.helpKey = key;
+  $('agHelp').textContent = AG_HELP[key] || AG_HELP.run;
+  if (ob && key === ob.type) agHead((AG.next + 1) + '. ' + AG_NAMES[ob.type], true);
+  else if (!AG.done) agHead('Obstacle ' + Math.min(AG.next + 1, AG.C.obs.length) + '/' + AG.C.obs.length);
+}
+
+// ---- input ----
+function agWorld(e){
+  const r = agcv.getBoundingClientRect(), k = AG_VIEW / r.width;
+  return [AG.cam.x + ((e.clientX - r.left)*k - AG_VIEW/2)/AG_ZOOM, AG.cam.y + ((e.clientY - r.top)*k - AG_VIEW/2)/AG_ZOOM];
+}
+function agTap(){
+  if (!AG || phase !== 'play' || AG.done) return;
+  if (AG.mode === 'run'){
+    const ob = agUpcoming();
+    if (ob && (ob.type === 'jump' || ob.type === 'tire') && !AG.res[ob.i]){
+      const dist = ob.sx - AG.d;
+      if (dist > 170 || dist < -12) return;
+      const win = ob.type === 'jump' ? [14, 62] : [22, 48];
+      AG.jumpT = 0; sfx('pop');
+      if (dist >= win[0] && dist <= win[1]){ AG.res[ob.i] = 'ok'; boom(ob.type === 'jump' ? 'HOP !' : 'DANS LE MILLE !', { size:26, x:.5, y:.3, pal:BOOM_COLORS[1], ms:700 }); }
+      else { AG.res[ob.i] = 'bad'; AG.knocked[ob.i] = 0; setTimeout(() => sfx('clack'), 180); agFault(dist > win[1] ? 'Trop tôt, barre tombée' : 'Trop tard, barre tombée'); }
+    }
+  } else if (AG.mode === 'table'){
+    if (AG.table === 'stand'){ AG.table = 'down'; AG.tableN = 3; sfx('place'); boom('COUCHÉ !', { size:26, x:.5, y:.3, pal:BOOM_COLORS[0], ms:700 }); }
+    else if (AG.table === 'down'){ AG.tableN = 3; agToast('Il a bougé ! On recommence le compte'); sfx('fail'); }
+  }
+}
+agcv.addEventListener('pointerdown', e => {
+  if (!AG || phase !== 'play' || AG.done) return;
+  e.preventDefault(); agcv.setPointerCapture(e.pointerId);
+  const w = agWorld(e);
+  if (AG.mode === 'weave'){ AG.trace = [w]; }
+  else if (AG.mode === 'tunnel'){ AG.finger = w; }
+  else if (AG.mode === 'walk'){ AG.hold = true; }
+  else agTap();
+});
+agcv.addEventListener('pointermove', e => {
+  if (!AG || !agcv.hasPointerCapture(e.pointerId)) return;
+  const w = agWorld(e);
+  if (AG.mode === 'weave' && AG.trace){ const l = AG.trace[AG.trace.length - 1]; if (Math.hypot(w[0] - l[0], w[1] - l[1]) > 4) AG.trace.push(w); }
+  else if (AG.mode === 'tunnel') AG.finger = w;
+});
+for (const ev of ['pointerup', 'pointercancel']) agcv.addEventListener(ev, () => {
+  if (!AG) return;
+  if (AG.mode === 'weave' && AG.trace) agWeaveCheck();
+  AG.finger = null; AG.hold = false;
+});
+addEventListener('keydown', e => {
+  if (cur !== 'agility' || !AG || e.target.tagName === 'INPUT') return;
+  if (e.key === ' ' || e.key === 'Enter'){ e.preventDefault(); if (!e.repeat){ AG.keys.space = true; if (AG.mode === 'walk') AG.hold = true; else if (AG.mode !== 'weave' && AG.mode !== 'tunnel') agTap(); } }
+});
+addEventListener('keyup', e => { if (AG && (e.key === ' ' || e.key === 'Enter')){ AG.keys.space = false; if (AG.mode === 'walk') AG.hold = false; } });
+
+// weave: the drawn line must pass right of pole 1, left of pole 2, and so on, and reach beyond the last pole
+function agWeaveCheck(){
+  const ob = agUpcoming(), tr = AG.trace; AG.trace = null;
+  if (!ob || tr.length < 6) return;
+  const P = agPoles(AG.C, ob), ux = Math.cos(ob.a), uy = Math.sin(ob.a), nx = uy, ny = -ux;   // n points to the dog's left
+  const along = q => (q[0] - ob.x)*ux + (q[1] - ob.y)*uy, lat = q => (q[0] - ob.x)*nx + (q[1] - ob.y)*ny;
+  const lastA = along([P[5].x, P[5].y]);
+  if (Math.max(...tr.map(along)) < lastA + 14){ agToast('Tracez jusqu\'après le dernier piquet'); return; }
+  const wrong = agWeaveWrong(AG.C, ob, tr);
+  // the dog follows the line (clipped to the weave area), then rejoins the course
+  const pts = tr.filter(q => along(q) >= -20 && along(q) <= lastA + 40);
+  pts.push([agPos(AG.C, ob.s1).x, agPos(AG.C, ob.s1).y]);
+  AG.follow = { pts, k:0, x:AG.cam.x, y:AG.cam.y, ob };
+  const st = agPos(AG.C, AG.d); AG.follow.x = st.x; AG.follow.y = st.y;
+  AG.mode = 'weavego';
+  if (wrong) agFault('Slalom raté (' + wrong + ' piquet' + (wrong > 1 ? 's' : '') + ')');
+  else { sfx('ok'); boom('SLALOM PARFAIT !', { size:24, x:.5, y:.3, pal:BOOM_COLORS[1], ms:800 }); }
+}
+// how many poles the drawn line passes on the wrong side (pole 1 must be on the dog's left, then alternate)
+function agWeaveWrong(C, ob, tr){
+  const P = agPoles(C, ob), ux = Math.cos(ob.a), uy = Math.sin(ob.a), nx = uy, ny = -ux;
+  const along = q => (q[0] - ob.x)*ux + (q[1] - ob.y)*uy, lat = q => (q[0] - ob.x)*nx + (q[1] - ob.y)*ny;
+  let wrong = 0;
+  P.forEach((p, k) => {
+    const pa = along([p.x, p.y]), pl = lat([p.x, p.y]);
+    let best = null; for (let j = 1; j < tr.length; j++){ const a0 = along(tr[j - 1]), a1 = along(tr[j]); if ((a0 - pa)*(a1 - pa) <= 0 && a0 !== a1){ const t = (pa - a0)/(a1 - a0); best = lat(tr[j - 1]) + (lat(tr[j]) - lat(tr[j - 1]))*t; break; } }
+    const side = best == null ? 0 : Math.sign(best - pl);           // +1: dog left of the pole
+    if (side !== (k % 2 ? 1 : -1)) wrong++;
+  });
+  return wrong;
+}
+
+// ---- loop ----
+function agilityFrame(dtMs, now){
+  if (!AG) return;
+  const dt = Math.min(.05, dtMs/1000), C = AG.C;
+  if (me.host) agilityHostFrame(now);
+  if (phase === 'count'){ AG.count -= dt; if (AG.count > 0) countBeep(Math.ceil(AG.count)); else { countBeep(0); phase = 'play'; if (AG.mode === 'count'){ AG.mode = 'run'; sfx('bark'); } } }
+  if (phase === 'play' && !AG.done && AG.mode !== 'watch'){
+    AG.t += dt;
+    const ob = agUpcoming();
+    if (AG.wait > 0){ AG.wait -= dt; if (AG.wait <= 0) AG.mode = 'run'; }
+    else if (AG.mode === 'run'){
+      AG.d += AG_SPEED*dt;
+      if (ob){
+        if (AG.res[ob.i] === 'refus' && AG.jumpT < 0 && !ob.hopped && AG.d >= ob.sx - 26){ ob.hopped = true; AG.jumpT = 0; }   // after a refusal, the dog jumps on the second try
+        if ((ob.type === 'jump' || ob.type === 'tire') && !AG.res[ob.i] && AG.d >= ob.sx - 6){
+          AG.res[ob.i] = 'refus'; AG.d = ob.sx - 30; AG.mode = 'refus'; AG.wait = .8; agFault('Refus');
+          boom('REFUS !', { size:26, x:.5, y:.3, pal:BOOM_COLORS[2], ms:700 });
+        } else if (ob.type === 'weave' && AG.d >= ob.s0){ AG.d = ob.s0; AG.mode = 'weave'; }
+        else if (ob.type === 'tunnel' && AG.d >= ob.s0){ AG.d = ob.s0; AG.mode = 'tunnel'; }
+        else if (ob.type === 'walk' && AG.d >= ob.s0){ AG.d = ob.s0; AG.mode = 'walk'; AG.hold = !!AG.keys.space; }
+        else if (ob.type === 'table' && AG.d >= ob.sx){ AG.d = ob.sx; AG.mode = 'table'; AG.table = 'stand'; }
+        if (AG.d >= ob.s1){ AG.next++; }
+      }
+      if (AG.d >= C.len){ agFinish(); }
+    } else if (AG.mode === 'refus'){ /* waiting */ }
+    else if (AG.mode === 'weave' && AG.keys.space){       // keyboard: a careful automatic weave, no fault but slow
+      const P = agPoles(C, ob), pts = [];
+      P.forEach((p, k) => { const s = k % 2 ? -1 : 1; pts.push([p.x - Math.sin(ob.a)*s*20, p.y + Math.cos(ob.a)*s*20]); });   // right of pole 1, then alternate
+      pts.push([agPos(C, ob.s1).x, agPos(C, ob.s1).y]);
+      const st = agPos(C, AG.d); AG.follow = { pts, k:0, x:st.x, y:st.y, ob, slow:true }; AG.mode = 'weavego';
+    } else if (AG.mode === 'weavego'){
+      const F = AG.follow, sp = F.slow ? 120 : 210;
+      let left = sp*dt;
+      while (left > 0 && F.k < F.pts.length){
+        const [tx, ty] = F.pts[F.k], dx = tx - F.x, dy = ty - F.y, L = Math.hypot(dx, dy);
+        if (L <= left){ F.x = tx; F.y = ty; left -= L; F.k++; } else { F.x += dx/L*left; F.y += dy/L*left; F.a = Math.atan2(dy, dx); left = 0; }
+      }
+      AG.d = F.ob.s0 + (F.ob.s1 - F.ob.s0) * F.k / F.pts.length;
+      if (F.k >= F.pts.length){ AG.d = F.ob.s1; AG.follow = null; AG.next++; AG.mode = 'run'; }
+    } else if (AG.mode === 'tunnel'){
+      let target = AG.d;
+      if (AG.keys.space) target = AG.d + 200*dt;
+      else if (AG.finger){
+        let bd = 1e9, bs = AG.d;
+        const lim = Math.min(ob.s1, AG.d + 140);
+        for (let s = AG.d; ; s = Math.min(lim, s + 6)){ const p = agPos(C, s), dd = Math.hypot(p.x - AG.finger[0], p.y - AG.finger[1]); if (dd < bd){ bd = dd; bs = s; } if (s >= lim) break; }   // the exit itself counts too
+        if (bd < 55) target = bs;
+      }
+      if (target > AG.d) AG.d = Math.min(target, AG.d + 320*dt);
+      if (AG.d >= ob.s1){ AG.d = ob.s1; AG.next++; AG.mode = 'run'; sfx('ok'); }
+    } else if (AG.mode === 'walk'){
+      const zone = ob.s1 - 55;
+      if (AG.hold){ AG.d += 165*dt; AG.stepT -= dt; if (AG.stepT <= 0){ AG.stepT = .22; tone(240 + Math.random()*40, .04, 'triangle', .05); } }
+      if (AG.d >= ob.s1){ AG.d = ob.s1; AG.next++; AG.mode = 'run'; agFault('Zone de contact sautée'); }
+      else if (!AG.hold && AG.d >= zone){ AG.next++; AG.mode = 'run'; AG.wait = .25; AG.mode = 'zone'; sfx('ok'); boom('ZONE !', { size:24, x:.5, y:.3, pal:BOOM_COLORS[1], ms:700 }); }
+    } else if (AG.mode === 'table'){
+      if (AG.table === 'down'){
+        const n0 = Math.ceil(AG.tableN); AG.tableN -= dt; const n1 = Math.ceil(AG.tableN);
+        if (n1 !== n0 && n1 > 0) sfx('count');
+        if (AG.tableN <= 0){ AG.table = null; AG.next++; AG.mode = 'run'; sfx('go'); }
+      }
+    }
+    if (AG.mode === 'tunnel' && (AG.finger || AG.keys.space)){ AG.stepT -= dt; if (AG.stepT <= 0){ AG.stepT = .3; noise(.25, .05, 600, 200); } }   // rumble in the tube
+    if (AG.jumpT >= 0){ AG.jumpT += dt; if (AG.jumpT > .45) AG.jumpT = -1; }
+    for (const k in AG.knocked) AG.knocked[k] = Math.min(1, AG.knocked[k] + dt*3);
+    if (now - AG.lastSend > 250){ AG.lastSend = now; toHost({ t:'ag_p', d:Math.round(AG.d) }); renderAgPlayers(); }
+    agChips(); agSetHelp();
+  }
+  // camera: follows the dog, a little ahead
+  const dp = AG.follow ? { x:AG.follow.x, y:AG.follow.y, a:AG.follow.a ?? agPos(C, AG.d).a } : agPos(C, AG.mode === 'watch' ? agLeaderD() : AG.d);
+  const tx = dp.x + Math.cos(dp.a)*55, ty = dp.y + Math.sin(dp.a)*55;
+  if (AG.mode !== 'weave'){ AG.cam.x += (tx - AG.cam.x)*Math.min(1, dt*4); AG.cam.y += (ty - AG.cam.y)*Math.min(1, dt*4); }   // frozen while the zigzag is drawn, so the line stays put under the finger
+  drawAgility(now, dp);
+}
+const agLeaderD = () => Math.max(0, ...[...AG.others.values()].map(o => o.d || 0));
+function agFinish(){
+  AG.done = true; AG.d = AG.C.len; AG.mode = 'done';
+  const total = AG.t + AG.faults*AG_FAULT;
+  sfx('finish');
+  boom('ARRIVÉE !', { size:34, x:.5, y:.35, pal:BOOM_COLORS[0], ms:1400 });
+  agMsg(agFmt(AG.t) + (AG.faults ? ' + ' + AG.faults + ' faute' + (AG.faults > 1 ? 's' : '') + ' = ' + agFmt(total) : ' sans faute !'));
+  agHead('Arrivé !'); $('agHelp').textContent = AG_HELP.done;
+  toHost({ t:'ag_done', time:Math.round(AG.t*10)/10, faults:AG.faults });
+  renderAgPlayers();
+}
+
+// ---- drawing ----
+function agDog(ctx, x, y, a, D, col, t, k, alpha){
+  // k: jump progress (-1 when on the ground); t: time for the running legs
+  ctx.save(); ctx.globalAlpha = alpha ?? 1;
+  const jump = k >= 0 ? Math.sin(Math.min(1, k/.45)*Math.PI) : 0, sc = 1 + jump*.3;
+  ctx.fillStyle = 'rgba(0,0,0,.22)'; ctx.beginPath(); ctx.ellipse(x + 4 + jump*14, y + 5 + jump*14, 20, 10, a, 0, Math.PI*2); ctx.fill();
+  ctx.translate(x, y); ctx.rotate(a); ctx.scale(sc, sc);
+  ctx.lineJoin = 'round'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5;
+  const leg = Math.sin(t*18)*5;
+  ctx.fillStyle = D.body;
+  for (const [lx, ly, s] of [[9, -7, 1], [9, 7, -1], [-10, -7, -1], [-10, 7, 1]]){ ctx.beginPath(); ctx.ellipse(lx + leg*s, ly*1.15, 5, 3, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke(); }
+  if (D.tail){ ctx.strokeStyle = '#000'; ctx.lineWidth = 7; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-16, 0); ctx.quadraticCurveTo(-24, Math.sin(t*14)*6, -28, Math.sin(t*14)*9); ctx.stroke();
+    ctx.strokeStyle = D.tail; ctx.lineWidth = 4; ctx.stroke(); }
+  ctx.fillStyle = D.body; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.ellipse(0, 0, 18, 10, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+  if (D.spots){ ctx.fillStyle = D.spots; for (const [sx, sy, r] of [[-8, -3, 2.5], [-2, 4, 2], [5, -4, 2.2], [-12, 4, 1.8], [9, 3, 1.6], [1, -6, 1.5]]){ ctx.beginPath(); ctx.arc(sx, sy, r, 0, Math.PI*2); ctx.fill(); } }
+  if (D.chest){ ctx.fillStyle = D.chest; ctx.beginPath(); ctx.ellipse(12, 0, 5, 7, 0, 0, Math.PI*2); ctx.fill(); }
+  ctx.strokeStyle = col; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(15, -7); ctx.lineTo(15, 7); ctx.stroke();           // collar in the player's colour
+  // head
+  ctx.fillStyle = D.head; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.ellipse(23, 0, 9, 8, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+  if (D.mask){ ctx.fillStyle = D.mask; ctx.beginPath(); ctx.ellipse(27, 0, 5, 4.5, 0, 0, Math.PI*2); ctx.fill(); }
+  ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(32, 0, 2.6, 0, Math.PI*2); ctx.fill();                                    // nose
+  ctx.fillStyle = D.ear; ctx.strokeStyle = '#000'; ctx.lineWidth = 2;
+  for (const s of [-1, 1]){
+    ctx.beginPath();
+    if (D.ears === 'drop'){ ctx.ellipse(19, s*8, 6, 3.5, s*.5, 0, Math.PI*2); }
+    else if (D.ears === 'big'){ ctx.moveTo(17, s*4); ctx.lineTo(13, s*15); ctx.lineTo(23, s*7); ctx.closePath(); }
+    else if (D.ears === 'pointy'){ ctx.moveTo(18, s*4); ctx.lineTo(15, s*12); ctx.lineTo(23, s*6); ctx.closePath(); }
+    else { ctx.moveTo(18, s*4); ctx.lineTo(17, s*11); ctx.lineTo(23, s*7); ctx.closePath(); }
+    ctx.fill(); ctx.stroke();
+  }
+  ctx.restore();
+}
+function agObstacle(ctx, ob, now){
+  const C = AG.C;
+  if (ob.type === 'jump' || ob.type === 'tire'){
+    const p = agPos(C, ob.sx), nx = -Math.sin(p.a), ny = Math.cos(p.a), k = AG.knocked[ob.i];
+    ctx.lineCap = 'butt';
+    for (const s of [-1, 1]){ ctx.fillStyle = '#FFFFFF'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
+      ctx.save(); ctx.translate(p.x + nx*s*38, p.y + ny*s*38); ctx.rotate(p.a); ctx.fillRect(-8, -5, 16, 10); ctx.strokeRect(-8, -5, 16, 10); ctx.restore(); }
+    if (ob.type === 'jump'){
+      ctx.save();
+      if (k != null){ ctx.translate(p.x + Math.cos(p.a)*18*k, p.y + Math.sin(p.a)*18*k); ctx.rotate(p.a + Math.PI/2 + k*.5); }
+      else { ctx.translate(p.x, p.y); ctx.rotate(p.a + Math.PI/2); }
+      ctx.fillStyle = '#000'; ctx.fillRect(-36, -4, 72, 8);
+      for (let i = 0; i < 6; i++){ ctx.fillStyle = i % 2 ? '#FFFFFF' : '#E6262B'; ctx.fillRect(-34 + i*11.4, -2.5, 11.4, 5); }
+      ctx.restore();
+    } else {
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.a);
+      ctx.strokeStyle = '#000'; ctx.lineWidth = 11; ctx.beginPath(); ctx.ellipse(0, 0, 7, 24, 0, 0, Math.PI*2); ctx.stroke();
+      ctx.strokeStyle = '#FFD21F'; ctx.lineWidth = 6; ctx.setLineDash([8, 6]); ctx.beginPath(); ctx.ellipse(0, 0, 7, 24, 0, 0, Math.PI*2); ctx.stroke();
+      ctx.strokeStyle = '#E6262B'; ctx.lineDashOffset = 7; ctx.beginPath(); ctx.ellipse(0, 0, 7, 24, 0, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+      ctx.strokeStyle = '#555'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(0, -24); ctx.lineTo(0, -38); ctx.moveTo(0, 24); ctx.lineTo(0, 38); ctx.stroke();
+      ctx.restore();
+    }
+    // timing ring for my next jump: green when the moment is right
+    if (AG.next === ob.i && !AG.res[ob.i] && !AG.done){
+      const dist = ob.sx - AG.d, win = ob.type === 'jump' ? [14, 62] : [22, 48];
+      if (dist < 200 && dist > -10){
+        const good = dist >= win[0] && dist <= win[1];
+        ctx.strokeStyle = good ? '#3DDC97' : '#FFFFFF'; ctx.lineWidth = good ? 6 : 3; ctx.setLineDash(good ? [] : [6, 5]);
+        ctx.beginPath(); ctx.arc(p.x, p.y, 30 + Math.max(0, dist - win[1])*.5, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+      }
+    }
+  } else if (ob.type === 'weave'){
+    agPoles(C, ob).forEach((p, k) => {
+      ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.beginPath(); ctx.arc(p.x + 3, p.y + 4, 6, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = k % 2 ? '#FFFFFF' : '#1E5BFF'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5;
+      ctx.beginPath(); ctx.arc(p.x, p.y, 6, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+    });
+    if (AG.next === ob.i && AG.mode === 'weave'){         // first pole marker: it goes on the dog's left
+      // a small curved arrow: the dog enters to the right of the first pole
+      const p = agPoles(C, ob)[0], ux = Math.cos(p.a), uy = Math.sin(p.a), rx = -Math.sin(p.a), ry = Math.cos(p.a);
+      ctx.strokeStyle = '#FFD21F'; ctx.lineWidth = 4; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(p.x - ux*34, p.y - uy*34); ctx.quadraticCurveTo(p.x - ux*10 + rx*18, p.y - uy*10 + ry*18, p.x + ux*12 + rx*14, p.y + uy*12 + ry*14); ctx.stroke();
+      ctx.fillStyle = '#FFD21F'; ctx.beginPath(); const hx = p.x + ux*16 + rx*12, hy = p.y + uy*16 + ry*12;
+      ctx.moveTo(hx + ux*8, hy + uy*8); ctx.lineTo(hx - ux*4 + rx*6, hy - uy*4 + ry*6); ctx.lineTo(hx - ux*4 - rx*6, hy - uy*4 - ry*6); ctx.closePath(); ctx.fill();
+    }
+  } else if (ob.type === 'tunnel'){
+    const pts = []; for (let s = ob.s0; s <= ob.s1; s += 6){ const p = agPos(C, s); pts.push([p.x, p.y]); }
+    ctx.lineCap = 'butt'; ctx.lineJoin = 'round';
+    const path = () => { ctx.beginPath(); pts.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); };
+    ctx.strokeStyle = '#000'; ctx.lineWidth = 50; path(); ctx.stroke();
+    ctx.strokeStyle = '#1E5BFF'; ctx.lineWidth = 44; path(); ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,255,255,.35)'; ctx.lineWidth = 44; ctx.setLineDash([3, 11]); path(); ctx.stroke(); ctx.setLineDash([]);
+    ctx.strokeStyle = 'rgba(255,255,255,.4)'; ctx.lineWidth = 10; path(); ctx.stroke();
+    for (const s of [ob.s0, ob.s1]){ const p = agPos(C, s); ctx.fillStyle = '#0A2A80'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(p.x, p.y, 8, 23, p.a, 0, Math.PI*2); ctx.fill(); ctx.stroke(); }
+  } else if (ob.type === 'walk'){
+    const a = agPos(C, ob.s0), b = agPos(C, ob.s1), ang = Math.atan2(b.y - a.y, b.x - a.x), L = ob.s1 - ob.s0;
+    ctx.save(); ctx.translate(a.x, a.y); ctx.rotate(ang);
+    ctx.fillStyle = 'rgba(0,0,0,.22)'; ctx.fillRect(4, -9, L, 26);
+    ctx.fillStyle = '#C9935A'; ctx.fillRect(0, -13, L, 26);
+    ctx.fillStyle = '#FFD21F'; ctx.fillRect(0, -13, 55, 26); ctx.fillRect(L - 55, -13, 55, 26);
+    ctx.strokeStyle = 'rgba(0,0,0,.3)'; ctx.lineWidth = 1.5; for (let x = 12; x < L; x += 18){ ctx.beginPath(); ctx.moveTo(x, -13); ctx.lineTo(x, 13); ctx.stroke(); }
+    ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.strokeRect(0, -13, L, 26);
+    ctx.restore();
+  } else if (ob.type === 'table'){
+    const p = agPos(C, ob.sx);
+    ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.a);
+    ctx.fillStyle = 'rgba(0,0,0,.22)'; ctx.fillRect(-26, -24, 56, 56);
+    ctx.fillStyle = '#1E5BFF'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.fillRect(-30, -30, 60, 60); ctx.strokeRect(-30, -30, 60, 60);
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 3; ctx.strokeRect(-24, -24, 48, 48);
+    ctx.restore();
+  }
+}
+function drawAgility(now, dp){
+  const ctx = agctx, C = AG.C, V = AG_VIEW;
+  ctx.save();
+  ctx.fillStyle = '#7CC456'; ctx.fillRect(0, 0, V, V);
+  ctx.translate(V/2, V/2); ctx.scale(AG_ZOOM, AG_ZOOM); ctx.translate(-AG.cam.x, -AG.cam.y);
+  // mown stripes in world space
+  ctx.fillStyle = '#86CD5F';
+  const x0 = AG.cam.x - V, y0 = AG.cam.y - V;
+  for (let x = Math.floor(x0/80)*80; x < AG.cam.x + V; x += 80) ctx.fillRect(x, y0, 40, V*2);
+  // the course trail
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  const trail = () => { ctx.beginPath(); C.pts.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); };
+  ctx.strokeStyle = 'rgba(0,0,0,.15)'; ctx.lineWidth = 56; trail(); ctx.stroke();
+  ctx.strokeStyle = '#E8D3A0'; ctx.lineWidth = 48; trail(); ctx.stroke();
+  ctx.strokeStyle = 'rgba(255,255,255,.7)'; ctx.lineWidth = 2; ctx.setLineDash([8, 12]); trail(); ctx.stroke(); ctx.setLineDash([]);
+  // start and finish lines
+  for (const [d, col] of [[60, '#FFFFFF'], [C.len - 40, '#E6262B']]){
+    const p = agPos(C, d), nx = -Math.sin(p.a), ny = Math.cos(p.a);
+    ctx.strokeStyle = '#000'; ctx.lineWidth = 9; ctx.beginPath(); ctx.moveTo(p.x - nx*34, p.y - ny*34); ctx.lineTo(p.x + nx*34, p.y + ny*34); ctx.stroke();
+    ctx.strokeStyle = col; ctx.lineWidth = 5; ctx.setLineDash([8, 8]); ctx.stroke(); ctx.setLineDash([]);
+  }
+  for (const ob of C.obs){
+    const p = agPos(C, ob.s0); if (Math.abs(p.x - AG.cam.x) > V || Math.abs(p.y - AG.cam.y) > V) continue;
+    agObstacle(ctx, ob, now);
+    // number plate beside the obstacle
+    const q = agPos(C, ob.s0 - 20), nx = -Math.sin(q.a), ny = Math.cos(q.a);
+    ctx.fillStyle = '#fff'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(q.x + nx*40, q.y + ny*40, 11, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#000'; ctx.font = '14px Bangers, Impact, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(String(ob.i + 1), q.x + nx*40, q.y + ny*40 + 1); ctx.textBaseline = 'alphabetic';
+  }
+  // weave trace being drawn
+  if (AG.trace && AG.trace.length > 1){ ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 4; ctx.setLineDash([7, 6]); ctx.beginPath(); AG.trace.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.stroke(); ctx.setLineDash([]); }
+  // the other dogs, faint
+  players.forEach((p, i) => {
+    if (p.id === me.id) return;
+    const o = AG.others.get(p.id); if (!o) return;
+    const q = agPos(C, o.d);
+    agDog(ctx, q.x, q.y, q.a, AG_DOGS[i % AG_DOGS.length], p.color, now/1000 + i, -1, .45);
+    ctx.font = '900 12px Nunito, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 3; ctx.strokeStyle = '#000'; ctx.fillStyle = p.color;
+    ctx.strokeText(p.name, q.x, q.y - 26); ctx.fillText(p.name, q.x, q.y - 26);
+  });
+  // my dog (on the table, lying down)
+  if (AG.mode !== 'watch'){
+    const myCol = (players.find(p => p.id === me.id) || {}).color || '#fff';
+    const moving = ['run', 'weavego', 'tunnel'].includes(AG.mode) || (AG.mode === 'walk' && AG.hold);
+    const inTunnel = AG.mode === 'tunnel' && AG.d > C.obs[AG.next].s0 + 6;
+    agDog(ctx, dp.x, dp.y, dp.a, AG.dog, myCol, moving ? now/1000 : 0, AG.jumpT, inTunnel ? .35 : 1);
+    if (AG.mode === 'table' && AG.table === 'down'){
+      ctx.font = '30px Bangers, Impact, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 5; ctx.strokeStyle = '#000'; ctx.fillStyle = '#FFD21F';
+      const n = String(Math.max(1, Math.ceil(AG.tableN))); ctx.strokeText(n, dp.x, dp.y - 34); ctx.fillText(n, dp.x, dp.y - 34);
+    }
+    if (AG.mode === 'tunnel' && !AG.finger){ ctx.strokeStyle = '#FFD21F'; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(dp.x, dp.y, 30 + Math.sin(now/150)*4, 0, Math.PI*2); ctx.stroke(); }
+  }
+  ctx.restore();
+  // big prompt for the moment
+  let prompt = '';
+  if (AG.mode === 'weave') prompt = 'TRACEZ LE ZIGZAG';
+  else if (AG.mode === 'tunnel' && !AG.finger) prompt = 'DOIGT SUR LE CHIEN, SUIVEZ LE TUNNEL';
+  else if (AG.mode === 'walk' && !AG.hold) prompt = 'MAINTENEZ POUR AVANCER';
+  else if (AG.mode === 'table' && AG.table === 'stand') prompt = 'TOUCHEZ : COUCHÉ !';
+  else if (AG.mode === 'table') prompt = 'NE TOUCHEZ PLUS…';
+  else if (AG.mode === 'run'){ const ob = agUpcoming(); if (ob && (ob.type === 'jump' || ob.type === 'tire') && ob.sx - AG.d < 170 && !AG.res[ob.i]) prompt = 'TOUCHEZ QUAND LE CERCLE EST VERT'; }
+  if (prompt){
+    ctx.font = '24px Bangers, Impact, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 5; ctx.strokeStyle = '#000'; ctx.fillStyle = '#fff';
+    ctx.strokeText(prompt, V/2, V - 24); ctx.fillText(prompt, V/2, V - 24);
+  }
+}
+
 // ================= comic sound effects in bursts =================
 const BOOM_COLORS = [['#FFD93B','#E6262B'], ['#FFFFFF','#1E5BFF'], ['#E6262B','#FFFFFF'], ['#1E5BFF','#FFD93B']];
 function gameWrap(){
   return cur === 'tetris' ? document.querySelector('#play .well') : cur === 'pong' ? $('pwrap') : cur === 'derby' ? $('padwrap')
-    : cur === 'naval' ? document.querySelector('#scrNaval .nvwrap') : cur === 'mole' ? $('mlWrap') : cur === 'curl' ? $('cuWrap') : cur === 'chairs' ? $('mcWrap') : cur === 'master' ? $('mmWrap') : cur === 'kabaddi' ? $('kbWrap') : cur === 'dodge' ? $('dbWrap') : cur === 'tank' ? $('tkWrap') : cur === 'sheep' ? $('shWrap') : cur === 'drakkar' ? $('dkWrap') : cur === 'lumber' ? $('ljWrap') : null;
+    : cur === 'naval' ? document.querySelector('#scrNaval .nvwrap') : cur === 'mole' ? $('mlWrap') : cur === 'curl' ? $('cuWrap') : cur === 'chairs' ? $('mcWrap') : cur === 'master' ? $('mmWrap') : cur === 'kabaddi' ? $('kbWrap') : cur === 'dodge' ? $('dbWrap') : cur === 'tank' ? $('tkWrap') : cur === 'sheep' ? $('shWrap') : cur === 'drakkar' ? $('dkWrap') : cur === 'lumber' ? $('ljWrap') : cur === 'agility' ? $('agWrap') : null;
 }
 // x, y: position in the wrap (0..1); size in px; pal: one of BOOM_COLORS
 function boom(text, o = {}){
@@ -7624,7 +8202,7 @@ function saveGame(ranking, game){
   if (!Array.isArray(ranking) || !ranking.length || lastSaved === ranking) return;
   lastSaved = ranking;
   const h = loadHist();
-  h.unshift({ at:Date.now(), game:['pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber'].includes(game) ? game : 'tetris', n:ranking.length,
+  h.unshift({ at:Date.now(), game:['pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber','agility'].includes(game) ? game : 'tetris', n:ranking.length,
     p:ranking.map(r => ({ name:String(r.name).slice(0,14), color:r.color, place:r.place|0, sc:r.sc|0, ln:r.ln|0, sent:r.sent|0, score:r.score|0, sync:r.sync|0, lives:r.lives|0, seats:r.seats|0, catches:r.catches|0, tank:r.tank|0, role:String(r.role || '').slice(0, 8), hits:r.hits|0, pts:r.pts|0, whacks:r.whacks|0, shots:r.shots|0, afloat:r.afloat|0, shapes:r.shapes|0, d:Math.round(r.d||0), t:+r.t||0, me:r.id === me.id })) });
   store.set(HIST_KEY, JSON.stringify(h.slice(0, HIST_MAX)));
 }
@@ -7639,14 +8217,14 @@ function renderBoard(){
     const a = agg.get(k) || { name:p.name, color:p.color, games:0, wins:0, pts:0, best:0, bestT:0 };
     a.games++; if (p.place === 1 && g.n > 1) a.wins++;
     a.pts += Math.max(0, g.n - p.place);                  // 1 point per player finished ahead of
-    if (g.game === 'derby'){ if (p.t > 0 && (!a.bestT || p.t < a.bestT)) a.bestT = p.t; }
+    if (g.game === 'derby' || g.game === 'agility'){ if (p.t > 0 && (!a.bestT || p.t < a.bestT)) a.bestT = p.t; }
     else a.best = Math.max(a.best, (g.game === 'pong' || g.game === 'naval') ? p.hits : g.game === 'mole' ? (p.whacks || 0) : g.game === 'curling' ? (p.pts || 0) : g.game === 'chairs' ? (p.seats || 0) : (g.game === 'dodge' || g.game === 'tank') ? (p.hits || 0) : g.game === 'sheep' ? (p.score || 0) : g.game === 'drakkar' ? (p.sync || 0) : (g.game === 'master' || g.game === 'kabaddi' || g.game === 'lumber') ? (p.pts || 0) : p.sc);
     agg.set(k, a);
   }
   const rows = [...agg.values()].sort((x, y) => y.pts - x.pts || y.wins - x.wins || x.games - y.games);
   const showBest = lbFilter !== 'all';
   const hd = $('lbHead'); hd.textContent = '';
-  for (const t of ['#','Joueur','Parties','Victoires','Points', ...(showBest ? [lbFilter === 'pong' ? 'Arrêts max' : lbFilter === 'derby' ? 'Meilleur temps' : lbFilter === 'naval' ? 'Touchés max' : lbFilter === 'mole' ? 'Taupes tapées max' : lbFilter === 'curling' ? 'Points max' : lbFilter === 'chairs' ? 'Chaises max' : (lbFilter === 'dodge' || lbFilter === 'tank') ? 'Touches max' : lbFilter === 'sheep' ? 'Record d\'équipe' : lbFilter === 'drakkar' ? 'Synchro max (%)' : (lbFilter === 'master' || lbFilter === 'kabaddi' || lbFilter === 'lumber') ? 'Points max' : 'Meilleur score'] : [])]){
+  for (const t of ['#','Joueur','Parties','Victoires','Points', ...(showBest ? [lbFilter === 'pong' ? 'Arrêts max' : (lbFilter === 'derby' || lbFilter === 'agility') ? 'Meilleur temps' : lbFilter === 'naval' ? 'Touchés max' : lbFilter === 'mole' ? 'Taupes tapées max' : lbFilter === 'curling' ? 'Points max' : lbFilter === 'chairs' ? 'Chaises max' : (lbFilter === 'dodge' || lbFilter === 'tank') ? 'Touches max' : lbFilter === 'sheep' ? 'Record d\'équipe' : lbFilter === 'drakkar' ? 'Synchro max (%)' : (lbFilter === 'master' || lbFilter === 'kabaddi' || lbFilter === 'lumber') ? 'Points max' : 'Meilleur score'] : [])]){
     const th = document.createElement('th'); th.textContent = t; hd.append(th);
   }
   const tb = $('lbBody'); tb.textContent = '';
@@ -7658,7 +8236,7 @@ function renderBoard(){
     const s = document.createElement('span'); s.textContent = r.name;
     w.append(d, s); nm.append(w);
     tr.append(td(i+1), nm, td(r.games), td(r.wins), td(r.pts));
-    if (showBest) tr.append(td(lbFilter === 'derby' ? (r.bestT ? fmtSec(r.bestT) : '–') : r.best.toLocaleString('fr-FR')));
+    if (showBest) tr.append(td((lbFilter === 'derby' || lbFilter === 'agility') ? (r.bestT ? fmtSec(r.bestT) : '–') : r.best.toLocaleString('fr-FR')));
     tb.append(tr);
   });
   if (!rows.length){ const tr = document.createElement('tr'); const c = td('Aucune partie terminée sur cet appareil pour l\'instant.'); c.colSpan = 6; c.style.textAlign = 'left'; tr.append(c); tb.append(tr); }
@@ -7706,6 +8284,7 @@ function frame(now){
   if (cur === 'sheep') sheepFrame(dt, now);
   if (cur === 'drakkar') drakkarFrame(dt, now);
   if (cur === 'lumber') lumberFrame(dt, now);
+  if (cur === 'agility') agilityFrame(dt, now);
   if (cur === 'tetris' && G && phase === 'count'){
     G.count -= dt/1000;
     if (G.count <= 0){ phase = 'play'; setMsg('', ''); countBeep(0); }
@@ -7782,11 +8361,11 @@ $('btnQuit').onclick = () => toMenu('');
 function backToLobby(){
   if (me.host){
     if (H) H.over = true;
-    H = null; if (HC) clearTimeout(HC.timer); HC = null; mcClear(); HMC = null; mmClear(); HMM = null; kbClear(); HKB = null; dbClear(); HDB = null; tkClear(); HTK = null; shClear(); HSH = null; dkClear(); HDK = null; ljClear(); HLJ = null;
+    H = null; if (HC) clearTimeout(HC.timer); HC = null; mcClear(); HMC = null; mmClear(); HMM = null; kbClear(); HKB = null; dbClear(); HDB = null; tkClear(); HTK = null; shClear(); HSH = null; dkClear(); HDK = null; ljClear(); HLJ = null; agClear(); HAG = null;
     players = players.filter(p => p.id === 'h' || net.conns.has(p.id));
     sendLobby(true);                                       // everyone goes back
   } else {
-    phase = 'lobby'; $('scrEnd').hidden = true; G = null; PG = null; D = null; NV = null; ML = null; CU = null; MC = null; MM = null; KB = null; DB = null; TK = null; SHV = null; DK = null; if (LJ){ LJ = null; sawStop(); } cur = null;
+    phase = 'lobby'; $('scrEnd').hidden = true; G = null; PG = null; D = null; NV = null; ML = null; CU = null; MC = null; MM = null; KB = null; DB = null; TK = null; SHV = null; DK = null; if (LJ){ LJ = null; sawStop(); } AG = null; cur = null;
     if (HM) moleClearTimers();
     show('scrLobby'); renderLobby();                      // wait there for the creator
   }
