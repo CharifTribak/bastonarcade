@@ -285,6 +285,8 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 #gpWrap,.gphead,.gpbtns{width:min(100%,56vh,540px)}
 #gpCv{display:block;width:100%;height:auto;aspect-ratio:540/600;border:3px solid #000;box-shadow:6px 6px 0 #000}
 .gpbtns{display:grid;grid-template-columns:1fr 1.5fr 1fr;gap:10px}
+#gpB{grid-column:1/-1;height:min(7vh,48px);font-size:clamp(15px,4vw,20px);background:#5DC8F0}
+#gpB.on{background:#2A8FB8;color:#fff}
 .gpbtns button{height:min(13vh,88px);font-size:clamp(22px,6vw,32px);touch-action:none;user-select:none;-webkit-user-select:none;background:#fff;color:#000}
 .gpbtns button.on{background:#FFD21F;transform:translate(3px,3px);box-shadow:none}
 #gpA{background:var(--accent);color:#fff}
@@ -791,7 +793,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
         <div class="msg pm" id="gpMsg"></div>
         <div class="toast pm" id="gpToast" aria-live="polite"></div>
       </div>
-      <div class="gpbtns" id="gpBtns"><button id="gpL" type="button" aria-label="Se décaler à gauche">◀</button><button id="gpA" type="button">GALOP !</button><button id="gpR" type="button" aria-label="Se décaler à droite">▶</button></div>
+      <div class="gpbtns" id="gpBtns"><button id="gpL" type="button" aria-label="Se décaler à gauche">◀</button><button id="gpA" type="button">GALOP !</button><button id="gpR" type="button" aria-label="Se décaler à droite">▶</button><button id="gpB" type="button">▼ RALENTIR</button></div>
       <p class="hint" id="gpHelp" style="text-align:center"></p>
     </div>
   </div>
@@ -8234,7 +8236,7 @@ function gpRaceStart(){
   broadcast({ t:'gp_race', runners });
   gpLater(() => { HGP.ph = 'race'; HGP.t = 0; broadcast({ t:'gp_go' }); }, 3600);
 }
-function galopInput(id, m){ if (HGP) HGP.IN[id] = { l:!!m.l, r:!!m.r, a:!!m.a }; }
+function galopInput(id, m){ if (HGP) HGP.IN[id] = { l:!!m.l, r:!!m.r, a:!!m.a, b:!!m.b }; }
 
 // ---- host: the race ----
 function gpStep(dt){
@@ -8251,21 +8253,24 @@ function gpStep(dt){
     h.draft = !!A && g > .3 && g <= 7 && !h.fin;
     h.blocked = !!A && g < 2.8 && !h.fin;
     let push = h.push && !h.tired && h.st > 0 && !h.fin;
+    const brake = h.brake && !push && !h.fin;          // easing off: drop back to a canter, catch your breath fast
     const cruise = h.vmax*.82, cap = h.tired ? h.vmax*.8 : h.vmax;
     let a = 0;
     if (h.fin) a = h.v > 12 ? -3 : 0;
     else if (push) a = h.ak + .55;
+    else if (brake) a = h.v > h.vmax*.6 ? -4.5 : 0;
     else a = h.v < cruise ? 2 + h.ak*.3 : -1.1;
     if (h.draft && A.acc > 0 && !h.fin) a += A.acc/3;                       // slipstream: a third of the horse in front's surge
     const v0 = h.v;
     h.v = Math.max(0, h.v + a*dt);
     if (h.v > cap) h.v = Math.max(cap, v0 - 3*dt);                          // tired: the speed fades, it does not drop at once
-    if (!push && h.v > cruise && a > 0) h.v = Math.max(cruise, v0);      // the free surge never carries above cruise without asking
+    if (!push && h.v > cruise && a > 0) h.v = Math.max(cruise, v0);
+    if (brake && h.draft && a > 0) h.v = Math.min(h.v, v0);                // easing off ignores the slipstream surge      // the free surge never carries above cruise without asking
     if (h.blocked) h.v = Math.min(h.v, A.v + (g - 2.2)*2.5);              // stuck behind: you cannot go through him
     h.acc = (h.v - v0)/dt;
     // stamina
     if (push){ h.st -= (h.v < h.vmax - .05 ? 7 : 4.5) * (h.draft && A.push ? .65 : 1) * dt; if (h.st <= 0){ h.st = 0; h.tired = true; } }
-    else h.st = Math.min(100, h.st + 1.1 * (h.draft ? 1.5 : 1) * (anyAhead ? 1 : .85) * dt);
+    else h.st = Math.min(100, h.st + (brake ? 6 : 1.1 * (h.draft ? 1.5 : 1) * (anyAhead ? 1 : .85)) * (h.bot ? 1 : 4/3) * dt);   // riders recover a third faster than robots
     if (h.tired && h.st >= 20) h.tired = false;
     // sideways, blocked by a horse alongside
     if (h.steer && !h.fin){
@@ -8286,7 +8291,7 @@ function galopHostFrame(dt, now){
     HGP.t += dt;
     for (const h of HGP.R){
       if (h.bot){ h.thinkT -= dt; if (h.thinkT <= 0){ h.thinkT = .2; gpBot(h); } }
-      else { const I = HGP.IN[h.id] || {}; h.push = !!I.a; h.steer = (I.r ? 1 : 0) - (I.l ? 1 : 0); }
+      else { const I = HGP.IN[h.id] || {}; h.push = !!I.a; h.brake = !!I.b && !I.a; h.steer = (I.r ? 1 : 0) - (I.l ? 1 : 0); }
     }
     const n = Math.ceil(dt/(1/60));
     for (let i = 0; i < n; i++) gpStep(dt/n);
@@ -8295,7 +8300,7 @@ function galopHostFrame(dt, now){
   if (now - HGP.lastSend > 50){
     HGP.lastSend = now;
     broadcast({ t:'gp_s', k:Math.round(HGP.t*10)/10, r:HGP.R.map(h => [Math.round(h.s*10)/10, Math.round(h.lat*100)/100, Math.round(h.v*10)/10, Math.round(h.st),
-      (h.push && !h.tired ? 1 : 0) | (h.draft ? 2 : 0) | (h.blocked ? 4 : 0) | (h.tired ? 8 : 0) | (h.fin ? 16 : 0)]) });
+      (h.push && !h.tired ? 1 : 0) | (h.draft ? 2 : 0) | (h.blocked ? 4 : 0) | (h.tired ? 8 : 0) | (h.fin ? 16 : 0) | (h.brake && !h.push ? 32 : 0)]) });
   }
 }
 function galopFinish(){
@@ -8310,7 +8315,7 @@ function galopFinish(){
 function galopDrop(id){
   if (!H || H.over || !H.stats[id]) return;
   H.stats[id].left = true;
-  if (HGP && HGP.R){ const h = HGP.R.find(x => x.id === id); if (h){ h.bot = true; h.strat = 'pacer'; h.bold = 1; h.name = GP_HORSES[h.h].n; } }   // a robot takes the reins
+  if (HGP && HGP.R){ const h = HGP.R.find(x => x.id === id); if (h){ h.bot = true; h.brake = false; h.strat = 'pacer'; h.bold = 1; h.name = GP_HORSES[h.h].n; } }   // a robot takes the reins
   if (!players.some(p => !H.stats[p.id].left)) return galopFinish();
   if (HGP && HGP.ph === 'pick' && players.every(p => HGP.picks[p.id] != null || H.stats[p.id].left)) gpLater(gpRaceStart, 500);
 }
@@ -8365,7 +8370,7 @@ function startGalop(m){
   lastCountShown = null;
   players = m.players; cur = 'galop'; G = null; PG = null; D = null; phase = 'pick';
   $('scrEnd').hidden = true; show('scrGalop');
-  GP = { ph:'pick', picks:{}, left:GP_PICK, R:null, view:null, me:-1, IN:{ l:false, r:false, a:false }, sent:'', count:0, t:0, fin:{}, over:false,
+  GP = { ph:'pick', picks:{}, left:GP_PICK, R:null, view:null, me:-1, IN:{ l:false, r:false, a:false, b:false }, sent:'', count:0, t:0, fin:{}, over:false,
     hoofT:0, bell:false, cheer:false, tracks:null };
   $('gpPick').hidden = false; $('gpRace').hidden = true;
   renderGpPick();
@@ -8399,7 +8404,7 @@ function galopRecv(m){
     GP.me = GP.R.findIndex(r => r.id === me.id);
     $('gpPick').hidden = true; $('gpRace').hidden = false;
     const mh = GP.me >= 0 ? GP.R[GP.me] : null;
-    $('gpHelp').textContent = mh ? 'Vous montez ' + GP_HORSES[mh.h].n + ' (stalle ' + (mh.stall + 1) + '). ◀ ▶ pour vous décaler, GALOP pour accélérer (coûte de l\'énergie). Collé derrière un cheval, vous récupérez plus vite et profitez de ses accélérations. Clavier : ← → et ↑ ou Espace.' : 'Vous regardez la course.';
+    $('gpHelp').textContent = mh ? 'Vous montez ' + GP_HORSES[mh.h].n + ' (stalle ' + (mh.stall + 1) + '). ◀ ▶ pour vous décaler, GALOP pour accélérer (coûte de l\'énergie), RALENTIR pour souffler et sortir d\'un blocage (récupération rapide). Collé derrière un cheval, vous récupérez plus vite et profitez de ses accélérations. Clavier : ← →, ↑ ou Espace, ↓ pour ralentir.' : 'Vous regardez la course.';
     $('gpBtns').hidden = !mh;
     sfx('clack');
   }
@@ -8419,18 +8424,18 @@ function galopRecv(m){
 let gpToastT = null;
 function gpToast(t){ const el = $('gpToast'); el.textContent = t; el.classList.add('on'); clearTimeout(gpToastT); gpToastT = setTimeout(() => el.classList.remove('on'), 2000); }
 function gpSendIn(){
-  const k = (GP.IN.l ? 1 : 0) + (GP.IN.r ? 2 : 0) + (GP.IN.a ? 4 : 0) + '';
+  const k = (GP.IN.l ? 1 : 0) + (GP.IN.r ? 2 : 0) + (GP.IN.a ? 4 : 0) + (GP.IN.b ? 8 : 0) + '';
   if (k === GP.sent) return;
-  GP.sent = k; toHost({ t:'gp_in', l:GP.IN.l, r:GP.IN.r, a:GP.IN.a });
+  GP.sent = k; toHost({ t:'gp_in', l:GP.IN.l, r:GP.IN.r, a:GP.IN.a, b:GP.IN.b });
 }
-for (const [id, key] of [['gpL', 'l'], ['gpA', 'a'], ['gpR', 'r']]){
+for (const [id, key] of [['gpL', 'l'], ['gpA', 'a'], ['gpR', 'r'], ['gpB', 'b']]){
   const b = $(id);
   const set = v => { if (!GP) return; GP.IN[key] = v; b.classList.toggle('on', v); gpSendIn(); };
   b.addEventListener('pointerdown', e => { e.preventDefault(); b.setPointerCapture(e.pointerId); set(true); });
   for (const ev of ['pointerup', 'pointercancel', 'lostpointercapture']) b.addEventListener(ev, () => set(false));
   b.addEventListener('contextmenu', e => e.preventDefault());
 }
-const GP_KEYS = { arrowleft:'l', q:'l', a:'l', arrowright:'r', d:'r', arrowup:'a', ' ':'a', z:'a', w:'a' };
+const GP_KEYS = { arrowleft:'l', q:'l', a:'l', arrowright:'r', d:'r', arrowup:'a', ' ':'a', z:'a', w:'a', arrowdown:'b', s:'b' };
 addEventListener('keydown', e => { if (cur !== 'galop' || !GP || e.target.tagName === 'INPUT') return; const k = GP_KEYS[e.key.toLowerCase()]; if (k){ e.preventDefault(); GP.IN[k] = true; gpSendIn(); } });
 addEventListener('keyup', e => { if (cur !== 'galop' || !GP) return; const k = GP_KEYS[e.key.toLowerCase()]; if (k){ GP.IN[k] = false; gpSendIn(); } });
 
@@ -8450,7 +8455,7 @@ function galopFrame(dtMs, now){
     const r = gpRail(GP_START + h.s), f = r.bend ? GP_RAD/(GP_RAD + h.lat + .8) : 1;
     if (!me.host){ h.ds += h.v*f*dt; }
     const src = me.host && HGP && HGP.R ? HGP.R.find(x => x.id === h.id) : null;
-    if (src){ h.s = src.s; h.lat = src.lat; h.v = src.v; h.st = src.st; h.f = (src.push && !src.tired ? 1 : 0) | (src.draft ? 2 : 0) | (src.blocked ? 4 : 0) | (src.tired ? 8 : 0) | (src.fin ? 16 : 0); }
+    if (src){ h.s = src.s; h.lat = src.lat; h.v = src.v; h.st = src.st; h.f = (src.push && !src.tired ? 1 : 0) | (src.draft ? 2 : 0) | (src.blocked ? 4 : 0) | (src.tired ? 8 : 0) | (src.fin ? 16 : 0) | (src.brake && !src.push ? 32 : 0); }
     else { h.s += (h.ds - h.s)*Math.min(1, dt*8); h.lat += (h.dl - h.lat)*Math.min(1, dt*8); }
     h.gait += dt*(4 + h.v*.35);
   }
@@ -8474,7 +8479,7 @@ function gpHud(){
   const fin = GP.fin[ref.id];
   $('gpHead').textContent = (fin ? 'Arrivé ' + fin.place + (fin.place === 1 ? 'er' : 'e') : rank + (rank === 1 ? 'er' : 'e') + ' / ' + GP.R.length) + (mh ? '' : ' · ' + (ref.bot ? GP_HORSES[ref.h].n : ref.name));
   $('gpDist').textContent = fin ? '🏁' : rem.toLocaleString('fr-FR') + ' m';
-  const tags = []; if (mh){ if (mh.f & 8) tags.push('ÉPUISÉ'); else if (mh.f & 4) tags.push('BLOQUÉ'); if (mh.f & 2) tags.push('ASPIRATION'); }
+  const tags = []; if (mh){ if (mh.f & 8) tags.push('ÉPUISÉ'); else if (mh.f & 4) tags.push('BLOQUÉ'); if (mh.f & 32) tags.push('SOUFFLE'); else if (mh.f & 2) tags.push('ASPIRATION'); }
   const el = $('gpTag'); el.textContent = tags.join(' · '); el.hidden = !tags.length; el.classList.toggle('low', !!(mh && (mh.f & 12)));
 }
 
