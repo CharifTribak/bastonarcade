@@ -9055,7 +9055,7 @@ function frame(now){
       if (input.das.held > 150){ input.das.arr += dt; while (input.das.arr >= 40 && G.alive){ input.das.arr -= 40; if (!move(input.das.dir, 0)) break; } }
     }
     const base = Math.max(55, 800 * Math.pow(0.82, level()));
-    const interval = input.soft ? Math.min(base, 35) : base;
+    const interval = input.soft ? Math.min(base, 70) : base;
     G.acc += dt;
     while (G.alive && G.p && G.acc >= interval){
       G.acc -= interval;
