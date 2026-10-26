@@ -1711,7 +1711,7 @@ function receiveGarbage(from, cols, black){
 }
 // Enemy bricks enter at the top of the well and fall straight down.
 // The player cannot move them; holding ↓ makes them fall faster. The next piece spawns once they have all landed.
-const BRICK_SPEED = 14, BRICK_SPEED_SOFT = 60;       // rows per second
+const BRICK_SPEED = 14, BRICK_SPEED_SOFT = 30;       // rows per second
 function startGarbageFall(){
   G.p = null; G.falling = [];
   const stackInCol = {};
