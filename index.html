@@ -107,7 +107,10 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .hello button{font-size:15px;padding:2px 9px;margin-left:4px}
 #menuHint:empty{display:none}
 .iconbar{display:flex;justify-content:center;gap:12px}
-.iconbar button{width:48px;height:44px;padding:0;font-size:20px;font-weight:900}
+.iconbar button,.iconbar a{width:48px;height:44px;padding:0;font-size:20px;font-weight:900}
+.iconbar a.coffee{display:flex;align-items:center;justify-content:center;text-decoration:none;background:#FFD93B;color:#000;border:3px solid var(--line);box-shadow:4px 4px 0 var(--line)}
+.coffeeline{margin:0;text-align:center;font-size:14px}
+.coffeeline a{color:#000;font-weight:800}
 .strip{overflow-x:auto;overflow-y:hidden;margin:0 -18px;border-top:3px solid var(--line);border-bottom:3px solid var(--line);background:#000;scrollbar-width:none;cursor:grab;touch-action:pan-x;-webkit-overflow-scrolling:touch}
 .strip::-webkit-scrollbar{display:none}
 .strip.drag{cursor:grabbing}
@@ -487,6 +490,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
       <button id="btnBoard" class="ghost" type="button" aria-label="Classement général" title="Classement général">🏆</button>
       <button id="btnSound" class="ghost" type="button" aria-label="Son : activé" title="Son : activé">🔊</button>
       <button id="btnLang" class="ghost" type="button" translate="no" aria-label="English" title="English">EN</button>
+      <a id="btnCoffee" class="btn ghost coffee" href="https://ko-fi.com/bastonarcade" target="_blank" rel="noopener" aria-label="Offrir un café au développeur" title="Offrir un café au développeur">☕</a>
     </div>
     <p class="legal"><a href="legal.html">Mentions légales et confidentialité</a></p>
   </div>
@@ -857,6 +861,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
     <button id="btnAgain">Retour au salon</button>
     <button id="btnBoard3" class="ghost">Classement général</button>
     <p class="hint" id="endHint"></p>
+    <p class="coffeeline"><a href="https://ko-fi.com/bastonarcade" target="_blank" rel="noopener">Ça vous a plu ? Offrez un café au développeur ☕</a></p>
     <button id="btnQuit" class="ghost">Quitter</button>
   </div>
 </div>
