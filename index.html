@@ -108,9 +108,12 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 #menuHint:empty{display:none}
 .iconbar{display:flex;justify-content:center;gap:12px}
 .iconbar button,.iconbar a{width:48px;height:44px;padding:0;font-size:20px;font-weight:900}
-.iconbar a.coffee{display:flex;align-items:center;justify-content:center;text-decoration:none;background:#FFD93B;color:#000;border:3px solid var(--line);box-shadow:4px 4px 0 var(--line)}
-.coffeeline{margin:0;text-align:center;font-size:14px}
-.coffeeline a{color:#000;font-weight:800}
+.support{display:flex;flex-direction:column;gap:12px}
+.support a{display:flex;align-items:center;justify-content:center;text-decoration:none;border:3px solid var(--line);box-shadow:5px 5px 0 var(--line);padding:12px;font-weight:900;font-size:16px;text-align:center}
+.support a.coffee{background:#FFD93B;color:#000;font-size:18px;transform:rotate(-1deg)}
+.support a.idea{background:#fff;color:#000}
+.coffeeline{margin:0;text-align:center}
+.coffeeline a{display:block;text-decoration:none;background:#FFD93B;color:#000;border:3px solid var(--line);box-shadow:5px 5px 0 var(--line);padding:11px;font-weight:900;font-size:16px}
 .strip{overflow-x:auto;overflow-y:hidden;margin:0 -18px;border-top:3px solid var(--line);border-bottom:3px solid var(--line);background:#000;scrollbar-width:none;cursor:grab;touch-action:pan-x;-webkit-overflow-scrolling:touch}
 .strip::-webkit-scrollbar{display:none}
 .strip.drag{cursor:grabbing}
@@ -486,11 +489,14 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
     </div>
     <div class="strip" id="gameStrip" aria-label="Les jeux"><div class="striprun" id="gameStripRun"></div></div>
     <div class="gamepop" id="gamePop" hidden><div class="feature"><img id="gamePopArt" class="gameart" alt=""><div class="featbody"><h2 id="gamePopTitle"></h2><p id="gamePopDesc"></p><small>Touchez pour fermer</small></div></div></div>
+    <div class="support">
+      <a class="btn coffee" id="btnCoffee" href="https://ko-fi.com/bastonarcade" target="_blank" rel="noopener">☕ Offrir un café au développeur</a>
+      <a class="btn ghost idea" id="btnIdea" href="mailto:contact@bastonarcade.com?subject=Id%C3%A9e%20de%20jeu%20pour%20Baston%20Arcade&body=Nom%20du%20jeu%20%3A%0A%0APrincipe%20en%20quelques%20lignes%20%3A%0A%0ANombre%20de%20joueurs%20%3A%0A%0AComment%20on%20joue%20(boutons%2C%20gestes)%20%3A%0A%0A---%0AEn%20envoyant%20cette%20id%C3%A9e%2C%20j'accepte%20les%20conditions%20des%20propositions%20d'id%C3%A9es%20%3A%20https%3A%2F%2Fbastonarcade.com%2Flegal.html">💡 Proposer une idée de jeu</a>
+    </div>
     <div class="iconbar">
       <button id="btnBoard" class="ghost" type="button" aria-label="Classement général" title="Classement général">🏆</button>
       <button id="btnSound" class="ghost" type="button" aria-label="Son : activé" title="Son : activé">🔊</button>
       <button id="btnLang" class="ghost" type="button" translate="no" aria-label="English" title="English">EN</button>
-      <a id="btnCoffee" class="btn ghost coffee" href="https://ko-fi.com/bastonarcade" target="_blank" rel="noopener" aria-label="Offrir un café au développeur" title="Offrir un café au développeur">☕</a>
     </div>
     <p class="legal"><a href="legal.html">Mentions légales et confidentialité</a></p>
   </div>
@@ -1051,6 +1057,7 @@ function syncHello(edit){
 }
 syncHello(false);
 $('btnName').onclick = () => { syncHello(true); $('nameIn').focus(); $('nameIn').select(); };
+if (LANG === 'en') $('btnIdea').href = 'mailto:contact@bastonarcade.com?subject=Game%20idea%20for%20Baston%20Arcade&body=Game%20name%3A%0A%0AThe%20idea%20in%20a%20few%20lines%3A%0A%0ANumber%20of%20players%3A%0A%0AHow%20you%20play%20%28buttons%2C%20gestures%29%3A%0A%0A---%0ABy%20sending%20this%20idea%2C%20I%20accept%20the%20terms%20for%20game%20idea%20submissions%3A%20https%3A//bastonarcade.com/legal.html';
 const menuView = multi => { $('menuMain').hidden = multi; $('menuMulti').hidden = !multi; };
 $('btnMulti').onclick = () => { menuView(true); menuHint(''); };
 $('btnMultiBack').onclick = () => { menuView(false); menuHint(''); };
