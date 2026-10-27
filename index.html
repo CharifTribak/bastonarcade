@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Baston Arcade</title>
-<meta name="description" content="Seize jeux multijoueurs dans le navigateur : Gravats, Les Gardiens, Derby, Armada, Tape-taupe, Curling, Chaises musicales, Code secret, Kabaddi, Balle au prisonnier, Chars, Les bergers, Drakkars, Bûcherons, Agility et Galop. Un salon, un code, de 1 à 5 joueurs.">
+<meta name="description" content="Dix-sept jeux multijoueurs dans le navigateur : Gravats, Les Gardiens, Derby, Armada, Tape-taupe, Curling, Chaises musicales, Code secret, Kabaddi, Balle au prisonnier, Chars, Les bergers, Drakkars, Bûcherons, Agility, Galop et Marée haute. Un salon, un code, de 1 à 5 joueurs.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Baston Arcade">
-<meta property="og:description" content="Seize jeux multijoueurs dans le navigateur. Créez un salon, partagez le code, et que le meilleur gagne.">
+<meta property="og:description" content="Dix-sept jeux multijoueurs dans le navigateur. Créez un salon, partagez le code, et que le meilleur gagne.">
 <meta property="og:image" content="https://bastonarcade.com/img/share.jpg?v=2">
 <meta property="og:url" content="https://bastonarcade.com/">
 <link rel="canonical" href="https://bastonarcade.com/">
@@ -304,6 +304,9 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 
 /* ---- bûcherons ---- */
 #ljWrap,.ljhead,#ljCutWrap,#ljGo{width:min(100%,50vh,560px)}
+#tdWrap,.tdhead,#tdUndo{width:min(100%,62vh,540px)}
+#tdCv{display:block;width:100%;height:auto;aspect-ratio:540/660;touch-action:none;user-select:none;-webkit-user-select:none;cursor:crosshair;border:3px solid #000;box-shadow:6px 6px 0 #000}
+.tdhead .dkchips{flex-wrap:wrap;justify-content:flex-end}
 #ljTop{display:block;width:100%;height:auto;aspect-ratio:1;touch-action:none;user-select:none;-webkit-user-select:none;cursor:crosshair;border:3px solid #000;box-shadow:6px 6px 0 #000}
 #ljCut{display:block;width:100%;height:auto;aspect-ratio:600/260;touch-action:none;user-select:none;-webkit-user-select:none;border:3px solid #000;box-shadow:6px 6px 0 #000}
 #ljGo{height:58px;font-size:26px}
@@ -480,7 +483,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
 <section id="scrMenu" class="center">
   <div class="card">
     <h1 class="logosvg" data-appname><svg viewBox="0 0 520 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Baston Arcade"><polygon points="260,8 292,62 352,22 356,86 428,58 404,118 494,120 438,166 508,214 428,226 456,292 384,270 372,322 318,276 262,318 222,270 156,306 152,248 76,262 104,206 18,184 92,148 36,92 116,94 102,30 172,62 204,8 228,58" fill="#000" transform="translate(7,7)"/><polygon points="260,8 292,62 352,22 356,86 428,58 404,118 494,120 438,166 508,214 428,226 456,292 384,270 372,322 318,276 262,318 222,270 156,306 152,248 76,262 104,206 18,184 92,148 36,92 116,94 102,30 172,62 204,8 228,58" fill="#E6262B" stroke="#000" stroke-width="5" stroke-linejoin="round"/><g transform="rotate(-6 260 168)"><text x="264" y="196" text-anchor="middle" font-family="Bangers, Impact, sans-serif" font-size="112" letter-spacing="3" fill="#000">BASTON !</text><text x="258" y="190" text-anchor="middle" font-family="Bangers, Impact, sans-serif" font-size="112" letter-spacing="3" fill="#fff" stroke="#000" stroke-width="6" paint-order="stroke" stroke-linejoin="round">BASTON !</text><text x="383" y="252" text-anchor="end" font-family="Bangers, Impact, sans-serif" font-size="52" letter-spacing="6" fill="#000">ARCADE</text><text x="379" y="248" text-anchor="end" font-family="Bangers, Impact, sans-serif" font-size="52" letter-spacing="6" fill="#FFD93B" stroke="#000" stroke-width="5" paint-order="stroke" stroke-linejoin="round">ARCADE</text></g><path d="M60 46 l26 14 M44 76 l30 6 M462 260 l-26 -12 M476 232 l-30 -4" stroke="#000" stroke-width="5" stroke-linecap="round"/></svg></h1>
-    <p class="tagline">Seize jeux, de 1 à 5 joueurs</p>
+    <p class="tagline">Dix-sept jeux, de 1 à 5 joueurs</p>
     <div class="hello" id="helloBox" hidden><span>Salut</span> <b id="helloName"></b><button id="btnName" class="ghost" type="button" aria-label="Changer de nom">✎</button></div>
     <div class="field" id="nameField">
       <label for="nameIn">Votre nom</label>
@@ -557,6 +560,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
       <button data-g="lumber" aria-pressed="false"><img src="img/lumber.jpg" alt=""><span>Bûcherons</span></button>
       <button data-g="agility" aria-pressed="false"><img src="img/agility.jpg" alt=""><span>Agility</span></button>
       <button data-g="galop" aria-pressed="false"><img src="img/galop.jpg" alt=""><span>Galop</span></button>
+      <button data-g="tide" aria-pressed="false"><img src="img/tide.jpg" alt=""><span>Marée haute</span></button>
     </div>
     </div>
     <div class="field" id="chatField">
@@ -847,6 +851,21 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
   </div>
 </section>
 
+<!-- MARÉE HAUTE -->
+<section id="scrTide" hidden>
+  <div class="naval">
+    <div class="nvhead tdhead"><div class="nvturn" id="tdHead">Marée haute</div><div class="dkchips"><span class="cuend" id="tdWave">Vague 1/7</span><span class="cuend" id="tdTime" hidden></span><span class="cuend" id="tdInk" hidden></span></div></div>
+    <div class="nvwrap" id="tdWrap">
+      <canvas id="tdCv" width="540" height="660" aria-label="La plage vue du dessus"></canvas>
+      <div class="msg pm" id="tdMsg"></div>
+      <div class="toast pm" id="tdToast" aria-live="polite"></div>
+    </div>
+    <button id="tdUndo" class="ghost" type="button" hidden>↶ Annuler mon dernier muret</button>
+    <ul class="nvplayers" id="tdPlayers"></ul>
+    <p class="hint" id="tdHelp" style="text-align:center"></p>
+  </div>
+</section>
+
 <!-- AGILITY -->
 <section id="scrAgility" hidden>
   <div class="naval">
@@ -925,6 +944,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
       <button data-f="lumber" aria-pressed="false">Bûcherons</button>
       <button data-f="agility" aria-pressed="false">Agility</button>
       <button data-f="galop" aria-pressed="false">Galop</button>
+      <button data-f="tide" aria-pressed="false">Marée</button>
     </div>
     <div class="rank"><table>
       <thead><tr id="lbHead"></tr></thead>
@@ -1053,7 +1073,7 @@ let D = null;                   // derby state
 let NV = null, HN = null;       // armada: my view / host's full map
 let BOT = null;                  // host-side robot when someone plays alone
 let ML = null, HM = null;       // tape-taupe: my view / host referee
-const GAME_NAMES = { tetris:'Gravats', pong:'Les Gardiens', derby:'Derby', naval:'Armada', mole:'Tape-taupe', curling:'Curling', chairs:'Chaises musicales', master:'Code secret', kabaddi:'Kabaddi', dodge:'Balle au prisonnier', tank:'Chars', sheep:'Les bergers', drakkar:'Drakkars', lumber:'Bûcherons', agility:'Agility', galop:'Galop' };
+const GAME_NAMES = { tetris:'Gravats', pong:'Les Gardiens', derby:'Derby', naval:'Armada', mole:'Tape-taupe', curling:'Curling', chairs:'Chaises musicales', master:'Code secret', kabaddi:'Kabaddi', dodge:'Balle au prisonnier', tank:'Chars', sheep:'Les bergers', drakkar:'Drakkars', lumber:'Bûcherons', agility:'Agility', galop:'Galop', tide:'Marée haute' };
 const GAME_DESC = {
   tetris:'Empilez des pièces de 2, 3 et 5 briques. Chaque ligne effacée envoie des briques fendues à vos adversaires. Effacez une ligne collée à une brique fendue : elle éclate et repart chez son expéditeur.',
   pong:'Chaque joueur garde un but avec 5 vies. Le terrain suit le nombre de joueurs : carré à 2, hexagone à 3, octogone à 4, décagone à 5. Deux ballons à partir de 3 joueurs. Le but d\'un joueur éliminé se ferme.',
@@ -1070,13 +1090,14 @@ const GAME_DESC = {
   drakkar:'Drakkars, en coopération : tout le salon rame dans le même drakkar et fait la course contre celui des robots jusqu\'en Angleterre. Un coup de rame par coup de tambour, en alternant GAUCHE et DROITE. Les coups de chacun s\'affichent chez tous pour se caler ensemble. Plus l\'équipage est synchro, plus le drakkar file, et le tambour accélère.',
   lumber:'Concours de bûcherons, tronçonneuse en main : vu du dessus, choisissez où tombe votre arbre sans rien écraser, puis abattez-le comme un vrai, en suivant les pointillés : les deux coupes de l\'entaille, puis le trait d\'abattage. Plus les coupes sont droites, plus l\'arbre tombe là où vous l\'avez décidé, et viser une ouverture étroite rapporte un gros bonus. Écraser une maison, une voiture ou un autre arbre élimine. Trois manches de plus en plus dures, tout le monde joue en même temps.',
   agility:'Concours d\'agility : chacun guide son chien sur le même parcours, en même temps. Entre les obstacles, le chien court seul. Haies et pneu : touchez au bon moment. Slalom : tracez le zigzag entre les piquets. Tunnel : suivez-le du doigt. Passerelle : maintenez, puis relâchez dans la zone jaune. Table : « Couché ! » puis ne touchez plus. Chaque faute coûte 5 s, le meilleur temps gagne.',
+  tide:'Chacun a son château de sable au bas d\'une même plage. Entre deux vagues, tracez au doigt des murets dans votre bande de plage, avec un sable limité. La vague rebondit sur les murets : un muret bien tourné protège votre château et renvoie l\'eau chez les voisins. La marée monte à chaque vague et les murets s\'usent. Le dernier château debout gagne.',
   galop:'Course de galop de 3000 m, chacun sur son cheval, vue du dessus. Choisissez votre monture parmi 20, nouvelles à chaque partie (accélération, vitesse, maniabilité, et une forme du jour cachée), des robots complètent jusqu\'à 8 partants. Le cheval suit la piste tout seul : vous vous décalez à gauche ou à droite et vous demandez du galop, qui coûte de l\'énergie. Collé derrière un autre, vous récupérez plus vite et profitez de ses accélérations.',
   derby:'Course de chevaux : tout le monde reçoit la même série de figures à tracer. Chaque figure réussie fait avancer votre cheval, plus loin si elle est complexe et bien tracée. Le premier à la ligne gagne.'
 };
 
 const cleanName = s => String(s || '').replace(/[\u0000-\u001f<>]/g,'').trim().slice(0,14) || (LANG === 'en' ? 'Player' : 'Joueur');
 const genCode = () => { const a='ABCDEFGHJKMNPQRSTUVWXYZ23456789'; let s=''; for(let i=0;i<4;i++) s+=a[Math.floor(Math.random()*a.length)]; return s; };
-const show = id => { for (const s of ['scrMenu','scrLobby','scrGame','scrPong','scrDerby','scrNaval','scrMole','scrCurl','scrChairs','scrMaster','scrKabaddi','scrDodge','scrTank','scrSheep','scrDrakkar','scrLumber','scrAgility','scrGalop']) $(s).hidden = s !== id; if (id === 'scrKabaddi') try { window.scrollTo(0, 0); } catch(_){} document.documentElement.classList.toggle('joyon', ['scrKabaddi','scrDodge','scrTank','scrSheep'].includes(id)); };
+const show = id => { for (const s of ['scrMenu','scrLobby','scrGame','scrPong','scrDerby','scrNaval','scrMole','scrCurl','scrChairs','scrMaster','scrKabaddi','scrDodge','scrTank','scrSheep','scrDrakkar','scrLumber','scrAgility','scrGalop','scrTide']) $(s).hidden = s !== id; if (id === 'scrKabaddi') try { window.scrollTo(0, 0); } catch(_){} document.documentElement.classList.toggle('joyon', ['scrKabaddi','scrDodge','scrTank','scrSheep'].includes(id)); };
 const store = { get(k){ try { return localStorage.getItem(k); } catch(_) { return null; } }, set(k,v){ try { localStorage.setItem(k,v); } catch(_){} } };
 
 $('nameIn').value = store.get('tm-name') || ((LANG === 'en' ? 'Player' : 'Joueur') + Math.floor(Math.random()*90+10));
@@ -1149,7 +1170,7 @@ function teardown(){
   if (HN && HN.timer) clearTimeout(HN.timer);
   if (HM) moleClearTimers();
   if (HC) clearTimeout(HC.timer);
-  HC = null; CU = null; mcClear(); HMC = null; MC = null; mmClear(); HMM = null; MM = null; kbClear(); HKB = null; KB = null; dbClear(); HDB = null; DB = null; tkClear(); HTK = null; TK = null; shClear(); HSH = null; SHV = null; dkClear(); HDK = null; ljClear(); HLJ = null; LJ = null; sawStop(); agClear(); HAG = null; AG = null; gpClear(); HGP = null; GP = null; DK = null;
+  HC = null; CU = null; mcClear(); HMC = null; MC = null; mmClear(); HMM = null; MM = null; kbClear(); HKB = null; KB = null; dbClear(); HDB = null; DB = null; tkClear(); HTK = null; TK = null; shClear(); HSH = null; SHV = null; dkClear(); HDK = null; ljClear(); HLJ = null; LJ = null; sawStop(); agClear(); HAG = null; AG = null; gpClear(); HGP = null; GP = null; tdClear(); HTD = null; TD = null; DK = null;
   CHAT.length = 0; renderChat();
   net = null; H = null; G = null; PG = null; D = null; NV = null; HN = null; cur = null; me.host = false; me.id = null; players = []; opps.clear();
 }
@@ -1337,7 +1358,7 @@ function hostDrop(conn){
   net.conns.delete(id);
   if (phase === 'lobby'){ const p = players.find(x => x.id === id); players = players.filter(p => p.id !== id); sendLobby(false); if (p) chatSys(p.name + ' a quitté le salon'); return; }
   if (H && H.alive.has(id)){
-    if (H.game === 'pong') pongDrop(id); else if (H.game === 'curling') curlDrop(id); else if (H.game === 'chairs') chairsDrop(id); else if (H.game === 'master') masterDrop(id); else if (H.game === 'kabaddi') kabaddiDrop(id); else if (H.game === 'dodge') dodgeDrop(id); else if (H.game === 'tank') tankDrop(id); else if (H.game === 'sheep') sheepDrop(id); else if (H.game === 'drakkar') drakkarDrop(id); else if (H.game === 'lumber') lumberDrop(id); else if (H.game === 'agility') agilityDrop(id); else if (H.game === 'galop') galopDrop(id); else if (H.game === 'derby') derbyDrop(id); else if (H.game === 'naval') navalDrop(id); else if (H.game === 'mole') moleDrop(id); else hostHandle(id, { t:'dead', left:true });
+    if (H.game === 'pong') pongDrop(id); else if (H.game === 'curling') curlDrop(id); else if (H.game === 'chairs') chairsDrop(id); else if (H.game === 'master') masterDrop(id); else if (H.game === 'kabaddi') kabaddiDrop(id); else if (H.game === 'dodge') dodgeDrop(id); else if (H.game === 'tank') tankDrop(id); else if (H.game === 'sheep') sheepDrop(id); else if (H.game === 'drakkar') drakkarDrop(id); else if (H.game === 'lumber') lumberDrop(id); else if (H.game === 'agility') agilityDrop(id); else if (H.game === 'galop') galopDrop(id); else if (H.game === 'tide') tideDrop(id); else if (H.game === 'derby') derbyDrop(id); else if (H.game === 'naval') navalDrop(id); else if (H.game === 'mole') moleDrop(id); else hostHandle(id, { t:'dead', left:true });
   }
 }
 
@@ -1397,6 +1418,7 @@ function hostStart(){
   if (gameKind === 'lumber') return lumberHostStart();
   if (gameKind === 'agility') return agilityHostStart();
   if (gameKind === 'galop') return galopHostStart();
+  if (gameKind === 'tide') return tideHostStart();
   unannounce();                                   // a started game leaves the public list at once
   broadcast({ t:'start', players, game:gameKind, seed:Math.floor(Math.random() * 2**31) });
 }
@@ -1445,6 +1467,8 @@ function hostHandle(id, m){
     galopPick(id, m.h);
   } else if (m.t === 'gp_in'){
     galopInput(id, m);
+  } else if (m.t === 'td_wall' || m.t === 'td_undo'){
+    tideInput(id, m);
   } else if (m.t === 'ag_p'){
     broadcast({ t:'ag_p', id, d:+m.d || 0 }, id);
   } else if (m.t === 'ag_done'){
@@ -1514,7 +1538,7 @@ function clientRecv(m){
     case 'lobby':
       players = Array.isArray(m.players) ? m.players : [];
       if (m.you) me.id = m.you;
-      if (['tetris','pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber','agility','galop'].includes(m.game)) gameKind = m.game;
+      if (['tetris','pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber','agility','galop','tide'].includes(m.game)) gameKind = m.game;
       if (phase === 'menu' || phase === 'lobby' || m.back){
         phase = 'lobby'; $('scrEnd').hidden = true; G = null; PG = null; D = null; NV = null; ML = null; CU = null; MC = null; MM = null; KB = null; DB = null; TK = null; SHV = null; DK = null; if (LJ){ LJ = null; sawStop(); } AG = null; GP = null; cur = null; show('scrLobby'); renderLobby();
       }
@@ -1544,7 +1568,8 @@ function clientRecv(m){
     case 'lj_round': case 'lj_res': case 'lj_sum': case 'lj_left': lumberRecv(m); break;
     case 'ag_p': case 'ag_done': case 'ag_left': agilityRecv(m); break;
     case 'gp_pick': case 'gp_race': case 'gp_go': case 'gp_s': case 'gp_fin': galopRecv(m); break;
-    case 'start': noteRecent(m.game); closeGameSheet(); $('colPick').hidden = true; if (m.game === 'galop') startGalop(m); else if (m.game === 'agility') startAgility(m); else if (m.game === 'lumber') startLumber(m); else if (m.game === 'drakkar') startDrakkar(m); else if (m.game === 'sheep') startSheep(m); else if (m.game === 'tank') startTank(m); else if (m.game === 'dodge') startDodge(m); else if (m.game === 'kabaddi') startKabaddi(m); else if (m.game === 'master') startMaster(m); else if (m.game === 'chairs') startChairs(m); else if (m.game === 'curling') startCurling(m); else if (m.game === 'pong') startPong(m.players); else if (m.game === 'derby') startDerby(m.players, m.seed|0); else startGame(m.players); break;
+    case 'td_build': case 'td_walls': case 'td_wave': case 'td_res': case 'td_left': tideRecv(m); break;
+    case 'start': noteRecent(m.game); closeGameSheet(); $('colPick').hidden = true; if (m.game === 'tide') startTide(m); else if (m.game === 'galop') startGalop(m); else if (m.game === 'agility') startAgility(m); else if (m.game === 'lumber') startLumber(m); else if (m.game === 'drakkar') startDrakkar(m); else if (m.game === 'sheep') startSheep(m); else if (m.game === 'tank') startTank(m); else if (m.game === 'dodge') startDodge(m); else if (m.game === 'kabaddi') startKabaddi(m); else if (m.game === 'master') startMaster(m); else if (m.game === 'chairs') startChairs(m); else if (m.game === 'curling') startCurling(m); else if (m.game === 'pong') startPong(m.players); else if (m.game === 'derby') startDerby(m.players, m.seed|0); else startGame(m.players); break;
     case 'dr': derbyRemote(m); break;
     case 'ps': pongState(m); break;
     case 'pg': pongGoalFx(m.side|0); break;
@@ -1836,7 +1861,7 @@ function showEnd(ranking, game){
   phase = 'end';
   if (G) G.p = null;
   if (PG) PG.ph = 'over';
-  const pong = game === 'pong', derby = game === 'derby', naval = game === 'naval', mole = game === 'mole', curl = game === 'curling', chairs = game === 'chairs', master = game === 'master', kab = game === 'kabaddi', dodge = game === 'dodge', tank = game === 'tank', coop = game === 'sheep', viking = game === 'drakkar', lumber = game === 'lumber', agil = game === 'agility', galop = game === 'galop';
+  const pong = game === 'pong', derby = game === 'derby', naval = game === 'naval', mole = game === 'mole', curl = game === 'curling', chairs = game === 'chairs', master = game === 'master', kab = game === 'kabaddi', dodge = game === 'dodge', tank = game === 'tank', coop = game === 'sheep', viking = game === 'drakkar', lumber = game === 'lumber', agil = game === 'agility', galop = game === 'galop', tide = game === 'tide';
   if (ML) ML.over = true;
   if (NV) NV.over = true;
   if (D) D.over = true;
@@ -1851,11 +1876,12 @@ function showEnd(ranking, game){
   if (LJ){ LJ.over = true; LJ.ph = 'end'; sawStop(); }
   if (AG){ AG.over = true; if (!AG.done) AG.mode = 'watch'; }
   if (GP) GP.over = true;
+  if (TD){ TD.over = true; TD.stroke = null; }
   const hd = $('rankHead'); hd.textContent = '';
-  for (const h of ['#','Joueur', ...(galop ? ['Cheval','Temps','Écart'] : agil ? ['Temps','Fautes','Total'] : lumber ? ['Points','Précision','Manches'] : viking ? ['Rôle','Coups','Synchro'] : coop ? ['Manches','Moutons','Ouaf'] : tank ? ['Char','Rôle','Touches'] : dodge ? ['Vies','Touches','Arrêts'] : kab ? ['Points','Raids réussis','Plaquages'] : master ? ['Points','Trouvés','Essais'] : chairs ? ['Vies','Chaises','Réflexe'] : curl ? ['Points','Maison','Meilleure'] : pong ? ['Vies','Arrêts'] : derby ? ['Figures','Distance','Temps'] : naval ? ['Tirs','Touchés','À flot'] : mole ? ['Points','Tapées','Échappées'] : ['Lignes','Briques','Score'])]){
+  for (const h of ['#','Joueur', ...(tide ? ['Château','Vagues','Eau renvoyée'] : galop ? ['Cheval','Temps','Écart'] : agil ? ['Temps','Fautes','Total'] : lumber ? ['Points','Précision','Manches'] : viking ? ['Rôle','Coups','Synchro'] : coop ? ['Manches','Moutons','Ouaf'] : tank ? ['Char','Rôle','Touches'] : dodge ? ['Vies','Touches','Arrêts'] : kab ? ['Points','Raids réussis','Plaquages'] : master ? ['Points','Trouvés','Essais'] : chairs ? ['Vies','Chaises','Réflexe'] : curl ? ['Points','Maison','Meilleure'] : pong ? ['Vies','Arrêts'] : derby ? ['Figures','Distance','Temps'] : naval ? ['Tirs','Touchés','À flot'] : mole ? ['Points','Tapées','Échappées'] : ['Lignes','Briques','Score'])]){
     const th = document.createElement('th'); th.textContent = h; hd.append(th);
   }
-  $('rankNote').textContent = galop ? '« Écart » : retard sur le vainqueur à l\'arrivée, en secondes. Les chevaux des robots sont classés avec les autres.' : agil ? '« Total » : temps du parcours plus 5 s par faute. Un chien qui n\'a pas fini est classé après les autres.' : lumber ? '« Précision » : moyenne de vos coupes. « Manches » : manches finies sans rien écraser. Un joueur qui écrase quelque chose est éliminé.' : viking ? 'Course en équipe. « Synchro » : coups de rame donnés en rythme avec le tambour.' : coop ? 'Partie en équipe : tout le monde partage le score. « Moutons » : moutons rentrés au total, « Ouaf » : aboiements.' : tank ? 'Les deux membres d\'un équipage partagent la même place. « Touches » : obus du canonnier qui ont fait mouche.' : dodge ? '« Touches » : balles qui ont atteint un adversaire. « Arrêts » : balles attrapées.' : kab ? '« Raids réussis » : raids rentrés avec au moins un défenseur touché. « Plaquages » : attaquants retenus jusqu\'au bout du souffle.' : master ? '« Trouvés » : codes trouvés. « Essais » : total des essais sur la partie.' : chairs ? '« Chaises » : chaises gagnées. « Réflexe » : votre plus rapide, de l\'arrêt du disque à la chaise.' : curl ? '« Maison » : pierres dans la maison en fin de mène. « Meilleure » : pierre la plus proche du centre.' : mole ? '« Tapées » : taupes adverses tapées. « Échappées » : vos taupes que personne n\'a eues.' : naval ? '« À flot » : cases de bateau encore intactes à la fin.' : pong ? '« Arrêts » : ballons repoussés par le gardien.' : derby ? '« Temps » : durée pour franchir la ligne, pour ceux qui l\'ont franchie.' : '« Briques » : nombre de briques envoyées aux adversaires.';
+  $('rankNote').textContent = tide ? '« Eau renvoyée » : gouttes qui ont rebondi sur vos murets avant de frapper le château d\'un autre. Les châteaux encore debout passent devant, puis ceux emportés le plus tard.' : galop ? '« Écart » : retard sur le vainqueur à l\'arrivée, en secondes. Les chevaux des robots sont classés avec les autres.' : agil ? '« Total » : temps du parcours plus 5 s par faute. Un chien qui n\'a pas fini est classé après les autres.' : lumber ? '« Précision » : moyenne de vos coupes. « Manches » : manches finies sans rien écraser. Un joueur qui écrase quelque chose est éliminé.' : viking ? 'Course en équipe. « Synchro » : coups de rame donnés en rythme avec le tambour.' : coop ? 'Partie en équipe : tout le monde partage le score. « Moutons » : moutons rentrés au total, « Ouaf » : aboiements.' : tank ? 'Les deux membres d\'un équipage partagent la même place. « Touches » : obus du canonnier qui ont fait mouche.' : dodge ? '« Touches » : balles qui ont atteint un adversaire. « Arrêts » : balles attrapées.' : kab ? '« Raids réussis » : raids rentrés avec au moins un défenseur touché. « Plaquages » : attaquants retenus jusqu\'au bout du souffle.' : master ? '« Trouvés » : codes trouvés. « Essais » : total des essais sur la partie.' : chairs ? '« Chaises » : chaises gagnées. « Réflexe » : votre plus rapide, de l\'arrêt du disque à la chaise.' : curl ? '« Maison » : pierres dans la maison en fin de mène. « Meilleure » : pierre la plus proche du centre.' : mole ? '« Tapées » : taupes adverses tapées. « Échappées » : vos taupes que personne n\'a eues.' : naval ? '« À flot » : cases de bateau encore intactes à la fin.' : pong ? '« Arrêts » : ballons repoussés par le gardien.' : derby ? '« Temps » : durée pour franchir la ligne, pour ceux qui l\'ont franchie.' : '« Briques » : nombre de briques envoyées aux adversaires.';
   const tb = $('rankBody'); tb.textContent = '';
   (ranking || []).forEach(r => {
     const tr = document.createElement('tr'); if (r.place === 1) tr.className = 'win';
@@ -1864,7 +1890,8 @@ function showEnd(ranking, game){
     const d = document.createElement('span'); d.className = 'dot'; d.style.background = r.color;
     const s = document.createElement('span'); s.textContent = r.name + (r.id === me.id ? ' (vous)' : '') + (r.left ? ' · parti' : '');
     w.append(d, s); nm.append(w);
-    if (galop) tr.append(td(r.place), nm, td(r.horse || ''), td(r.t ? fmtSec(r.t) : '–'), td(r.gap == null ? '–' : r.gap > 0 ? '+' + r.gap.toLocaleString('fr-FR', { minimumFractionDigits:2, maximumFractionDigits:2 }) : '')); if (galop) [...tr.children].slice(-2).forEach(c => c.style.whiteSpace = 'nowrap');
+    if (tide) tr.append(td(r.place), nm, td(r.hp > 0 ? r.hp + ' %' : 'emporté'), td((r.waves|0) + '/' + TD_WAVES), td(r.sent|0));
+    else if (galop){ tr.append(td(r.place), nm, td(r.horse || ''), td(r.t ? fmtSec(r.t) : '–'), td(r.gap == null ? '–' : r.gap > 0 ? '+' + r.gap.toLocaleString('fr-FR', { minimumFractionDigits:2, maximumFractionDigits:2 }) : '')); [...tr.children].slice(-2).forEach(c => c.style.whiteSpace = 'nowrap'); }
     else if (agil) tr.append(td(r.place), nm, td(r.done ? fmtSec(Math.round(r.time*1000)) : '–'), td(r.done ? r.faults|0 : '–'), td(r.done ? fmtSec(Math.round(r.total*1000)) : 'abandon'));
     else if (lumber) tr.append(td(r.place), nm, td(r.pts|0), td((r.sync|0) + ' %'), td((r.rounds|0) + '/' + LJ_ROUNDS + (r.out ? ' ✗' : '')));
     else if (viking) tr.append(td(r.win ? '★' : '–'), nm, td(r.role || ''), td(r.strokes|0), td((r.sync|0) + ' %'));
@@ -1891,7 +1918,7 @@ function showEnd(ranking, game){
   $('winPanel').style.background = viking ? (iWon ? '#3DDC97' : '#8A84B0') : coop ? '#3DDC97' : win ? win.color : '#FFD93B';
   $('winName').textContent = viking ? (iWon ? 'L\'Angleterre est à vous !' : 'Les autres Vikings arrivent avant vous') : coop ? 'Score d\'équipe : ' + ((win && win.score) | 0) : win ? (iWon ? 'Vous gagnez !' : (galop && win.bot && win.horse ? win.horse : win.name) + ' gagne !') : '';
   $('myPlace').textContent = viking ? 'Drakkars' + (iWon && win.t ? ' · ' + fmtSec(win.t) : '') : coop ? 'Les bergers · ' + ((win && win.rounds) | 0) + '/' + SH_ROUNDS + ' manches réussies' : (GAME_NAMES[game] || 'Gravats') + (mine ? ' · vous finissez ' + (mine.place === 1 ? '1er' : mine.place + 'e') + ' sur ' + ranking.length : '');
-  (galop ? (t => { const el = $('gpMsg'); if (el) el.textContent = t || ''; }) : agil ? agMsg : lumber ? ljMsg : viking ? drakkarMsg : coop ? sheepMsg : tank ? tankMsg : dodge ? dodgeMsg : kab ? kabaddiMsg : master ? masterMsg : chairs ? chairsMsg : curl ? curlMsg : pong ? pongMsg : derby ? derbyMsg : naval ? navalMsg : mole ? moleMsg : setMsg)('', '');
+  (tide ? tdMsg : galop ? (t => { const el = $('gpMsg'); if (el) el.textContent = t || ''; }) : agil ? agMsg : lumber ? ljMsg : viking ? drakkarMsg : coop ? sheepMsg : tank ? tankMsg : dodge ? dodgeMsg : kab ? kabaddiMsg : master ? masterMsg : chairs ? chairsMsg : curl ? curlMsg : pong ? pongMsg : derby ? derbyMsg : naval ? navalMsg : mole ? moleMsg : setMsg)('', '');
   $('btnAgain').hidden = false;
   $('endHint').textContent = me.host ? 'Tout le monde revient au salon : relancez le même jeu ou choisissez-en un autre.' : 'Vous attendrez au salon que le créateur relance.';
   saveGame(ranking, game);
@@ -2095,7 +2122,7 @@ function release(a){
 const KEYMAP = { arrowleft:'left', arrowright:'right', arrowdown:'down', arrowup:'rotr', x:'rotr', z:'rotl', w:'rotl', control:'rotl', ' ':'drop', c:'hold', shift:'hold' };
 addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT') return;
-  if (cur === 'curl' || cur === 'chairs' || cur === 'master' || cur === 'kabaddi' || cur === 'dodge' || cur === 'tank' || cur === 'sheep' || cur === 'drakkar' || cur === 'lumber' || cur === 'agility' || cur === 'galop') return;
+  if (cur === 'curl' || cur === 'chairs' || cur === 'master' || cur === 'kabaddi' || cur === 'dodge' || cur === 'tank' || cur === 'sheep' || cur === 'drakkar' || cur === 'lumber' || cur === 'agility' || cur === 'galop' || cur === 'tide') return;
   if (cur === 'pong'){ const k = PKEYS[e.key.toLowerCase()]; if (k){ e.preventDefault(); pin[k] = true; } return; }
   const a = KEYMAP[e.key.toLowerCase()]; if (!a) return;
   e.preventDefault();
@@ -8820,7 +8847,7 @@ function drawGalop(now){
 const BOOM_COLORS = [['#FFD93B','#E6262B'], ['#FFFFFF','#1E5BFF'], ['#E6262B','#FFFFFF'], ['#1E5BFF','#FFD93B']];
 function gameWrap(){
   return cur === 'tetris' ? document.querySelector('#play .well') : cur === 'pong' ? $('pwrap') : cur === 'derby' ? $('padwrap')
-    : cur === 'naval' ? document.querySelector('#scrNaval .nvwrap') : cur === 'mole' ? $('mlWrap') : cur === 'curl' ? $('cuWrap') : cur === 'chairs' ? $('mcWrap') : cur === 'master' ? $('mmWrap') : cur === 'kabaddi' ? $('kbWrap') : cur === 'dodge' ? $('dbWrap') : cur === 'tank' ? $('tkWrap') : cur === 'sheep' ? $('shWrap') : cur === 'drakkar' ? $('dkWrap') : cur === 'lumber' ? $('ljWrap') : cur === 'agility' ? $('agWrap') : cur === 'galop' ? $('gpWrap') : null;
+    : cur === 'naval' ? document.querySelector('#scrNaval .nvwrap') : cur === 'mole' ? $('mlWrap') : cur === 'curl' ? $('cuWrap') : cur === 'chairs' ? $('mcWrap') : cur === 'master' ? $('mmWrap') : cur === 'kabaddi' ? $('kbWrap') : cur === 'dodge' ? $('dbWrap') : cur === 'tank' ? $('tkWrap') : cur === 'sheep' ? $('shWrap') : cur === 'drakkar' ? $('dkWrap') : cur === 'lumber' ? $('ljWrap') : cur === 'agility' ? $('agWrap') : cur === 'galop' ? $('gpWrap') : cur === 'tide' ? $('tdWrap') : null;
 }
 // x, y: position in the wrap (0..1); size in px; pal: one of BOOM_COLORS
 function boom(text, o = {}){
@@ -8922,6 +8949,455 @@ const SFX = {
 function sfx(name, arg){ if (!SND.on) return; try { SFX[name] && SFX[name](arg); } catch(_){} }
 // countdown beeps shared by every game: call with the number on screen, 0 when it starts
 let lastCountShown = null;
+
+// ================= MARÉE HAUTE : build sand walls on your beach; a wall turned well sends the wave to your neighbours =================
+// Everyone has a sandcastle along the bottom of one shared beach. Between waves, each player traces sand walls in their own
+// strip (a limited amount of sand per wave). Then the wave rolls in: every droplet bounces off the walls, so a slanted wall
+// does not just shelter your castle, it throws the water sideways, often into someone else's. The tide rises at each wave,
+// swallowing the walls left too close to the sea, and walls wear away as they are hit. Last castle standing wins.
+// The wave is simulated the same way on every screen (same walls, same seed, fixed steps); the host's copy is the one that counts.
+const TD_W = 540, TD_H = 660, TD_WAVES = 7, TD_BUILD = 10, TD_STEPS = 400, TD_HP = 100, TD_INK = 230, TD_INK_MAX = 400, TD_MIN = 3;
+const TD_PUSH = 90, TD_SEG_HP = 3, TD_CASTLE_TOP = TD_H - 78, TD_CASTLE_BOT = TD_H - 26;
+let HTD = null, TD = null;
+const tdSea = w => 64 + w*17;                                   // the sea line comes down at every wave
+function tdZone(n, i){                                          // the strip of beach and the castle of castle i (of n)
+  const zw = TD_W/n, x0 = i*zw, cw = Math.min(80, zw*.62), cx = x0 + zw/2;
+  return { x0, x1:x0 + zw, cx, cw, c0:cx - cw/2, c1:cx + cw/2 };
+}
+function tdClampPt(n, i, w, x, y){
+  const Z = tdZone(n, i);
+  return [Math.max(Z.x0 + 5, Math.min(Z.x1 - 5, x)), Math.max(tdSea(w) + 26, Math.min(TD_CASTLE_TOP - 14, y))];
+}
+// a stroke (list of points) → wall segments, trimmed to the sand left
+function tdStrokeSegs(pts, ink){
+  const segs = []; let used = 0;
+  for (let i = 1; i < pts.length; i++){
+    const [ax, ay] = pts[i-1]; let [bx, by] = pts[i];
+    let L = Math.hypot(bx - ax, by - ay);
+    if (L < 4) continue;
+    if (used + L > ink){ const k = (ink - used)/L; if (k*L < 6) break; bx = ax + (bx - ax)*k; by = ay + (by - ay)*k; L = k*L; }
+    segs.push([Math.round(ax), Math.round(ay), Math.round(bx), Math.round(by)]); used += L;
+    if (used >= ink - .5) break;
+  }
+  return { segs, used };
+}
+
+// ---- the wave (shared by host and clients: arithmetic only, so every screen computes the same thing) ----
+function tdWaveNew(seed, w, n, walls, hp){
+  const R = rng32(seed), sea = tdSea(w), N = 68 + 16*w, P = [];
+  const swells = [R()*TD_W, R()*TD_W].slice(0, 1 + (R() < .55 ? 1 : 0));
+  for (let i = 0; i < N; i++){
+    let x;
+    if (R() < .58){ const s = swells[Math.floor(R()*swells.length)]; x = s + (R() + R() + R() - 1.5)*90; }
+    else x = R()*TD_W;
+    x = Math.max(6, Math.min(TD_W - 6, x));
+    P.push({ x, y:sea - 6 - R()*14, px:x, py:sea - 6, vx:(R()*2 - 1)*(26 + 6*w), vy:185 + 12*w + R()*45, t0:Math.floor(R()*95), own:-1, on:true, seen:false });
+  }
+  return { w, n, sea, k:0, P, walls:walls.map(s => s.slice()), hp:hp.slice(), hits:new Array(n).fill(0), sent:new Array(n).fill(0), fx:[], done:false };
+}
+function tdWaveStep(S){
+  const dt = 1/60, W = S.walls, top = S.sea - 34;
+  for (const p of S.P){
+    if (!p.on || p.t0 > S.k) continue;
+    if (!p.seen){ p.seen = true; p.px = p.x; p.py = p.y; }
+    p.px = p.x; p.py = p.y;
+    let nx = p.x + p.vx*dt, ny = p.y + p.vy*dt;
+    // walls: first wall crossed on the way, bounce off it
+    let best = null, bt = 2;
+    for (let j = 0; j < W.length; j++){
+      const s = W[j]; if (s[5] <= 0) continue;
+      const ax = s[0], ay = s[1], bx = s[2], by = s[3];
+      if (Math.max(p.x, nx) < Math.min(ax, bx) - 3 || Math.min(p.x, nx) > Math.max(ax, bx) + 3 || Math.max(p.y, ny) < Math.min(ay, by) - 3 || Math.min(p.y, ny) > Math.max(ay, by) + 3) continue;
+      const rx = nx - p.x, ry = ny - p.y, sx = bx - ax, sy = by - ay, den = rx*sy - ry*sx;
+      if (den === 0) continue;
+      const qx = ax - p.x, qy = ay - p.y, t = (qx*sy - qy*sx)/den, u = (qx*ry - qy*rx)/den;
+      if (t >= 0 && t <= 1 && u >= -.02 && u <= 1.02 && t < bt){ bt = t; best = j; }
+    }
+    if (best !== null){
+      const s = W[best], sx = s[2] - s[0], sy = s[3] - s[1], L = Math.sqrt(sx*sx + sy*sy) || 1;
+      let nxn = -sy/L, nyn = sx/L;
+      const side = (p.x - s[0])*nxn + (p.y - s[1])*nyn; if (side < 0){ nxn = -nxn; nyn = -nyn; }
+      const d = p.vx*nxn + p.vy*nyn;
+      if (d < 0){ p.vx = (p.vx - 2*d*nxn)*.8; p.vy = (p.vy - 2*d*nyn)*.8; }
+      nx = p.x + (nx - p.x)*bt + nxn*1.6; ny = p.y + (ny - p.y)*bt + nyn*1.6;
+      s[5]--; p.own = s[4];
+      if (S.fx.length < 60) S.fx.push({ x:nx, y:ny, t:0, k:'splash' });
+    }
+    // the cliffs on each side
+    if (nx < 4){ nx = 4; p.vx = Math.abs(p.vx)*.8; } else if (nx > TD_W - 4){ nx = TD_W - 4; p.vx = -Math.abs(p.vx)*.8; }
+    p.x = nx; p.y = ny;
+    if (ny < top){ p.on = false; continue; }                       // back to the sea
+    // castles
+    if (ny >= TD_CASTLE_TOP && ny <= TD_CASTLE_BOT){
+      const i = Math.floor(nx/(TD_W/S.n));
+      if (i >= 0 && i < S.n && S.hp[i] > 0){
+        const Z = tdZone(S.n, i);
+        if (nx >= Z.c0 && nx <= Z.c1){
+          S.hp[i] = Math.max(0, S.hp[i] - 1); S.hits[i]++; p.on = false;
+          if (p.own >= 0 && p.own !== i) S.sent[p.own]++;
+          if (S.fx.length < 60) S.fx.push({ x:nx, y:TD_CASTLE_TOP, t:0, k:'hit', i });
+          continue;
+        }
+      }
+    }
+    if (ny > TD_H - 4){ p.on = false; continue; }                   // soaks into the sand
+    const f = 1 - .2*dt; p.vx *= f; p.vy = p.vy*f + TD_PUSH*dt;      // the surge keeps pushing the water up the beach
+  }
+  S.k++;
+  if (S.k >= TD_STEPS || (S.k > 100 && !S.P.some(p => p.on))) S.done = true;
+}
+
+// ---- host side ----
+function tdLater(fn, ms){ const g = HTD; const t = setTimeout(() => { if (HTD === g && H && !H.over) fn(); }, ms); HTD.timers.push(t); }
+function tdClear(){ if (HTD) HTD.timers.forEach(t => clearTimeout(t)); }
+function tideHostStart(){
+  players = players.filter(p => !p.bot);
+  H.alive = new Set(players.map(p => p.id)); H.n = players.length; H.stats = {};
+  const castles = players.map(p => ({ id:p.id, name:p.name, color:p.color, bot:false }));
+  const used = new Set(castles.map(c => c.color)), cols = PALETTE.filter(c => !used.has(c));
+  for (let k = 1; castles.length < TD_MIN; k++) castles.push({ id:'tb' + k, name:'Robot ' + k, color:cols.shift() || '#888', bot:true });
+  castles.sort(() => Math.random() - .5);                       // places along the beach drawn at random
+  for (const c of castles) H.stats[c.id] = { hp:TD_HP, sent:0, waves:0, out:0, left:false, bot:c.bot };
+  HTD = { timers:[], castles, w:-1, walls:[], ink:castles.map(() => 0), stroke:castles.map(() => 0), ph:'start', hp:castles.map(() => TD_HP) };
+  broadcast({ t:'start', players, game:'tide', castles });
+  tdLater(() => tdBuild(0), 3400);
+}
+const tdIdx = id => HTD ? HTD.castles.findIndex(c => c.id === id) : -1;
+function tdWallsMsg(){ return HTD.walls.map(s => [s[0], s[1], s[2], s[3], s[4], s[5]]); }
+function tdBuild(w){
+  HTD.w = w; HTD.ph = 'build';
+  const sea = tdSea(w);
+  HTD.walls = HTD.walls.filter(s => s[5] > 0 && Math.min(s[1], s[3]) > sea + 18);      // the tide swallows what was left near the sea
+  HTD.ink = HTD.ink.map((v, i) => HTD.hp[i] > 0 ? Math.min(TD_INK_MAX, v + TD_INK) : 0);
+  HTD.strokes = [];                                                                       // strokes of this round, for "undo"
+  broadcast({ t:'td_build', w, dur:TD_BUILD, walls:tdWallsMsg(), ink:HTD.ink, hp:HTD.hp });
+  HTD.castles.forEach((c, i) => { if (c.bot && HTD.hp[i] > 0) tdLater(() => tdBot(i), 1200 + Math.random()*4500); });
+  tdLater(() => tdWave(w), TD_BUILD*1000 + 300);
+}
+function tdAddStroke(i, pts){
+  if (!HTD || HTD.ph !== 'build' || HTD.hp[i] <= 0 || !Array.isArray(pts)) return;
+  const n = HTD.castles.length, P = pts.slice(0, 60).map(q => Array.isArray(q) && isFinite(+q[0]) && isFinite(+q[1]) ? tdClampPt(n, i, HTD.w, +q[0], +q[1]) : null).filter(Boolean);
+  if (P.length < 2) return;
+  const { segs, used } = tdStrokeSegs(P, HTD.ink[i]);
+  if (!segs.length) return;
+  const sk = ++HTD.stroke[i];
+  for (const s of segs) HTD.walls.push([s[0], s[1], s[2], s[3], i, TD_SEG_HP, sk]);
+  HTD.ink[i] = Math.max(0, HTD.ink[i] - used);
+  HTD.strokes.push({ i, sk, used });
+  broadcast({ t:'td_walls', walls:tdWallsMsg(), ink:HTD.ink });
+}
+function tdUndo(i){
+  if (!HTD || HTD.ph !== 'build') return;
+  for (let k = HTD.strokes.length - 1; k >= 0; k--){
+    const st = HTD.strokes[k]; if (st.i !== i) continue;
+    HTD.walls = HTD.walls.filter(s => !(s[4] === i && s[6] === st.sk));
+    HTD.ink[i] = Math.min(TD_INK_MAX, HTD.ink[i] + st.used); HTD.strokes.splice(k, 1);
+    broadcast({ t:'td_walls', walls:tdWallsMsg(), ink:HTD.ink });
+    return;
+  }
+}
+function tideInput(id, m){
+  const i = tdIdx(id); if (i < 0) return;
+  if (m.t === 'td_wall') tdAddStroke(i, m.pts);
+  else if (m.t === 'td_undo') tdUndo(i);
+}
+function tdWave(w){
+  if (!HTD || HTD.w !== w || HTD.ph !== 'build') return;
+  HTD.ph = 'wave'; HTD.seed = Math.floor(Math.random()*2**31);
+  broadcast({ t:'td_wave', w, seed:HTD.seed, walls:tdWallsMsg(), hp:HTD.hp });
+  tdLater(() => { if (HTD.ph === 'wave') tideWaveDone(null); }, 15000);                  // safety: the host's screen stalled
+}
+// the host's own screen finished simulating the wave: its result counts
+function tideWaveDone(S){
+  if (!HTD || HTD.ph !== 'wave') return;
+  HTD.ph = 'res';
+  if (!S){ S = tdWaveNew(HTD.seed, HTD.w, HTD.castles.length, HTD.walls, HTD.hp); while (!S.done) tdWaveStep(S); }
+  const before = HTD.hp.slice();
+  HTD.hp = S.hp.slice();
+  HTD.walls = S.walls.map((s, j) => [s[0], s[1], s[2], s[3], s[4], s[5], (HTD.walls[j] || [])[6] || 0]).filter(s => s[5] > 0);
+  HTD.castles.forEach((c, i) => {
+    const st = H.stats[c.id]; st.hp = HTD.hp[i]; st.sent += S.sent[i];
+    if (HTD.hp[i] > 0) st.waves = HTD.w + 1;
+    else if (before[i] > 0){ st.out = HTD.w + 1; H.alive.delete(c.id); }
+  });
+  broadcast({ t:'td_res', w:HTD.w, hp:HTD.hp, sent:S.sent, walls:tdWallsMsg() });
+  const alive = HTD.castles.filter((c, i) => HTD.hp[i] > 0);
+  const humans = alive.filter(c => !c.bot && !H.stats[c.id].left);
+  if (HTD.w + 1 >= TD_WAVES || alive.length <= 1 || !humans.length) tdLater(tideFinish, 2600);
+  else tdLater(() => tdBuild(HTD.w + 1), 2600);
+}
+function tideFinish(){
+  if (!H || H.over) return;
+  H.over = true; tdClear();
+  const rows = HTD.castles.map((c, i) => ({ c, i, st:H.stats[c.id] }));
+  rows.sort((a, b) => (b.st.hp > 0) - (a.st.hp > 0) || b.st.hp - a.st.hp || b.st.out - a.st.out || b.st.sent - a.st.sent);
+  const ranking = rows.map((r, k) => ({ id:r.c.id, name:r.c.bot ? 'Robot' : r.c.name, color:r.c.color, place:k + 1, hp:r.st.hp, sent:r.st.sent, waves:r.st.waves, out:r.st.out, left:r.st.left, bot:r.c.bot, pts:r.st.sent }));
+  setTimeout(() => broadcast({ t:'end', ranking, game:'tide' }), 600);
+}
+function tideDrop(id){
+  if (!H || H.over || !H.stats[id]) return;
+  H.stats[id].left = true;
+  const i = tdIdx(id); if (i >= 0){ HTD.castles[i].bot = true; H.stats[id].bot = true; }            // a robot keeps the castle
+  broadcast({ t:'td_left', id });
+  if (!HTD.castles.some((c, k) => !c.bot && HTD.hp[k] > 0)) tideFinish();
+  else if (HTD.ph === 'build' && i >= 0) tdLater(() => tdBot(i), 500);
+}
+// robot: one slanted wall above its castle that throws the water towards the strongest neighbour, a second one later on
+function tdBot(i){
+  if (!HTD || HTD.ph !== 'build' || HTD.hp[i] <= 0) return;
+  const n = HTD.castles.length, Z = tdZone(n, i), zw = Z.x1 - Z.x0;
+  const nb = [i - 1, i + 1].filter(k => k >= 0 && k < n && HTD.hp[k] > 0);
+  let dir = nb.length ? (nb.length === 2 ? (HTD.hp[i + 1] > HTD.hp[i - 1] ? 1 : HTD.hp[i + 1] < HTD.hp[i - 1] ? -1 : (Math.random() < .5 ? -1 : 1)) : nb[0] > i ? 1 : -1) : (i === 0 ? 1 : -1);
+  const mine = HTD.walls.filter(s => s[4] === i).length;
+  const base = TD_CASTLE_TOP - 40 - Math.random()*40, half = Math.min(zw*.42, 58), drop = 22 + Math.random()*26;
+  const pts = [[Z.cx - dir*half, base - drop], [Z.cx + dir*half, base + drop*.3]];
+  tdAddStroke(i, pts);
+  if (mine < 3 && HTD.ink[i] > 90){                                                         // a little roof higher up
+    const y = Math.max(tdSea(HTD.w) + 40, base - 110 - Math.random()*40);
+    tdLater(() => tdAddStroke(i, [[Z.cx - dir*half*.8, y - drop*.6], [Z.cx + dir*half*.8, y + drop*.4]]), 900 + Math.random()*1500);
+  }
+}
+
+// ---- my view ----
+const tdCv = $('tdCv'), tdCtx = tdCv.getContext('2d');
+function startTide(m){
+  lastCountShown = null;
+  players = m.players; cur = 'tide'; G = null; PG = null; D = null; phase = 'count';
+  $('scrEnd').hidden = true; show('scrTide');
+  const castles = Array.isArray(m.castles) ? m.castles : [];
+  TD = { castles, n:castles.length, me:castles.findIndex(c => c.id === me.id), w:0, ph:'count', count:3.2, walls:[], ink:castles.map(() => 0), hp:castles.map(() => TD_HP), sent:castles.map(() => 0),
+    out:{}, end:0, sim:null, stroke:null, bg:null, bgW:-1, over:false, fx:[], shake:0, lastHit:0 };
+  $('tdUndo').hidden = true; tdHead('Préparez vos pelles…'); tdMsg('');
+  $('tdHelp').textContent = 'Entre deux vagues, tracez des murets de sable au doigt dans votre bande de plage (sable limité). La vague rebondit sur les murets : un muret en biais protège votre château et renvoie l\'eau chez le voisin. La marée monte à chaque vague et engloutit les murets trop près de la mer ; les murets s\'usent quand l\'eau les frappe. Le dernier château debout gagne. Clavier : Retour arrière pour annuler le dernier muret.';
+  renderTdPlayers();
+}
+const tdMsg = big => { const m = $('tdMsg'); m.textContent = ''; if (big){ const s = document.createElement('strong'); s.textContent = big; m.append(s); } };
+function tdHead(t){ $('tdHead').textContent = t; }
+let tdToastT = null;
+function tdToast(t){ const el = $('tdToast'); el.textContent = t; el.classList.add('on'); clearTimeout(tdToastT); tdToastT = setTimeout(() => el.classList.remove('on'), 2200); }
+function renderTdPlayers(){
+  const ul = $('tdPlayers'); ul.textContent = '';
+  TD.castles.forEach((c, i) => {
+    const li = document.createElement('li'); if (TD.hp[i] <= 0 || c.left) li.classList.add('dead');
+    const d = document.createElement('span'); d.className = 'dot'; d.style.background = c.color;
+    const t = document.createElement('span');
+    t.textContent = (c.bot ? 'Robot' : c.name) + (c.id === me.id ? ' (vous)' : '') + ' · ' + (TD.hp[i] > 0 ? TD.hp[i] + ' %' : 'emporté') + (TD.sent[i] ? ' · 🌊 ' + TD.sent[i] : '');
+    li.append(d, t); ul.append(li);
+  });
+}
+function tdChips(){
+  const mine = TD.me >= 0 && TD.hp[TD.me] > 0;
+  $('tdInk').hidden = !mine || TD.ph !== 'build'; $('tdInk').textContent = '🪣 Sable : ' + Math.round(TD.me >= 0 ? TD.ink[TD.me] : 0);
+  $('tdWave').textContent = 'Vague ' + Math.min(TD_WAVES, TD.w + 1) + '/' + TD_WAVES;
+}
+function tideRecv(m){
+  if (!TD) return;
+  if (m.t === 'td_build'){
+    TD.w = m.w|0; TD.ph = 'build'; TD.end = performance.now() + (+m.dur || TD_BUILD)*1000; TD.sim = null; TD.stroke = null;
+    TD.walls = (m.walls || []).map(s => s.slice()); TD.ink = m.ink || TD.ink; if (m.hp) TD.hp = m.hp.slice();
+    const mine = TD.me >= 0 && TD.hp[TD.me] > 0;
+    $('tdUndo').hidden = !mine;
+    tdHead(mine ? 'Vague ' + (TD.w + 1) + ' : construisez vos murets !' : 'Vague ' + (TD.w + 1) + ' : les autres construisent');
+    tdMsg(''); tdChips(); renderTdPlayers();
+    if (TD.w > 0) tdToast('La marée monte !');
+    sfx('place');
+  } else if (m.t === 'td_walls'){
+    TD.walls = (m.walls || []).map(s => s.slice()); TD.ink = m.ink || TD.ink; tdChips();
+  } else if (m.t === 'td_wave'){
+    TD.ph = 'wave'; TD.stroke = null; $('tdUndo').hidden = true;
+    TD.walls = (m.walls || []).map(s => s.slice()); if (m.hp) TD.hp = m.hp.slice();
+    TD.sim = tdWaveNew(m.seed|0, m.w|0, TD.n, TD.walls, TD.hp); TD.acc = 0;
+    tdHead('Vague ' + (TD.w + 1) + ' : la voilà !'); tdChips();
+    boom('LA VAGUE !', { size:34, x:.5, y:.25, pal:BOOM_COLORS[1], ms:1000, wrap:$('tdWrap') });
+    noise(2.6, .16, 900, 250, 0, .5); noise(1.4, .1, 3000, 600, .5, .7);
+  } else if (m.t === 'td_res'){
+    const before = TD.hp.slice();
+    TD.hp = m.hp.slice(); TD.walls = (m.walls || []).map(s => s.slice()); TD.ph = 'res'; TD.sim = null;
+    (m.sent || []).forEach((v, i) => { TD.sent[i] += v|0; });
+    TD.castles.forEach((c, i) => { if (before[i] > 0 && TD.hp[i] <= 0){ TD.out[c.id] = true; boom((c.id === me.id ? 'VOTRE CHÂTEAU' : (c.bot ? 'ROBOT' : c.name.toUpperCase())) + ' EST EMPORTÉ !', { size:24, x:(i + .5)/TD.n, y:.75, pal:BOOM_COLORS[2], ms:1600, wrap:$('tdWrap') }); sfx('crash', 'wall'); } });
+    const mineSent = TD.me >= 0 ? (m.sent || [])[TD.me]|0 : 0;
+    if (TD.me >= 0 && TD.hp[TD.me] > 0) tdToast('Château : ' + TD.hp[TD.me] + ' %' + (mineSent ? ' · ' + mineSent + ' gouttes renvoyées chez les autres' : ''));
+    else if (TD.me >= 0 && before[TD.me] > 0) tdMsg('Château emporté !');
+    tdHead('Vague ' + (TD.w + 1) + ' passée'); renderTdPlayers(); tdChips();
+  } else if (m.t === 'td_left'){
+    const c = TD.castles.find(x => x.id === m.id); if (c){ c.left = true; c.bot = true; } renderTdPlayers();
+  }
+}
+// ---- drawing a wall with the finger ----
+function tdPoint(e){ const r = tdCv.getBoundingClientRect(); return [(e.clientX - r.left)/r.width*TD_W, (e.clientY - r.top)/r.height*TD_H]; }
+const tdCanDraw = () => TD && TD.ph === 'build' && TD.me >= 0 && TD.hp[TD.me] > 0 && !TD.over;
+function tdStrokeLen(pts){ let L = 0; for (let i = 1; i < pts.length; i++) L += Math.hypot(pts[i][0] - pts[i-1][0], pts[i][1] - pts[i-1][1]); return L; }
+tdCv.addEventListener('pointerdown', e => {
+  if (!tdCanDraw()) return;
+  e.preventDefault(); tdCv.setPointerCapture(e.pointerId);
+  const [x, y] = tdPoint(e); TD.stroke = [tdClampPt(TD.n, TD.me, TD.w, x, y)];
+});
+tdCv.addEventListener('pointermove', e => {
+  if (!TD || !TD.stroke || !tdCanDraw()) return;
+  const [x, y] = tdPoint(e), q = tdClampPt(TD.n, TD.me, TD.w, x, y), l = TD.stroke[TD.stroke.length - 1];
+  if (Math.hypot(q[0] - l[0], q[1] - l[1]) < 10) return;
+  if (tdStrokeLen(TD.stroke) + Math.hypot(q[0] - l[0], q[1] - l[1]) > TD.ink[TD.me] + 8) return;     // out of sand
+  TD.stroke.push(q);
+  if (TD.stroke.length % 3 === 0) noise(.08, .04, 2200, 1200);
+});
+function tdEndStroke(){
+  if (!TD || !TD.stroke) return;
+  const pts = TD.stroke; TD.stroke = null;
+  if (pts.length < 2 || !tdCanDraw()) return;
+  const simple = [pts[0]];                                          // keep it light: drop the points that barely bend the line
+  for (let i = 1; i < pts.length - 1; i++){
+    const a = simple[simple.length - 1], b = pts[i], c = pts[i + 1];
+    const cross = Math.abs((b[0] - a[0])*(c[1] - a[1]) - (b[1] - a[1])*(c[0] - a[0])) / (Math.hypot(c[0] - a[0], c[1] - a[1]) || 1);
+    if (cross > 3 || Math.hypot(b[0] - a[0], b[1] - a[1]) > 70) simple.push(b);
+  }
+  simple.push(pts[pts.length - 1]);
+  toHost({ t:'td_wall', pts:simple.map(([x, y]) => [Math.round(x), Math.round(y)]) });
+  sfx('place');
+}
+for (const ev of ['pointerup', 'pointercancel', 'lostpointercapture']) tdCv.addEventListener(ev, tdEndStroke);
+$('tdUndo').onclick = () => { if (tdCanDraw()) toHost({ t:'td_undo' }); };
+addEventListener('keydown', e => { if (cur === 'tide' && e.key === 'Backspace' && e.target.tagName !== 'INPUT'){ e.preventDefault(); if (tdCanDraw()) toHost({ t:'td_undo' }); } });
+
+// ---- loop ----
+function tideFrame(dtMs, now){
+  if (!TD) return;
+  const dt = Math.min(.05, dtMs/1000);
+  if (phase === 'count'){ TD.count -= dt; if (TD.count > 0) countBeep(Math.ceil(TD.count)); else { countBeep(0); phase = 'play'; } }
+  if (TD.ph === 'build'){
+    const left = Math.max(0, (TD.end - now)/1000);
+    $('tdTime').hidden = false; $('tdTime').textContent = '⏱ ' + Math.ceil(left) + ' s';
+    if (left <= 3.2 && Math.ceil(left) !== TD.lastTick && left > 0){ TD.lastTick = Math.ceil(left); sfx('count'); }
+  } else $('tdTime').hidden = true;
+  const S = TD.sim;
+  if (S && !S.done){
+    TD.acc = (TD.acc || 0) + dt;
+    let n = 0;
+    while (TD.acc >= 1/60 && n < 6 && !S.done){ tdWaveStep(S); TD.acc -= 1/60; n++; }
+    const hits = S.hits.reduce((a, b) => a + b, 0);
+    if (S.done && me.host) tideWaveDone(S);
+    // castle hits: a thud
+    if (hits > TD.lastHit && now - (TD.hitT || 0) > 90){ TD.hitT = now; tone(110, .12, 'sine', .1, 60); }
+    TD.lastHit = hits;
+  } else TD.lastHit = 0;
+  drawTide(now);
+}
+// ---- drawing ----
+function tdBeach(sea){
+  const c = document.createElement('canvas'); c.width = TD_W; c.height = TD_H;
+  const x = c.getContext('2d');
+  const g = x.createLinearGradient(0, sea, 0, TD_H); g.addColorStop(0, '#E9C98B'); g.addColorStop(1, '#F6DFA8');
+  x.fillStyle = g; x.fillRect(0, 0, TD_W, TD_H);
+  const R = rng32(7);
+  for (let i = 0; i < 900; i++){ x.fillStyle = R() < .5 ? 'rgba(160,120,60,.18)' : 'rgba(255,255,255,.35)'; x.fillRect(R()*TD_W, sea + R()*(TD_H - sea), 1.6, 1.6); }
+  for (let i = 0; i < 9; i++){                                                     // shells and pebbles
+    const sx = R()*TD_W, sy = sea + 60 + R()*(TD_CASTLE_TOP - sea - 100);
+    x.fillStyle = R() < .5 ? '#F4B6A0' : '#D9D2C5'; x.beginPath(); x.ellipse(sx, sy, 4, 3, R()*3, 0, Math.PI*2); x.fill();
+  }
+  // wet sand just below the sea
+  const wg = x.createLinearGradient(0, sea, 0, sea + 40); wg.addColorStop(0, 'rgba(150,110,60,.45)'); wg.addColorStop(1, 'rgba(150,110,60,0)');
+  x.fillStyle = wg; x.fillRect(0, sea, TD_W, 40);
+  return c;
+}
+function tdCastle(ctx, i, now){
+  const Z = tdZone(TD.n, i), c = TD.castles[i], hp = TD.hp[i], k = hp/TD_HP, w = Z.cw, x0 = Z.c0, bot = TD_CASTLE_BOT;
+  ctx.save(); ctx.lineJoin = 'round';
+  if (hp <= 0){                                                                    // rubble
+    ctx.fillStyle = '#D8B574'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(x0, bot); ctx.quadraticCurveTo(Z.cx, bot - 18, x0 + w, bot); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.restore(); return;
+  }
+  const H0 = 26 + 20*k, top = bot - H0;
+  ctx.fillStyle = 'rgba(0,0,0,.18)'; ctx.fillRect(x0 + 5, bot - 2, w, 6);
+  const sand = '#E2BC72', dark = '#B98D44';
+  // towers
+  const tw = w*.26, th = 14 + 14*k;
+  for (const [tx, keep] of [[x0, k > .2], [x0 + w - tw, k > .45], [Z.cx - tw/2, true]]){
+    if (!keep) continue;
+    const big = tx === Z.cx - tw/2, hh = big ? th + 10 : th;
+    ctx.fillStyle = sand; ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.rect(tx, top - hh, tw, hh + 2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = dark; for (let j = 0; j < 3; j++) ctx.fillRect(tx + j*tw/3 + 1, top - hh - 5, tw/3 - 3, 6);
+    ctx.strokeRect(tx, top - hh - 5, tw, 5);
+    if (big){                                                                      // the flag in the owner's colour
+      ctx.strokeStyle = '#000'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(Z.cx, top - hh - 5); ctx.lineTo(Z.cx, top - hh - 26); ctx.stroke();
+      const wv = Math.sin(now/260 + i)*3;
+      ctx.fillStyle = c.color; ctx.beginPath(); ctx.moveTo(Z.cx, top - hh - 26); ctx.lineTo(Z.cx + 16, top - hh - 21 + wv); ctx.lineTo(Z.cx, top - hh - 16); ctx.closePath(); ctx.fill(); ctx.stroke();
+    }
+  }
+  ctx.fillStyle = sand; ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.rect(x0, top, w, H0); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#3B2A16'; ctx.beginPath(); ctx.arc(Z.cx, bot, Math.min(9, w*.12), Math.PI, 0); ctx.fill();   // door
+  // bites taken by the sea
+  ctx.fillStyle = 'rgba(80,140,200,.35)'; const R = rng32(31 + i); for (let j = 0; j < (1 - k)*10; j++) { ctx.beginPath(); ctx.arc(x0 + R()*w, top + R()*H0, 4 + R()*4, 0, Math.PI*2); ctx.fill(); }
+  // health bar
+  ctx.fillStyle = '#000'; ctx.fillRect(x0 - 2, bot + 5, w + 4, 9); ctx.fillStyle = k > .5 ? '#3DDC97' : k > .25 ? '#FFD21F' : '#E6262B'; ctx.fillRect(x0, bot + 7, w*k, 5);
+  ctx.restore();
+}
+function drawTide(now){
+  const ctx = tdCtx, sea = tdSea(TD.w);
+  if (TD.bgW !== TD.w){ TD.bgW = TD.w; TD.bg = tdBeach(sea); }
+  ctx.drawImage(TD.bg, 0, 0);
+  // my strip, while building
+  if (TD.ph === 'build' && TD.me >= 0 && TD.hp[TD.me] > 0){
+    const Z = tdZone(TD.n, TD.me);
+    ctx.fillStyle = 'rgba(255,255,255,.28)'; ctx.fillRect(Z.x0 + 3, sea + 22, Z.x1 - Z.x0 - 6, TD_CASTLE_TOP - 10 - sea - 22);
+    ctx.strokeStyle = TD.castles[TD.me].color; ctx.lineWidth = 3; ctx.setLineDash([8, 6]); ctx.strokeRect(Z.x0 + 3, sea + 22, Z.x1 - Z.x0 - 6, TD_CASTLE_TOP - 10 - sea - 22); ctx.setLineDash([]);
+  }
+  // strips
+  ctx.strokeStyle = 'rgba(120,85,40,.35)'; ctx.lineWidth = 2; ctx.setLineDash([4, 8]);
+  for (let i = 1; i < TD.n; i++){ const x = i*TD_W/TD.n; ctx.beginPath(); ctx.moveTo(x, sea + 20); ctx.lineTo(x, TD_H); ctx.stroke(); }
+  ctx.setLineDash([]);
+  // the sea
+  const g = ctx.createLinearGradient(0, 0, 0, sea); g.addColorStop(0, '#1E5BFF'); g.addColorStop(1, '#4FB3E8');
+  ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(TD_W, 0);
+  for (let x = TD_W; x >= 0; x -= 12) ctx.lineTo(x, sea + Math.sin(x/38 + now/600)*4);
+  ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = '#fff'; ctx.lineWidth = 3; ctx.beginPath();
+  for (let x = 0; x <= TD_W; x += 12) ctx[x ? 'lineTo' : 'moveTo'](x, sea + Math.sin(x/38 + now/600)*4);
+  ctx.stroke();
+  ctx.strokeStyle = 'rgba(255,255,255,.35)'; ctx.lineWidth = 2;
+  for (let r = 1; r < 4; r++){ ctx.beginPath(); for (let x = 0; x <= TD_W; x += 16) ctx[x ? 'lineTo' : 'moveTo'](x, sea - r*16 + Math.sin(x/30 - now/500 + r)*3); ctx.stroke(); }
+  // walls
+  ctx.lineCap = 'round';
+  for (const s of TD.walls){
+    if (s[5] <= 0) continue;
+    const col = TD.castles[s[4]] ? TD.castles[s[4]].color : '#000';
+    ctx.strokeStyle = '#000'; ctx.lineWidth = 11; ctx.beginPath(); ctx.moveTo(s[0], s[1]); ctx.lineTo(s[2], s[3]); ctx.stroke();
+    ctx.strokeStyle = s[5] >= TD_SEG_HP ? '#C99A52' : s[5] === 2 ? '#B48443' : '#9C6E35'; ctx.lineWidth = 7; ctx.beginPath(); ctx.moveTo(s[0], s[1]); ctx.lineTo(s[2], s[3]); ctx.stroke();
+    ctx.strokeStyle = col; ctx.lineWidth = 2; ctx.globalAlpha = .7; ctx.beginPath(); ctx.moveTo(s[0], s[1]); ctx.lineTo(s[2], s[3]); ctx.stroke(); ctx.globalAlpha = 1;
+  }
+  // the stroke being drawn
+  if (TD.stroke && TD.stroke.length > 1){
+    ctx.strokeStyle = 'rgba(0,0,0,.6)'; ctx.lineWidth = 8; ctx.setLineDash([6, 6]); ctx.beginPath();
+    TD.stroke.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.stroke(); ctx.setLineDash([]);
+  }
+  // live walls on the wave (they wear away)
+  const S = TD.sim;
+  if (S){
+    for (const s of S.walls) if (s[5] <= 0){ ctx.fillStyle = 'rgba(201,154,82,.5)'; ctx.beginPath(); ctx.arc((s[0] + s[2])/2, (s[1] + s[3])/2, 5, 0, Math.PI*2); ctx.fill(); }
+  }
+  // castles (live hp during the wave)
+  const hpShown = S ? S.hp : TD.hp, keep = TD.hp; TD.hp = hpShown;
+  for (let i = 0; i < TD.n; i++) tdCastle(ctx, i, now);
+  TD.hp = keep;
+  // water
+  if (S){
+    ctx.lineCap = 'round';
+    for (const p of S.P){
+      if (!p.on || !p.seen) continue;
+      ctx.strokeStyle = 'rgba(79,179,232,.5)'; ctx.lineWidth = 11; ctx.beginPath(); ctx.moveTo(p.x - p.vx*.07, p.y - p.vy*.07); ctx.lineTo(p.x, p.y); ctx.stroke();
+      ctx.fillStyle = '#4FB3E8'; ctx.beginPath(); ctx.arc(p.x, p.y, 6, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = p.own >= 0 ? (TD.castles[p.own] ? TD.castles[p.own].color : '#fff') : '#fff'; ctx.beginPath(); ctx.arc(p.x - 1.5, p.y - 1.5, 2.4, 0, Math.PI*2); ctx.fill();
+    }
+    for (const f of S.fx){ f.t += 1/60; }
+    S.fx = S.fx.filter(f => f.t < .4);
+    for (const f of S.fx){ ctx.strokeStyle = f.k === 'hit' ? 'rgba(230,38,43,' + (1 - f.t/.4) + ')' : 'rgba(255,255,255,' + (1 - f.t/.4) + ')'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(f.x, f.y, 4 + f.t*30, 0, Math.PI*2); ctx.stroke(); }
+  }
+  // names under the castles
+  ctx.font = '800 15px Nunito, sans-serif'; ctx.textAlign = 'center'; ctx.fillStyle = '#000';
+  TD.castles.forEach((c, i) => { const Z = tdZone(TD.n, i); ctx.fillText((c.id === me.id ? '▲ ' : '') + (c.bot ? 'Robot' : c.name).slice(0, 12), Z.cx, TD_H - 4); });
+}
+
 function countBeep(n){
   if (n === lastCountShown) return;
   lastCountShown = n;
@@ -8989,7 +9465,7 @@ function saveGame(ranking, game){
   if (!Array.isArray(ranking) || !ranking.length || lastSaved === ranking) return;
   lastSaved = ranking;
   const h = loadHist();
-  h.unshift({ at:Date.now(), game:['pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber','agility','galop'].includes(game) ? game : 'tetris', n:ranking.length,
+  h.unshift({ at:Date.now(), game:['pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber','agility','galop','tide'].includes(game) ? game : 'tetris', n:ranking.length,
     p:ranking.map(r => ({ name:String(r.name).slice(0,14), color:r.color, place:r.place|0, sc:r.sc|0, ln:r.ln|0, sent:r.sent|0, score:r.score|0, sync:r.sync|0, lives:r.lives|0, seats:r.seats|0, catches:r.catches|0, tank:r.tank|0, role:String(r.role || '').slice(0, 8), hits:r.hits|0, pts:r.pts|0, whacks:r.whacks|0, shots:r.shots|0, afloat:r.afloat|0, shapes:r.shapes|0, d:Math.round(r.d||0), t:+r.t||0, me:r.id === me.id })) });
   store.set(HIST_KEY, JSON.stringify(h.slice(0, HIST_MAX)));
 }
@@ -9005,13 +9481,13 @@ function renderBoard(){
     a.games++; if (p.place === 1 && g.n > 1) a.wins++;
     a.pts += Math.max(0, g.n - p.place);                  // 1 point per player finished ahead of
     if (g.game === 'derby' || g.game === 'agility' || g.game === 'galop'){ if (p.t > 0 && (!a.bestT || p.t < a.bestT)) a.bestT = p.t; }
-    else a.best = Math.max(a.best, (g.game === 'pong' || g.game === 'naval') ? p.hits : g.game === 'mole' ? (p.whacks || 0) : g.game === 'curling' ? (p.pts || 0) : g.game === 'chairs' ? (p.seats || 0) : (g.game === 'dodge' || g.game === 'tank') ? (p.hits || 0) : g.game === 'sheep' ? (p.score || 0) : g.game === 'drakkar' ? (p.sync || 0) : (g.game === 'master' || g.game === 'kabaddi' || g.game === 'lumber') ? (p.pts || 0) : p.sc);
+    else a.best = Math.max(a.best, (g.game === 'pong' || g.game === 'naval') ? p.hits : g.game === 'mole' ? (p.whacks || 0) : g.game === 'curling' ? (p.pts || 0) : g.game === 'chairs' ? (p.seats || 0) : (g.game === 'dodge' || g.game === 'tank') ? (p.hits || 0) : g.game === 'sheep' ? (p.score || 0) : g.game === 'drakkar' ? (p.sync || 0) : (g.game === 'master' || g.game === 'kabaddi' || g.game === 'lumber') ? (p.pts || 0) : g.game === 'tide' ? (p.sent || 0) : p.sc);
     agg.set(k, a);
   }
   const rows = [...agg.values()].sort((x, y) => y.pts - x.pts || y.wins - x.wins || x.games - y.games);
   const showBest = lbFilter !== 'all';
   const hd = $('lbHead'); hd.textContent = '';
-  for (const t of ['#','Joueur','Parties','Victoires','Points', ...(showBest ? [lbFilter === 'pong' ? 'Arrêts max' : (lbFilter === 'derby' || lbFilter === 'agility' || lbFilter === 'galop') ? 'Meilleur temps' : lbFilter === 'naval' ? 'Touchés max' : lbFilter === 'mole' ? 'Taupes tapées max' : lbFilter === 'curling' ? 'Points max' : lbFilter === 'chairs' ? 'Chaises max' : (lbFilter === 'dodge' || lbFilter === 'tank') ? 'Touches max' : lbFilter === 'sheep' ? 'Record d\'équipe' : lbFilter === 'drakkar' ? 'Synchro max (%)' : (lbFilter === 'master' || lbFilter === 'kabaddi' || lbFilter === 'lumber') ? 'Points max' : 'Meilleur score'] : [])]){
+  for (const t of ['#','Joueur','Parties','Victoires','Points', ...(showBest ? [lbFilter === 'pong' ? 'Arrêts max' : (lbFilter === 'derby' || lbFilter === 'agility' || lbFilter === 'galop') ? 'Meilleur temps' : lbFilter === 'naval' ? 'Touchés max' : lbFilter === 'mole' ? 'Taupes tapées max' : lbFilter === 'curling' ? 'Points max' : lbFilter === 'chairs' ? 'Chaises max' : (lbFilter === 'dodge' || lbFilter === 'tank') ? 'Touches max' : lbFilter === 'sheep' ? 'Record d\'équipe' : lbFilter === 'drakkar' ? 'Synchro max (%)' : (lbFilter === 'master' || lbFilter === 'kabaddi' || lbFilter === 'lumber') ? 'Points max' : lbFilter === 'tide' ? 'Eau renvoyée max' : 'Meilleur score'] : [])]){
     const th = document.createElement('th'); th.textContent = t; hd.append(th);
   }
   const tb = $('lbBody'); tb.textContent = '';
@@ -9072,7 +9548,8 @@ function frame(now){
   if (cur === 'drakkar') drakkarFrame(dt, now);
   if (cur === 'lumber') lumberFrame(dt, now);
   if (cur === 'agility') agilityFrame(dt, now);
-  if (cur === 'galop') try { galopFrame(dt, now); } catch(e){ console.error(e); }   // one bad frame must not freeze the race
+  if (cur === 'galop') try { galopFrame(dt, now); } catch(e){ console.error(e); }
+  if (cur === 'tide') try { tideFrame(dt, now); } catch(e){ console.error(e); }   // one bad frame must not freeze the race
   if (cur === 'tetris' && G && phase === 'count'){
     G.count -= dt/1000;
     if (G.count <= 0){ phase = 'play'; setMsg('', ''); countBeep(0); }
@@ -9180,7 +9657,7 @@ $('btnQuit').onclick = () => toMenu('');
 function backToLobby(){
   if (me.host){
     if (H) H.over = true;
-    H = null; if (HC) clearTimeout(HC.timer); HC = null; mcClear(); HMC = null; mmClear(); HMM = null; kbClear(); HKB = null; dbClear(); HDB = null; tkClear(); HTK = null; shClear(); HSH = null; dkClear(); HDK = null; ljClear(); HLJ = null; agClear(); HAG = null; gpClear(); HGP = null;
+    H = null; if (HC) clearTimeout(HC.timer); HC = null; mcClear(); HMC = null; mmClear(); HMM = null; kbClear(); HKB = null; dbClear(); HDB = null; tkClear(); HTK = null; shClear(); HSH = null; dkClear(); HDK = null; ljClear(); HLJ = null; agClear(); HAG = null; gpClear(); HGP = null; tdClear(); HTD = null;
     players = players.filter(p => p.id === 'h' || net.conns.has(p.id));
     sendLobby(true);                                       // everyone goes back
   } else {
