@@ -296,10 +296,10 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 #salonList .none{color:var(--muted);display:block}
 
 /* ---- lobby colours ---- */
-.colpick{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-top:6px}
-.colpick::before{content:"Votre couleur";font-weight:900;font-size:13px;margin-right:4px}
+.colpick{display:grid;grid-template-columns:repeat(6,40px);gap:10px;justify-content:center;align-items:center;padding:4px 0 2px}
+.colpick::before{content:"Votre couleur";grid-column:1/-1;font-weight:900;font-size:13px;text-align:center}
 .colpick[hidden]{display:none}
-.colpick button{width:32px;height:32px;padding:0;border-radius:50%;border:3px solid #000;box-shadow:2px 2px 0 #000;font-family:var(--body);font-size:13px;font-weight:900;color:#fff;-webkit-text-stroke:.5px #000;letter-spacing:0}
+.colpick button{width:40px;height:40px;padding:0;border-radius:50%;border:3px solid #000;box-shadow:2px 2px 0 #000;font-family:var(--body);font-size:13px;font-weight:900;color:#fff;-webkit-text-stroke:.5px #000;letter-spacing:0}
 .colpick button[aria-pressed="true"]{outline:3px solid #000;outline-offset:3px}
 .colpick button:disabled{opacity:1;cursor:not-allowed;filter:saturate(.35) brightness(.8)}
 
@@ -989,8 +989,8 @@ const $ = id => document.getElementById(id);
 // ================= constants =================
 const COLS = 12, VIS = 22, HID = 2, ROWS = VIS + HID, CELL = 30, MAXP = 5;
 const PREFIX = 'letsdriveit-arcade-';
-const PALETTE = ['#E8202A','#FF8A1F','#FFD21F','#9BE22D','#12A150','#2ED3E6','#1E5BFF','#8E44FF','#FF5FC8','#8B5A2B'];
-const PALETTE_NAMES = ['rouge','orange','jaune','citron vert','vert','turquoise','bleu','violet','rose','marron'];
+const PALETTE = ['#E8202A','#FF8A1F','#FFD21F','#9BE22D','#12A150','#2ED3E6','#1E5BFF','#8E44FF','#FF5FC8','#8B5A2B','#9E1748','#7D8A2E'];
+const PALETTE_NAMES = ['rouge','orange','jaune','citron vert','vert','turquoise','bleu','violet','rose','marron','bordeaux','kaki'];
 // Gravats: a piece of 2 cells (d), pieces of 3 cells (a, b) and 9 pieces of 5 cells. One letter per piece, never a digit or X.
 // No piece of 4 cells, on purpose. The awkward 5-cell shapes (F, W, plus sign) are left out to keep the game readable.
 const PCOL = { d:'#8C9AA6', a:'#C8553D', b:'#E0A458', I:'#4F86C6', L:'#D9822B', N:'#7A9E3B', Y:'#B86FB0', P:'#E3C567',
