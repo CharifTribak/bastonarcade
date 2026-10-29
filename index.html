@@ -895,6 +895,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
       <tbody id="rankBody"></tbody>
     </table></div>
     <p class="hint" id="rankNote"></p>
+    <button id="btnReplay" hidden>🔁 Rejouer à ce jeu</button>
     <button id="btnAgain">Retour au salon</button>
     <button id="btnBoard3" class="ghost">Classement général</button>
     <p class="hint" id="endHint"></p>
@@ -1892,8 +1893,8 @@ function showEnd(ranking, game){
   $('winName').textContent = viking ? (iWon ? 'L\'Angleterre est à vous !' : 'Les autres Vikings arrivent avant vous') : coop ? 'Score d\'équipe : ' + ((win && win.score) | 0) : win ? (iWon ? 'Vous gagnez !' : (galop && win.bot && win.horse ? win.horse : win.name) + ' gagne !') : '';
   $('myPlace').textContent = viking ? 'Drakkars' + (iWon && win.t ? ' · ' + fmtSec(win.t) : '') : coop ? 'Les bergers · ' + ((win && win.rounds) | 0) + '/' + SH_ROUNDS + ' manches réussies' : (GAME_NAMES[game] || 'Gravats') + (mine ? ' · vous finissez ' + (mine.place === 1 ? '1er' : mine.place + 'e') + ' sur ' + ranking.length : '');
   (galop ? (t => { const el = $('gpMsg'); if (el) el.textContent = t || ''; }) : agil ? agMsg : lumber ? ljMsg : viking ? drakkarMsg : coop ? sheepMsg : tank ? tankMsg : dodge ? dodgeMsg : kab ? kabaddiMsg : master ? masterMsg : chairs ? chairsMsg : curl ? curlMsg : pong ? pongMsg : derby ? derbyMsg : naval ? navalMsg : mole ? moleMsg : setMsg)('', '');
-  $('btnAgain').hidden = false;
-  $('endHint').textContent = me.host ? 'Tout le monde revient au salon : relancez le même jeu ou choisissez-en un autre.' : 'Vous attendrez au salon que le créateur relance.';
+  $('btnAgain').hidden = false; $('btnReplay').hidden = !me.host; $('btnAgain').classList.toggle('ghost', me.host);
+  $('endHint').textContent = me.host ? 'Rejouez tout de suite au même jeu avec les mêmes joueurs, ou revenez au salon pour en choisir un autre.' : 'Vous attendrez au salon que le créateur relance.';
   saveGame(ranking, game);
   $('scrEnd').hidden = false;
 }
@@ -9190,6 +9191,7 @@ function backToLobby(){
   abortArmed = false; syncAbort();
 }
 $('btnAgain').onclick = backToLobby;
+$('btnReplay').onclick = () => { if (!me.host) return; backToLobby(); if (phase === 'lobby') hostStart(); };   // same game, same players, straight away
 // creator only: stop the current game and bring everyone back to the lobby (two taps)
 let abortArmed = false, abortT = null;
 function syncAbort(){
