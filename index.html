@@ -79,6 +79,11 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .codebox{display:flex;flex-direction:column;align-items:center;gap:8px;flex:none}
 .invite{font-size:13px;padding:6px 10px;white-space:nowrap}
 .invite.ok{background:#13A35B;color:#fff}
+.qrmini{padding:0 0 4px;width:128px;background:#fff;color:#000;border:3px solid var(--line);box-shadow:5px 5px 0 var(--line);transform:rotate(3deg);flex:none;display:flex;flex-direction:column;align-items:center;font-family:var(--body);letter-spacing:0}
+.qrmini canvas{width:100%;height:auto;aspect-ratio:1;display:block;image-rendering:pixelated}
+.qrmini span{font-weight:900;font-size:12px;line-height:1}
+.qrmini b{font-family:var(--display);font-weight:400;font-size:26px;letter-spacing:.06em;color:var(--blue)}
+@media (max-width:560px){.qrmini{width:112px}.qrmini b{font-size:22px}}
 .qrcard{align-items:center;padding-bottom:10px}
 .qrcard .caption{align-self:stretch;text-align:center}
 #qrCv{width:min(78vw,360px);height:auto;margin:14px auto 6px;display:block;image-rendering:pixelated}
@@ -130,7 +135,7 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .gamepop .feature{width:min(400px,100%);animation:popin .18s ease-out}
 .gamepop .featbody small{color:var(--muted);font-weight:800;font-size:12px}
 @keyframes popin{from{transform:scale(.9);opacity:0}}
-#scrLobby.solo #btnQR,#scrLobby.solo .codebox,#scrLobby.solo #lobbyCodeHint,#scrLobby.solo #chatField{display:none}
+#scrLobby.solo .codebox,#scrLobby.solo #lobbyCodeHint,#scrLobby.solo #chatField{display:none}
 .lobbyfoot{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 #scrLobby .lobby{padding-bottom:96px}
 @media (max-width:560px){#scrLobby .logosvg.small{width:min(170px,46%)}#scrLobby .burst{width:104px;height:104px}#scrLobby .burst b{font-size:30px}#scrLobby .lobby{gap:12px}#lobbyCodeHint{font-size:13px;margin:-4px 0 0}}
@@ -528,9 +533,9 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
   <div class="card lobby">
     <div class="lobbyhead">
       <h1 class="logosvg small" data-appname><svg viewBox="0 0 520 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Baston Arcade"><polygon points="260,8 292,62 352,22 356,86 428,58 404,118 494,120 438,166 508,214 428,226 456,292 384,270 372,322 318,276 262,318 222,270 156,306 152,248 76,262 104,206 18,184 92,148 36,92 116,94 102,30 172,62 204,8 228,58" fill="#000" transform="translate(7,7)"/><polygon points="260,8 292,62 352,22 356,86 428,58 404,118 494,120 438,166 508,214 428,226 456,292 384,270 372,322 318,276 262,318 222,270 156,306 152,248 76,262 104,206 18,184 92,148 36,92 116,94 102,30 172,62 204,8 228,58" fill="#E6262B" stroke="#000" stroke-width="5" stroke-linejoin="round"/><g transform="rotate(-6 260 168)"><text x="264" y="196" text-anchor="middle" font-family="Bangers, Impact, sans-serif" font-size="112" letter-spacing="3" fill="#000">BASTON !</text><text x="258" y="190" text-anchor="middle" font-family="Bangers, Impact, sans-serif" font-size="112" letter-spacing="3" fill="#fff" stroke="#000" stroke-width="6" paint-order="stroke" stroke-linejoin="round">BASTON !</text><text id="ARC" x="383" y="252" text-anchor="end" font-family="Bangers, Impact, sans-serif" font-size="52" letter-spacing="6" fill="#000">ARCADE</text><text x="379" y="248" text-anchor="end" font-family="Bangers, Impact, sans-serif" font-size="52" letter-spacing="6" fill="#FFD93B" stroke="#000" stroke-width="5" paint-order="stroke" stroke-linejoin="round">ARCADE</text></g><path d="M60 46 l26 14 M44 76 l30 6 M462 260 l-26 -12 M476 232 l-30 -4" stroke="#000" stroke-width="5" stroke-linecap="round"/></svg></h1>
-      <div class="codebox"><div class="burst"><span>Code</span><b id="lobbyCode">----</b></div><button id="btnInvite" class="ghost invite" type="button">🔗 Copier le lien</button><button id="btnQR" class="ghost invite" type="button">📱 QR code</button></div>
+      <div class="codebox"><button id="btnQR" class="qrmini" type="button" aria-label="Agrandir le QR code du salon"><canvas id="qrMini" width="160" height="160"></canvas><span>Code : <b id="lobbyCode">----</b></span></button><button id="btnInvite" class="ghost invite" type="button">🔗 Copier le lien</button></div>
     </div>
-    <p class="hint" id="lobbyCodeHint">Les autres joueurs saisissent ce code depuis le menu, ou ouvrent le lien copié.</p>
+    <p class="hint" id="lobbyCodeHint">Les autres joueurs scannent le QR code, saisissent le code depuis le menu, ou ouvrent le lien envoyé.</p>
     <label class="privbox" id="privBox" hidden><input type="checkbox" id="privIn"> Salon privé (ne pas l'afficher dans la liste)</label>
     <div class="field">
       <label id="lobbyCount">Joueurs</label>
@@ -1575,6 +1580,7 @@ function clientRecv(m){
 // ================= lobby UI =================
 function renderLobby(){
   $('lobbyCode').textContent = net ? net.code : '----';
+  if (net && !net.solo && net.code && typeof qrcode === 'function' && $('qrMini').dataset.code !== net.code){ $('qrMini').dataset.code = net.code; drawQR($('qrMini'), inviteUrl(), 320); }
   $('privBox').hidden = !(SUPA_ON && me.host && net && !net.solo);
   $('lobbyCount').textContent = 'Joueurs ' + players.length + '/' + MAXP;
   const ul = $('lobbyList'); ul.textContent = '';
@@ -8954,19 +8960,20 @@ function drawQR(cv, text, px, label){
   const c = cv.getContext('2d'); c.fillStyle = '#fff'; c.fillRect(0, 0, cv.width, cv.height); c.fillStyle = '#000';
   for (let r = 0; r < n; r++) for (let k = 0; k < n; k++) if (q.isDark(r, k)) c.fillRect((k + m)*s, (r + m)*s, s, s);
   if (label){
-    const bw = Math.round(n*.4)*s, bh = Math.round(n*.2)*s, bx = (cv.width - bw)/2, by = (cv.height - bh)/2;
+    const two = String(label).includes('\n'), bw = Math.round(n*.4)*s, bh = Math.round(n*(two ? .3 : .2))*s, bx = (cv.width - bw)/2, by = (cv.height - bh)/2;
     c.fillStyle = '#fff'; c.fillRect(bx - s*.5, by - s*.5, bw + s, bh + s);
     c.fillStyle = '#1E5BFF'; c.fillRect(bx, by, bw, bh);
     c.fillStyle = '#fff'; c.textAlign = 'center'; c.textBaseline = 'middle';
-    let fs = bh*.82; c.font = fs + 'px Bangers, Impact, sans-serif';
-    while (c.measureText(label).width > bw*.9 && fs > 8){ fs -= 2; c.font = fs + 'px Bangers, Impact, sans-serif'; }
-    c.fillText(label, cv.width/2, cv.height/2 + fs*.04);
+    const lines = String(label).split('\n'), lh = bh/lines.length;
+    let fs = lh*(lines.length > 1 ? .9 : .82); c.font = fs + 'px Bangers, Impact, sans-serif';
+    while (lines.some(t => c.measureText(t).width > bw*.9) && fs > 6){ fs -= 1; c.font = fs + 'px Bangers, Impact, sans-serif'; }
+    lines.forEach((t, k) => c.fillText(t, cv.width/2, by + lh*(k + .5) + fs*.04));
     c.textBaseline = 'alphabetic';
   }
 }
 $('btnQR').onclick = () => {
   if (typeof qrcode !== 'function') return;
-  drawQR($('qrCv'), inviteUrl(), 560, net && net.code || '');
+  drawQR($('qrCv'), inviteUrl(), 560, tr('Code :') + '\n' + (net && net.code || ''));
   $('qrCode').textContent = net && net.code || '';
   $('qrPop').hidden = false; track('qr-ouvert');
 };
@@ -9285,15 +9292,21 @@ $('btnLeaveLobby').onclick = () => toMenu('');
 // Invitation link: <page>?salon=CODE. Opening it fills the code and joins straight away when a name is already saved.
 const inviteUrl = () => location.origin + location.pathname + '?salon=' + (net && net.code || $('lobbyCode').textContent);
 let inviteT = null;
+const canShareLink = () => !!navigator.share && matchMedia('(pointer: coarse)').matches;
+if (canShareLink()) $('btnInvite').textContent = '📤 Partager le lien';
 $('btnInvite').onclick = async () => {
   const url = inviteUrl(), b = $('btnInvite');
+  if (canShareLink()){
+    try { await navigator.share({ title:'Baston Arcade', text:tr('Rejoins mon salon Baston Arcade, code ') + (net && net.code || '') + ' :', url }); track('lien-partage'); } catch(_){}
+    return;
+  }
   let ok = false;
   try { await navigator.clipboard.writeText(url); ok = true; } catch(_){
     try { const t = document.createElement('textarea'); t.value = url; t.style.position = 'fixed'; t.style.opacity = '0'; document.body.append(t); t.select(); ok = document.execCommand('copy'); t.remove(); } catch(_){}
   }
   if (!ok){ window.prompt(tr('Copiez ce lien et envoyez-le à vos amis :'), url); return; }
   b.textContent = '✔ Lien copié !'; b.classList.add('ok');
-  clearTimeout(inviteT); inviteT = setTimeout(() => { b.textContent = '🔗 Copier le lien'; b.classList.remove('ok'); }, 2200);
+  clearTimeout(inviteT); inviteT = setTimeout(() => { b.textContent = '🔗 Copier le lien'; b.classList.remove('ok'); }, 2200); track('lien-copie');
 };
 (() => {
   let c = null;
