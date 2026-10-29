@@ -106,6 +106,33 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .tiles button:disabled[aria-pressed="false"] img{filter:saturate(.5)}
 .plist{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
 .plist li{display:flex;align-items:center;gap:7px;padding:5px 12px 5px 6px;background:var(--panel);border:3px solid var(--line);border-radius:20px;font-weight:800}
+.lobbytip{margin:-4px 0 0;font-size:13px;color:var(--muted);font-weight:700}
+.ppanel{background:var(--panel);border:3px solid var(--line);box-shadow:5px 5px 0 var(--line);padding:10px 12px 12px;display:flex;flex-direction:column;gap:10px}
+.pphead{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.pphead b{font-family:var(--display);font-weight:400;font-size:24px;letter-spacing:.03em}
+#lobbyList{flex-direction:column;flex-wrap:nowrap;gap:6px}
+#lobbyList li{border-radius:12px;padding:6px 10px 6px 6px;gap:10px;box-shadow:2px 2px 0 var(--line)}
+#lobbyList li .pav{width:32px;height:32px;border-radius:50%;border:3px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:18px;color:#fff;-webkit-text-stroke:.6px #000;text-shadow:1px 1px 0 #000}
+#lobbyList li .pname{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:17px}
+#lobbyList li .pbadge{font-size:11px;font-weight:900;padding:2px 7px;border:2px solid var(--line);border-radius:9px;background:#FFD93B;white-space:nowrap}
+#lobbyList li .pbadge.you{background:var(--blue);color:#fff}
+#lobbyList li.me{cursor:pointer;background:#FFF6C9}
+#lobbyList li.me::after{content:"🎨";font-size:16px}
+#lobbyList li.slot{border-style:dashed;box-shadow:none;background:transparent;color:var(--muted);cursor:pointer;justify-content:center;font-size:14px}
+#lobbyList li.new{animation:pjoin .55s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pjoin{from{transform:scale(.6) rotate(-4deg);opacity:0}}
+.pphint{margin:0;font-size:13px;color:var(--muted);font-weight:700}
+.privbox{display:flex;gap:7px;align-items:center;font-size:13px;font-weight:900;cursor:pointer;user-select:none}
+.privbox input{position:absolute;opacity:0;width:1px;height:1px}
+.privbox .sw{width:38px;height:22px;border:3px solid var(--line);border-radius:12px;background:#ddd;position:relative;flex:none;transition:background .15s}
+.privbox .sw::after{content:"";position:absolute;top:1px;left:1px;width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid var(--line);transition:left .15s}
+.privbox input:checked + .sw{background:var(--accent)}
+.privbox input:checked + .sw::after{left:17px}
+.privbox input:focus-visible + .sw{outline:3px solid var(--blue);outline-offset:2px}
+.chatping{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);z-index:45;font-size:15px;font-weight:900;padding:9px 16px;border-radius:20px;background:var(--blue);color:#fff;box-shadow:4px 4px 0 var(--line);animation:cping 1s ease-in-out infinite;white-space:nowrap;max-width:calc(100% - 40px);overflow:hidden;text-overflow:ellipsis}
+@keyframes cping{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-6px)}}
+#chatField.flash .chat{animation:cflash .9s}
+@keyframes cflash{30%{box-shadow:5px 5px 0 var(--line),0 0 0 6px #FFD93B}}
 .tag{font-size:11px;color:var(--muted);font-weight:700}
 .choices{display:flex;flex-direction:column;gap:14px}
 .choice{width:100%;font-size:22px;padding:18px 12px}
@@ -147,8 +174,6 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .lbinfo small{font-size:12px;font-weight:700;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .lbgo{flex:none;font-size:22px;padding:0 16px;box-shadow:3px 3px 0 var(--line)}
 .tiles.recent button{flex:0 0 calc((100% - 30px)/4);font-size:12px}
-.plist li.me{cursor:pointer}
-.plist li.me::after{content:"🎨";font-size:13px}
 .gsbtns{display:grid;grid-template-columns:1fr 1.4fr;gap:10px;margin-top:8px}
 #gsGuest{grid-template-columns:1fr}
 #gsNote{color:var(--muted);font-weight:700;font-size:12px}
@@ -260,8 +285,6 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 #padwrap.ko #drawCv{border-color:var(--danger);box-shadow:6px 6px 0 var(--danger)}
 
 /* ---- public lobby list (menu) ---- */
-.privbox{display:flex;gap:8px;align-items:center;font-size:13px;font-weight:800;justify-content:flex-start}
-.privbox input{width:20px;height:20px;flex:none;margin:0;padding:0;box-shadow:none;accent-color:#E6262B}
 .salons{border:3px solid #000;background:#fff;box-shadow:4px 4px 0 #000;padding:8px 10px}
 .salonshead{display:flex;justify-content:space-between;align-items:center;font-size:14px}
 .salonshead button{padding:2px 10px;font-size:16px}
@@ -535,14 +558,15 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
       <h1 class="logosvg small" data-appname><svg viewBox="0 0 520 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Baston Arcade"><polygon points="260,8 292,62 352,22 356,86 428,58 404,118 494,120 438,166 508,214 428,226 456,292 384,270 372,322 318,276 262,318 222,270 156,306 152,248 76,262 104,206 18,184 92,148 36,92 116,94 102,30 172,62 204,8 228,58" fill="#000" transform="translate(7,7)"/><polygon points="260,8 292,62 352,22 356,86 428,58 404,118 494,120 438,166 508,214 428,226 456,292 384,270 372,322 318,276 262,318 222,270 156,306 152,248 76,262 104,206 18,184 92,148 36,92 116,94 102,30 172,62 204,8 228,58" fill="#E6262B" stroke="#000" stroke-width="5" stroke-linejoin="round"/><g transform="rotate(-6 260 168)"><text x="264" y="196" text-anchor="middle" font-family="Bangers, Impact, sans-serif" font-size="112" letter-spacing="3" fill="#000">BASTON !</text><text x="258" y="190" text-anchor="middle" font-family="Bangers, Impact, sans-serif" font-size="112" letter-spacing="3" fill="#fff" stroke="#000" stroke-width="6" paint-order="stroke" stroke-linejoin="round">BASTON !</text><text id="ARC" x="383" y="252" text-anchor="end" font-family="Bangers, Impact, sans-serif" font-size="52" letter-spacing="6" fill="#000">ARCADE</text><text x="379" y="248" text-anchor="end" font-family="Bangers, Impact, sans-serif" font-size="52" letter-spacing="6" fill="#FFD93B" stroke="#000" stroke-width="5" paint-order="stroke" stroke-linejoin="round">ARCADE</text></g><path d="M60 46 l26 14 M44 76 l30 6 M462 260 l-26 -12 M476 232 l-30 -4" stroke="#000" stroke-width="5" stroke-linecap="round"/></svg></h1>
       <div class="codebox"><button id="btnQR" class="qrmini" type="button" aria-label="Agrandir le QR code du salon"><canvas id="qrMini" width="160" height="160"></canvas><span>Code : <b id="lobbyCode">----</b></span></button><button id="btnInvite" class="ghost invite" type="button">🔗 Copier le lien</button></div>
     </div>
-    <p class="hint" id="lobbyCodeHint">Les autres joueurs scannent le QR code, saisissent le code depuis le menu, ou ouvrent le lien envoyé.</p>
-    <label class="privbox" id="privBox" hidden><input type="checkbox" id="privIn"> Salon privé (ne pas l'afficher dans la liste)</label>
-    <div class="field">
-      <label id="lobbyCount">Joueurs</label>
+    <p class="lobbytip" id="lobbyCodeHint">Pour rejoindre : scanner le QR code, taper le code dans le menu, ou ouvrir le lien envoyé.</p>
+    <div class="ppanel">
+      <div class="pphead"><b id="lobbyCount">Joueurs</b>
+        <label class="privbox" id="privBox" hidden title="Ne pas afficher ce salon dans la liste publique"><input type="checkbox" id="privIn"><span class="sw" aria-hidden="true"></span>Salon privé</label></div>
       <ul class="plist" id="lobbyList"></ul>
       <div class="colpick" id="colPick" role="group" aria-label="Votre couleur" hidden></div>
-      <p class="hint" id="lobbyHint"></p>
+      <p class="pphint" id="lobbyHint"></p>
     </div>
+    <button class="chatping" id="chatPing" type="button" hidden>💬 <span id="chatPingTxt">Nouveau message</span> ↓</button>
     <div class="field" id="recentBox" hidden>
       <label>Récents</label>
       <div class="tiles recent" id="recentPick" role="group" aria-label="Jeux récents"></div>
@@ -1584,16 +1608,23 @@ function renderLobby(){
   $('privBox').hidden = !(SUPA_ON && me.host && net && !net.solo);
   $('lobbyCount').textContent = 'Joueurs ' + players.length + '/' + MAXP;
   const ul = $('lobbyList'); ul.textContent = '';
+  const seen = renderLobby.seen || (renderLobby.seen = new Set());
   players.forEach(p => {
     const li = document.createElement('li');
-    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color;
-    const n = document.createElement('span'); n.textContent = p.name;
-    const t = document.createElement('span'); t.className = 'tag';
-    t.textContent = p.id === 'h' ? (p.id === me.id ? 'crée le salon, vous' : 'crée le salon') : (p.id === me.id ? 'vous' : '');
-    li.append(d, n); if (t.textContent) li.append(t);
-    if (p.id === me.id){ li.className = 'me'; li.title = 'Changer de couleur'; li.onclick = () => { $('colPick').hidden = !$('colPick').hidden; }; }
+    const av = document.createElement('span'); av.className = 'pav'; av.style.background = p.color; av.textContent = (p.name || '?').slice(0, 1).toUpperCase(); av.setAttribute('translate', 'no');
+    const n = document.createElement('span'); n.className = 'pname'; n.textContent = p.name; n.setAttribute('translate', 'no');
+    li.append(av, n);
+    if (p.id === 'h'){ const b = document.createElement('span'); b.className = 'pbadge'; b.textContent = '👑 Hôte'; li.append(b); }
+    if (p.id === me.id){ const b = document.createElement('span'); b.className = 'pbadge you'; b.textContent = 'Vous'; li.append(b);
+      li.classList.add('me'); li.title = 'Changer de couleur'; li.onclick = () => { $('colPick').hidden = !$('colPick').hidden; }; }
+    if (!seen.has(p.id)){ seen.add(p.id); if (seen.size > 1 || p.id !== me.id){ li.classList.add('new'); if (p.id !== me.id && phase === 'lobby') tone(660, .09, 'triangle', .07, null), tone(990, .12, 'triangle', .06, null, .08); } }
     ul.append(li);
   });
+  for (const id of [...seen]) if (!players.some(p => p.id === id)) seen.delete(id);
+  if (net && !net.solo && players.length < MAXP){
+    const li = document.createElement('li'); li.className = 'slot'; li.textContent = '＋ Inviter un ami (' + (MAXP - players.length) + (MAXP - players.length > 1 ? ' places libres)' : ' place libre)');
+    li.onclick = () => $('btnInvite').click(); ul.append(li);
+  }
   const cp = $('colPick'); cp.textContent = '';
   const mineP = players.find(p => p.id === me.id);
   PALETTE.forEach((col, i) => {
@@ -9091,8 +9122,20 @@ function addChat(m){
   CHAT.push({ id:m.id || null, name:String(m.name || '').slice(0, 14), color:m.color || '#888', text:m.text.slice(0, 120), sys:!!m.sys });
   if (CHAT.length > 60) CHAT.splice(0, CHAT.length - 60);
   renderChat();
-  if (!m.sys && m.id !== me.id) sfx('place');
+  if (!m.sys && m.id !== me.id){ tone(880, .08, 'sine', .08, null); tone(1320, .12, 'sine', .07, null, .09); chatNotify(m.name); }
 }
+// a message arrived while the chat is off screen: a bouncing pill points down to it
+let chatSeen = true;
+const chatObs = 'IntersectionObserver' in window ? new IntersectionObserver(es => { chatSeen = es.some(e => e.isIntersecting && e.intersectionRatio > .35); if (chatSeen) $('chatPing').hidden = true; }, { threshold:[0, .35, 1] }) : null;
+if (chatObs) chatObs.observe($('chatField'));
+function chatNotify(name){
+  if (phase !== 'lobby' || $('scrLobby').hidden) return;
+  const f = $('chatField'); f.classList.remove('flash'); void f.offsetWidth; f.classList.add('flash');
+  if (chatSeen) return;
+  $('chatPingTxt').textContent = tr('Nouveau message de') + ' ' + String(name || '').slice(0, 14);
+  $('chatPing').hidden = false;
+}
+$('chatPing').onclick = () => { $('chatPing').hidden = true; $('chatField').scrollIntoView({ behavior:'smooth', block:'center' }); setTimeout(() => { try { $('chatIn').focus({ preventScroll:true }); } catch(_){} }, 450); };
 function renderChat(){
   const log = $('chatLog'); if (!log) return;
   log.textContent = '';
