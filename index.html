@@ -79,6 +79,10 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .codebox{display:flex;flex-direction:column;align-items:center;gap:8px;flex:none}
 .invite{font-size:13px;padding:6px 10px;white-space:nowrap}
 .invite.ok{background:#13A35B;color:#fff}
+.qrcard{align-items:center;padding-bottom:10px}
+.qrcard .caption{align-self:stretch;text-align:center}
+#qrCv{width:min(78vw,360px);height:auto;margin:14px auto 6px;display:block;image-rendering:pixelated}
+.qrcard small{color:var(--muted);font-weight:700}
 .burst b{font-family:var(--display);font-weight:400;font-size:36px;line-height:1;letter-spacing:.06em}
 .feature{background:var(--panel);border:3px solid var(--line);box-shadow:7px 7px 0 var(--line);display:flex;flex-direction:column}
 .caption{background:var(--blue);color:#fff;border-bottom:3px solid var(--line);padding:6px 10px;font-weight:900;font-size:13px}
@@ -126,7 +130,7 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .gamepop .feature{width:min(400px,100%);animation:popin .18s ease-out}
 .gamepop .featbody small{color:var(--muted);font-weight:800;font-size:12px}
 @keyframes popin{from{transform:scale(.9);opacity:0}}
-#scrLobby.solo .codebox,#scrLobby.solo #lobbyCodeHint,#scrLobby.solo #chatField{display:none}
+#scrLobby.solo #btnQR,#scrLobby.solo .codebox,#scrLobby.solo #lobbyCodeHint,#scrLobby.solo #chatField{display:none}
 .lobbyfoot{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 #scrLobby .lobby{padding-bottom:96px}
 @media (max-width:560px){#scrLobby .logosvg.small{width:min(170px,46%)}#scrLobby .burst{width:104px;height:104px}#scrLobby .burst b{font-size:30px}#scrLobby .lobby{gap:12px}#lobbyCodeHint{font-size:13px;margin:-4px 0 0}}
@@ -524,7 +528,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
   <div class="card lobby">
     <div class="lobbyhead">
       <h1 class="logosvg small" data-appname><svg viewBox="0 0 520 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Baston Arcade"><polygon points="260,8 292,62 352,22 356,86 428,58 404,118 494,120 438,166 508,214 428,226 456,292 384,270 372,322 318,276 262,318 222,270 156,306 152,248 76,262 104,206 18,184 92,148 36,92 116,94 102,30 172,62 204,8 228,58" fill="#000" transform="translate(7,7)"/><polygon points="260,8 292,62 352,22 356,86 428,58 404,118 494,120 438,166 508,214 428,226 456,292 384,270 372,322 318,276 262,318 222,270 156,306 152,248 76,262 104,206 18,184 92,148 36,92 116,94 102,30 172,62 204,8 228,58" fill="#E6262B" stroke="#000" stroke-width="5" stroke-linejoin="round"/><g transform="rotate(-6 260 168)"><text x="264" y="196" text-anchor="middle" font-family="Bangers, Impact, sans-serif" font-size="112" letter-spacing="3" fill="#000">BASTON !</text><text x="258" y="190" text-anchor="middle" font-family="Bangers, Impact, sans-serif" font-size="112" letter-spacing="3" fill="#fff" stroke="#000" stroke-width="6" paint-order="stroke" stroke-linejoin="round">BASTON !</text><text id="ARC" x="383" y="252" text-anchor="end" font-family="Bangers, Impact, sans-serif" font-size="52" letter-spacing="6" fill="#000">ARCADE</text><text x="379" y="248" text-anchor="end" font-family="Bangers, Impact, sans-serif" font-size="52" letter-spacing="6" fill="#FFD93B" stroke="#000" stroke-width="5" paint-order="stroke" stroke-linejoin="round">ARCADE</text></g><path d="M60 46 l26 14 M44 76 l30 6 M462 260 l-26 -12 M476 232 l-30 -4" stroke="#000" stroke-width="5" stroke-linecap="round"/></svg></h1>
-      <div class="codebox"><div class="burst"><span>Code</span><b id="lobbyCode">----</b></div><button id="btnInvite" class="ghost invite" type="button">🔗 Copier le lien</button></div>
+      <div class="codebox"><div class="burst"><span>Code</span><b id="lobbyCode">----</b></div><button id="btnInvite" class="ghost invite" type="button">🔗 Copier le lien</button><button id="btnQR" class="ghost invite" type="button">📱 QR code</button></div>
     </div>
     <p class="hint" id="lobbyCodeHint">Les autres joueurs saisissent ce code depuis le menu, ou ouvrent le lien copié.</p>
     <label class="privbox" id="privBox" hidden><input type="checkbox" id="privIn"> Salon privé (ne pas l'afficher dans la liste)</label>
@@ -576,6 +580,9 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
     <div class="launchbar" id="launchBar">
       <button class="lbinfo" id="lbInfo" type="button"><img id="lbArt" alt=""><span><b id="lbTitle">Gravats</b><small id="lbSub"></small></span></button>
       <button id="btnStart" class="lbgo" type="button" hidden>C'est parti !</button>
+    </div>
+    <div class="gamepop" id="qrPop" hidden>
+      <div class="feature qrcard"><div class="caption">Scannez pour rejoindre le salon <b id="qrCode"></b></div><canvas id="qrCv" width="560" height="560" aria-label="QR code du salon"></canvas><small>Touchez pour fermer</small></div>
     </div>
     <div class="gamepop sheet" id="gameSheet" hidden>
       <div class="feature" id="gameSheetCard">
@@ -896,6 +903,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
     </table></div>
     <p class="hint" id="rankNote"></p>
     <button id="btnReplay" hidden>🔁 Rejouer à ce jeu</button>
+    <button id="btnShare" class="ghost" type="button">📤 Partager le résultat</button>
     <button id="btnAgain">Retour au salon</button>
     <button id="btnBoard3" class="ghost">Classement général</button>
     <p class="hint" id="endHint"></p>
@@ -942,6 +950,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
 </div>
 
 <script src="lib/peerjs.min.js"></script>
+<script src="lib/qrcode.js"></script>
 <script src="lib/en.js"></script>
 <script>
 (() => {
@@ -1170,7 +1179,7 @@ function soloCreate(){
   me.host = true; me.id = 'h';
   players = [{ id:'h', name:me.name, color:pickColor() }];
   phase = 'lobby';
-  $('scrLobby').classList.add('solo'); $('btnLeaveLobby').textContent = 'Retour au menu';
+  $('scrLobby').classList.add('solo'); $('btnLeaveLobby').textContent = 'Retour au menu'; track('solo');
   show('scrLobby'); renderLobby();
 }
 function hostCreate(retry = 0){
@@ -1182,7 +1191,7 @@ function hostCreate(retry = 0){
   peer.on('open', () => {
     me.host = true; me.id = 'h';
     players = [{ id:'h', name:me.name, color:pickColor() }];
-    phase = 'lobby'; show('scrLobby'); renderLobby(); announce();
+    phase = 'lobby'; show('scrLobby'); renderLobby(); announce(); track('salon-cree');
   });
   peer.on('connection', conn => {
     conn.on('data', d => hostRecv(conn, d));
@@ -1207,7 +1216,7 @@ function guestJoin(code){
   peer.on('open', () => {
     const conn = peer.connect(PREFIX + code.toLowerCase(), { reliable:true });
     net.conn = conn;
-    conn.on('open', () => { opened = true; clearTimeout(timer); lastPing = performance.now(); conn.send({ t:'hello', name:me.name }); });
+    conn.on('open', () => { opened = true; clearTimeout(timer); lastPing = performance.now(); conn.send({ t:'hello', name:me.name }); track('salon-rejoint'); });
     conn.on('data', d => clientRecv(d));
     conn.on('close', () => { if (net && net.conn === conn) toMenu('Le créateur a quitté le salon.'); });
   });
@@ -1267,6 +1276,7 @@ setInterval(() => {
 // Fill these to switch the features on; empty values keep the game working exactly as before.
 const NET_CFG = {
   meteredApp:'baston', meteredKey:'ed029bef44295041e34bf6c29050a4cfbf0a',          // https://<meteredApp>.metered.live, API key from the Metered dashboard
+  goatcounter:'',                                                                    // audience without cookies: https://<code>.goatcounter.com/count (empty = off)
   supaUrl:'https://yxwwkjzcoglfctrbayzv.supabase.co', supaKey:'sb_publishable_EWYQJy2-7-r41_9VT7gNPw_wB00imLH'                 // Supabase project URL and its public "anon" key
 };
 let ICE = null;
@@ -1367,6 +1377,7 @@ function toHost(msg){
 
 function hostStart(){
   unannounce(); annKey = null;
+  track('partie/' + gameKind + (net && net.solo ? '/solo' : '/' + players.length + 'j'));
   // drop anyone who left meanwhile
   players = players.filter(p => p.id === 'h' || net.conns.has(p.id));
   BOT = null;
@@ -1834,6 +1845,7 @@ function setMsg(big, small){
   if (small){ const t = document.createElement('small'); t.textContent = small; m.append(t); }
 }
 function showEnd(ranking, game){
+  lastEnd = { ranking:Array.isArray(ranking) ? ranking : [], game };
   phase = 'end';
   if (G) G.p = null;
   if (PG) PG.ph = 'over';
@@ -8923,6 +8935,122 @@ const SFX = {
 function sfx(name, arg){ if (!SND.on) return; try { SFX[name] && SFX[name](arg); } catch(_){} }
 // countdown beeps shared by every game: call with the number on screen, 0 when it starts
 let lastCountShown = null;
+
+// ================= audience (GoatCounter: no cookie, no personal data), room QR code, shareable result card =================
+const GC_ON = !!NET_CFG.goatcounter;
+if (GC_ON){
+  const sc = document.createElement('script'); sc.async = true; sc.src = 'https://gc.zgo.at/count.js';
+  sc.dataset.goatcounter = NET_CFG.goatcounter; document.head.append(sc);
+}
+// events: what people do, never who they are (no names, no room codes)
+function track(name){ if (!GC_ON) return; try { if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path:name, title:name, event:true }); } catch(_){} }
+
+// ---- QR code of the room ----
+// label: drawn in the middle (the room code), readable by eye; level H error correction keeps the code scannable
+function drawQR(cv, text, px, label){
+  const q = qrcode(0, label ? 'H' : 'M'); q.addData(text); q.make();
+  const n = q.getModuleCount(), m = 4, s = Math.floor(px/(n + 2*m));
+  cv.width = cv.height = s*(n + 2*m);
+  const c = cv.getContext('2d'); c.fillStyle = '#fff'; c.fillRect(0, 0, cv.width, cv.height); c.fillStyle = '#000';
+  for (let r = 0; r < n; r++) for (let k = 0; k < n; k++) if (q.isDark(r, k)) c.fillRect((k + m)*s, (r + m)*s, s, s);
+  if (label){
+    const bw = Math.round(n*.4)*s, bh = Math.round(n*.2)*s, bx = (cv.width - bw)/2, by = (cv.height - bh)/2;
+    c.fillStyle = '#fff'; c.fillRect(bx - s*.5, by - s*.5, bw + s, bh + s);
+    c.fillStyle = '#1E5BFF'; c.fillRect(bx, by, bw, bh);
+    c.fillStyle = '#fff'; c.textAlign = 'center'; c.textBaseline = 'middle';
+    let fs = bh*.82; c.font = fs + 'px Bangers, Impact, sans-serif';
+    while (c.measureText(label).width > bw*.9 && fs > 8){ fs -= 2; c.font = fs + 'px Bangers, Impact, sans-serif'; }
+    c.fillText(label, cv.width/2, cv.height/2 + fs*.04);
+    c.textBaseline = 'alphabetic';
+  }
+}
+$('btnQR').onclick = () => {
+  if (typeof qrcode !== 'function') return;
+  drawQR($('qrCv'), inviteUrl(), 560, net && net.code || '');
+  $('qrCode').textContent = net && net.code || '';
+  $('qrPop').hidden = false; track('qr-ouvert');
+};
+$('qrPop').addEventListener('click', () => { $('qrPop').hidden = true; });
+
+// ---- the result card to share ----
+let lastEnd = null;
+const gameArt = g => 'img/' + ({ tetris:'gravats', pong:'gardiens' }[g] || g) + '.jpg';
+function loadImg(src){ return new Promise(res => { const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = src; }); }
+async function resultCard(){
+  if (!lastEnd) return null;
+  const { ranking, game } = lastEnd, W = 1080, H = 1350;
+  const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  const c = cv.getContext('2d');
+  try { await document.fonts.ready; } catch(_){}
+  // background: yellow with halftone dots
+  c.fillStyle = '#FFD93B'; c.fillRect(0, 0, W, H);
+  c.fillStyle = 'rgba(0,0,0,.07)'; for (let y = 0; y < H; y += 18) for (let x = (y/18 % 2)*9; x < W; x += 18){ c.beginPath(); c.arc(x, y, 3, 0, Math.PI*2); c.fill(); }
+  // the game's picture
+  const art = await loadImg(gameArt(game));
+  const ax = 100, ay = 245, aw = W - 200, ah = Math.round(aw*714/1280);
+  c.fillStyle = '#000'; c.fillRect(ax + 12, ay + 12, aw, ah);
+  if (art) c.drawImage(art, ax, ay, aw, ah); else { c.fillStyle = '#1E5BFF'; c.fillRect(ax, ay, aw, ah); }
+  c.lineWidth = 8; c.strokeStyle = '#000'; c.strokeRect(ax, ay, aw, ah);
+  // the logo: a red burst with the name
+  const burst = (cx, cy, r) => { c.beginPath(); for (let i = 0; i < 28; i++){ const a = i/28*Math.PI*2, rr = r*(i % 2 ? .78 : 1)*(1 + .06*Math.sin(i*1.7)); c.lineTo(cx + Math.cos(a)*rr*1.45, cy + Math.sin(a)*rr*.75); } c.closePath(); };
+  c.save(); c.translate(8, 8); burst(W/2, 130, 210); c.fillStyle = '#000'; c.fill(); c.restore();
+  burst(W/2, 130, 210); c.fillStyle = '#E6262B'; c.fill(); c.lineWidth = 7; c.stroke();
+  c.save(); c.translate(W/2, 130); c.rotate(-.06); c.textAlign = 'center';
+  c.font = '120px Bangers, Impact, sans-serif'; c.lineJoin = 'round';
+  c.fillStyle = '#000'; c.fillText('BASTON !', 6, 26); c.lineWidth = 10; c.strokeText('BASTON !', 0, 20); c.fillStyle = '#fff'; c.fillText('BASTON !', 0, 20);
+  c.font = '54px Bangers, Impact, sans-serif'; c.textAlign = 'right';
+  c.fillStyle = '#000'; c.fillText('ARCADE', 172, 92); c.lineWidth = 8; c.strokeText('ARCADE', 168, 88); c.fillStyle = '#FFD93B'; c.fillText('ARCADE', 168, 88);
+  c.restore();
+  // headline
+  const win = ranking[0], mine = ranking.find(r => r.id === me.id), gname = GAME_NAMES[game] || 'Baston';
+  const head = mine && mine.place === 1 ? 'J\'ai gagné au jeu ' + gname + ' !' : win ? (win.name + ' gagne au jeu ' + gname + ' !') : gname;
+  c.textAlign = 'center'; c.font = '72px Bangers, Impact, sans-serif';
+  let fs = 72; while (c.measureText(head).width > W - 120 && fs > 40){ fs -= 4; c.font = fs + 'px Bangers, Impact, sans-serif'; }
+  const hy = ay + ah + 92;
+  c.lineWidth = 10; c.strokeStyle = '#000'; c.strokeText(head, W/2, hy); c.fillStyle = '#fff'; c.fillText(head, W/2, hy);
+  // the podium
+  c.font = '800 40px Nunito, sans-serif'; c.textAlign = 'left';
+  ranking.slice(0, 5).forEach((r, i) => {
+    const y = hy + 80 + i*62, isMe = r.id === me.id;
+    c.fillStyle = isMe ? '#fff' : 'rgba(255,255,255,.55)'; c.fillRect(70, y - 44, 650, 56);
+    c.lineWidth = 4; c.strokeStyle = '#000'; c.strokeRect(70, y - 44, 650, 56);
+    c.fillStyle = '#000'; c.font = '44px Bangers, Impact, sans-serif'; c.fillText(String(r.place), 90, y);
+    c.fillStyle = r.color || '#888'; c.beginPath(); c.arc(162, y - 16, 15, 0, Math.PI*2); c.fill(); c.stroke();
+    c.fillStyle = '#000'; c.font = '800 36px Nunito, sans-serif'; c.fillText(String(r.name).slice(0, 16) + (isMe ? ' (moi)' : ''), 194, y - 2);
+  });
+  // a QR code to the site, beside the podium
+  if (typeof qrcode === 'function'){
+    const qc = document.createElement('canvas'); drawQR(qc, 'https://bastonarcade.com', 260, 'JOUER');
+    const qx = W - 70 - qc.width, qy = hy + 36;
+    c.fillStyle = '#000'; c.fillRect(qx + 8, qy + 8, qc.width, qc.height); c.drawImage(qc, qx, qy); c.lineWidth = 5; c.strokeRect(qx, qy, qc.width, qc.height);
+  }
+  // footer: where to play
+  c.fillStyle = '#000'; c.fillRect(0, H - 120, W, 120);
+  c.fillStyle = '#FFD93B'; c.textAlign = 'center'; c.font = '58px Bangers, Impact, sans-serif'; c.fillText('Viens jouer : bastonarcade.com', W/2, H - 64);
+  c.fillStyle = '#fff'; c.font = '700 26px Nunito, sans-serif'; c.fillText('16 jeux à plusieurs, gratuits, sans compte, sans pub', W/2, H - 22);
+  return cv;
+}
+$('btnShare').onclick = async () => {
+  const b = $('btnShare'); b.disabled = true;
+  try {
+    const cv = await resultCard(); if (!cv) return;
+    const blob = await new Promise(r => cv.toBlob(r, 'image/png'));
+    const file = new File([blob], 'baston-arcade-resultat.png', { type:'image/png' });
+    const text = tr('On joue à Baston Arcade ! Viens défier tout le monde :') + ' https://bastonarcade.com';
+    if (navigator.canShare && navigator.canShare({ files:[file] })){
+      try { await navigator.share({ files:[file], text, title:'Baston Arcade' }); track('resultat-partage'); } catch(_){}
+    } else {
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = file.name; document.body.append(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+      b.textContent = tr('✔ Image enregistrée'); setTimeout(() => { b.textContent = tr('📤 Partager le résultat'); }, 2500);
+      track('resultat-telecharge');
+    }
+  } finally { b.disabled = false; }
+};
+$('btnCoffee').addEventListener('click', () => track('clic-cafe'));
+document.querySelector('.coffeeline a').addEventListener('click', () => track('clic-cafe-fin'));
+$('btnIdea').addEventListener('click', () => track('clic-idee'));
+
 function countBeep(n){
   if (n === lastCountShown) return;
   lastCountShown = n;
