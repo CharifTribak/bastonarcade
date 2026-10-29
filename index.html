@@ -583,8 +583,8 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
         <div class="featbody">
           <h2 id="gsTitle"></h2>
           <p id="gsDesc"></p>
-          <div class="gsbtns" id="gsHost"><button id="gsPick" class="ghost" type="button">Choisir</button><button id="gsGo" type="button">Choisir et lancer</button></div>
-          <div class="gsbtns" id="gsGuest"><button id="gsClose" class="ghost" type="button">Fermer</button></div>
+          <div class="gsbtns" id="gsHost"><button id="gsPick" class="ghost" type="button">← Retour à la liste</button><button id="gsGo" type="button">Lancer</button></div>
+          <div class="gsbtns" id="gsGuest"><button id="gsClose" class="ghost" type="button">← Retour à la liste</button></div>
           <small id="gsNote"></small>
         </div>
       </div>
@@ -9127,7 +9127,6 @@ function openGameSheet(g){
   $('gsTitle').textContent = GAME_NAMES[g]; $('gsDesc').textContent = GAME_DESC[g];
   const cur = g === gameKind;
   $('gsHost').hidden = !me.host; $('gsGuest').hidden = me.host;
-  $('gsPick').textContent = cur ? 'Fermer' : 'Choisir'; $('gsGo').textContent = cur ? 'Lancer' : 'Choisir et lancer';
   const host = players.find(p => p.id === 'h');
   $('gsNote').textContent = me.host ? '' : cur ? 'C\'est le jeu choisi par ' + (host ? host.name : 'le créateur') + '.' : 'Seul ' + (host ? host.name : 'le créateur du salon') + ' choisit le jeu.';
   sh.hidden = false;
@@ -9135,7 +9134,7 @@ function openGameSheet(g){
 const closeGameSheet = () => { $('gameSheet').hidden = true; };
 const pickGame = g => { if (!me.host || phase !== 'lobby' || !GAME_NAMES[g]) return; if (g !== gameKind){ gameKind = g; sendLobby(false); } };
 $('gameSheet').addEventListener('click', e => { if (!e.target.closest('#gameSheetCard') || e.target.closest('#gsClose')) closeGameSheet(); });
-$('gsPick').onclick = () => { pickGame($('gameSheet').dataset.g); closeGameSheet(); };
+$('gsPick').onclick = closeGameSheet;
 $('gsGo').onclick = () => { pickGame($('gameSheet').dataset.g); closeGameSheet(); if (me.host && phase === 'lobby') hostStart(); };
 $('lbInfo').onclick = () => openGameSheet(gameKind);
 addEventListener('keydown', e => { if (e.key === 'Escape' && !$('gameSheet').hidden) closeGameSheet(); });
