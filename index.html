@@ -362,6 +362,8 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .salonrow .seats{font-weight:900;font-size:13px;padding:3px 9px;border:2px solid #000;border-radius:12px;background:#3DDC97;white-space:nowrap}
 .salonrow.full{opacity:.55;box-shadow:none;cursor:default}
 .salonrow.full .seats{background:#ddd}
+.mcard{margin-top:6px;align-items:center}
+.mcardtxt{flex:1;font-size:13px;font-weight:800;color:var(--muted)}
 #salonList .none{color:var(--muted);display:block}
 
 /* ---- lobby colours ---- */
@@ -596,16 +598,20 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
     </div>
     <div class="multi" id="menuMulti" hidden>
       <div class="salons" id="salons" hidden>
-        <div class="salonshead"><b>Rejoindre un salon ouvert</b><button id="btnSalons" class="ghost" type="button" aria-label="Actualiser">↻</button></div>
+        <div class="salonshead"><b>Rejoindre un salon public</b><button id="btnSalons" class="ghost" type="button" aria-label="Actualiser">↻</button></div>
         <ul id="salonList"></ul>
       </div>
-      <div class="sep">J'ai un code</div>
-      <div class="row">
-        <input id="codeIn" maxlength="6" placeholder="CODE" aria-label="Code du salon" autocomplete="off" autocapitalize="characters">
-        <button id="btnJoin" class="ghost" type="button">Entrer</button>
+      <div class="salons">
+        <div class="salonshead"><b>Rejoindre un salon public/privé par son code</b></div>
+        <div class="row mcard">
+          <input id="codeIn" maxlength="6" placeholder="CODE" aria-label="Code du salon" autocomplete="off" autocapitalize="characters">
+          <button id="btnJoin" class="ghost" type="button">Entrer</button>
+        </div>
       </div>
-      <div class="sep">Ou bien</div>
-      <button id="btnCreate" type="button">Créer un salon</button>
+      <div class="salons">
+        <div class="salonshead"><b>Créer un salon</b></div>
+        <div class="row mcard"><span class="mcardtxt">Vous choisissez le jeu, les autres vous rejoignent.</span><button id="btnCreate" class="ghost" type="button">Créer</button></div>
+      </div>
       <button id="btnMultiBack" class="ghost backlink" type="button">← Retour</button>
     </div>
     <p class="hint" id="menuHint"></p>
@@ -1478,7 +1484,7 @@ async function loadSalons(){
     const c = document.createElement('b'); c.textContent = String(r.code || '').slice(0, 4); c.setAttribute('translate', 'no');
     const info = document.createElement('span'); const hn = publicName(r.host); info.textContent = (/^[aeiouyàâäéèêëîïôöùûü]/i.test(hn) ? 'Salon d\'' : 'Salon de ') + hn;
     const sm = document.createElement('small'); sm.textContent = (GAME_NAMES[r.game] || 'Jeu') + ' · ' + n + ' joueur' + (n > 1 ? 's' : '') + ' sur ' + MAXP; info.append(sm);
-    const st = document.createElement('span'); st.className = 'seats'; st.textContent = free ? free + ' place' + (free > 1 ? 's' : '') : 'Complet';
+    const st = document.createElement('span'); st.className = 'seats'; st.textContent = free ? free + ' place' + (free > 1 ? 's' : '') : 'Plein';
     b.append(c, info, st);
     if (free) b.onclick = () => { $('codeIn').value = String(r.code || '').slice(0, 4); $('btnJoin').click(); };
     else b.setAttribute('aria-disabled', 'true');
