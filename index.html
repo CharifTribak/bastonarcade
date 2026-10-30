@@ -130,6 +130,33 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .stgauge{height:18px;border:3px solid var(--line);background:#fff;margin:8px 0}
 .stgauge i{display:block;height:100%}
 @media (max-width:560px){.stkpis{grid-template-columns:repeat(2,1fr)}}
+.briefpop{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;padding:12px}
+.briefpop[hidden]{display:none}
+.briefcard{width:min(460px,100%);max-height:100%;overflow:auto;background:var(--panel);border:3px solid var(--line);box-shadow:7px 7px 0 var(--line);padding:12px;display:flex;flex-direction:column;gap:10px;animation:popin .18s ease-out}
+.briefhead{display:flex;justify-content:space-between;align-items:center}
+.briefhead b{font-family:var(--display);font-weight:400;font-size:30px;color:var(--accent);letter-spacing:.02em}
+.briefhead button{padding:4px 10px;font-size:16px}
+.brview{overflow:hidden;touch-action:pan-y}
+.brtrack{display:flex;transition:transform .28s ease}
+.brslide{flex:0 0 100%;display:flex;flex-direction:column;gap:8px;padding:2px}
+.brslide h3{margin:0;font-size:18px;background:var(--blue);color:#fff;align-self:flex-start;padding:3px 10px;border:3px solid var(--line);transform:rotate(-1deg)}
+.brslide p{margin:0;font-size:15px;line-height:1.45}
+.brart{width:100%;aspect-ratio:16/9;object-fit:cover;border:3px solid var(--line)}
+.brctl{display:flex;gap:10px;align-items:flex-start;background:#fff;border:3px solid var(--line);padding:8px 10px;box-shadow:3px 3px 0 var(--line)}
+.bric{font-size:30px;line-height:1}
+.brctl b{font-size:13px;text-transform:uppercase;letter-spacing:.05em}
+.brbig{font-size:64px;text-align:center}
+.brtip{font-size:17px!important;font-weight:700;text-align:center}
+.brnav{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.brnav button{padding:6px 14px}
+.brdots{display:flex;gap:8px}
+.brdots button{width:14px;height:14px;padding:0;border-radius:50%;background:#fff;border:3px solid var(--line);box-shadow:none}
+.brdots button.on{background:var(--accent)}
+#brReady{height:60px;font-size:28px}
+#brReady:disabled{background:#3DDC97;color:#000;opacity:1}
+.brwait{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:center;font-size:14px;font-weight:700;text-align:center}
+.brwho{display:inline-flex;align-items:center;gap:5px;border:2px solid var(--line);border-radius:12px;padding:2px 9px;background:#fff}
+.brwho i{width:12px;height:12px;border-radius:50%;border:2px solid var(--line)}
 .lobbytip{margin:-4px 0 0;font-size:13px;color:var(--muted);font-weight:700}
 .ppanel{background:var(--panel);border:3px solid var(--line);box-shadow:5px 5px 0 var(--line);padding:10px 12px 12px;display:flex;flex-direction:column;gap:10px}
 .pphead{display:flex;align-items:center;justify-content:space-between;gap:10px}
@@ -230,6 +257,8 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .toast.pm{top:auto;bottom:0;transform:translate(-50%,calc(50% + 8px))}
 .toast.pm.on{transform:translate(-50%,50%)}
 .keys{color:var(--muted);font-size:13px;text-align:center}
+.ctlhelp,.game .keys,.pong .keys{color:#111!important;font-size:15px!important;font-weight:700;line-height:1.5;background:#fff;border:3px solid var(--line);box-shadow:4px 4px 0 var(--line);padding:9px 12px;margin:6px auto 0!important;max-width:min(100%,640px);text-align:left!important}
+.ctlhelp::before,.game .keys::before,.pong .keys::before{content:"🎮 "}
 .abortbar{display:flex;justify-content:flex-end;max-width:1100px;margin:0 auto 8px}
 .abort{padding:4px 12px;font-family:var(--body);font-weight:900;font-size:13px;background:#fff;color:#000;box-shadow:2px 2px 0 #000;border-width:2px}
 .abort::before{content:"← "}
@@ -668,6 +697,16 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
     <div class="gamepop" id="qrPop" hidden>
       <div class="feature qrcard"><div class="caption">Scannez pour rejoindre le salon <b id="qrCode"></b></div><canvas id="qrCv" width="560" height="560" aria-label="QR code du salon"></canvas><small>Touchez pour fermer</small></div>
     </div>
+    <div class="briefpop" id="briefPop" hidden>
+      <div class="briefcard">
+        <div class="briefhead"><b id="brTitle"></b><button id="brClose" class="ghost" type="button" aria-label="Annuler">✕</button></div>
+        <div class="brview" id="brView"><div class="brtrack" id="brTrack"></div></div>
+        <div class="brnav"><button id="brPrev" class="ghost" type="button" aria-label="Précédent">◀</button><div class="brdots" id="brDots"></div><button id="brNext" class="ghost" type="button" aria-label="Suivant">▶</button></div>
+        <button id="brReady" class="big" type="button">✔ Prêt !</button>
+        <div class="brwait" id="brWait"></div>
+        <button id="brForce" class="ghost" type="button" hidden>Lancer sans attendre</button>
+      </div>
+    </div>
     <div class="gamepop sheet" id="gameSheet" hidden>
       <div class="feature" id="gameSheetCard">
         <img id="gsArt" class="gameart" alt="">
@@ -711,7 +750,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
       <button data-a="down" aria-label="Descendre">↓</button>
       <button data-a="right" aria-label="Droite">→</button>
     </div>
-    <p class="keys">← → déplacer · ↓ descendre · ↑ ou X tourner · Z tourner à gauche · Espace chute · C réserve</p>
+    <p class="keys">← → déplacer · ↓ descendre · ↑ ou X tourner · Z tourner à gauche · Espace chute · C réserve<br>Souris : la pièce suit le curseur · clic tourner · molette descendre · clic droit chute</p>
   </div>
 </section>
 
@@ -744,7 +783,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
       <div class="msg pm" id="derbyMsg"></div>
       <div class="toast pm" id="dToast" aria-live="polite"></div>
     </div>
-    <p class="hint" style="text-align:center">Repassez toute la figure d'un seul trait, en partant du point vert, sans sortir de la bande bleue. Plus vous restez au centre, plus votre cheval avance.</p>
+    <p class="hint ctlhelp">Repassez toute la figure d'un seul trait, en partant du point vert, sans sortir de la bande bleue. Plus vous restez au centre, plus votre cheval avance.</p>
   </div>
 </section>
 
@@ -766,7 +805,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
       <button id="nvCancel" class="ghost">Annuler</button>
     </div>
     <ul class="nvplayers" id="nvPlayers"></ul>
-    <p class="hint" style="text-align:center">À votre tour, touchez une case. Dans l'eau, vous seul voyez combien de cases de bateau entourent la case (diagonales comprises, coulées ou non). Éliminé, vous voyez les chiffres de tout le monde.</p>
+    <p class="hint ctlhelp">À votre tour, touchez une case. Dans l'eau, vous seul voyez combien de cases de bateau entourent la case (diagonales comprises, coulées ou non). Éliminé, vous voyez les chiffres de tout le monde.</p>
   </div>
 </section>
 
@@ -797,7 +836,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
   <div class="curl">
     <div class="nvhead cuhead">
       <div class="nvturn" id="cuTurn">Préparation…</div>
-      <div class="cuend" id="cuEnd">Mène 1</div>
+      <div class="cuend" id="cuEnd">Manche 1</div>
       <div class="nvtime" id="cuTime"></div>
     </div>
     <div class="cuwrap" id="cuWrap">
@@ -810,7 +849,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
       <button id="cuR" class="ghost" aria-pressed="true">Effet à droite ↻</button>
     </div>
     <ul class="nvplayers" id="cuPlayers"></ul>
-    <p class="hint" id="cuHelp" style="text-align:center"></p>
+    <p class="hint ctlhelp" id="cuHelp"></p>
     <p class="keys">Clavier : ← → viser · ↑ ↓ puissance · Q ou D effet · Entrée lancer · Espace balayer</p>
   </div>
 </section>
@@ -825,7 +864,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
       <div class="toast pm" id="mcToast" aria-live="polite"></div>
     </div>
     <ul class="nvplayers" id="mcPlayers"></ul>
-    <p class="hint" style="text-align:center">Quand le disque s'arrête, touchez vite une chaise libre. Toucher une chaise pendant la musique coûte 1 s de pénalité. Attention aux faux arrêts : si le disque tourne encore, ce n'est pas fini !</p>
+    <p class="hint ctlhelp">Quand le disque s'arrête, touchez vite une chaise libre. Toucher une chaise pendant la musique coûte 1 s de pénalité. Attention aux faux arrêts : si le disque tourne encore, ce n'est pas fini !</p>
   </div>
 </section>
 
@@ -841,7 +880,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
     <div class="mmpal" id="mmPal" role="group" aria-label="Couleurs"></div>
     <div class="mmact"><button id="mmDel" class="ghost">Effacer</button><button id="mmOk">Valider</button></div>
     <ul class="nvplayers" id="mmOthers"></ul>
-    <p class="hint" style="text-align:center">Trouvez le code : 4 couleurs toutes différentes. Pion noir : bonne couleur bien placée. Pion blanc : bonne couleur mal placée. Tout le monde cherche le même code, le premier qui trouve marque le plus. Clavier : 1 à 6, Retour arrière, Entrée.</p>
+    <p class="hint ctlhelp">Trouvez le code : 4 couleurs toutes différentes. Pion noir : bonne couleur bien placée. Pion blanc : bonne couleur mal placée. Tout le monde cherche le même code, le premier qui trouve marque le plus. Clavier : 1 à 6, Retour arrière, Entrée.</p>
   </div>
 </section>
 
@@ -855,7 +894,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
       <div class="toast pm" id="kbToast" aria-live="polite"></div>
     </div>
     <ul class="nvplayers" id="kbPlayers"></ul>
-    <p class="hint" style="text-align:center">Posez le doigt n'importe où et glissez : c'est un joystick. Attaquant : gardez le doigt appuyé (ou Espace) pour retenir votre souffle, touchez des défenseurs puis revenez dans votre camp avant la fin du souffle. Au contact, l'attaquant reste collé au défenseur : pour se libérer, il doit tirer franchement dans l'autre sens une demi-seconde. Accroché par plusieurs, il est presque bloqué. La bande claire près de la ligne vous est interdite tant qu'il n'est pas entré. Clavier : flèches ou ZQSD.</p>
+    <p class="hint ctlhelp">Posez le doigt n'importe où et glissez : c'est un joystick. Attaquant : gardez le doigt appuyé (ou Espace) pour retenir votre souffle, touchez des défenseurs puis revenez dans votre camp avant la fin du souffle. Au contact, l'attaquant reste collé au défenseur : pour se libérer, il doit tirer franchement dans l'autre sens une demi-seconde. Accroché par plusieurs, il est presque bloqué. La bande claire près de la ligne vous est interdite tant qu'il n'est pas entré. Clavier : flèches ou ZQSD.</p>
   </div>
 </section>
 
@@ -870,7 +909,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
     </div>
     <button id="dbCatch">✋ Attraper ✋</button>
     <ul class="nvplayers" id="dbPlayers"></ul>
-    <p class="hint" style="text-align:center">Posez le doigt n'importe où et glissez pour courir (joystick). Passez sur une balle pour la ramasser, touchez brièvement le terrain pour la lancer à cet endroit. « Attraper » lève les mains un court instant : une balle attrapée fait perdre un cœur au lanceur. Clavier : flèches ou ZQSD, Espace lancer, E attraper.</p>
+    <p class="hint ctlhelp">Posez le doigt n'importe où et glissez pour courir (joystick). Passez sur une balle pour la ramasser, touchez brièvement le terrain pour la lancer à cet endroit. « Attraper » lève les mains un court instant : une balle attrapée fait perdre un cœur au lanceur. Clavier : flèches ou ZQSD, Espace lancer, E attraper.</p>
   </div>
 </section>
 
@@ -885,7 +924,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
     </div>
     <button id="tkFire">💥 FEU ! 💥</button>
     <ul class="nvplayers" id="tkPlayers"></ul>
-    <p class="hint" id="tkHelp" style="text-align:center"></p>
+    <p class="hint ctlhelp" id="tkHelp"></p>
   </div>
 </section>
 
@@ -901,7 +940,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
     </div>
     <button id="shBark">🐶 OUAF !</button>
     <ul class="nvplayers" id="shPlayers"></ul>
-    <p class="hint" style="text-align:center">Tous ensemble : posez le doigt n'importe où et glissez pour courir. Les moutons fuient les chiens ; rabattez-les dans l'enclos avant le coucher du soleil. « Ouaf ! » (ou une touche brève, ou Espace) fait détaler les moutons proches et chasse le loup. Deux chiens près d'un loup, ou un « Ouaf ! » sous son nez, le font déguerpir (il reviendra ailleurs) ; un chien qui le bouscule lui fait lâcher son mouton.</p>
+    <p class="hint ctlhelp">Tous ensemble : posez le doigt n'importe où et glissez pour courir. Les moutons fuient les chiens ; rabattez-les dans l'enclos avant le coucher du soleil. « Ouaf ! » (ou une touche brève, ou Espace) fait détaler les moutons proches et chasse le loup. Deux chiens près d'un loup, ou un « Ouaf ! » sous son nez, le font déguerpir (il reviendra ailleurs) ; un chien qui le bouscule lui fait lâcher son mouton.</p>
   </div>
 </section>
 
@@ -918,7 +957,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
       <canvas id="dkPad" width="600" height="130" aria-label="Rythme et coups de l'équipage"></canvas>
       <div class="dkbtns"><button id="dkL">◀ GAUCHE</button><button id="dkR">DROITE ▶</button></div>
     </div>
-    <p class="hint" id="dkHelp" style="text-align:center"></p>
+    <p class="hint ctlhelp" id="dkHelp"></p>
   </div>
 </section>
 
@@ -934,7 +973,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
     <button id="ljGo" class="big" hidden>🪓 Valider la direction</button>
     <div class="nvwrap" id="ljCutWrap"><canvas id="ljCut" width="600" height="260" aria-label="Le tronc vu de côté"></canvas></div>
     <ul class="nvplayers" id="ljPlayers"></ul>
-    <p class="hint" id="ljHelp" style="text-align:center"></p>
+    <p class="hint ctlhelp" id="ljHelp"></p>
   </div>
 </section>
 
@@ -948,7 +987,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
       <div class="toast pm" id="agToast" aria-live="polite"></div>
     </div>
     <ul class="nvplayers" id="agPlayers"></ul>
-    <p class="hint" id="agHelp" style="text-align:center"></p>
+    <p class="hint ctlhelp" id="agHelp"></p>
   </div>
 </section>
 
@@ -968,7 +1007,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
         <div class="toast pm" id="gpToast" aria-live="polite"></div>
       </div>
       <div class="gpbtns" id="gpBtns"><button id="gpL" type="button" aria-label="Se décaler à gauche">◀</button><button id="gpA" type="button">GALOP !</button><button id="gpR" type="button" aria-label="Se décaler à droite">▶</button><button id="gpB" type="button">▼ RALENTIR</button></div>
-      <p class="hint" id="gpHelp" style="text-align:center"></p>
+      <p class="hint ctlhelp" id="gpHelp"></p>
     </div>
   </div>
 </section>
@@ -1154,7 +1193,7 @@ const GAME_DESC = {
   mole:'Chacun a 8 taupes, placées au hasard dans le pré et reconnaissables à leur couleur et à leur accessoire. Elles sortent une à une, vite : la première personne à taper une taupe d\'un autre gagne 1 point ; une taupe que personne ne tape rapporte 1 point à son propriétaire. Vos propres taupes ne se tapent pas. Premier à 20 points.',
   moleOld:'En même temps, chacun cache 8 taupes à sa couleur dans le pré (8×8). Puis elles sortent une à une, vite : la première personne à taper une taupe d\'un autre gagne 1 point (taper la sienne coûte 2 points), une taupe que personne ne tape rapporte 1 point à son propriétaire. Premier à 20 points.',
   naval:'Bataille navale à plusieurs sur une seule mer. Chacun voit ses bateaux, rien d\'autre. À tour de rôle, tirez au canon sur une case : touché, tout le monde voit la flamme ; dans l\'eau, vous seul voyez combien de cases de bateau l\'entourent, comme au démineur. Le dernier à flot gagne.',
-  curling:'Curling à plusieurs : chacun lance ses pierres à tour de rôle vers la maison, la cible au bout de la piste. Tirez vers l\'arrière pour viser et doser, choisissez l\'effet, puis frottez la glace pour balayer : la pierre glisse plus loin et tourne moins. À chaque mène, le joueur le plus proche du centre marque 1 point par pierre mieux placée que toutes les autres.',
+  curling:'Curling à plusieurs : chacun lance ses pierres à tour de rôle vers la maison, la cible au bout de la piste. Tirez vers l\'arrière pour viser et doser, choisissez l\'effet, puis frottez la glace pour balayer : la pierre glisse plus loin et tourne moins. À chaque manche, le joueur le plus proche du centre marque 1 point par pierre mieux placée que toutes les autres.',
   chairs:'Chaises musicales : la musique joue, le disque tourne, tout le monde fait le tour. Quand le disque s\'arrête, touchez vite une chaise libre : il y en a une de moins que de joueurs. Qui reste debout perd un cœur. Gare aux faux arrêts : tant que le disque tourne, toucher une chaise coûte une pénalité. Le dernier en jeu gagne.',
   master:'Code secret à plusieurs : tout le monde cherche le même code de 4 couleurs. À chaque essai, vous seul voyez vos indices (noir : bien placé, blanc : bonne couleur mal placée) ; les autres voient seulement combien d\'essais vous avez faits. Le premier qui trouve marque le plus, et les autres n\'ont plus que 40 s. Trois manches.',
   kabaddi:'Kabaddi, le sport indien : à tour de rôle, un attaquant entre chez les autres en retenant son souffle (gardez le doigt appuyé). Il touche des défenseurs puis doit rentrer dans son camp avant d\'être à bout de souffle : 1 point par défenseur touché. Les défenseurs l\'accrochent à plusieurs pour le freiner : s\'il échoue, chaque défenseur marque 1 point, 2 s\'il le tenait.',
@@ -1241,6 +1280,7 @@ const menuHint = (t, err) => { $('menuHint').textContent = t; $('menuHint').clas
 
 // ================= networking (PeerJS star, host relays) =================
 function teardown(){
+  HB = null; if (typeof closeBrief === 'function' && BR) closeBrief();
   if (net && net.peer){ try { net.peer.destroy(); } catch(_){} }
   if (HN && HN.timer) clearTimeout(HN.timer);
   if (HM) moleClearTimers();
@@ -1330,11 +1370,13 @@ function hostRecv(conn, d){
     players.push({ id, name:cleanName(d.name), color:pickColor() });
     sendLobby(false);
     try { conn.send({ t:'chatlog', items:CHAT.slice(-30) }); } catch(_){}
+    if (HB) try { conn.send({ t:'brief', game:HB.game, ready:[...HB.ready] }); } catch(_){}
     chatSys(cleanName(d.name) + ' a rejoint le salon');
     return;
   }
   if (d.t === 'chat'){ if (conn._pid) hostChat(conn._pid, d.text); return; }
   if (d.t === 'pong'){ conn._pong = performance.now(); return; }
+  if (d.t === 'ready'){ if (conn._pid) briefReady(conn._pid); return; }
   if (d.t === 'color'){ if (conn._pid) hostSetColor(conn._pid, d.c); return; }
   if (conn._pid) hostHandle(conn._pid, d);
 }
@@ -1443,7 +1485,7 @@ function hostDrop(conn){
   const id = conn._pid;
   if (!id || !net || !net.conns.has(id)) return;
   net.conns.delete(id);
-  if (phase === 'lobby'){ const p = players.find(x => x.id === id); players = players.filter(p => p.id !== id); sendLobby(false); if (p) chatSys(p.name + ' a quitté le salon'); return; }
+  if (phase === 'lobby'){ const p = players.find(x => x.id === id); players = players.filter(p => p.id !== id); sendLobby(false); briefCheck(); if (BR) briefStatus(); if (p) chatSys(p.name + ' a quitté le salon'); return; }
   if (H && H.alive.has(id)){
     if (H.game === 'pong') pongDrop(id); else if (H.game === 'curling') curlDrop(id); else if (H.game === 'chairs') chairsDrop(id); else if (H.game === 'master') masterDrop(id); else if (H.game === 'kabaddi') kabaddiDrop(id); else if (H.game === 'dodge') dodgeDrop(id); else if (H.game === 'tank') tankDrop(id); else if (H.game === 'sheep') sheepDrop(id); else if (H.game === 'drakkar') drakkarDrop(id); else if (H.game === 'lumber') lumberDrop(id); else if (H.game === 'agility') agilityDrop(id); else if (H.game === 'galop') galopDrop(id); else if (H.game === 'derby') derbyDrop(id); else if (H.game === 'naval') navalDrop(id); else if (H.game === 'mole') moleDrop(id); else hostHandle(id, { t:'dead', left:true });
   }
@@ -1472,7 +1514,8 @@ function toHost(msg){
   else if (net && net.conn && net.conn.open) try { net.conn.send(msg); } catch(_){}
 }
 
-function hostStart(){
+function hostLaunch(){
+  HB = null; closeBrief();
   unannounce(); annKey = null;
   track('partie/' + gameKind + (net && net.solo ? '/solo' : '/' + players.length + 'j'));
   // drop anyone who left meanwhile
@@ -1653,7 +1696,10 @@ function clientRecv(m){
     case 'lj_round': case 'lj_res': case 'lj_sum': case 'lj_left': lumberRecv(m); break;
     case 'ag_p': case 'ag_done': case 'ag_left': agilityRecv(m); break;
     case 'gp_pick': case 'gp_race': case 'gp_go': case 'gp_s': case 'gp_fin': galopRecv(m); break;
-    case 'start': noteRecent(m.game); closeGameSheet(); $('colPick').hidden = true; if (m.game === 'galop') startGalop(m); else if (m.game === 'agility') startAgility(m); else if (m.game === 'lumber') startLumber(m); else if (m.game === 'drakkar') startDrakkar(m); else if (m.game === 'sheep') startSheep(m); else if (m.game === 'tank') startTank(m); else if (m.game === 'dodge') startDodge(m); else if (m.game === 'kabaddi') startKabaddi(m); else if (m.game === 'master') startMaster(m); else if (m.game === 'chairs') startChairs(m); else if (m.game === 'curling') startCurling(m); else if (m.game === 'pong') startPong(m.players); else if (m.game === 'derby') startDerby(m.players, m.seed|0); else startGame(m.players); break;
+    case 'brief': if (phase === 'lobby') openBrief(m.game, m.ready); break;
+    case 'brief_st': if (BR){ BR.ready = new Set(m.ready || []); briefStatus(); } break;
+    case 'brief_off': closeBrief(); break;
+    case 'start': noteRecent(m.game); closeGameSheet(); closeBrief(); $('colPick').hidden = true; if (m.game === 'galop') startGalop(m); else if (m.game === 'agility') startAgility(m); else if (m.game === 'lumber') startLumber(m); else if (m.game === 'drakkar') startDrakkar(m); else if (m.game === 'sheep') startSheep(m); else if (m.game === 'tank') startTank(m); else if (m.game === 'dodge') startDodge(m); else if (m.game === 'kabaddi') startKabaddi(m); else if (m.game === 'master') startMaster(m); else if (m.game === 'chairs') startChairs(m); else if (m.game === 'curling') startCurling(m); else if (m.game === 'pong') startPong(m.players); else if (m.game === 'derby') startDerby(m.players, m.seed|0); else startGame(m.players); break;
     case 'dr': derbyRemote(m); break;
     case 'ps': pongState(m); break;
     case 'pg': pongGoalFx(m.side|0); break;
@@ -1718,6 +1764,7 @@ function renderLobby(){
     ? (players.length < 2 ? 'Seul, vous jouerez contre un robot de niveau moyen. Ou attendez les autres.' : 'Lancez quand tout le monde est là.')
     : 'En attente du lancement par le créateur…';
   if (!$('gameSheet').hidden) openGameSheet($('gameSheet').dataset.g);
+  if (BR) briefStatus();
 }
 
 // ================= game core =================
@@ -1973,7 +2020,7 @@ function showEnd(ranking, game){
   for (const h of ['#','Joueur', ...(galop ? ['Cheval','Temps','Écart'] : agil ? ['Temps','Fautes','Total'] : lumber ? ['Points','Précision','Manches'] : viking ? ['Rôle','Coups','Synchro'] : coop ? ['Manches','Moutons','Ouaf'] : tank ? ['Char','Rôle','Touches'] : dodge ? ['Vies','Touches','Arrêts'] : kab ? ['Points','Raids réussis','Plaquages'] : master ? ['Points','Trouvés','Essais'] : chairs ? ['Vies','Chaises','Réflexe'] : curl ? ['Points','Maison','Meilleure'] : pong ? ['Vies','Arrêts'] : derby ? ['Figures','Distance','Temps'] : naval ? ['Tirs','Touchés','À flot'] : mole ? ['Points','Tapées','Échappées'] : ['Lignes','Briques','Score'])]){
     const th = document.createElement('th'); th.textContent = h; hd.append(th);
   }
-  $('rankNote').textContent = galop ? '« Écart » : retard sur le vainqueur à l\'arrivée, en secondes. Les chevaux des robots sont classés avec les autres.' : agil ? '« Total » : temps du parcours plus 5 s par faute. Un chien qui n\'a pas fini est classé après les autres.' : lumber ? '« Précision » : moyenne de vos coupes. « Manches » : manches finies sans rien écraser. Un joueur qui écrase quelque chose est éliminé.' : viking ? 'Course en équipe. « Synchro » : coups de rame donnés en rythme avec le tambour.' : coop ? 'Partie en équipe : tout le monde partage le score. « Moutons » : moutons rentrés au total, « Ouaf » : aboiements.' : tank ? 'Les deux membres d\'un équipage partagent la même place. « Touches » : obus du canonnier qui ont fait mouche.' : dodge ? '« Touches » : balles qui ont atteint un adversaire. « Arrêts » : balles attrapées.' : kab ? '« Raids réussis » : raids rentrés avec au moins un défenseur touché. « Plaquages » : attaquants retenus jusqu\'au bout du souffle.' : master ? '« Trouvés » : codes trouvés. « Essais » : total des essais sur la partie.' : chairs ? '« Chaises » : chaises gagnées. « Réflexe » : votre plus rapide, de l\'arrêt du disque à la chaise.' : curl ? '« Maison » : pierres dans la maison en fin de mène. « Meilleure » : pierre la plus proche du centre.' : mole ? '« Tapées » : taupes adverses tapées. « Échappées » : vos taupes que personne n\'a eues.' : naval ? '« À flot » : cases de bateau encore intactes à la fin.' : pong ? '« Arrêts » : ballons repoussés par le gardien.' : derby ? '« Temps » : durée pour franchir la ligne, pour ceux qui l\'ont franchie.' : '« Briques » : nombre de briques envoyées aux adversaires.';
+  $('rankNote').textContent = galop ? '« Écart » : retard sur le vainqueur à l\'arrivée, en secondes. Les chevaux des robots sont classés avec les autres.' : agil ? '« Total » : temps du parcours plus 5 s par faute. Un chien qui n\'a pas fini est classé après les autres.' : lumber ? '« Précision » : moyenne de vos coupes. « Manches » : manches finies sans rien écraser. Un joueur qui écrase quelque chose est éliminé.' : viking ? 'Course en équipe. « Synchro » : coups de rame donnés en rythme avec le tambour.' : coop ? 'Partie en équipe : tout le monde partage le score. « Moutons » : moutons rentrés au total, « Ouaf » : aboiements.' : tank ? 'Les deux membres d\'un équipage partagent la même place. « Touches » : obus du canonnier qui ont fait mouche.' : dodge ? '« Touches » : balles qui ont atteint un adversaire. « Arrêts » : balles attrapées.' : kab ? '« Raids réussis » : raids rentrés avec au moins un défenseur touché. « Plaquages » : attaquants retenus jusqu\'au bout du souffle.' : master ? '« Trouvés » : codes trouvés. « Essais » : total des essais sur la partie.' : chairs ? '« Chaises » : chaises gagnées. « Réflexe » : votre plus rapide, de l\'arrêt du disque à la chaise.' : curl ? '« Maison » : pierres dans la maison en fin de manche. « Meilleure » : pierre la plus proche du centre.' : mole ? '« Tapées » : taupes adverses tapées. « Échappées » : vos taupes que personne n\'a eues.' : naval ? '« À flot » : cases de bateau encore intactes à la fin.' : pong ? '« Arrêts » : ballons repoussés par le gardien.' : derby ? '« Temps » : durée pour franchir la ligne, pour ceux qui l\'ont franchie.' : '« Briques » : nombre de briques envoyées aux adversaires.';
   const tb = $('rankBody'); tb.textContent = '';
   (ranking || []).forEach(r => {
     const tr = document.createElement('tr'); if (r.place === 1) tr.className = 'win';
@@ -2224,6 +2271,21 @@ addEventListener('keyup', e => {
   const k = PKEYS[e.key.toLowerCase()]; if (k) pin[k] = false;
   const a = KEYMAP[e.key.toLowerCase()]; if (a) release(a);
 });
+// mouse on a computer: the piece follows the pointer's column, click rotates, right click drops, wheel brings it down
+(() => {
+  const cv = $('board');
+  cv.addEventListener('pointermove', e => {
+    if (e.pointerType !== 'mouse' || cur !== 'tetris' || phase !== 'play' || !G || !G.alive || !G.p) return;
+    const r = cv.getBoundingClientRect(), col = Math.floor((e.clientX - r.left)/r.width*COLS);
+    for (let k = 0; k < COLS; k++){
+      const xs = cellsOf(G.p).map(c => c[0]), mid = Math.round((Math.min(...xs) + Math.max(...xs))/2);
+      if (mid === col || !move(Math.sign(col - mid), 0)) break;
+    }
+  });
+  cv.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse' || cur !== 'tetris') return; e.preventDefault(); if (e.button === 0) act('rotr'); else if (e.button === 2) act('drop'); });
+  cv.addEventListener('contextmenu', e => { if (cur === 'tetris') e.preventDefault(); });
+  cv.addEventListener('wheel', e => { if (cur !== 'tetris' || phase !== 'play' || !G || !G.p) return; e.preventDefault(); if (e.deltaY > 0) move(0, 1); else act('rotl'); }, { passive:false });
+})();
 for (const b of $('pad').querySelectorAll('button')){
   const a = b.dataset.a;
   b.addEventListener('pointerdown', e => { e.preventDefault(); b.setPointerCapture(e.pointerId); act(a); });
@@ -3228,12 +3290,12 @@ function nvDrawShip(ctx, cells, color, sunk, now){
     block(-c*.15, c*.55, hw*.95);
     ctx.fillStyle = 'rgba(120,200,255,.8)'; ctx.fillRect(c*.12, -hw*.45, c*.07, hw*.9);
   }
-  if (sunk){                // a few bubbles and weed so it reads as lying on the bottom
-    ctx.fillStyle = 'rgba(10,25,50,.45)'; ctx.fillRect(-hl, -hw, hl*2, hw*2);
-    ctx.strokeStyle = 'rgba(255,255,255,.6)'; ctx.lineWidth = 1.5;
-    for (let i = 0; i < len; i++){ ctx.beginPath(); ctx.arc(-hl + c*(i + .5), -hw*.2 - (now/400 + i*.7) % 1 * c*.3, c*.05, 0, Math.PI*2); ctx.stroke(); }
-  }
+  if (sunk){ ctx.fillStyle = 'rgba(10,25,50,.45)'; ctx.fillRect(-hl, -hw, hl*2, hw*2); }
   ctx.restore(); ctx.globalAlpha = 1;
+  if (sunk){                // bubbles rising from the wreck: always straight up the screen, whatever the ship's direction
+    ctx.strokeStyle = 'rgba(255,255,255,.6)'; ctx.lineWidth = 1.5;
+    cells.forEach((p, i) => { const bx = M + (p[0] + .5)*c, by = M + (p[1] + .5)*c - c*.05; ctx.beginPath(); ctx.arc(bx, by - (now/400 + i*.7) % 1 * c*.3, c*.05, 0, Math.PI*2); ctx.stroke(); });
+  }
 }
 function nvShape(ctx, kind, r){
   ctx.beginPath();
@@ -3994,12 +4056,12 @@ function renderCuPlayers(){
     const t = document.createElement('span');
     t.textContent = p.name + (p.id === me.id ? ' (vous)' : '') + ' · ' + CU.scores[i] + ' pt' + (CU.scores[i] > 1 ? 's' : '');
     const st = document.createElement('span'); st.className = 'cust'; st.textContent = '●'.repeat(Math.max(0, CU.left[i])) + '○'.repeat(Math.max(0, CU.spp - CU.left[i]));
-    st.title = 'pierres restantes dans cette mène';
+    st.title = 'pierres restantes dans cette manche';
     li.append(d, t, st); ul.append(li);
   });
 }
 function curlHeader(){
-  $('cuEnd').textContent = 'Mène ' + Math.min(CU.end + 1, CU.ends) + '/' + CU.ends;
+  $('cuEnd').textContent = 'Manche ' + Math.min(CU.end + 1, CU.ends) + '/' + CU.ends;
   const el = $('cuTurn'); el.textContent = '';
   const mine = CU.turnId === me.id;
   if (CU.turnId){
@@ -4008,14 +4070,14 @@ function curlHeader(){
     const t = document.createElement('span');
     t.textContent = mine ? (CU.ph === 'run' ? 'Balayez !' : 'À vous de lancer !') : (CU.ph === 'run' ? 'Lancer de ' : 'Tour de ') + cuName(CU.turnId);
     el.append(d, t);
-  } else el.textContent = CU.ph === 'score' ? 'Fin de la mène' : 'Préparation…';
+  } else el.textContent = CU.ph === 'score' ? 'Fin de la manche' : 'Préparation…';
   el.classList.toggle('mine', mine);
   $('cuCtl').classList.toggle('off', !(mine && CU.ph === 'aim'));
   $('cuHelp').textContent = mine && CU.ph === 'aim'
     ? 'Tirez vers l\'arrière depuis n\'importe où sur la piste, puis relâchez : plus vous tirez, plus c\'est fort. L\'effet fait tourner la pierre en fin de course.'
     : mine && CU.ph === 'run'
     ? 'Frottez la glace devant la pierre (glissez vite le doigt ou la souris, ou maintenez Espace) : elle va plus loin et tourne moins.'
-    : 'À la fin de la mène, le joueur le plus proche du centre marque 1 point par pierre mieux placée que la meilleure des autres.';
+    : 'À la fin de la manche, le joueur le plus proche du centre marque 1 point par pierre mieux placée que la meilleure des autres.';
 }
 function syncCurlBtns(){ $('cuL').setAttribute('aria-pressed', String(CU.curl < 0)); $('cuR').setAttribute('aria-pressed', String(CU.curl > 0)); }
 $('cuL').onclick = () => { if (CU){ CU.curl = -1; syncCurlBtns(); } };
@@ -4082,7 +4144,7 @@ function curlRecv(m){
         cuToast(p.name + ' marque ' + m.pts + ' point' + (m.pts > 1 ? 's' : ''));
         boom('+' + m.pts + ' !', { size:46, x:.5, y:CU_TEE/CU_H + .02, pal:p.id === me.id ? BOOM_COLORS[0] : BOOM_COLORS[3], ms:1400 });
         sfx(p.id === me.id ? 'finish' : 'ok');
-      } else { cuToast('Mène blanche : aucune pierre dans la maison'); boom('BLANCHE !', { size:34, x:.5, y:.25, pal:BOOM_COLORS[1], ms:1200 }); }
+      } else { cuToast('Manche blanche : aucune pierre dans la maison'); boom('BLANCHE !', { size:34, x:.5, y:.25, pal:BOOM_COLORS[1], ms:1200 }); }
       renderCuPlayers(); curlHeader();
       break;
     }
@@ -8481,7 +8543,7 @@ function gpBreed(){
 // balanced by simulating hundreds of robot races: each star is worth about the same
 const GP_ACC = [0, 1.15, 1.45, 1.75, 2.05], GP_VMAX = [0, 36.17, 36.59, 37.01, 37.43], GP_LAT = [0, 1.7, 2.3, 2.9, 3.5];
 const GP_STR = 400, GP_RAD = 111.4, GP_LAP = 2*GP_STR + 2*Math.PI*GP_RAD, GP_DIST = 3000, GP_START = 300;
-const GP_LANE = 1.45, GP_W = 12.2, GP_RUNNERS = 8, GP_PICK = 20, GP_K = 20;   // GP_K: pixels per metre on screen
+const GP_GAP = 3.6, GP_LANE = 1.45, GP_W = 12.2, GP_RUNNERS = 8, GP_PICK = 20, GP_K = 20;   // GP_K: pixels per metre on screen
 const GP_STRATS = ['front', 'stalker', 'closer', 'pacer'];
 const GP_STRAT_NAMES = { front:'meneur', stalker:'planqué', closer:'finisseur', pacer:'régulier' };
 let HGP = null, GP = null;
@@ -8566,25 +8628,25 @@ function gpStep(dt){
       if (o === h) continue;
       const ds = o.s - h.s;
       if (ds > 0 && ds < 25) anyAhead = true;
-      if (ds > 0 && ds < 8 && Math.abs(o.lat - h.lat) < 1.25 && ds < g){ g = ds; A = o; }
+      if (ds > 0 && ds < 11 && Math.abs(o.lat - h.lat) < 1.25 && ds < g){ g = ds; A = o; }
     }
-    h.draft = !!A && g > .3 && g <= 7 && !h.fin;
-    h.blocked = !!A && g < 2.8 && !h.fin;
+    h.draft = !!A && g <= GP_GAP + 5 && !h.fin;
+    h.blocked = !!A && g < GP_GAP + 1.4 && !h.fin;
     let push = h.push && !h.tired && h.st > 0 && !h.fin;
     const brake = h.brake && !push && !h.fin;          // easing off: drop back to a canter, catch your breath fast
     const cruise = h.vmax*.82, cap = h.tired ? h.vmax*.8 : h.vmax;
     let a = 0;
     if (h.fin) a = h.v > 12 ? -3 : 0;
-    else if (push) a = h.ak + .55;
+    else if (push) a = h.v < cruise ? h.ak*1.5 + 1.4 : h.ak + .55;      // asking for the gallop below cruising speed (the start, after a check): a real burst
     else if (brake) a = h.v > h.vmax*.6 ? -4.5 : 0;
-    else a = h.v < cruise ? 2 + h.ak*.3 : -1.1;
+    else a = h.v < cruise ? 1.3 + h.ak*.25 : -1.1;                      // left alone, the horse picks up speed calmly
     if (h.draft && A.acc > 0 && !h.fin) a += A.acc/3;                       // slipstream: a third of the horse in front's surge
     const v0 = h.v;
     h.v = Math.max(0, h.v + a*dt);
     if (h.v > cap) h.v = Math.max(cap, v0 - 3*dt);                          // tired: the speed fades, it does not drop at once
     if (!push && h.v > cruise && a > 0) h.v = Math.max(cruise, v0);
     if (brake && h.draft && a > 0) h.v = Math.min(h.v, v0);                // easing off ignores the slipstream surge      // the free surge never carries above cruise without asking
-    if (h.blocked) h.v = Math.min(h.v, A.v + (g - 2.2)*2.5);              // stuck behind: you cannot go through him
+    if (h.blocked) h.v = Math.max(Math.min(h.v, A.v + (g - GP_GAP)*1.2), Math.min(v0, A.v) - 7*dt);   // stuck behind: ease down to his pace, never a dead stop
     h.acc = (h.v - v0)/dt;
     // stamina
     if (push){ h.st -= (h.v < h.vmax - .05 ? 7 : 4.5) * (h.draft && A.push ? .65 : 1) / h.fm * dt; if (h.st <= 0){ h.st = 0; h.tired = true; } }
@@ -8593,13 +8655,14 @@ function gpStep(dt){
     // sideways, blocked by a horse alongside
     if (h.steer && !h.fin){
       const nl = Math.max(.3, Math.min(GP_W - .7, h.lat + h.steer*h.hand*dt));
-      const hit = R.some(o => o !== h && Math.abs(o.s - h.s) < 2.7 && Math.abs(o.lat - nl) < 1.2 && Math.abs(o.lat - nl) < Math.abs(o.lat - h.lat));
+      const hit = R.some(o => o !== h && Math.abs(o.s - h.s) < GP_GAP && Math.abs(o.lat - nl) < 1.2 && Math.abs(o.lat - nl) < Math.abs(o.lat - h.lat));
       if (!hit) h.lat = nl;
     }
     // along the track: wider on the bends costs ground
     // the bends: wider costs ground, and a handy horse corners better
     const r = gpRail(GP_START + h.s), f = r.bend ? GP_RAD/(GP_RAD + h.lat + .8) * (.915 + .022*GP_HORSES[h.h].s[2]) : 1;
     h.s += h.v*f*dt;
+    if (A && !A.fin && !h.fin && h.s > A.s - GP_GAP){ h.s = Math.max(h.s - h.v*f*dt, A.s - GP_GAP); h.v = Math.min(h.v, A.v); }   // never through the horse in front
     if (!h.fin && h.s >= GP_DIST){ h.fin = HGP.t; h.place = HGP.order.length + 1; HGP.order.push(h.id); broadcast({ t:'gp_fin', id:h.id, place:h.place, time:Math.round(HGP.t*100)/100 }); }
   }
 }
@@ -9313,6 +9376,118 @@ $('stBack').onclick = () => { show('scrMenu'); };
 $('stRefresh').onclick = () => stLoad();
 for (const b of $('stRange').querySelectorAll('button')) b.onclick = () => { ST.days = +b.dataset.d; stLoad(); };
 
+
+// ================= before each game: the rules in 2-3 slides, then everyone taps "Prêt" =================
+// The creator's "start" opens this briefing for the whole room; the game really starts once every player is ready
+// (or when the creator decides not to wait). "Rejouer" skips it: everybody already knows the game.
+const BRIEF = {
+  tetris:{ ctl:[['📱', 'Boutons sous le puits : ↻ tourner, ← → déplacer, ↓ descendre.'], ['💻', '← → déplacer · ↓ descendre · ↑ ou X tourner · Z tourner à gauche · Espace chute · C réserve. Souris : la pièce suit le curseur, clic pour tourner, molette pour descendre, clic droit pour la chute.']],
+    tip:'Une ligne effacée envoie des briques fendues aux autres. Effacez une ligne collée à une brique fendue : elle repart chez celui qui l\'a envoyée.' },
+  pong:{ ctl:[['📱', 'Glissez le doigt sur le terrain, ou sur la barre en dessous, pour déplacer votre gardien.'], ['💻', '← → ou A D, ou la souris : cliquez et glissez sur le terrain.']],
+    tip:'5 vies chacun : chaque but encaissé en coûte une. Le dernier gardien debout gagne.' },
+  derby:{ ctl:[['📱', 'Repassez la figure d\'un seul trait au doigt, en partant du point vert.'], ['💻', 'Pareil à la souris : cliquez sur le point vert et tracez sans relâcher.']],
+    tip:'Restez au centre de la bande bleue : plus le tracé est propre, plus votre cheval avance.' },
+  naval:{ ctl:[['📱', 'À votre tour, touchez une case de la mer pour tirer au canon.'], ['💻', 'À votre tour, cliquez une case.']],
+    tip:'Dans l\'eau, un chiffre indique combien de cases de bateau entourent la case (diagonales comprises). Vous seul le voyez.' },
+  mole:{ ctl:[['📱', 'Touchez vite les taupes des autres quand elles sortent.'], ['💻', 'Cliquez vite les taupes des autres quand elles sortent.']],
+    tip:'Chaque taupe a la couleur et l\'accessoire de son joueur : ne tapez pas les vôtres.' },
+  curling:{ ctl:[['📱', 'Tirez vers l\'arrière depuis la piste puis relâchez : plus vous tirez, plus c\'est fort. Choisissez l\'effet avec les boutons. Pendant la glissade, frottez la glace du doigt.'], ['💻', 'Même geste à la souris (cliquer, tirer, relâcher). Pour frotter : glissez vite la souris ou maintenez Espace.']],
+    tip:'À chaque manche, le plus proche du centre marque 1 point par pierre mieux placée que la meilleure des autres.' },
+  chairs:{ ctl:[['📱', 'Quand le disque s\'arrête, touchez vite une chaise libre.'], ['💻', 'Quand le disque s\'arrête, cliquez vite une chaise libre.']],
+    tip:'Toucher une chaise pendant la musique coûte 1 s de pénalité. Attention aux faux arrêts !' },
+  master:{ ctl:[['📱', 'Touchez 4 couleurs différentes, puis validez votre essai.'], ['💻', 'Cliquez les couleurs, ou tapez 1 à 6 · Retour arrière efface · Entrée valide.']],
+    tip:'Pion noir : bonne couleur bien placée. Pion blanc : bonne couleur mal placée. Le premier qui trouve marque le plus.' },
+  kabaddi:{ ctl:[['📱', 'Posez le doigt n\'importe où et glissez : c\'est un joystick. Attaquant : gardez le doigt appuyé pour retenir votre souffle.'], ['💻', 'Flèches ou ZQSD pour courir, Espace pour retenir le souffle. La souris marche aussi : cliquez, maintenez et glissez.']],
+    tip:'Attaquant : touchez des défenseurs puis rentrez dans votre camp avant la fin du souffle. Défenseurs : encerclez-le à plusieurs.' },
+  dodge:{ ctl:[['📱', 'Glissez pour courir. Passez sur une balle pour la ramasser, touchez brièvement le terrain pour la lancer. Bouton « Attraper » au bon moment.'], ['💻', 'Flèches ou ZQSD · Espace lancer · E attraper. La souris marche comme le doigt.']],
+    tip:'Une balle attrapée fait perdre un cœur au lanceur.' },
+  tank:{ ctl:[['📱', 'Pilote : glissez, le char tourne puis roule dans cette direction. Canonnier : glissez pour la tourelle, touchez brièvement ou « FEU ! » pour tirer.'], ['💻', 'Pilote : flèches ou ZQSD. Canonnier : visez avec la souris et cliquez pour tirer, ou ← → et Espace.']],
+    tip:'Deux par char, l\'un pilote, l\'autre tire. Interdit de se parler : devinez ce que fait votre équipier !' },
+  sheep:{ ctl:[['📱', 'Glissez pour courir. « Ouaf ! » (bouton ou touche brève) fait détaler les moutons proches et chasse le loup.'], ['💻', 'Flèches ou ZQSD pour courir, Espace pour aboyer. La souris marche comme le doigt.']],
+    tip:'En équipe : rabattez le troupeau dans l\'enclos avant le coucher du soleil.' },
+  drakkar:{ ctl:[['📱', 'Un coup de rame par BOUM du tambour, en alternant les boutons GAUCHE et DROITE.'], ['💻', '← et → en alternance, en rythme. Ou cliquez les boutons.']],
+    tip:'Le tambour accélère quand tout l\'équipage est synchro : calez-vous ensemble.' },
+  lumber:{ ctl:[['📱', '1. Touchez le jardin pour choisir où tombe l\'arbre, puis validez. 2. Sciez en suivant les pointillés : l\'entaille d\'un seul geste, puis le trait d\'abattage.'], ['💻', 'Tout à la souris (cliquer et glisser), ou au clavier : ← → viser, Entrée valider, Espace scier, ↑ ↓ corriger.']],
+    tip:'Ne rien écraser ! Viser une ouverture étroite, ou tomber au ras d\'un obstacle avec une coupe propre, rapporte un gros bonus.' },
+  agility:{ ctl:[['📱', 'Haie et pneu : un tap quand le cercle est vert. Slalom : tracez le zigzag. Tunnel : doigt sur le chien, glissez. Passerelle : restez appuyé, lâchez sur le jaune. Table : un tap puis plus rien.'], ['💻', 'Les mêmes gestes à la souris (clic, clic maintenu, glisser).']],
+    tip:'Entre les obstacles le chien court seul. Une consigne s\'affiche avant chaque obstacle.' },
+  galop:{ ctl:[['📱', 'Choisissez un cheval. ◀ ▶ pour vous décaler, GALOP pour accélérer (coûte de l\'énergie), RALENTIR pour souffler.'], ['💻', '← → se décaler · ↑ ou Espace galop · ↓ ralentir. Ou cliquez les boutons.']],
+    tip:'Partir au galop donne un départ rapide mais entame l\'énergie. Collé derrière un cheval, vous récupérez plus vite.' }
+};
+let HB = null, BR = null;
+// ---- host ----
+function hostStart(){
+  if (!me.host || phase !== 'lobby' || HB) return;
+  HB = { game:gameKind, ready:new Set() };
+  broadcast({ t:'brief', game:gameKind, ready:[] });
+}
+function briefReady(id){
+  if (!HB || phase !== 'lobby') return;
+  HB.ready.add(id);
+  broadcast({ t:'brief_st', ready:[...HB.ready] });
+  briefCheck();
+}
+function briefCheck(){
+  if (!HB) return;
+  if (players.every(p => p.bot || HB.ready.has(p.id))){ HB = null; setTimeout(() => { if (phase === 'lobby') hostLaunch(); }, 350); }
+}
+function briefCancel(){ if (HB){ HB = null; broadcast({ t:'brief_off' }); } }
+// ---- everyone ----
+function openBrief(game, ready){
+  const B = BRIEF[game]; if (!B){ closeBrief(); return; }
+  BR = { game, i:0, ready:new Set(ready || []), n:B.tip ? 3 : 2 };
+  $('brTitle').textContent = GAME_NAMES[game] || '';
+  const tr0 = $('brTrack'); tr0.textContent = '';
+  const slide = (title, body) => { const s = document.createElement('div'); s.className = 'brslide'; const h = document.createElement('h3'); h.textContent = title; s.append(h, ...body); tr0.append(s); };
+  const im = document.createElement('img'); im.className = 'brart'; im.alt = ''; im.src = gameImg(game);
+  const p1 = document.createElement('p'); p1.textContent = GAME_DESC[game] || '';
+  slide('Le principe', [im, p1]);
+  const rows = B.ctl.map(([ic, t]) => { const r = document.createElement('div'); r.className = 'brctl'; const i = document.createElement('span'); i.className = 'bric'; i.textContent = ic; const l = document.createElement('div'); const k = document.createElement('b'); k.textContent = ic === '📱' ? 'Téléphone' : 'Ordinateur'; const x = document.createElement('p'); x.textContent = t; l.append(k, x); r.append(i, l); return r; });
+  slide('Les commandes', rows);
+  if (B.tip){ const p = document.createElement('p'); p.className = 'brtip'; p.textContent = B.tip; const big = document.createElement('div'); big.className = 'brbig'; big.textContent = '💡'; slide('L\'astuce', [big, p]); }
+  const dots = $('brDots'); dots.textContent = '';
+  for (let k = 0; k < BR.n; k++){ const d = document.createElement('button'); d.type = 'button'; d.setAttribute('aria-label', String(k + 1)); d.onclick = () => briefGo(k); dots.append(d); }
+  briefGo(0); briefStatus();
+  $('brClose').hidden = !me.host; $('briefPop').hidden = false; closeGameSheet();
+}
+function briefGo(k){
+  if (!BR) return;
+  BR.i = Math.max(0, Math.min(BR.n - 1, k));
+  $('brTrack').style.transform = 'translateX(' + (-100*BR.i) + '%)';
+  [...$('brDots').children].forEach((d, j) => d.classList.toggle('on', j === BR.i));
+  $('brPrev').disabled = BR.i === 0; $('brNext').disabled = BR.i === BR.n - 1;
+}
+function briefStatus(){
+  if (!BR) return;
+  const mine = BR.ready.has(me.id);
+  $('brReady').disabled = mine; $('brReady').textContent = mine ? '✔ Vous êtes prêt' : '✔ Prêt !';
+  const waiting = players.filter(p => !p.bot && !BR.ready.has(p.id));
+  const w = $('brWait'); w.textContent = '';
+  if (mine && waiting.length){
+    const t = document.createElement('b'); t.textContent = 'On attend :'; w.append(t);
+    for (const p of waiting){ const c = document.createElement('span'); c.className = 'brwho'; const d = document.createElement('i'); d.style.background = p.color; const n = document.createElement('span'); n.textContent = p.name; n.setAttribute('translate', 'no'); c.append(d, n); w.append(c); }
+  } else if (!mine){ const t = document.createElement('span'); t.textContent = BR.ready.size ? BR.ready.size + ' joueur' + (BR.ready.size > 1 ? 's' : '') + ' prêt' + (BR.ready.size > 1 ? 's' : '') + ' sur ' + players.length : 'Lisez les règles, puis touchez « Prêt ».'; w.append(t); }
+  $('brForce').hidden = !(me.host && mine && waiting.length);
+}
+function closeBrief(){ BR = null; $('briefPop').hidden = true; }
+$('brPrev').onclick = () => briefGo(BR ? BR.i - 1 : 0);
+$('brNext').onclick = () => briefGo(BR ? BR.i + 1 : 0);
+$('brReady').onclick = () => {
+  if (!BR) return;
+  BR.ready.add(me.id); briefStatus(); sfx('ok');
+  if (me.host) briefReady('h'); else toHost({ t:'ready' });
+};
+$('brForce').onclick = () => { if (!me.host || !HB) return; HB = null; hostLaunch(); };
+$('brClose').onclick = () => { if (me.host) briefCancel(); else closeBrief(); };
+// swipe between slides
+(() => {
+  let x0 = null;
+  const vp = $('brView');
+  vp.addEventListener('pointerdown', e => { x0 = e.clientX; });
+  vp.addEventListener('pointerup', e => { if (x0 == null || !BR) return; const dx = e.clientX - x0; x0 = null; if (Math.abs(dx) > 40) briefGo(BR.i + (dx < 0 ? 1 : -1)); });
+  addEventListener('keydown', e => { if (!BR || $('briefPop').hidden) return; if (e.key === 'ArrowRight') briefGo(BR.i + 1); else if (e.key === 'ArrowLeft') briefGo(BR.i - 1); else if (e.key === 'Enter' && !$('brReady').disabled){ e.preventDefault(); $('brReady').click(); } });
+})();
+
 function countBeep(n){
   if (n === lastCountShown) return;
   lastCountShown = n;
@@ -9600,7 +9775,7 @@ function backToLobby(){
   abortArmed = false; syncAbort();
 }
 $('btnAgain').onclick = backToLobby;
-$('btnReplay').onclick = () => { if (!me.host) return; backToLobby(); if (phase === 'lobby') hostStart(); };   // same game, same players, straight away
+$('btnReplay').onclick = () => { if (!me.host) return; backToLobby(); if (phase === 'lobby') hostLaunch(); };   // same game, same players, straight away
 // creator only: stop the current game and bring everyone back to the lobby (two taps)
 let abortArmed = false, abortT = null;
 function syncAbort(){
