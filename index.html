@@ -106,6 +106,28 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .tiles button:disabled[aria-pressed="false"] img{filter:saturate(.5)}
 .plist{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
 .plist li{display:flex;align-items:center;gap:7px;padding:5px 12px 5px 6px;background:var(--panel);border:3px solid var(--line);border-radius:20px;font-weight:800}
+.stcard{max-width:680px;gap:12px}
+.sthead{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.sthead h2{font-size:28px}
+.stkeybox{display:flex;flex-direction:column;gap:10px}
+.stkeybox p{margin:0;font-size:14px}
+.strange{display:flex;gap:8px;flex-wrap:wrap}
+.strange button{padding:6px 12px;font-size:14px;background:#fff;color:#000}
+.strange button[aria-pressed="true"]{background:var(--accent);color:#fff}
+.stmsg{margin:0;font-size:13px;color:var(--muted);font-weight:700}
+.stkpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stkpi{border:3px solid var(--line);box-shadow:3px 3px 0 var(--line);padding:8px;display:flex;flex-direction:column;background:#fff}
+.stkpi b{font-family:var(--display);font-weight:400;font-size:30px;line-height:1;color:var(--blue)}
+.stkpi span{font-size:12px;font-weight:800}
+#scrStats h3{margin:8px 0 0;font-size:16px}
+#stChart{width:100%;height:auto;border:3px solid var(--line)}
+.strow{display:grid;grid-template-columns:minmax(90px,38%) 1fr auto;gap:8px;align-items:center;font-size:13px;font-weight:700;margin:3px 0}
+.stl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stbar{height:14px;border:2px solid var(--line);background:#fff}
+.stbar i{display:block;height:100%;background:var(--blue)}
+.strow b{min-width:34px;text-align:right}
+.stnone{margin:0;font-size:13px;color:var(--muted)}
+@media (max-width:560px){.stkpis{grid-template-columns:repeat(2,1fr)}}
 .lobbytip{margin:-4px 0 0;font-size:13px;color:var(--muted);font-weight:700}
 .ppanel{background:var(--panel);border:3px solid var(--line);box-shadow:5px 5px 0 var(--line);padding:10px 12px 12px;display:flex;flex-direction:column;gap:10px}
 .pphead{display:flex;align-items:center;justify-content:space-between;gap:10px}
@@ -526,7 +548,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
       <button id="btnCreate" type="button">Créer un salon</button>
       <div class="sep">J'ai un code</div>
       <div class="row">
-        <input id="codeIn" maxlength="4" placeholder="CODE" aria-label="Code du salon" autocomplete="off" autocapitalize="characters">
+        <input id="codeIn" maxlength="6" placeholder="CODE" aria-label="Code du salon" autocomplete="off" autocapitalize="characters">
         <button id="btnJoin" class="ghost" type="button">Entrer</button>
       </div>
       <button id="btnMultiBack" class="ghost backlink" type="button">← Retour</button>
@@ -548,6 +570,33 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
       <button id="btnLang" class="ghost" type="button" translate="no" aria-label="English" title="English">EN</button>
     </div>
     <p class="legal"><a href="legal.html">Mentions légales et confidentialité</a></p>
+  </div>
+</section>
+
+<!-- HIDDEN DASHBOARD -->
+<section id="scrStats" class="center" hidden translate="no">
+  <div class="card stcard">
+    <div class="sthead"><h2>📊 Tableau de bord</h2><button id="stBack" class="ghost" type="button">← Menu</button></div>
+    <div id="stKeyBox" class="stkeybox">
+      <p>Collez une clé d'API GoatCounter (menu de votre compte, puis API). Elle reste uniquement dans ce navigateur, jamais dans le code du site.</p>
+      <input id="stKeyIn" type="password" autocomplete="off" placeholder="Clé d'API GoatCounter">
+      <button id="stSave" type="button">Enregistrer la clé</button>
+    </div>
+    <div id="stBody" hidden>
+      <div class="strange" id="stRange"><button data-d="1" type="button">24 h</button><button data-d="7" type="button">7 j</button><button data-d="30" type="button">30 j</button><button data-d="90" type="button">90 j</button><button id="stRefresh" class="ghost" type="button">↻</button></div>
+      <p class="stmsg" id="stMsg"></p>
+      <div class="stkpis" id="stKpis"></div>
+      <h3>Visites par jour</h3><canvas id="stChart" width="640" height="220"></canvas>
+      <h3>Parcours</h3><div id="stFunnel"></div>
+      <h3>Parties par jeu</h3><div id="stGames"></div>
+      <h3>Taille des parties</h3><div id="stSizes"></div>
+      <h3>Autres événements</h3><div id="stEvents"></div>
+      <h3>D'où viennent les visiteurs</h3><div id="stRefs"></div>
+      <h3>Pays</h3><div id="stLocs"></div>
+      <h3>Appareils</h3><div id="stSys"></div>
+      <h3>Pages</h3><div id="stPages"></div>
+      <button id="stForget" class="ghost" type="button">Oublier la clé sur cet appareil</button>
+    </div>
   </div>
 </section>
 
@@ -1115,7 +1164,7 @@ const GAME_DESC = {
 
 const cleanName = s => String(s || '').replace(/[\u0000-\u001f<>]/g,'').trim().slice(0,14) || (LANG === 'en' ? 'Player' : 'Joueur');
 const genCode = () => { const a='ABCDEFGHJKMNPQRSTUVWXYZ23456789'; let s=''; for(let i=0;i<4;i++) s+=a[Math.floor(Math.random()*a.length)]; return s; };
-const show = id => { for (const s of ['scrMenu','scrLobby','scrGame','scrPong','scrDerby','scrNaval','scrMole','scrCurl','scrChairs','scrMaster','scrKabaddi','scrDodge','scrTank','scrSheep','scrDrakkar','scrLumber','scrAgility','scrGalop']) $(s).hidden = s !== id; if (id === 'scrKabaddi') try { window.scrollTo(0, 0); } catch(_){} document.documentElement.classList.toggle('joyon', ['scrKabaddi','scrDodge','scrTank','scrSheep'].includes(id)); };
+const show = id => { for (const s of ['scrMenu','scrStats','scrLobby','scrGame','scrPong','scrDerby','scrNaval','scrMole','scrCurl','scrChairs','scrMaster','scrKabaddi','scrDodge','scrTank','scrSheep','scrDrakkar','scrLumber','scrAgility','scrGalop']) $(s).hidden = s !== id; if (id === 'scrKabaddi') try { window.scrollTo(0, 0); } catch(_){} document.documentElement.classList.toggle('joyon', ['scrKabaddi','scrDodge','scrTank','scrSheep'].includes(id)); };
 const store = { get(k){ try { return localStorage.getItem(k); } catch(_) { return null; } }, set(k,v){ try { localStorage.setItem(k,v); } catch(_){} } };
 
 $('nameIn').value = store.get('tm-name') || ((LANG === 'en' ? 'Player' : 'Joueur') + Math.floor(Math.random()*90+10));
@@ -9089,6 +9138,111 @@ $('btnCoffee').addEventListener('click', () => track('clic-cafe'));
 document.querySelector('.coffeeline a').addEventListener('click', () => track('clic-cafe-fin'));
 $('btnIdea').addEventListener('click', () => track('clic-idee'));
 
+
+// ================= hidden dashboard (code 111012 in "J'ai un code"): GoatCounter figures =================
+// The API key is never in the site's code: it is typed once and kept only in this browser (localStorage).
+const ST_KEY = 'ba-gc-key', ST_SECRET = '111012';
+const stApi = () => NET_CFG.goatcounter.replace(/\/count\/?$/, '') + '/api/v0';
+let ST = { days:30, busy:false };
+function stKey(){ try { return localStorage.getItem(ST_KEY) || ''; } catch(_){ return ''; } }
+function openStats(){
+  show('scrStats'); $('stKeyBox').hidden = !!stKey(); $('stBody').hidden = !stKey();
+  if (stKey()) stLoad();
+}
+const stSleep = ms => new Promise(r => setTimeout(r, ms));
+async function stGet(path, q){
+  const u = new URL(stApi() + path);
+  for (const [k, v] of Object.entries(q || {})) u.searchParams.set(k, v);
+  const r = await fetch(u, { headers:{ Authorization:'Bearer ' + stKey(), 'Content-Type':'application/json' } });
+  if (r.status === 401 || r.status === 403) throw new Error('clé');
+  if (r.status === 429){ await stSleep(1200); return stGet(path, q); }
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  await stSleep(260);                                                      // 4 requests per second at most
+  return r.json();
+}
+const stIso = d => d.toISOString().slice(0, 19) + 'Z';
+async function stLoad(){
+  if (ST.busy) return; ST.busy = true;
+  $('stMsg').textContent = 'Chargement…';
+  for (const b of $('stRange').querySelectorAll('button')) b.setAttribute('aria-pressed', String(+b.dataset.d === ST.days));
+  const end = new Date(), start = new Date(end - ST.days*864e5), q = { start:stIso(start), end:stIso(end) };
+  try {
+    const total = await stGet('/stats/total', q);
+    // every path and event, page by page
+    let hits = [], excl = [];
+    for (let k = 0; k < 4; k++){
+      const r = await stGet('/stats/hits', { ...q, limit:100, ...(excl.length ? { exclude_paths:excl.join(',') } : {}) });
+      hits = hits.concat(r.hits || []); excl = hits.map(h => h.path_id);
+      if (!r.more) break;
+    }
+    const refs = await stGet('/stats/toprefs', { ...q, limit:8 }).catch(() => ({ stats:[] }));
+    const locs = await stGet('/stats/locations', { ...q, limit:8 }).catch(() => ({ stats:[] }));
+    const sys = await stGet('/stats/systems', { ...q, limit:6 }).catch(() => ({ stats:[] }));
+    stRender(total, hits, refs.stats || [], locs.stats || [], sys.stats || []);
+    $('stMsg').textContent = 'Mis à jour à ' + new Date().toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' }) + ' · ' + ST.days + ' derniers jours';
+  } catch(e){
+    $('stMsg').textContent = e.message === 'clé' ? 'Clé refusée par GoatCounter : vérifiez-la ou ses permissions.'
+      : e instanceof TypeError ? 'Appel bloqué par le navigateur (réseau ou CORS). Si ça persiste, il faudra passer par un petit relais.' : 'Erreur : ' + e.message;
+  } finally { ST.busy = false; }
+}
+function stBars(el, rows, color){
+  el.textContent = '';
+  const max = Math.max(1, ...rows.map(r => r[1]));
+  if (!rows.length){ const p = document.createElement('p'); p.className = 'stnone'; p.textContent = 'Rien pour l\'instant.'; el.append(p); return; }
+  for (const [label, n] of rows){
+    const row = document.createElement('div'); row.className = 'strow';
+    const l = document.createElement('span'); l.className = 'stl'; l.textContent = label;
+    const bar = document.createElement('span'); bar.className = 'stbar'; const f = document.createElement('i'); f.style.width = (100*n/max) + '%'; if (color) f.style.background = color; bar.append(f);
+    const v = document.createElement('b'); v.textContent = n.toLocaleString('fr-FR');
+    row.append(l, bar, v); el.append(row);
+  }
+}
+function stRender(total, hits, refs, locs, sys){
+  const ev = hits.filter(h => h.event), pages = hits.filter(h => !h.event);
+  const evc = name => ev.filter(h => h.path === name).reduce((a, h) => a + (h.count || 0), 0);
+  const games = {}, sizes = {};
+  let solo = 0, multi = 0;
+  for (const h of ev){
+    const m = /^partie\/([a-z]+)\/(solo|(\d)j)$/.exec(h.path || ''); if (!m) continue;
+    games[m[1]] = (games[m[1]] || 0) + h.count;
+    if (m[2] === 'solo') solo += h.count; else { multi += h.count; sizes[m[3] + ' joueurs'] = (sizes[m[3] + ' joueurs'] || 0) + h.count; }
+  }
+  const visits = total.total || 0, parties = solo + multi, rooms = evc('salon-cree'), joins = evc('salon-rejoint');
+  const shares = evc('resultat-partage') + evc('resultat-telecharge') + evc('lien-partage') + evc('lien-copie');
+  const kpis = [['Visites', visits], ['Parties lancées', parties], ['Salons créés', rooms], ['Arrivées dans un salon', joins], ['Partages', shares], ['Clics café', evc('clic-cafe') + evc('clic-cafe-fin')]];
+  const kp = $('stKpis'); kp.textContent = '';
+  for (const [t, v] of kpis){ const d = document.createElement('div'); d.className = 'stkpi'; const b = document.createElement('b'); b.textContent = v.toLocaleString('fr-FR'); const s = document.createElement('span'); s.textContent = t; d.append(b, s); kp.append(d); }
+  // visits per day
+  const days = (total.stats || []).map(s => [s.day, s.daily || 0]);
+  const cv = $('stChart'), c = cv.getContext('2d'), W = cv.width, H = cv.height;
+  c.clearRect(0, 0, W, H); c.fillStyle = '#fff'; c.fillRect(0, 0, W, H);
+  const mx = Math.max(1, ...days.map(d => d[1])), bw = (W - 40)/Math.max(1, days.length);
+  c.strokeStyle = '#ddd'; c.lineWidth = 1; c.fillStyle = '#666'; c.font = '700 12px Nunito, sans-serif';
+  for (let k = 0; k <= 4; k++){ const y = H - 24 - (H - 40)*k/4; c.beginPath(); c.moveTo(34, y); c.lineTo(W, y); c.stroke(); c.fillText(String(Math.round(mx*k/4)), 2, y + 4); }
+  days.forEach(([d, n], i) => {
+    const h = (H - 40)*n/mx, x = 38 + i*bw;
+    c.fillStyle = '#1E5BFF'; c.fillRect(x, H - 24 - h, Math.max(1, bw - 2), h);
+    if (days.length <= 31 ? i % Math.ceil(days.length/7) === 0 : i % 14 === 0){ c.fillStyle = '#333'; c.fillText(d.slice(8, 10) + '/' + d.slice(5, 7), x, H - 6); }
+  });
+  stBars($('stGames'), Object.entries(games).sort((a, b) => b[1] - a[1]).map(([g, n]) => [GAME_NAMES[g] || g, n]), '#E6262B');
+  stBars($('stSizes'), [['Solo', solo], ...Object.entries(sizes).sort()], '#FFD21F');
+  stBars($('stFunnel'), [['Visites', visits], ['Salons créés + solo', rooms + evc('solo')], ['Parties lancées', parties], ['Résultats partagés', evc('resultat-partage') + evc('resultat-telecharge')]], '#12A150');
+  stBars($('stEvents'), ev.filter(h => !/^partie\//.test(h.path)).sort((a, b) => b.count - a.count).map(h => [h.path, h.count]), '#8E44FF');
+  stBars($('stRefs'), refs.map(r => [r.name || '(direct)', r.count || 0]), '#2ED3E6');
+  stBars($('stLocs'), locs.map(r => [r.name || '?', r.count || 0]), '#FF8A1F');
+  stBars($('stSys'), sys.map(r => [r.name || '?', r.count || 0]), '#8B5A2B');
+  stBars($('stPages'), pages.sort((a, b) => b.count - a.count).slice(0, 6).map(h => [h.path, h.count]));
+}
+$('stSave').onclick = () => {
+  const k = $('stKeyIn').value.trim(); if (!k) return;
+  try { localStorage.setItem(ST_KEY, k); } catch(_){}
+  $('stKeyIn').value = ''; openStats();
+};
+$('stForget').onclick = () => { try { localStorage.removeItem(ST_KEY); } catch(_){} openStats(); };
+$('stBack').onclick = () => { show('scrMenu'); };
+$('stRefresh').onclick = () => stLoad();
+for (const b of $('stRange').querySelectorAll('button')) b.onclick = () => { ST.days = +b.dataset.d; stLoad(); };
+
 function countBeep(n){
   if (n === lastCountShown) return;
   lastCountShown = n;
@@ -9293,6 +9447,7 @@ $('btnCreate').onclick = async () => { readName(); $('btnCreate').disabled = tru
 $('btnSolo').onclick = () => soloCreate();
 $('btnJoin').onclick = () => {
   const c = $('codeIn').value.trim().toUpperCase();
+  if (c === ST_SECRET){ $('codeIn').value = ''; return openStats(); }
   if (!/^[A-Z0-9]{4}$/.test(c)) return menuHint('Le code fait 4 caractères.', true);
   readName(); $('btnCreate').disabled = true; $('btnJoin').disabled = true; iceReady().then(() => guestJoin(c));
 };
