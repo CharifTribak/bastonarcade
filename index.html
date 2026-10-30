@@ -355,10 +355,13 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .salonshead{display:flex;justify-content:space-between;align-items:center;font-size:14px}
 .salonshead button{padding:2px 10px;font-size:16px}
 #salonList{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:13px}
-#salonList li{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center}
-#salonList li b{font-family:var(--display);font-weight:400;font-size:20px;letter-spacing:.06em}
-#salonList li small{color:var(--muted);display:block}
-#salonList li button{padding:4px 12px;font-size:15px}
+#salonList li{display:block}
+.salonrow{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;width:100%;text-align:left;background:#fff;color:#000;border:3px solid #000;box-shadow:3px 3px 0 #000;padding:7px 10px;font-family:var(--body);font-size:14px;letter-spacing:0;text-transform:none}
+.salonrow b{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:.06em}
+.salonrow small{color:var(--muted);display:block;font-weight:800}
+.salonrow .seats{font-weight:900;font-size:13px;padding:3px 9px;border:2px solid #000;border-radius:12px;background:#3DDC97;white-space:nowrap}
+.salonrow.full{opacity:.55;box-shadow:none;cursor:default}
+.salonrow.full .seats{background:#ddd}
 #salonList .none{color:var(--muted);display:block}
 
 /* ---- lobby colours ---- */
@@ -592,19 +595,20 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
       <button id="btnMulti" class="choice" type="button">👥 Jouer à plusieurs</button>
     </div>
     <div class="multi" id="menuMulti" hidden>
-      <button id="btnCreate" type="button">Créer un salon</button>
+      <div class="salons" id="salons" hidden>
+        <div class="salonshead"><b>Rejoindre un salon ouvert</b><button id="btnSalons" class="ghost" type="button" aria-label="Actualiser">↻</button></div>
+        <ul id="salonList"></ul>
+      </div>
       <div class="sep">J'ai un code</div>
       <div class="row">
         <input id="codeIn" maxlength="6" placeholder="CODE" aria-label="Code du salon" autocomplete="off" autocapitalize="characters">
         <button id="btnJoin" class="ghost" type="button">Entrer</button>
       </div>
+      <div class="sep">Ou bien</div>
+      <button id="btnCreate" type="button">Créer un salon</button>
       <button id="btnMultiBack" class="ghost backlink" type="button">← Retour</button>
     </div>
     <p class="hint" id="menuHint"></p>
-    <div class="salons" id="salons" hidden>
-      <div class="salonshead"><b>Salons ouverts</b><button id="btnSalons" class="ghost" aria-label="Actualiser">↻</button></div>
-      <ul id="salonList"></ul>
-    </div>
     <div class="strip" id="gameStrip" aria-label="Les jeux"><div class="striprun" id="gameStripRun"></div></div>
     <div class="gamepop" id="gamePop" hidden><div class="feature"><img id="gamePopArt" class="gameart" alt=""><div class="featbody"><h2 id="gamePopTitle"></h2><p id="gamePopDesc"></p><small>Touchez pour fermer</small></div></div></div>
     <div class="support">
@@ -1240,7 +1244,7 @@ syncHello(false);
 $('btnName').onclick = () => { syncHello(true); $('nameIn').focus(); $('nameIn').select(); };
 if (LANG === 'en') $('btnIdea').href = 'mailto:contact@bastonarcade.com?subject=Game%20idea%20for%20Baston%20Arcade&body=Game%20name%3A%0A%0AThe%20idea%20in%20a%20few%20lines%3A%0A%0ANumber%20of%20players%3A%0A%0AHow%20you%20play%20%28buttons%2C%20gestures%29%3A%0A%0A---%0ABy%20sending%20this%20idea%2C%20I%20accept%20the%20terms%20for%20game%20idea%20submissions%3A%20https%3A//bastonarcade.com/legal.html';
 const menuView = multi => { $('menuMain').hidden = multi; $('menuMulti').hidden = !multi; };
-$('btnMulti').onclick = () => { menuView(true); menuHint(''); };
+$('btnMulti').onclick = () => { menuView(true); menuHint(''); if (typeof loadSalons === 'function') loadSalons(); };
 $('btnMultiBack').onclick = () => { menuView(false); menuHint(''); };
 // the game strip: scrolls by itself, can be swiped or flung (mouse drag too), a tap opens the game's card, a second tap closes it
 (() => {
@@ -1465,15 +1469,20 @@ async function loadSalons(){
   const since = new Date(Date.now() - 90000).toISOString();
   const rows = await supa('salons?select=code,host,game,players,updated_at&updated_at=gt.' + encodeURIComponent(since) + '&order=updated_at.desc&limit=8');
   const ul = $('salonList'); ul.textContent = '';
-  if (!rows || !rows.length){ const li = document.createElement('li'); const sp = document.createElement('span'); sp.className = 'none'; sp.textContent = rows ? 'Aucun salon ouvert pour l\'instant.' : 'Liste indisponible.'; li.append(sp); ul.append(li); return; }
+  if (!rows || !rows.length){ const li = document.createElement('li'); const sp = document.createElement('span'); sp.className = 'none'; sp.textContent = rows ? 'Aucun salon ouvert pour l\'instant : créez le vôtre !' : 'Liste indisponible.'; li.append(sp); ul.append(li); return; }
+  // rooms with free seats first: joining beats opening one more empty room
+  rows.sort((a, b) => ((a.players|0) >= MAXP) - ((b.players|0) >= MAXP));
   for (const r of rows){
-    const li = document.createElement('li');
-    const c = document.createElement('b'); c.textContent = String(r.code || '').slice(0, 4);
-    const info = document.createElement('span'); info.textContent = (GAME_NAMES[r.game] || 'Jeu') + ' · ' + (r.players|0) + '/' + MAXP;
-    const sm = document.createElement('small'); sm.textContent = 'chez ' + publicName(r.host); info.append(sm);
-    const b = document.createElement('button'); b.className = 'ghost'; b.textContent = 'Rejoindre';
-    b.onclick = () => { $('codeIn').value = String(r.code || '').slice(0, 4); $('btnJoin').click(); };
-    li.append(c, info, b); ul.append(li);
+    const li = document.createElement('li'), n = r.players|0, free = Math.max(0, MAXP - n);
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'salonrow' + (free ? '' : ' full');
+    const c = document.createElement('b'); c.textContent = String(r.code || '').slice(0, 4); c.setAttribute('translate', 'no');
+    const info = document.createElement('span'); const hn = publicName(r.host); info.textContent = (/^[aeiouyàâäéèêëîïôöùûü]/i.test(hn) ? 'Salon d\'' : 'Salon de ') + hn;
+    const sm = document.createElement('small'); sm.textContent = (GAME_NAMES[r.game] || 'Jeu') + ' · ' + n + ' joueur' + (n > 1 ? 's' : '') + ' sur ' + MAXP; info.append(sm);
+    const st = document.createElement('span'); st.className = 'seats'; st.textContent = free ? free + ' place' + (free > 1 ? 's' : '') : 'Complet';
+    b.append(c, info, st);
+    if (free) b.onclick = () => { $('codeIn').value = String(r.code || '').slice(0, 4); $('btnJoin').click(); };
+    else b.setAttribute('aria-disabled', 'true');
+    li.append(b); ul.append(li);
   }
 }
 if (SUPA_ON){ $('salons').hidden = false; loadSalons(); setInterval(() => { if (phase === 'menu' && document.visibilityState === 'visible') loadSalons(); }, 15000); }
