@@ -1163,6 +1163,8 @@ const GAME_DESC = {
 };
 
 const cleanName = s => String(s || '').replace(/[\u0000-\u001f<>]/g,'').trim().slice(0,14) || (LANG === 'en' ? 'Player' : 'Joueur');
+// names shown to everyone in the public list: anything that looks like a link or an address is replaced
+const publicName = s => { const n = cleanName(s); return /https?|www|\.\s*[a-z]{2,}|@|\/\/|discord|t\.me|bit\.ly/i.test(n) ? (LANG === 'en' ? 'Player' : 'Joueur') : n; };
 const genCode = () => { const a='ABCDEFGHJKMNPQRSTUVWXYZ23456789'; let s=''; for(let i=0;i<4;i++) s+=a[Math.floor(Math.random()*a.length)]; return s; };
 const show = id => { for (const s of ['scrMenu','scrStats','scrLobby','scrGame','scrPong','scrDerby','scrNaval','scrMole','scrCurl','scrChairs','scrMaster','scrKabaddi','scrDodge','scrTank','scrSheep','scrDrakkar','scrLumber','scrAgility','scrGalop']) $(s).hidden = s !== id; if (id === 'scrKabaddi') try { window.scrollTo(0, 0); } catch(_){} document.documentElement.classList.toggle('joyon', ['scrKabaddi','scrDodge','scrTank','scrSheep'].includes(id)); };
 const store = { get(k){ try { return localStorage.getItem(k); } catch(_) { return null; } }, set(k,v){ try { localStorage.setItem(k,v); } catch(_){} } };
@@ -1377,7 +1379,7 @@ function announce(){
   if (!SUPA_ON || !net || net.solo || !me.host || phase !== 'lobby' || $('privIn').checked) return;
   annCode = net.code;
   supa('salons?on_conflict=code', { method:'POST', headers:{ Prefer:'resolution=merge-duplicates' },
-    body:JSON.stringify({ code:net.code, host:me.name, game:gameKind, players:players.length, updated_at:new Date().toISOString() }) });
+    body:JSON.stringify({ code:net.code, host:publicName(me.name), game:gameKind, players:players.length, updated_at:new Date().toISOString() }) });
 }
 function unannounce(){ if (SUPA_ON && annCode){ supa('salons?code=eq.' + annCode, { method:'DELETE', keepalive:true }); annCode = null; annKey = null; } }   // keepalive: still sent when the tab is closing
 setInterval(() => { if (net && me.host && phase === 'lobby') announce(); else if (annCode && (!net || phase !== 'lobby')) unannounce(); }, 30000);
@@ -1392,7 +1394,7 @@ async function loadSalons(){
     const li = document.createElement('li');
     const c = document.createElement('b'); c.textContent = String(r.code || '').slice(0, 4);
     const info = document.createElement('span'); info.textContent = (GAME_NAMES[r.game] || 'Jeu') + ' · ' + (r.players|0) + '/' + MAXP;
-    const sm = document.createElement('small'); sm.textContent = 'chez ' + cleanName(r.host); info.append(sm);
+    const sm = document.createElement('small'); sm.textContent = 'chez ' + publicName(r.host); info.append(sm);
     const b = document.createElement('button'); b.className = 'ghost'; b.textContent = 'Rejoindre';
     b.onclick = () => { $('codeIn').value = String(r.code || '').slice(0, 4); $('btnJoin').click(); };
     li.append(c, info, b); ul.append(li);
@@ -1602,7 +1604,7 @@ function clientRecv(m){
     case 'chat': addChat(m); break;
     case 'chatlog': if (Array.isArray(m.items)){ CHAT.length = 0; m.items.forEach(x => CHAT.push(x)); renderChat(); } break;
     case 'lobby':
-      players = Array.isArray(m.players) ? m.players : [];
+      players = (Array.isArray(m.players) ? m.players : []).slice(0, MAXP).filter(p => p && typeof p.id === 'string').map(p => ({ ...p, id:p.id.slice(0, 12), name:cleanName(p.name), color:PALETTE.includes(p.color) ? p.color : '#888' }));
       if (m.you) me.id = m.you;
       if (['tetris','pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber','agility','galop'].includes(m.game)) gameKind = m.game;
       if (phase === 'menu' || phase === 'lobby' || m.back){
