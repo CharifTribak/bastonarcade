@@ -127,6 +127,8 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .stbar i{display:block;height:100%;background:var(--blue)}
 .strow b{min-width:34px;text-align:right}
 .stnone{margin:0;font-size:13px;color:var(--muted)}
+.stgauge{height:18px;border:3px solid var(--line);background:#fff;margin:8px 0}
+.stgauge i{display:block;height:100%}
 @media (max-width:560px){.stkpis{grid-template-columns:repeat(2,1fr)}}
 .lobbytip{margin:-4px 0 0;font-size:13px;color:var(--muted);font-weight:700}
 .ppanel{background:var(--panel);border:3px solid var(--line);box-shadow:5px 5px 0 var(--line);padding:10px 12px 12px;display:flex;flex-direction:column;gap:10px}
@@ -595,7 +597,11 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
       <h3>Pays</h3><div id="stLocs"></div>
       <h3>Appareils</h3><div id="stSys"></div>
       <h3>Pages</h3><div id="stPages"></div>
-      <button id="stForget" class="ghost" type="button">Oublier la clé sur cet appareil</button>
+      <h3>Relais Metered (connexions difficiles)</h3>
+      <div id="stTurnKeyBox" class="stkeybox"><p>Facultatif : collez la clé secrète Metered (tableau de bord Metered, rubrique des clés secrètes). Elle reste uniquement dans ce navigateur.</p>
+        <input id="stTurnIn" type="password" autocomplete="off" placeholder="Clé secrète Metered"><button id="stTurnSave" class="ghost" type="button">Enregistrer la clé Metered</button></div>
+      <div id="stTurn"></div>
+      <button id="stForget" class="ghost" type="button">Oublier les clés sur cet appareil</button>
     </div>
   </div>
 </section>
@@ -9202,6 +9208,7 @@ async function stLoad(){
     const sys = await stGet('/stats/systems', { ...q, limit:6 }).catch(() => ({ stats:[] }));
     step('mise en forme');
     stRender(total, hits, refs.stats || [], locs.stats || [], sys.stats || []);
+    stTurnLoad();
     $('stMsg').textContent = 'Mis à jour à ' + new Date().toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' }) + ' · ' + ST.days + ' derniers jours';
   } catch(e){
     $('stMsg').textContent = e.message === 'clé' ? 'Clé refusée par GoatCounter : vérifiez-la ou ses permissions.'
@@ -9261,7 +9268,47 @@ $('stSave').onclick = () => {
   try { localStorage.setItem(ST_KEY, k); } catch(_){}
   $('stKeyIn').value = ''; openStats();
 };
-$('stForget').onclick = () => { try { localStorage.removeItem(ST_KEY); } catch(_){} openStats(); };
+$('stForget').onclick = () => { try { localStorage.removeItem(ST_KEY); localStorage.removeItem(ST_TURN); } catch(_){} openStats(); };
+// Metered relay: quota and daily use (secret key typed once, kept only in this browser)
+const ST_TURN = 'ba-metered-secret';
+function stTurnKey(){ try { return localStorage.getItem(ST_TURN) || ''; } catch(_){ return ''; } }
+async function stTurnLoad(){
+  const box = $('stTurn'); box.textContent = ''; $('stTurnKeyBox').hidden = !!stTurnKey();
+  if (!stTurnKey()) return;
+  const msg = t => { const p = document.createElement('p'); p.className = 'stmsg'; p.textContent = t; box.append(p); };
+  const base = 'https://' + NET_CFG.meteredApp + '.metered.live/api/v1/turn/';
+  const get = async path => {
+    const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 15000);
+    try {
+      const r = await fetch(base + path + '?secretKey=' + encodeURIComponent(stTurnKey()), { signal:ctl.signal, cache:'no-store' });
+      if (r.status === 401) throw new Error('clé Metered refusée');
+      if (!r.ok) throw new Error('HTTP ' + r.status + ' sur ' + path);
+      return r.json();
+    } catch(e){ throw new Error(e.name === 'AbortError' ? 'délai dépassé sur ' + path : e.message === 'Failed to fetch' ? 'appel bloqué sur ' + path + ' (réseau ou CORS)' : e.message); }
+    finally { clearTimeout(to); }
+  };
+  try {
+    msg('Chargement du relais…');
+    const u = await get('current_usage');
+    box.textContent = '';
+    const used = +u.usageInGB || 0, quota = +u.quotaInGB || 0, pct = quota ? Math.min(100, 100*used/quota) : 0;
+    const kp = document.createElement('div'); kp.className = 'stkpis';
+    for (const [t, v] of [['Go utilisés', used.toLocaleString('fr-FR', { maximumFractionDigits:2 })], ['Quota (Go)', quota.toLocaleString('fr-FR')], ['Utilisé', Math.round(pct) + ' %']]){
+      const d = document.createElement('div'); d.className = 'stkpi'; const b = document.createElement('b'); b.textContent = v; const sp = document.createElement('span'); sp.textContent = t; d.append(b, sp); kp.append(d);
+    }
+    box.append(kp);
+    const g = document.createElement('div'); g.className = 'stgauge'; const f = document.createElement('i'); f.style.width = pct + '%'; f.style.background = pct > 80 ? '#E6262B' : pct > 50 ? '#FF8A1F' : '#12A150'; g.append(f); box.append(g);
+    if (+u.overageInGB > 0) msg('⚠ Dépassement : ' + u.overageInGB + ' Go au-delà du quota.');
+    else if (pct > 80) msg('⚠ Plus de 80 % du quota : surveillez une utilisation anormale.');
+    const days = await get('current_usage_by_date').catch(() => []);
+    if (Array.isArray(days) && days.length){
+      const h = document.createElement('div'); box.append(h);
+      stBars(h, days.slice(-14).map(d => [String(d.date || '').slice(5).split('-').reverse().join('/'), Math.round((+d.usageInGB || 0)*1000)/1000]), '#1E5BFF');
+      msg('Consommation par jour (Go), 14 derniers jours du cycle.');
+    }
+  } catch(e){ box.textContent = ''; msg('Relais : ' + e.message); }
+}
+$('stTurnSave').onclick = () => { const k = $('stTurnIn').value.trim(); if (!k) return; try { localStorage.setItem(ST_TURN, k); } catch(_){} $('stTurnIn').value = ''; stTurnLoad(); };
 $('stBack').onclick = () => { show('scrMenu'); };
 $('stRefresh').onclick = () => stLoad();
 for (const b of $('stRange').querySelectorAll('button')) b.onclick = () => { ST.days = +b.dataset.d; stLoad(); };
