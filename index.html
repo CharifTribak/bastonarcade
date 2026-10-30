@@ -363,6 +363,13 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .salonrow.full{opacity:.55;box-shadow:none;cursor:default}
 .salonrow.full .seats{background:#ddd}
 .mcard{margin-top:6px;align-items:center}
+.salons.mc1{background:#1E5BFF}
+.salons.mc1 .salonshead b,.salons.mc3 .salonshead b{color:#fff;text-shadow:1px 1px 0 #000}
+.salons.mc1 .none{color:#fff}
+.salons.mc2{background:#FFD21F}
+.salons.mc3{background:#E6262B}
+.salons.mc3 .mcardtxt{color:#fff}
+.salons .salonshead b{font-size:15px}
 .mcardtxt{flex:1;font-size:13px;font-weight:800;color:var(--muted)}
 #salonList .none{color:var(--muted);display:block}
 
@@ -597,18 +604,18 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
       <button id="btnMulti" class="choice" type="button">👥 Jouer à plusieurs</button>
     </div>
     <div class="multi" id="menuMulti" hidden>
-      <div class="salons" id="salons" hidden>
+      <div class="salons mc1" id="salons" hidden>
         <div class="salonshead"><b>Rejoindre un salon public</b><button id="btnSalons" class="ghost" type="button" aria-label="Actualiser">↻</button></div>
         <ul id="salonList"></ul>
       </div>
-      <div class="salons">
+      <div class="salons mc2">
         <div class="salonshead"><b>Rejoindre un salon public/privé par son code</b></div>
         <div class="row mcard">
           <input id="codeIn" maxlength="6" placeholder="CODE" aria-label="Code du salon" autocomplete="off" autocapitalize="characters">
           <button id="btnJoin" class="ghost" type="button">Entrer</button>
         </div>
       </div>
-      <div class="salons">
+      <div class="salons mc3">
         <div class="salonshead"><b>Créer un salon</b></div>
         <div class="row mcard"><span class="mcardtxt">Vous choisissez le jeu, les autres vous rejoignent.</span><button id="btnCreate" class="ghost" type="button">Créer</button></div>
       </div>
