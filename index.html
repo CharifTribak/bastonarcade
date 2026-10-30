@@ -518,6 +518,7 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .joy i{position:absolute;left:50%;top:50%;width:44px;height:44px;border-radius:50%;background:#FFD93B;border:3px solid #000;transform:translate(-50%,-50%)}
 #scrKabaddi,#scrDodge,#scrTank,#scrSheep{touch-action:none;user-select:none;-webkit-user-select:none}
 html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
+html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would drop you out of the room */
 @media (max-height:780px){ #scrKabaddi .hint,#scrDodge .hint,#scrTank .hint,#scrSheep .hint{display:none} }
 
 /* ---- kabaddi ---- */
@@ -560,6 +561,25 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
 .seg button[aria-pressed="true"]{background:var(--accent);color:#fff}
 .seg button:active:not(:disabled){transform:none}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:5}
+#scrEnd{padding:10px;align-items:flex-start}
+#scrEnd .card{gap:10px;padding:14px 14px 16px;max-height:calc(100dvh - 20px);overflow-y:auto;overscroll-behavior:contain;margin:auto 0}
+#scrEnd .winpanel{margin-top:20px;padding:10px 12px;gap:6px}
+#scrEnd .endburst{top:-28px}
+#scrEnd .endburst span{padding:13px 24px;font-size:24px}
+#scrEnd .wname{font-size:clamp(26px,8vw,40px);margin-top:20px}
+#scrEnd .rank td{padding:5px 5px;font-size:14px}
+#scrEnd .rank td:first-child{font-size:18px;width:28px}
+#scrEnd .rank th{padding:3px 5px}
+#scrEnd #rankNote{font-size:11.5px;margin:0;line-height:1.3}
+#scrEnd #endHint{font-size:12.5px;margin:0}
+#scrEnd #endHint:empty{display:none}
+#scrEnd .card > *{flex-shrink:0}
+@media (max-height:700px){#scrEnd #rankNote{display:none}#scrEnd .rank td{padding:3px 5px}#scrEnd .winpanel{padding:8px 10px}#scrEnd .wname{font-size:clamp(24px,7vw,34px)}.endacts{gap:8px}.endacts button{min-height:44px;padding:8px 6px}}
+.endacts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.endacts button{font-size:17px;padding:10px 6px;min-height:46px}
+.endacts button[hidden]{display:none}
+#scrEnd .coffeeline a{font-size:13px;padding:8px;box-shadow:3px 3px 0 var(--line)}
+.endquit{font-size:14px;padding:6px 10px;min-height:44px;align-self:center;box-shadow:none;border-width:2px}
 .overlay .card h1{font-size:40px;color:var(--accent);-webkit-text-stroke:1px #000}
 .board{max-width:560px;max-height:calc(100vh - 32px);overflow-y:auto}
 .rank{width:100%;overflow-x:auto}
@@ -1062,13 +1082,15 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
       <tbody id="rankBody"></tbody>
     </table></div>
     <p class="hint" id="rankNote"></p>
-    <button id="btnReplay" hidden>🔁 Rejouer à ce jeu</button>
-    <button id="btnShare" class="ghost" type="button">📤 Partager le résultat</button>
-    <button id="btnAgain">Retour au salon</button>
-    <button id="btnBoard3" class="ghost">Classement général</button>
     <p class="hint" id="endHint"></p>
+    <div class="endacts">
+      <button id="btnReplay" hidden>🔁 Rejouer</button>
+      <button id="btnAgain">Retour au salon</button>
+      <button id="btnShare" class="ghost" type="button">📤 Partager</button>
+      <button id="btnBoard3" class="ghost">🏆 Classement</button>
+    </div>
     <p class="coffeeline"><a href="https://ko-fi.com/bastonarcade" target="_blank" rel="noopener">Ça vous a plu ? Offrez un café au développeur ☕</a></p>
-    <button id="btnQuit" class="ghost">Quitter</button>
+    <button id="btnQuit" class="ghost endquit">Quitter le salon</button>
   </div>
 </div>
 
@@ -1353,6 +1375,7 @@ function teardown(){
 }
 function toMenu(msg){
   unannounce(); annKey = null;
+  try { sessionStorage.removeItem('ba-room'); } catch(_){}
   $('scrLobby').classList.remove('solo'); $('btnLeaveLobby').textContent = 'Quitter le salon';
   teardown(); phase = 'menu'; $('scrEnd').hidden = true; show('scrMenu');
   $('btnCreate').disabled = false; $('btnJoin').disabled = false;
@@ -1423,6 +1446,7 @@ function pickColor(){
 
 function hostRecv(conn, d){
   if (!d || typeof d !== 'object' || !net) return;
+  if (d.t === 'bye'){ try { conn.close(); } catch(_){} hostDrop(conn); return; }        // a guest closing or reloading the page
   if (d.t === 'hello'){
     if (conn._pid) return;
     if (phase !== 'lobby'){ conn.send({ t:'refused', why:'La partie est déjà lancée.' }); setTimeout(() => conn.close(), 400); return; }
@@ -1737,6 +1761,7 @@ function clientRecv(m){
     case 'lobby':
       players = (Array.isArray(m.players) ? m.players : []).slice(0, MAXP).filter(p => p && typeof p.id === 'string').map(p => ({ ...p, id:p.id.slice(0, 12), name:cleanName(p.name), color:PALETTE.includes(p.color) ? p.color : '#888' }));
       if (m.you) me.id = m.you;
+      if (net && !net.solo && !me.host) try { sessionStorage.setItem('ba-room', net.code); } catch(_){}   // after an accidental reload, come straight back
       if (['tetris','pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber','agility','galop'].includes(m.game)) gameKind = m.game;
       if (phase === 'menu' || phase === 'lobby' || m.back){
         phase = 'lobby'; $('scrEnd').hidden = true; G = null; PG = null; D = null; NV = null; ML = null; CU = null; MC = null; MM = null; KB = null; DB = null; TK = null; SHV = null; DK = null; if (LJ){ LJ = null; sawStop(); } AG = null; GP = null; cur = null; show('scrLobby'); renderLobby();
@@ -2124,7 +2149,10 @@ function showEnd(ranking, game){
   $('myPlace').textContent = viking ? 'Drakkars' + (iWon && win.t ? ' · ' + fmtSec(win.t) : '') : coop ? 'Les bergers · ' + ((win && win.rounds) | 0) + '/' + SH_ROUNDS + ' manches réussies' : (GAME_NAMES[game] || 'Gravats') + (mine ? ' · vous finissez ' + (mine.place === 1 ? '1er' : mine.place + 'e') + ' sur ' + ranking.length : '');
   (galop ? (t => { const el = $('gpMsg'); if (el) el.textContent = t || ''; }) : agil ? agMsg : lumber ? ljMsg : viking ? drakkarMsg : coop ? sheepMsg : tank ? tankMsg : dodge ? dodgeMsg : kab ? kabaddiMsg : master ? masterMsg : chairs ? chairsMsg : curl ? curlMsg : pong ? pongMsg : derby ? derbyMsg : naval ? navalMsg : mole ? moleMsg : setMsg)('', '');
   $('btnAgain').hidden = false; $('btnReplay').hidden = !me.host; $('btnAgain').classList.toggle('ghost', me.host);
-  $('endHint').textContent = me.host ? 'Rejouez tout de suite au même jeu avec les mêmes joueurs, ou revenez au salon pour en choisir un autre.' : 'Vous attendrez au salon que le créateur relance.';
+  $('endHint').textContent = me.host ? '' : 'Le créateur choisit la suite : rejouer ou revenir au salon.';
+  $('btnAgain').style.gridColumn = me.host ? '' : '1 / -1';
+  $('btnQuit').textContent = net && net.solo ? 'Retour au menu' : 'Quitter le salon';
+  $('scrEnd').scrollTop = 0;
   saveGame(ranking, game);
   $('scrEnd').hidden = false;
 }
@@ -9538,7 +9566,7 @@ $('btnShare').onclick = async () => {
     } else {
       const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = file.name; document.body.append(a); a.click(); a.remove();
       setTimeout(() => URL.revokeObjectURL(a.href), 4000);
-      b.textContent = tr('✔ Image enregistrée'); setTimeout(() => { b.textContent = tr('📤 Partager le résultat'); }, 2500);
+      b.textContent = tr('✔ Image enregistrée'); setTimeout(() => { b.textContent = tr('📤 Partager'); }, 2500);
       track('resultat-telecharge');
     }
   } finally { b.disabled = false; }
@@ -10077,6 +10105,10 @@ addEventListener('keydown', e => { if (e.key === 'Escape' && !$('gameSheet').hid
 for (const b of $('gamePick').querySelectorAll('button')) b.onclick = () => openGameSheet(b.dataset.g);
 function noteRecent(){}
 $('btnLeaveLobby').onclick = () => toMenu('');
+// a guest leaving the page says goodbye, so the creator frees the seat at once (and a reload does not leave a ghost)
+addEventListener('pagehide', () => { if (net && !me.host && net.conn && net.conn.open) try { net.conn.send({ t:'bye' }); } catch(_){} });
+// leaving the page by mistake while in a room: the browser asks first
+addEventListener('beforeunload', e => { if (net && !net.solo && phase !== 'menu'){ e.preventDefault(); e.returnValue = ''; } });
 // Invitation link: <page>?salon=CODE. Opening it fills the code and joins straight away when a name is already saved.
 const inviteUrl = () => location.origin + location.pathname + '?salon=' + (net && net.code || $('lobbyCode').textContent);
 let inviteT = null;
@@ -10101,6 +10133,7 @@ $('btnInvite').onclick = async () => {
 (() => {
   let c = null;
   try { c = (new URLSearchParams(location.search).get('salon') || '').trim().toUpperCase(); } catch(_){}
+  if (!c){ try { c = (sessionStorage.getItem('ba-room') || '').toUpperCase(); } catch(_){} if (c && /^[A-Z0-9]{4}$/.test(c) && store.get('tm-name')) menuHint('Retour dans le salon ' + c + '…'); }
   if (!c || !/^[A-Z0-9]{4}$/.test(c)) return;
   try { history.replaceState(null, '', location.pathname); } catch(_){}   // a reload does not rejoin
   $('codeIn').value = c; menuView(true);
