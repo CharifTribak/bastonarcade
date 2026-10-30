@@ -215,7 +215,6 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 @keyframes popin{from{transform:scale(.9);opacity:0}}
 #scrLobby.solo .codebox,#scrLobby.solo #lobbyCodeHint,#scrLobby.solo #chatField{display:none}
 .lobbyfoot{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-#scrLobby .lobby{padding-bottom:96px}
 @media (max-width:560px){#scrLobby .logosvg.small{width:min(170px,46%)}#scrLobby .burst{width:104px;height:104px}#scrLobby .burst b{font-size:30px}#scrLobby .lobby{gap:12px}#lobbyCodeHint{font-size:13px;margin:-4px 0 0}}
 .launchbar{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);width:min(440px,calc(100% - 24px));z-index:40;display:flex;gap:8px;align-items:stretch;background:var(--panel);border:3px solid var(--line);box-shadow:5px 5px 0 var(--line);padding:6px}
 .lbinfo{flex:1;min-width:0;display:flex;align-items:center;gap:8px;padding:0;background:transparent;border:0;box-shadow:none;color:var(--fg);text-align:left;font-family:var(--body);letter-spacing:0;transform:none}
@@ -226,7 +225,19 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .lbgo{flex:none;font-size:22px;padding:0 16px;box-shadow:3px 3px 0 var(--line)}
 .tiles.recent button{flex:0 0 calc((100% - 30px)/4);font-size:12px}
 .gsbtns{display:grid;grid-template-columns:1fr 1.4fr;gap:10px;margin-top:8px}
-#gsGuest{grid-template-columns:1fr}
+#gsGuest{grid-template-columns:1fr 1.4fr}
+#gsVote.on{background:#3DDC97;color:#000}
+#scrLobby #gamePick button[aria-pressed="true"]{background:var(--panel);color:var(--fg)}
+#gamePick button{position:relative}
+#gamePick button.peek{box-shadow:0 0 0 5px var(--blue),6px 6px 0 var(--line)!important;animation:peekp 1s ease-in-out infinite;z-index:1}
+@keyframes peekp{50%{box-shadow:0 0 0 5px #FFD93B,6px 6px 0 var(--line)}}
+#gamePick .vbadge{width:auto!important;overflow:visible!important;position:absolute;top:-8px;right:-8px;display:flex;align-items:center;gap:2px;background:#3DDC97;color:#000;border:3px solid var(--line);border-radius:14px;padding:1px 6px 1px 4px;font-family:var(--body);font-weight:900;font-size:13px;box-shadow:2px 2px 0 var(--line);z-index:2}
+#gamePick .vbadge i{width:10px;height:10px;border-radius:50%;border:2px solid var(--line)}
+#gamePick .vbadge.top{background:#FFD93B}
+.peekbar{width:100%;background:var(--blue);color:#fff;font-size:15px;padding:8px 10px;margin-bottom:10px;animation:popin .2s ease-out}
+.votesum{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:10px;font-weight:900;font-size:14px}
+.votesum button{font-size:13px;padding:4px 10px;background:#fff;color:#000}
+.votesum button.top{background:#FFD93B}
 #gsNote{color:var(--muted);font-weight:700;font-size:12px}
 .sheet{cursor:default}
 .big{height:64px;font-size:32px;box-shadow:6px 6px 0 var(--line)}
@@ -653,12 +664,10 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
       <p class="pphint" id="lobbyHint"></p>
     </div>
     <button class="chatping" id="chatPing" type="button" hidden>💬 <span id="chatPingTxt">Nouveau message</span> ↓</button>
-    <div class="field" id="recentBox" hidden>
-      <label>Récents</label>
-      <div class="tiles recent" id="recentPick" role="group" aria-label="Jeux récents"></div>
-    </div>
     <div class="field">
       <label id="pickLabel">Tous les jeux</label>
+      <button class="peekbar" id="peekBar" type="button" hidden>👀 <span id="peekTxt"></span></button>
+      <div class="votesum" id="voteSum" hidden></div>
     <div class="tiles" id="gamePick" role="group" aria-label="Choix du jeu">
       <button data-g="tetris" aria-pressed="true"><img src="img/gravats.jpg" alt=""><span>Gravats</span></button>
       <button data-g="pong" aria-pressed="false"><img src="img/gardiens.jpg" alt=""><span>Gardiens</span></button>
@@ -692,10 +701,6 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
       <button id="btnBoard2" class="ghost">Classement</button>
       <button id="btnLeaveLobby" class="ghost">Quitter le salon</button>
     </div>
-    <div class="launchbar" id="launchBar">
-      <button class="lbinfo" id="lbInfo" type="button"><img id="lbArt" alt=""><span><b id="lbTitle">Gravats</b><small id="lbSub"></small></span></button>
-      <button id="btnStart" class="lbgo" type="button" hidden>C'est parti !</button>
-    </div>
     <div class="gamepop" id="qrPop" hidden>
       <div class="feature qrcard"><div class="caption">Scannez pour rejoindre le salon <b id="qrCode"></b></div><canvas id="qrCv" width="560" height="560" aria-label="QR code du salon"></canvas><small>Touchez pour fermer</small></div>
     </div>
@@ -716,7 +721,7 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
           <h2 id="gsTitle"></h2>
           <p id="gsDesc"></p>
           <div class="gsbtns" id="gsHost"><button id="gsPick" class="ghost" type="button">← Retour à la liste</button><button id="gsGo" type="button">Lancer</button></div>
-          <div class="gsbtns" id="gsGuest"><button id="gsClose" class="ghost" type="button">← Retour à la liste</button></div>
+          <div class="gsbtns" id="gsGuest"><button id="gsClose" class="ghost" type="button">← Retour à la liste</button><button id="gsVote" type="button">👍 J'aimerais y jouer</button></div>
           <small id="gsNote"></small>
         </div>
       </div>
@@ -1373,12 +1378,14 @@ function hostRecv(conn, d){
     sendLobby(false);
     try { conn.send({ t:'chatlog', items:CHAT.slice(-30) }); } catch(_){}
     if (HB) try { conn.send({ t:'brief', game:HB.game, ready:[...HB.ready] }); } catch(_){}
+    try { conn.send({ t:'votes', v:VOTES }); const pk = $('gameSheet').dataset.peek; if (pk) conn.send({ t:'peek', g:pk }); } catch(_){}
     chatSys(cleanName(d.name) + ' a rejoint le salon');
     return;
   }
   if (d.t === 'chat'){ if (conn._pid) hostChat(conn._pid, d.text); return; }
   if (d.t === 'pong'){ conn._pong = performance.now(); return; }
   if (d.t === 'ready'){ if (conn._pid) briefReady(conn._pid); return; }
+  if (d.t === 'vote'){ if (conn._pid) hostVote(conn._pid, d.g); return; }
   if (d.t === 'color'){ if (conn._pid) hostSetColor(conn._pid, d.c); return; }
   if (conn._pid) hostHandle(conn._pid, d);
 }
@@ -1487,7 +1494,7 @@ function hostDrop(conn){
   const id = conn._pid;
   if (!id || !net || !net.conns.has(id)) return;
   net.conns.delete(id);
-  if (phase === 'lobby'){ const p = players.find(x => x.id === id); players = players.filter(p => p.id !== id); sendLobby(false); briefCheck(); if (BR) briefStatus(); if (p) chatSys(p.name + ' a quitté le salon'); return; }
+  if (phase === 'lobby'){ const p = players.find(x => x.id === id); players = players.filter(p => p.id !== id); if (VOTES[id]){ delete VOTES[id]; broadcast({ t:'votes', v:VOTES }); } sendLobby(false); briefCheck(); if (BR) briefStatus(); if (p) chatSys(p.name + ' a quitté le salon'); return; }
   if (H && H.alive.has(id)){
     if (H.game === 'pong') pongDrop(id); else if (H.game === 'curling') curlDrop(id); else if (H.game === 'chairs') chairsDrop(id); else if (H.game === 'master') masterDrop(id); else if (H.game === 'kabaddi') kabaddiDrop(id); else if (H.game === 'dodge') dodgeDrop(id); else if (H.game === 'tank') tankDrop(id); else if (H.game === 'sheep') sheepDrop(id); else if (H.game === 'drakkar') drakkarDrop(id); else if (H.game === 'lumber') lumberDrop(id); else if (H.game === 'agility') agilityDrop(id); else if (H.game === 'galop') galopDrop(id); else if (H.game === 'derby') derbyDrop(id); else if (H.game === 'naval') navalDrop(id); else if (H.game === 'mole') moleDrop(id); else hostHandle(id, { t:'dead', left:true });
   }
@@ -1517,7 +1524,7 @@ function toHost(msg){
 }
 
 function hostLaunch(){
-  HB = null; closeBrief();
+  HB = null; closeBrief(); VOTES = {}; broadcast({ t:'votes', v:{} });
   unannounce(); annKey = null;
   track('partie/' + gameKind + (net && net.solo ? '/solo' : '/' + players.length + 'j'));
   // drop anyone who left meanwhile
@@ -1699,9 +1706,11 @@ function clientRecv(m){
     case 'ag_p': case 'ag_done': case 'ag_left': agilityRecv(m); break;
     case 'gp_pick': case 'gp_race': case 'gp_go': case 'gp_s': case 'gp_fin': galopRecv(m); break;
     case 'brief': if (phase === 'lobby') openBrief(m.game, m.ready); break;
+    case 'votes': VOTES = m.v && typeof m.v === 'object' ? m.v : {}; renderVotes(); if (!$('gameSheet').hidden) openGameSheet($('gameSheet').dataset.g); break;
+    case 'peek': if (!me.host){ PEEK = GAME_NAMES[m.g] ? m.g : null; renderVotes(); } break;
     case 'brief_st': if (BR){ BR.ready = new Set(m.ready || []); briefStatus(); } break;
     case 'brief_off': closeBrief(); break;
-    case 'start': noteRecent(m.game); closeGameSheet(); closeBrief(); $('colPick').hidden = true; if (m.game === 'galop') startGalop(m); else if (m.game === 'agility') startAgility(m); else if (m.game === 'lumber') startLumber(m); else if (m.game === 'drakkar') startDrakkar(m); else if (m.game === 'sheep') startSheep(m); else if (m.game === 'tank') startTank(m); else if (m.game === 'dodge') startDodge(m); else if (m.game === 'kabaddi') startKabaddi(m); else if (m.game === 'master') startMaster(m); else if (m.game === 'chairs') startChairs(m); else if (m.game === 'curling') startCurling(m); else if (m.game === 'pong') startPong(m.players); else if (m.game === 'derby') startDerby(m.players, m.seed|0); else startGame(m.players); break;
+    case 'start': closeGameSheet(); closeBrief(); PEEK = null; VOTES = {}; $('colPick').hidden = true; if (m.game === 'galop') startGalop(m); else if (m.game === 'agility') startAgility(m); else if (m.game === 'lumber') startLumber(m); else if (m.game === 'drakkar') startDrakkar(m); else if (m.game === 'sheep') startSheep(m); else if (m.game === 'tank') startTank(m); else if (m.game === 'dodge') startDodge(m); else if (m.game === 'kabaddi') startKabaddi(m); else if (m.game === 'master') startMaster(m); else if (m.game === 'chairs') startChairs(m); else if (m.game === 'curling') startCurling(m); else if (m.game === 'pong') startPong(m.players); else if (m.game === 'derby') startDerby(m.players, m.seed|0); else startGame(m.players); break;
     case 'dr': derbyRemote(m); break;
     case 'ps': pongState(m); break;
     case 'pg': pongGoalFx(m.side|0); break;
@@ -1752,19 +1761,13 @@ function renderLobby(){
     b.onclick = () => { if (me.host) hostSetColor('h', col); else if (net && net.conn && net.conn.open) try { net.conn.send({ t:'color', c:col }); } catch(_){} };
     cp.append(b);
   });
-  for (const b of document.querySelectorAll('#gamePick button, #recentPick button')) b.setAttribute('aria-pressed', String(b.dataset.g === gameKind));
-  renderRecent();
   const host = players.find(p => p.id === 'h');
-  $('pickLabel').textContent = me.host ? 'Tous les jeux : touchez pour voir la fiche' : 'Tous les jeux : ' + (host ? host.name : 'le créateur') + ' choisit';
-  // the launch bar: always on screen
-  const lbA = $('lbArt'), src = gameImg(gameKind);
-  if (lbA.dataset.src !== src){ lbA.dataset.src = src; lbA.src = src; }
-  $('lbTitle').textContent = GAME_NAMES[gameKind];
-  $('lbSub').textContent = net && net.solo ? 'Partie en solo, contre des robots' : (me.host ? 'Joueurs ' + players.length + '/' + MAXP : (host ? host.name : 'Le créateur') + ' lance la partie');
-  $('btnStart').hidden = !me.host;
+  $('pickLabel').textContent = me.host ? (net && net.solo ? 'Tous les jeux : touchez pour voir la fiche et lancer' : 'Tous les jeux : touchez pour voir la fiche et lancer · les 👍 sont les envies des joueurs')
+    : 'Tous les jeux : touchez pour lire la fiche et voter pour vos envies';
+  renderVotes();
   $('lobbyHint').textContent = me.host
     ? (players.length < 2 ? 'Seul, vous jouerez contre un robot de niveau moyen. Ou attendez les autres.' : 'Lancez quand tout le monde est là.')
-    : 'En attente du lancement par le créateur…';
+    : 'Votez pour les jeux qui vous tentent : ' + (host ? host.name : 'le créateur') + ' les voit et lance la partie.';
   if (!$('gameSheet').hidden) openGameSheet($('gameSheet').dataset.g);
   if (BR) briefStatus();
 }
@@ -9786,30 +9789,48 @@ function openGameSheet(g){
   const cur = g === gameKind;
   $('gsHost').hidden = !me.host; $('gsGuest').hidden = me.host;
   const host = players.find(p => p.id === 'h');
-  $('gsNote').textContent = me.host ? '' : cur ? 'C\'est le jeu choisi par ' + (host ? host.name : 'le créateur') + '.' : 'Seul ' + (host ? host.name : 'le créateur du salon') + ' choisit le jeu.';
+  const voters = players.filter(p => VOTES[p.id] === g);
+  $('gsNote').textContent = voters.length ? '👍 ' + voters.map(p => p.name).join(', ') + (voters.length > 1 ? ' aimeraient y jouer' : ' aimerait y jouer') : me.host ? '' : 'Seul ' + (host ? host.name : 'le créateur du salon') + ' lance la partie.';
+  const mine = VOTES[me.id] === g; $('gsVote').classList.toggle('on', mine); $('gsVote').textContent = mine ? '✔ Votre envie (retirer)' : '👍 J\'aimerais y jouer';
+  if (me.host && sh.dataset.peek !== g){ sh.dataset.peek = g; if (net && !net.solo && phase === 'lobby') broadcast({ t:'peek', g }); }   // the others see which game the creator is looking at
   sh.hidden = false;
 }
-const closeGameSheet = () => { $('gameSheet').hidden = true; };
+const closeGameSheet = () => { const sh = $('gameSheet'); if (sh.hidden) return; sh.hidden = true; sh.dataset.peek = ''; if (me.host && net && !net.solo && phase === 'lobby') broadcast({ t:'peek', g:null }); };
 const pickGame = g => { if (!me.host || phase !== 'lobby' || !GAME_NAMES[g]) return; if (g !== gameKind){ gameKind = g; sendLobby(false); } };
 $('gameSheet').addEventListener('click', e => { if (!e.target.closest('#gameSheetCard') || e.target.closest('#gsClose')) closeGameSheet(); });
 $('gsPick').onclick = closeGameSheet;
 $('gsGo').onclick = () => { pickGame($('gameSheet').dataset.g); closeGameSheet(); if (me.host && phase === 'lobby') hostStart(); };
-$('lbInfo').onclick = () => openGameSheet(gameKind);
+$('gsVote').onclick = () => { const g = $('gameSheet').dataset.g; const v = VOTES[me.id] === g ? null : g; if (me.host) hostVote('h', v); else toHost({ t:'vote', g:v }); VOTES[me.id] = v || undefined; if (!v) delete VOTES[me.id]; openGameSheet(g); renderVotes(); if (v) sfx('ok'); };
+$('peekBar').onclick = () => { if (PEEK) openGameSheet(PEEK); };
+// votes: what each player would like to play; the creator sees them on the tiles and in a short summary
+let VOTES = {}, PEEK = null;
+function hostVote(id, g){
+  if (!me.host || phase !== 'lobby') return;
+  if (g && GAME_NAMES[g]) VOTES[id] = g; else delete VOTES[id];
+  broadcast({ t:'votes', v:VOTES });
+}
+function renderVotes(){
+  const solo = !net || net.solo, host = players.find(p => p.id === 'h');
+  for (const id of Object.keys(VOTES)) if (!players.some(p => p.id === id)) delete VOTES[id];
+  const count = {}; for (const [id, g] of Object.entries(VOTES)) (count[g] = count[g] || []).push(players.find(p => p.id === id));
+  const top = Math.max(0, ...Object.values(count).map(a => a.length));
+  for (const b of $('gamePick').querySelectorAll('button')){
+    b.setAttribute('aria-pressed', 'false');
+    const old = b.querySelector('.vbadge'); if (old) old.remove();
+    const v = count[b.dataset.g];
+    if (v && v.length && !solo){ const d = document.createElement('span'); d.className = 'vbadge' + (v.length === top ? ' top' : ''); d.append('👍' + v.length); for (const p of v){ if (!p) continue; const i = document.createElement('i'); i.style.background = p.color; d.append(i); } b.append(d); }
+    b.classList.toggle('peek', !solo && !me.host && PEEK === b.dataset.g);
+  }
+  const pb = $('peekBar'); pb.hidden = solo || me.host || !PEEK;
+  if (!pb.hidden) $('peekTxt').textContent = (host ? host.name : 'Le créateur') + ' regarde : ' + (GAME_NAMES[PEEK] || '');
+  const vs = $('voteSum'), entries = Object.entries(count).sort((a, b) => b[1].length - a[1].length);
+  vs.hidden = solo || !entries.length; vs.textContent = '';
+  if (!vs.hidden){ const l = document.createElement('span'); l.textContent = 'Envies :'; vs.append(l);
+    for (const [g, v] of entries){ const b = document.createElement('button'); b.type = 'button'; b.className = v.length === top ? 'top' : ''; b.textContent = (GAME_NAMES[g] || g) + ' 👍' + v.length; b.onclick = () => openGameSheet(g); vs.append(b); } }
+}
 addEventListener('keydown', e => { if (e.key === 'Escape' && !$('gameSheet').hidden) closeGameSheet(); });
 for (const b of $('gamePick').querySelectorAll('button')) b.onclick = () => openGameSheet(b.dataset.g);
-// recently played games (this browser), first in the list
-function recentGames(){ try { const a = JSON.parse(localStorage.getItem('tm-recent') || '[]'); return Array.isArray(a) ? a.filter(g => GAME_NAMES[g]) : []; } catch(_){ return []; } }
-function noteRecent(g){ if (!GAME_NAMES[g]) return; try { localStorage.setItem('tm-recent', JSON.stringify([g, ...recentGames().filter(x => x !== g)].slice(0, 4))); } catch(_){} }
-function renderRecent(){
-  const list = recentGames(), box = $('recentBox'), row = $('recentPick');
-  box.hidden = !list.length;
-  if (row.dataset.k !== list.join()){
-    row.dataset.k = list.join(); row.textContent = '';
-    for (const g of list){ const src = $('gamePick').querySelector('button[data-g="' + g + '"]'); if (!src) continue; const b = src.cloneNode(true); b.onclick = () => openGameSheet(g); row.append(b); }
-  }
-  for (const b of row.querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.g === gameKind));
-}
-$('btnStart').onclick = () => { if (me.host && phase === 'lobby') hostStart(); };
+function noteRecent(){}
 $('btnLeaveLobby').onclick = () => toMenu('');
 // Invitation link: <page>?salon=CODE. Opening it fills the code and joins straight away when a name is already saved.
 const inviteUrl = () => location.origin + location.pathname + '?salon=' + (net && net.code || $('lobbyCode').textContent);
