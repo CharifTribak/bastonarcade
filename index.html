@@ -1374,14 +1374,25 @@ async function supa(path, opts = {}){
   } catch(_){ return null; }
 }
 // the creator announces an open lobby every 30 s, and takes it down when the game starts or the lobby closes
-let annT = null, annCode = null, annKey = null;
-function announce(){
+// Each room gets a random secret: the database only lets whoever knows it update or remove the room (functions salon_upsert / salon_delete).
+let annT = null, annCode = null, annKey = null, annSecret = null, annSecretFor = null;
+const newSecret = () => { const a = new Uint8Array(16); crypto.getRandomValues(a); return [...a].map(b => b.toString(16).padStart(2, '0')).join(''); };
+async function announce(){
   if (!SUPA_ON || !net || net.solo || !me.host || phase !== 'lobby' || $('privIn').checked) return;
+  if (annSecretFor !== net.code){ annSecretFor = net.code; annSecret = newSecret(); }
   annCode = net.code;
-  supa('salons?on_conflict=code', { method:'POST', headers:{ Prefer:'resolution=merge-duplicates' },
-    body:JSON.stringify({ code:net.code, host:publicName(me.name), game:gameKind, players:players.length, updated_at:new Date().toISOString() }) });
+  const row = { p_code:net.code, p_host:publicName(me.name), p_game:gameKind, p_players:players.length, p_secret:annSecret };
+  const ok = await supa('rpc/salon_upsert', { method:'POST', body:JSON.stringify(row) });
+  if (ok === null)                                                              // database not migrated yet: the old way
+    supa('salons?on_conflict=code', { method:'POST', headers:{ Prefer:'resolution=merge-duplicates' },
+      body:JSON.stringify({ code:net.code, host:row.p_host, game:gameKind, players:players.length, updated_at:new Date().toISOString() }) });
 }
-function unannounce(){ if (SUPA_ON && annCode){ supa('salons?code=eq.' + annCode, { method:'DELETE', keepalive:true }); annCode = null; annKey = null; } }   // keepalive: still sent when the tab is closing
+function unannounce(){
+  if (!SUPA_ON || !annCode) return;
+  const code = annCode; annCode = null; annKey = null;
+  supa('rpc/salon_delete', { method:'POST', keepalive:true, body:JSON.stringify({ p_code:code, p_secret:annSecret || '' }) })      // keepalive: still sent when the tab is closing
+    .then(ok => { if (ok === null) supa('salons?code=eq.' + code, { method:'DELETE', keepalive:true }); });
+}
 setInterval(() => { if (net && me.host && phase === 'lobby') announce(); else if (annCode && (!net || phase !== 'lobby')) unannounce(); }, 30000);
 addEventListener('pagehide', unannounce);
 async function loadSalons(){
