@@ -256,6 +256,8 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .msg.pm{inset:0}
 .toast.pm{top:auto;bottom:0;transform:translate(-50%,calc(50% + 8px))}
 .toast.pm.on{transform:translate(-50%,50%)}
+#pToast{top:8px;bottom:auto;transform:translate(-50%,-8px)}
+#pToast.on{transform:translate(-50%,0)}
 .keys{color:var(--muted);font-size:13px;text-align:center}
 .ctlhelp,.game .keys,.pong .keys{color:#111!important;font-size:15px!important;font-weight:700;line-height:1.5;background:#fff;border:3px solid var(--line);box-shadow:4px 4px 0 var(--line);padding:9px 12px;margin:6px auto 0!important;max-width:min(100%,640px);text-align:left!important}
 .ctlhelp::before,.game .keys::before,.pong .keys::before{content:"🎮 "}
@@ -2442,7 +2444,7 @@ function pongGoalFx(k){
   if (!PG) return;
   PG.flash[k] = 1;
   sfx('goal');
-  boom(k === PG.mySide ? 'BUT…' : 'BUT !', { size:38, x:.5, y:k === PG.mySide ? .78 : .3, pal:k === PG.mySide ? BOOM_COLORS[2] : BOOM_COLORS[0] });
+  boom(k === PG.mySide ? 'BUT…' : 'BUT !', { size:38, x:.5, y:.3, pal:k === PG.mySide ? BOOM_COLORS[2] : BOOM_COLORS[0] });
   if (k === PG.mySide){
     const el = $('pwrap'); el.style.setProperty('--amp', '5px');
     el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake');
@@ -6184,6 +6186,8 @@ function drawTank(now){
 // Everyone plays together against the field. Host simulates sheep, wolves and dogs; joystick to run, "Ouaf !" to bark.
 const SH_S = 540, SH_DOG = 15, SH_SHEEP = 10, SH_DSP = 175, SH_DAY = 75, SH_BARK_CD = 3, SH_ROUNDS = 6;
 let HSH = null, SHV = null;
+const SH_NAMES = ['Biscotte','Pompon','Frisette','Caramel','Nuage','Praline','Grisou','Choupette','Bouclette','Flocon','Marcel','Gaston','Noisette','Patapouf','Réglisse','Moumoute','Brioche','Cachou','Doudou','Fifi','Gribouille','Léon','Mimosa','Nougat','Olive','Papillote','Quenotte','Rosalie','Saucisse','Tartine','Victor','Zébulon','Bergamote','Chips','Pistache','Roudoudou'];
+const shName = (seed, k) => SH_NAMES[((seed >>> 3) + k*7) % SH_NAMES.length];
 
 // ---- field for a round: pen at the top, maybe a river with a bridge, maybe a flower meadow ----
 function shField(seed, round){
@@ -6233,10 +6237,18 @@ function shRound(){
   const count = Math.min(30, 6 + 2*HSH.round + 3*(n - 1));
   HSH.day = SH_DAY - 4*(HSH.round - 1);                                   // 75 s, then 71, 67… down to 55 s
   HSH.need = Math.ceil(count * Math.min(.8, (F.kind === 'plain' ? .6 : .55) + .04*HSH.round)); const extra = Math.min(2, Math.floor((n - 1)/2) + Math.floor((HSH.round - 1)/2)); HSH.wolfMax = 1 + Math.floor(Math.random()*(extra + 1));
+  if (HSH.round >= 4) HSH.wolfMax += 1;                                    // the last days are harder: one more wolf,
+  HSH.wolfSp = 1 + Math.max(0, HSH.round - 3)*.08;                        // faster wolves,
+  if (HSH.round >= 5) HSH.need = Math.min(count, HSH.need + 2);           // and a couple more sheep to bring home
   HSH.sheep = []; HSH.wolves = [];
+  // the bear (3 players or more): slow, only backs off in front of 3 or 4 dogs together, otherwise keeps coming and kills a sheep
+  const humans = players.filter(p => !p.bot).length;
+  HSH.bear = null;
+  if (humans >= 3 && HSH.round >= 3 && (HSH.round >= 5 || Math.random() < .5))
+    HSH.bear = { x:0, y:0, out:true, back:12 + Math.random()*14, need:Math.min(4, Math.max(3, humans - 1)), near:0, pause:0, a:0 };
   const below = F.river ? F.river.y + F.river.h + 30 : 230;
   for (let k = 0; k < count; k++){
-    const kind = k % 7 === 3 ? 'peureux' : k % 7 === 5 && F.kind === 'flowers' ? 'gourmand' : k % 9 === 6 ? 'mere' : 'normal';
+    const kind = (k % 7 === 3 || (HSH.round >= 5 && k % 5 === 1)) ? 'peureux' : k % 7 === 5 && F.kind === 'flowers' ? 'gourmand' : k % 9 === 6 ? 'mere' : 'normal';
     const s = { id:k, x:60 + Math.random()*(SH_S - 120), y:below + Math.random()*(SH_S - below - 40), vx:0, vy:0, kind, in:false, gone:false, mom:-1 };
     HSH.sheep.push(s);
     if (kind === 'mere'){ HSH.sheep.push({ id:++k, x:s.x + 14, y:s.y + 8, vx:0, vy:0, kind:'agneau', in:false, gone:false, mom:s.id }); }
@@ -6278,6 +6290,7 @@ function shStep(h){
       if (s.kind === 'gourmand' && s.eat && L > 55) continue;            // too busy eating
       if (L < fleeR){ const f = (fleeR - L)*fleeK; ax += dx/L*f; ay += dy/L*f; } }
     for (const w of HSH.wolves){ const dx = s.x - w.x, dy = s.y - w.y, L = Math.hypot(dx, dy) || 1; if (L < 130){ const f = (130 - L)*3.5; ax += dx/L*f; ay += dy/L*f; } }
+    { const b = HSH.bear; if (b && !b.out){ const dx = s.x - b.x, dy = s.y - b.y, L = Math.hypot(dx, dy) || 1; if (L < 150){ const f = (150 - L)*3; ax += dx/L*f; ay += dy/L*f; } } }
     let cx = 0, cy = 0, nb = 0;
     for (const o of live){ if (o === s || o.in) continue; const dx = o.x - s.x, dy = o.y - s.y, L = Math.hypot(dx, dy);
       if (L < 70){ cx += o.x; cy += o.y; nb++; }
@@ -6328,11 +6341,45 @@ function shStep(h){
       if (nd < 60) sp = 55;                                           // a dog in its way slows it down
     }
     const dx = tx - w.x, dy = ty - w.y, L = Math.hypot(dx, dy) || 1;
+    sp *= HSH.wolfSp || 1;
     w.x += dx/L*sp*h; w.y += dy/L*sp*h; w.a = Math.atan2(dy, dx);
     if (w.x > 0 && w.x < SH_S) shPush({ walls:HSH.F.walls.filter(o => !o.river).concat([{ x:F.pen.x - 8, y:F.pen.y - 8, w:F.pen.w + 16, h:F.pen.h + 16 }]) }, w, 14);
     if (w.carry < 0 && w.scare <= 0) for (const s of live){ if (!s.in && Math.hypot(s.x - w.x, s.y - w.y) < 20){ w.carry = HSH.sheep.indexOf(s); s.gone = true; broadcast({ t:'sh_ev', k:'grab', x:Math.round(w.x), y:Math.round(w.y) }); break; } }
     if (w.x < -30 || w.x > SH_S + 30 || w.y > SH_S + 30){ w.out = true; w.back = 6 + Math.random()*5; if (w.carry >= 0){ HSH.lost++; w.carry = -1; broadcast({ t:'sh_ev', k:'lost' }); } }
   }
+  shBearStep(h, dogs, live);
+}
+function shBearStep(h, dogs, live){
+  const b = HSH.bear; if (!b) return;
+  if (b.out){
+    b.back -= h;
+    if (b.back <= 0 && HSH.t < HSH.day - 12 && !b.gone){
+      b.out = false; b.retreat = false; const side = Math.floor(Math.random()*3);
+      if (side === 2){ b.x = 60 + Math.random()*(SH_S - 120); b.y = SH_S + 20; } else { b.x = side ? SH_S + 20 : -20; b.y = 240 + Math.random()*(SH_S - 280); }
+      broadcast({ t:'sh_ev', k:'bear' });
+    }
+    return;
+  }
+  let near = 0;
+  for (const [, d] of dogs) if (Math.hypot(d.x - b.x, d.y - b.y) < 95) near++;
+  b.near = near;
+  if (near >= b.need && !b.retreat){ b.retreat = true; broadcast({ t:'sh_ev', k:'bearflee', x:Math.round(b.x), y:Math.round(b.y) }); }
+  let tx, ty, sp;
+  if (b.retreat){                                                         // backs off to the nearest edge, then it is gone for the day
+    const ex = [[-50, b.y, b.x], [SH_S + 50, b.y, SH_S - b.x], [b.x, SH_S + 50, SH_S - b.y]].sort((p, q) => p[2] - q[2])[0];
+    tx = ex[0]; ty = ex[1]; sp = 60;
+    if (near < b.need - 1){ b.retreat = false; }                          // not enough dogs left: it turns round
+  } else {
+    b.pause = Math.max(0, b.pause - h);
+    let best = null, bd = 1e9; for (const s of live){ if (s.in || s.gone) continue; const L = Math.hypot(s.x - b.x, s.y - b.y); if (L < bd){ bd = L; best = s; } }
+    if (!best){ tx = b.x; ty = SH_S + 50; } else { tx = best.x; ty = best.y; }
+    sp = b.pause > 0 ? 0 : near ? 22 : 38;                                 // slowed down by the dogs, never stopped
+    if (best && bd < 22 && b.pause <= 0){ best.gone = true; best.dead = true; HSH.lost++; b.pause = 2.5; broadcast({ t:'sh_ev', k:'bearkill', x:Math.round(best.x), y:Math.round(best.y) }); }
+  }
+  const dx = tx - b.x, dy = ty - b.y, L = Math.hypot(dx, dy) || 1;
+  if (sp){ b.x += dx/L*sp*h; b.y += dy/L*sp*h; b.a = Math.atan2(dy, dx); }
+  if (b.x > 0 && b.x < SH_S && b.y < SH_S) shPush({ walls:HSH.F.walls.filter(o => !o.river).concat([{ x:HSH.F.pen.x - 8, y:HSH.F.pen.y - 8, w:HSH.F.pen.w + 16, h:HSH.F.pen.h + 16 }]) }, b, 22);
+  if (b.x < -40 || b.x > SH_S + 40 || b.y > SH_S + 40){ b.out = true; b.gone = !!b.retreat; b.back = 20; }
 }
 function shEndRound(){
   HSH.ph = 'res';
@@ -6366,7 +6413,8 @@ function sheepHostFrame(dt, now){
     broadcastSnap({ t:'sh_s', p:HSH.t / HSH.day,
       d:Object.entries(HSH.dogs).map(([id, d]) => [id, r(d.x), r(d.y), Math.round(d.a*100)/100, d.mv|0, Math.ceil(d.cd*10)]),
       s:HSH.sheep.map(s => [r(s.x), r(s.y), s.gone ? 2 : s.in ? 1 : 0, s.eat ? 1 : 0]),
-      w:HSH.wolves.filter(w => !w.out).map(w => [r(w.x), r(w.y), Math.round((w.a || 0)*100)/100, w.carry >= 0 ? 1 : 0, w.scare > 0 ? 1 : 0]) });
+      w:HSH.wolves.filter(w => !w.out).map(w => [r(w.x), r(w.y), Math.round((w.a || 0)*100)/100, w.carry >= 0 ? 1 : 0, w.scare > 0 ? 1 : 0]),
+      b:HSH.bear && !HSH.bear.out ? [r(HSH.bear.x), r(HSH.bear.y), Math.round((HSH.bear.a || 0)*100)/100, HSH.bear.near, HSH.bear.need, HSH.bear.retreat ? 1 : 0] : 0 });
   }
 }
 
@@ -6430,7 +6478,7 @@ function sheepRecv(m){
   if (m.t === 'sh_round'){
     if (phase === 'count'){ phase = 'play'; sheepMsg(''); }
     SHV.F = shField(m.seed|0, m.round|0); SHV.sc = null; SHV.round = m.round|0; SHV.total = m.count|0; SHV.need = m.need|0; SHV.score = m.score|0; SHV.ph = 'play'; SHV.p = 0;
-    SHV.sheep = []; SHV.wolves = []; SHV.dogs = new Map(); SHV.kindsList = Array.isArray(m.kinds) ? m.kinds : [];
+    SHV.sheep = []; SHV.wolves = []; SHV.bear = null; SHV.dogs = new Map(); SHV.kindsList = Array.isArray(m.kinds) ? m.kinds : [];
     shToast(m.kind === 'river' ? 'Une rivière : passez par le pont !' : m.kind === 'flowers' ? 'Attention aux gourmands dans les fleurs' : 'Ramenez au moins ' + m.need + ' moutons avant la nuit');
     sfx('myturn'); shHead();
     return;
@@ -6439,6 +6487,7 @@ function sheepRecv(m){
     SHV.p = +m.p;
     for (const [id, x, y, a, mv, cd] of m.d || []){ const o = SHV.dogs.get(id) || { x, y }; o.tx = x; o.ty = y; o.a = a; o.mv = mv; o.cd = cd/10; if (!SHV.dogs.has(id)) SHV.dogs.set(id, o); }
     const old = SHV.sheep; SHV.sheep = (m.s || []).map((s, k) => { const o = old[k]; return [o ? o[0] : s[0], o ? o[1] : s[1], s[2], s[3], s[0], s[1]]; });
+    if (Array.isArray(m.b)){ const o = SHV.bear; SHV.bear = { x:o ? o.x : m.b[0], y:o ? o.y : m.b[1], tx:m.b[0], ty:m.b[1], a:m.b[2], near:m.b[3], need:m.b[4], back:m.b[5] }; } else SHV.bear = null;
     const ow = SHV.wolves; SHV.wolves = (m.w || []).map((w, k) => { const o = ow[k]; return { x:o ? o.x : w[0], y:o ? o.y : w[1], tx:w[0], ty:w[1], a:w[2], carry:w[3], scare:w[4] }; });
     shHead();
     return;
@@ -6458,6 +6507,9 @@ function sheepRecv(m){
   else if (m.k === 'grab'){ sfx('fail'); boom('AU LOUP !', { size:26, x:m.x/SH_S, y:Math.max(.05, m.y/SH_S - .07), pal:BOOM_COLORS[2], ms:900 }); }
   else if (m.k === 'saved'){ sfx('ok'); boom('LÂCHE ÇA !', { size:22, x:m.x/SH_S, y:Math.max(.05, m.y/SH_S - .07), pal:BOOM_COLORS[1], ms:800 }); }
   else if (m.k === 'lost'){ shToast('Le loup a emporté un mouton'); }
+  else if (m.k === 'bear'){ sfx('crash', 'wall'); shToast('UN OURS ! Il ne recule que devant plusieurs chiens ensemble'); boom('UN OURS !', { size:30, x:.5, y:.25, pal:BOOM_COLORS[2], ms:1400 }); }
+  else if (m.k === 'bearflee'){ sfx('escape'); boom('IL RECULE !', { size:24, x:m.x/SH_S, y:Math.max(.05, m.y/SH_S - .08), pal:BOOM_COLORS[0], ms:900 }); }
+  else if (m.k === 'bearkill'){ sfx('fail'); boom('GRRR !', { size:26, x:m.x/SH_S, y:Math.max(.05, m.y/SH_S - .08), pal:BOOM_COLORS[2], ms:1000 }); shToast('L\'ours a eu un mouton'); }
   else if (m.k === 'left'){ const p = players.find(x => x.id === m.id); if (p){ p.left = true; renderShPlayers(); shToast(p.name + ' est parti'); } }
 }
 
@@ -6491,6 +6543,7 @@ function sheepFrame(dtMs, now){
   for (const d of SHV.dogs.values()){ d.x += (d.tx - d.x)*k; d.y += (d.ty - d.y)*k; }
   for (const s of SHV.sheep){ s[0] += (s[4] - s[0])*k; s[1] += (s[5] - s[1])*k; }
   for (const w of SHV.wolves){ w.x += (w.tx - w.x)*k; w.y += (w.ty - w.y)*k; }
+  if (SHV.bear){ SHV.bear.x += (SHV.bear.tx - SHV.bear.x)*k; SHV.bear.y += (SHV.bear.ty - SHV.bear.y)*k; }
   for (const f of SHV.fx) f.t += dt;
   SHV.fx = SHV.fx.filter(f => f.t < .8);
   const md = SHV.dogs.get(me.id); $('shBark').disabled = !md || md.cd > 0 || phase !== 'play';
@@ -6589,6 +6642,25 @@ function shWolf(ctx, w, now){
   if (w.carry){ ctx.translate(30, 0); shSheepDraw(ctx, 0, 0, 'agneau', false, now, 0); }
   ctx.restore();
 }
+function shBear(ctx, b, now){
+  ctx.save(); ctx.translate(b.x, b.y); ctx.rotate(b.a || 0);
+  const step = Math.sin(now/180)*2;
+  ctx.fillStyle = 'rgba(0,0,0,.28)'; ctx.beginPath(); ctx.ellipse(3, 6, 30, 19, 0, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#5B3A1E'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
+  for (const [px, py] of [[12, -15], [12, 15], [-14, -15], [-14, 15]]){ ctx.beginPath(); ctx.ellipse(px + (py > 0 ? step : -step), py, 7, 6, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke(); }
+  ctx.beginPath(); ctx.ellipse(-2, 0, 26, 18, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = halftone(ctx, .3); ctx.beginPath(); ctx.ellipse(-4, 4, 22, 11, 0, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#5B3A1E'; ctx.beginPath(); ctx.arc(24, 0, 12, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+  for (const sd of [-1, 1]){ ctx.beginPath(); ctx.arc(20, sd*10, 4.5, 0, Math.PI*2); ctx.fill(); ctx.stroke(); }
+  ctx.fillStyle = '#C49A6C'; ctx.beginPath(); ctx.ellipse(32, 0, 6, 5, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(37, 0, 2.4, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = b.back ? '#fff' : '#E6262B'; for (const sd of [-1, 1]){ ctx.beginPath(); ctx.arc(27, sd*4.5, 1.8, 0, Math.PI*2); ctx.fill(); }
+  ctx.restore();
+  if (b.need){                                                          // how many dogs it takes
+    ctx.font = '900 13px Nunito, sans-serif'; ctx.textAlign = 'center'; ctx.lineJoin = 'round';
+    const t = '🐕 ' + b.near + '/' + b.need; ctx.strokeStyle = '#000'; ctx.lineWidth = 4; ctx.strokeText(t, b.x, b.y - 30); ctx.fillStyle = b.near >= b.need ? '#3DDC97' : '#FFD21F'; ctx.fillText(t, b.x, b.y - 30);
+  }
+}
 function drawSheep(now){
   const ctx = shctx, S = SH_S;
   if (!SHV || !SHV.F){ ctx.fillStyle = '#93C95A'; ctx.fillRect(0, 0, S, S); return; }
@@ -6596,6 +6668,9 @@ function drawSheep(now){
   ctx.drawImage(SHV.sc, 0, 0);
   const kinds = SHV.kinds || (SHV.kinds = []);
   SHV.sheep.forEach((s, k) => { if (s[2] !== 2) shSheepDraw(ctx, s[0], s[1], shKindOf(k), s[3], now, k); });
+  ctx.font = '700 9px Nunito, sans-serif'; ctx.textAlign = 'center'; ctx.lineJoin = 'round';     // each sheep's name, small
+  SHV.sheep.forEach((s, k) => { if (s[2] !== 0) return; const n = shName(SHV.F.seed, k); ctx.strokeStyle = 'rgba(255,255,255,.85)'; ctx.lineWidth = 3; ctx.strokeText(n, s[0], s[1] + 22); ctx.fillStyle = '#2B2B33'; ctx.fillText(n, s[0], s[1] + 22); });
+  if (SHV.bear) shBear(ctx, SHV.bear, now);
   for (const w of SHV.wolves) shWolf(ctx, w, now);
   for (const [id, d] of SHV.dogs){ const p = players.find(x => x.id === id); if (p && !p.left) shDog(ctx, d, p.color, id === me.id, now); }
   for (const f of SHV.fx){
@@ -7128,7 +7203,9 @@ const LJ_CW = 600, LJ_CH = 260, LJ_GROUND = 214;
 let HLJ = null, LJ = null;
 
 const ljGauss = R => { const u = Math.max(1e-6, R()), v = R(); return Math.sqrt(-2*Math.log(u)) * Math.cos(2*Math.PI*v); };
-const ljSigma = prec => 1 + 55 * Math.pow(1 - ljClamp(prec, 0, 1), 1.5);   // degrees of random deviation: a clean cut barely strays, a sloppy one goes anywhere
+const ljSigma = prec => .5 + 120 * Math.pow(1 - ljClamp(prec, 0, 1), 1.6);   // degrees of random deviation: a clean cut barely strays, a sloppy one goes anywhere
+// a botched cut (under 40 %) can split the trunk and send the tree the wrong way, even backwards
+const ljBotch = (prec, R) => prec < .4 && R() < (.4 - prec)*2.2 ? 180 + (R() - .5)*120 : 0;
 const ljClamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
 // ---- the garden of a round ----
@@ -7345,7 +7422,7 @@ function botLumber(id){
   if (!HLJ || HLJ.closed || !ljIn(id)) return;
   const F = HLJ.F, R = Math.random;
   const aim = F.ta*180/Math.PI - F.wind*.7 + ljGauss(R)*2.2;   // the robot knows where the free corridor is
-  const prec = ljClamp(.72 + R()*.25 - F.r*.03, 0, 1);
+  const prec = ljClamp(.8 + R()*.19 - F.r*.02, 0, 1);
   lumberDone(id, { r:F.r, a:aim + ljGauss(R)*ljSigma(prec) + F.wind, prec, aim });
 }
 
@@ -7458,7 +7535,9 @@ function ljFinishCut(timeout){
   segs.forEach((g, i) => { total += g.L; if (i > S.i) rest += g.L; else if (i === S.i) rest += Math.max(0, g.L - S.t); });
   const dev = (S.dev + rest*15) / Math.max(1, total);
   const prec = ljClamp(1 - Math.max(0, dev - 1.5)/14, 0, 1);
-  const a = Math.round((LJ.aim + ljGauss(Math.random)*ljSigma(prec) + F.wind)*10)/10;   // rounded like the host's copy, so both find the same landing
+  const botch = ljBotch(prec, Math.random);
+  const a = Math.round((LJ.aim + botch + ljGauss(Math.random)*ljSigma(prec) + F.wind)*10)/10;
+  if (botch) setTimeout(() => boom('LE TRONC SE FEND !', { size:26, x:.5, y:.2, pal:BOOM_COLORS[2], ms:1400 }), 300);   // rounded like the host's copy, so both find the same landing
   LJ.ph = 'fall'; LJ.fall = { a, k:0, prec, done:false, timeout, dev:null };
   sawStop(); sfx('creak');
   boom('ATTENTION, ÇA TOMBE !', { size:30, x:.5, y:.3, pal:BOOM_COLORS[2], ms:1400 });
@@ -9404,11 +9483,11 @@ const BRIEF = {
   tank:{ ctl:[['📱', 'Pilote : glissez, le char tourne puis roule dans cette direction. Canonnier : glissez pour la tourelle, touchez brièvement ou « FEU ! » pour tirer.'], ['💻', 'Pilote : flèches ou ZQSD. Canonnier : visez avec la souris et cliquez pour tirer, ou ← → et Espace.']],
     tip:'Deux par char, l\'un pilote, l\'autre tire. Interdit de se parler : devinez ce que fait votre équipier !' },
   sheep:{ ctl:[['📱', 'Glissez pour courir. « Ouaf ! » (bouton ou touche brève) fait détaler les moutons proches et chasse le loup.'], ['💻', 'Flèches ou ZQSD pour courir, Espace pour aboyer. La souris marche comme le doigt.']],
-    tip:'En équipe : rabattez le troupeau dans l\'enclos avant le coucher du soleil.' },
+    tip:'En équipe : rabattez le troupeau dans l\'enclos avant le coucher du soleil. À 3 joueurs ou plus, un ours peut surgir : il ne recule que devant 3 ou 4 chiens ensemble, sinon il avance jusqu\'à attraper un mouton.' },
   drakkar:{ ctl:[['📱', 'Un coup de rame par BOUM du tambour, en alternant les boutons GAUCHE et DROITE.'], ['💻', '← et → en alternance, en rythme. Ou cliquez les boutons.']],
     tip:'Le tambour accélère quand tout l\'équipage est synchro : calez-vous ensemble.' },
   lumber:{ ctl:[['📱', '1. Touchez le jardin pour choisir où tombe l\'arbre, puis validez. 2. Sciez en suivant les pointillés : l\'entaille d\'un seul geste, puis le trait d\'abattage.'], ['💻', 'Tout à la souris (cliquer et glisser), ou au clavier : ← → viser, Entrée valider, Espace scier, ↑ ↓ corriger.']],
-    tip:'Ne rien écraser ! Viser une ouverture étroite, ou tomber au ras d\'un obstacle avec une coupe propre, rapporte un gros bonus.' },
+    tip:'Ne rien écraser ! Une coupe bâclée envoie l\'arbre n\'importe où, parfois même en arrière. Viser une ouverture étroite, ou tomber au ras d\'un obstacle avec une coupe propre, rapporte un gros bonus.' },
   agility:{ ctl:[['📱', 'Haie et pneu : un tap quand le cercle est vert. Slalom : tracez le zigzag. Tunnel : doigt sur le chien, glissez. Passerelle : restez appuyé, lâchez sur le jaune. Table : un tap puis plus rien.'], ['💻', 'Les mêmes gestes à la souris (clic, clic maintenu, glisser).']],
     tip:'Entre les obstacles le chien court seul. Une consigne s\'affiche avant chaque obstacle.' },
   galop:{ ctl:[['📱', 'Choisissez un cheval. ◀ ▶ pour vous décaler, GALOP pour accélérer (coûte de l\'énergie), RALENTIR pour souffler.'], ['💻', '← → se décaler · ↑ ou Espace galop · ↓ ralentir. Ou cliquez les boutons.']],
