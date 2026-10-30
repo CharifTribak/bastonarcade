@@ -28,7 +28,7 @@
 /* Layout: a comic page. Yellow halftone paper, every block is a panel with a thick ink outline and an offset shadow,
    titles lettered in Bangers, talk in speech bubbles. Game boards keep their own dark palettes inside their panels. */
 :root{
-  --bg:#FFD93B; --panel:#FFFFFF; --line:#000000; --fg:#000000; --muted:#4D3F00; --accent:#E6262B; --danger:#C4121A; --blue:#1E5BFF;
+  --bg:#FFD93B; --panel:#FFFFFF; --line:#000000; --fg:#000000; --muted:#4D3F00; --accent:#D91F25; --danger:#C4121A; --blue:#1E5BFF;
   --display:"Bangers",Impact,"Arial Black",sans-serif;
   --body:"Nunito",system-ui,sans-serif;
   --mono:var(--body);
@@ -135,7 +135,7 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .briefcard{width:min(460px,100%);max-height:100%;overflow:auto;background:var(--panel);border:3px solid var(--line);box-shadow:7px 7px 0 var(--line);padding:12px;display:flex;flex-direction:column;gap:10px;animation:popin .18s ease-out}
 .briefhead{display:flex;justify-content:space-between;align-items:center}
 .briefhead b{font-family:var(--display);font-weight:400;font-size:30px;color:var(--accent);letter-spacing:.02em}
-.briefhead button{padding:4px 10px;font-size:16px}
+.briefhead button{padding:4px 10px;font-size:16px;min-width:44px;min-height:44px}
 .brview{overflow:hidden;touch-action:pan-y}
 .brtrack{display:flex;transition:transform .28s ease}
 .brslide{flex:0 0 100%;display:flex;flex-direction:column;gap:8px;padding:2px}
@@ -148,10 +148,12 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .brbig{font-size:64px;text-align:center}
 .brtip{font-size:17px!important;font-weight:700;text-align:center}
 .brnav{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.brnav button{padding:6px 14px}
-.brdots{display:flex;gap:8px}
-.brdots button{width:14px;height:14px;padding:0;border-radius:50%;background:#fff;border:3px solid var(--line);box-shadow:none}
-.brdots button.on{background:var(--accent)}
+.brnav button{padding:6px 14px;min-width:52px;min-height:44px}
+.brdots{display:flex;gap:4px}
+.brdots button{width:32px;height:44px;padding:0;background:transparent;border:0;box-shadow:none;display:flex;align-items:center;justify-content:center}
+.brdots button::before{content:'';width:16px;height:16px;border-radius:50%;background:#fff;border:3px solid var(--line);box-sizing:border-box}
+.brdots button.on{background:transparent}
+.brdots button.on::before{background:var(--accent)}
 #brReady{height:60px;font-size:28px}
 #brReady:disabled{background:#3DDC97;color:#000;opacity:1}
 .brwait{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:center;font-size:14px;font-weight:700;text-align:center}
@@ -163,13 +165,14 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .pphead b{font-family:var(--display);font-weight:400;font-size:24px;letter-spacing:.03em}
 #lobbyList{flex-direction:column;flex-wrap:nowrap;gap:6px}
 #lobbyList li{border-radius:12px;padding:6px 10px 6px 6px;gap:10px;box-shadow:2px 2px 0 var(--line)}
-#lobbyList li .pav{width:32px;height:32px;border-radius:50%;border:3px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:18px;color:#fff;-webkit-text-stroke:.6px #000;text-shadow:1px 1px 0 #000}
+#lobbyList li .pav{width:32px;height:32px;border-radius:50%;border:3px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:18px;color:#000}
 #lobbyList li .pname{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:17px}
 #lobbyList li .pbadge{font-size:11px;font-weight:900;padding:2px 7px;border:2px solid var(--line);border-radius:9px;background:#FFD93B;white-space:nowrap}
 #lobbyList li .pbadge.you{background:var(--blue);color:#fff}
 #lobbyList li.me{cursor:pointer;background:#FFF6C9}
 #lobbyList li.me::after{content:"🎨";font-size:16px}
-#lobbyList li.slot{border-style:dashed;box-shadow:none;background:transparent;color:var(--muted);cursor:pointer;justify-content:center;font-size:14px}
+#lobbyList li.slot{border-style:dashed;box-shadow:none;background:transparent;color:var(--muted);cursor:pointer;justify-content:center;font-size:14px;min-height:44px}
+#lobbyList li.slot.ok{background:#13A35B;color:#fff;border-style:solid}
 #lobbyList li.new{animation:pjoin .55s cubic-bezier(.2,1.6,.4,1)}
 @keyframes pjoin{from{transform:scale(.6) rotate(-4deg);opacity:0}}
 .pphint{margin:0;font-size:13px;color:var(--muted);font-weight:700}
@@ -187,9 +190,9 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .tag{font-size:11px;color:var(--muted);font-weight:700}
 .choices{display:flex;flex-direction:column;gap:14px}
 .choice{width:100%;font-size:22px;padding:18px 12px}
-#btnMulti{background:var(--blue);color:#fff}
+#btnSolo{background:var(--blue);color:#fff}
 .multi{display:flex;flex-direction:column;gap:12px}
-.backlink{align-self:flex-start;font-size:13px;padding:6px 10px}
+.backlink{align-self:flex-start;font-size:13px;padding:6px 14px;min-height:44px}
 .hello{display:flex;align-items:center;justify-content:center;gap:6px;font-weight:800;font-size:17px}
 .hello button{font-size:15px;padding:2px 9px;margin-left:4px}
 #menuHint:empty{display:none}
@@ -213,7 +216,7 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .gamepop .feature{width:min(400px,100%);animation:popin .18s ease-out}
 .gamepop .featbody small{color:var(--muted);font-weight:800;font-size:12px}
 @keyframes popin{from{transform:scale(.9);opacity:0}}
-#scrLobby.solo .codebox,#scrLobby.solo #lobbyCodeHint,#scrLobby.solo #chatField{display:none}
+#scrLobby.solo .codebox,#scrLobby.solo #chatField{display:none}
 .lobbyfoot{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 @media (max-width:560px){#scrLobby .logosvg.small{width:min(170px,46%)}#scrLobby .burst{width:104px;height:104px}#scrLobby .burst b{font-size:30px}#scrLobby .lobby{gap:12px}#lobbyCodeHint{font-size:13px;margin:-4px 0 0}}
 .launchbar{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);width:min(440px,calc(100% - 24px));z-index:40;display:flex;gap:8px;align-items:stretch;background:var(--panel);border:3px solid var(--line);box-shadow:5px 5px 0 var(--line);padding:6px}
@@ -229,12 +232,15 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 #gsVote.on{background:#3DDC97;color:#000}
 #scrLobby #gamePick button[aria-pressed="true"]{background:var(--panel);color:var(--fg)}
 #gamePick button{position:relative}
+#scrLobby #gamePick{gap:10px 8px}
+#scrLobby #gamePick button{flex:0 0 calc((100% - 24px)/4);font-size:13px;box-shadow:2px 2px 0 var(--line)}
+#scrLobby #gamePick span{padding:2px 0}
 #gamePick button.peek{box-shadow:0 0 0 5px var(--blue),6px 6px 0 var(--line)!important;animation:peekp 1s ease-in-out infinite;z-index:1}
 @keyframes peekp{50%{box-shadow:0 0 0 5px #FFD93B,6px 6px 0 var(--line)}}
 #gamePick .vbadge{width:auto!important;overflow:visible!important;position:absolute;top:-8px;right:-8px;display:flex;align-items:center;gap:2px;background:#3DDC97;color:#000;border:3px solid var(--line);border-radius:14px;padding:1px 6px 1px 4px;font-family:var(--body);font-weight:900;font-size:13px;box-shadow:2px 2px 0 var(--line);z-index:2}
 #gamePick .vbadge i{width:10px;height:10px;border-radius:50%;border:2px solid var(--line)}
 #gamePick .vbadge.top{background:#FFD93B}
-.peekbar{width:100%;background:var(--blue);color:#fff;font-size:15px;padding:8px 10px;margin-bottom:10px;animation:popin .2s ease-out}
+.peekbar{width:100%;min-height:44px;background:var(--blue);color:#fff;font-size:15px;padding:8px 10px;margin-bottom:10px;animation:popin .2s ease-out}
 .votesum{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:10px;font-weight:900;font-size:14px}
 .votesum button{font-size:13px;padding:4px 10px;background:#fff;color:#000}
 .votesum button.top{background:#FFD93B}
@@ -254,7 +260,7 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .bub .who{display:block;font-size:11px;font-weight:900}
 .sysmsg{align-self:center;font-size:12px;font-weight:800;color:var(--muted);background:#FFF7CC;border:2px dashed var(--line);padding:2px 10px}
 .chatform{display:flex;border-top:3px solid var(--line)}
-.chatform input{border:0;flex:1}
+.chatform input{border:0;flex:1;min-height:44px}
 .chatform button{box-shadow:none;border:0;border-left:3px solid var(--line);font-size:18px;padding:8px 14px}
 .chatform button:active:not(:disabled){transform:none}
 
@@ -289,7 +295,7 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .wsub{margin:0;font-weight:900;font-size:14px;background:#fff;border:2px solid #000;padding:3px 10px}
 .panelcv{border:3px solid #000;box-shadow:6px 6px 0 #000}
 .legal{margin:4px 0 0;text-align:center;font-size:13px}
-.legal a{color:#000;font-weight:800}
+.legal a{color:#000;font-weight:800;display:inline-block;padding:13px 8px}
 
 /* ---- tetris ---- */
 .game{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"play opps" "pad pad";gap:22px;justify-content:center;align-items:start;max-width:1100px;margin:0 auto}
@@ -353,7 +359,7 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 /* ---- public lobby list (menu) ---- */
 .salons{border:3px solid #000;background:#fff;box-shadow:4px 4px 0 #000;padding:8px 10px}
 .salonshead{display:flex;justify-content:space-between;align-items:center;font-size:14px}
-.salonshead button{padding:2px 10px;font-size:16px}
+.salonshead button{padding:2px 10px;font-size:16px;min-width:44px;min-height:44px}
 #salonList{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:13px}
 #salonList li{display:block}
 .salonrow{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;width:100%;text-align:left;background:#fff;color:#000;border:3px solid #000;box-shadow:3px 3px 0 #000;padding:7px 10px;font-family:var(--body);font-size:14px;letter-spacing:0;text-transform:none}
@@ -367,7 +373,7 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .salons.mc1 .salonshead b,.salons.mc3 .salonshead b{color:#fff;text-shadow:1px 1px 0 #000}
 .salons.mc1 .none{color:#fff}
 .salons.mc2{background:#FFD21F}
-.salons.mc3{background:#E6262B}
+.salons.mc3{background:var(--accent)}
 .salons.mc3 .mcardtxt{color:#fff}
 .salons .salonshead b{font-size:15px}
 .mcardtxt{flex:1;font-size:13px;font-weight:800;color:var(--muted)}
@@ -600,8 +606,8 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
       <input id="nameIn" maxlength="14" autocomplete="nickname" placeholder="Votre nom">
     </div>
     <div class="choices" id="menuMain">
-      <button id="btnSolo" class="choice" type="button">🎮 Jouer seul</button>
       <button id="btnMulti" class="choice" type="button">👥 Jouer à plusieurs</button>
+      <button id="btnSolo" class="choice" type="button">🎮 Jouer seul</button>
     </div>
     <div class="multi" id="menuMulti" hidden>
       <div class="salons mc1" id="salons" hidden>
@@ -673,15 +679,24 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
   <div class="card lobby">
     <div class="lobbyhead">
       <h1 class="logosvg small" data-appname><svg viewBox="0 0 520 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Baston Arcade"><polygon points="260,8 292,62 352,22 356,86 428,58 404,118 494,120 438,166 508,214 428,226 456,292 384,270 372,322 318,276 262,318 222,270 156,306 152,248 76,262 104,206 18,184 92,148 36,92 116,94 102,30 172,62 204,8 228,58" fill="#000" transform="translate(7,7)"/><polygon points="260,8 292,62 352,22 356,86 428,58 404,118 494,120 438,166 508,214 428,226 456,292 384,270 372,322 318,276 262,318 222,270 156,306 152,248 76,262 104,206 18,184 92,148 36,92 116,94 102,30 172,62 204,8 228,58" fill="#E6262B" stroke="#000" stroke-width="5" stroke-linejoin="round"/><g transform="rotate(-6 260 168)"><text x="264" y="196" text-anchor="middle" font-family="Bangers, Impact, sans-serif" font-size="112" letter-spacing="3" fill="#000">BASTON !</text><text x="258" y="190" text-anchor="middle" font-family="Bangers, Impact, sans-serif" font-size="112" letter-spacing="3" fill="#fff" stroke="#000" stroke-width="6" paint-order="stroke" stroke-linejoin="round">BASTON !</text><text id="ARC" x="383" y="252" text-anchor="end" font-family="Bangers, Impact, sans-serif" font-size="52" letter-spacing="6" fill="#000">ARCADE</text><text x="379" y="248" text-anchor="end" font-family="Bangers, Impact, sans-serif" font-size="52" letter-spacing="6" fill="#FFD93B" stroke="#000" stroke-width="5" paint-order="stroke" stroke-linejoin="round">ARCADE</text></g><path d="M60 46 l26 14 M44 76 l30 6 M462 260 l-26 -12 M476 232 l-30 -4" stroke="#000" stroke-width="5" stroke-linecap="round"/></svg></h1>
-      <div class="codebox"><button id="btnQR" class="qrmini" type="button" aria-label="Agrandir le QR code du salon"><canvas id="qrMini" width="160" height="160"></canvas><span>Code : <b id="lobbyCode">----</b></span></button><button id="btnInvite" class="ghost invite" type="button">🔗 Copier le lien</button></div>
+      <div class="codebox"><button id="btnQR" class="qrmini" type="button" aria-label="Agrandir le QR code du salon"><canvas id="qrMini" width="160" height="160"></canvas><span>Code : <b id="lobbyCode">----</b></span></button><button id="btnInvite" class="ghost invite" type="button" hidden>🔗 Copier le lien</button></div>
     </div>
-    <p class="lobbytip" id="lobbyCodeHint">Pour rejoindre : scanner le QR code, taper le code dans le menu, ou ouvrir le lien envoyé.</p>
     <div class="ppanel">
       <div class="pphead"><b id="lobbyCount">Joueurs</b>
         <label class="privbox" id="privBox" hidden title="Ne pas afficher ce salon dans la liste publique"><input type="checkbox" id="privIn"><span class="sw" aria-hidden="true"></span>Salon privé</label></div>
       <ul class="plist" id="lobbyList"></ul>
       <div class="colpick" id="colPick" role="group" aria-label="Votre couleur" hidden></div>
       <p class="pphint" id="lobbyHint"></p>
+    </div>
+    <div class="field" id="chatField">
+      <label for="chatIn">Discussion</label>
+      <div class="chat">
+        <div class="chatlog" id="chatLog" aria-live="polite"><p class="chatempty" id="chatEmpty">Dites bonjour aux autres joueurs.</p></div>
+        <form class="chatform" id="chatForm">
+          <input id="chatIn" maxlength="120" placeholder="Écrire un message…" autocomplete="off">
+          <button type="submit">Envoyer</button>
+        </form>
+      </div>
     </div>
     <button class="chatping" id="chatPing" type="button" hidden>💬 <span id="chatPingTxt">Nouveau message</span> ↓</button>
     <div class="field">
@@ -706,16 +721,6 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
       <button data-g="agility" aria-pressed="false"><img src="img/agility.jpg" alt=""><span>Agility</span></button>
       <button data-g="galop" aria-pressed="false"><img src="img/galop.jpg" alt=""><span>Galop</span></button>
     </div>
-    </div>
-    <div class="field" id="chatField">
-      <label for="chatIn">Discussion</label>
-      <div class="chat">
-        <div class="chatlog" id="chatLog" aria-live="polite"><p class="chatempty" id="chatEmpty">Dites bonjour aux autres joueurs.</p></div>
-        <form class="chatform" id="chatForm">
-          <input id="chatIn" maxlength="120" placeholder="Écrire un message…" autocomplete="off">
-          <button type="submit">Envoyer</button>
-        </form>
-      </div>
     </div>
     <div class="lobbyfoot">
       <button id="btnBoard2" class="ghost">Classement</button>
@@ -1116,6 +1121,12 @@ const $ = id => document.getElementById(id);
 const COLS = 12, VIS = 22, HID = 2, ROWS = VIS + HID, CELL = 30, MAXP = 5;
 const PREFIX = 'letsdriveit-arcade-';
 const PALETTE = ['#E8202A','#FF8A1F','#FFD21F','#9BE22D','#12A150','#2ED3E6','#1E5BFF','#8E44FF','#FF5FC8','#8B5A2B','#9E1748','#7D8A2E'];
+// black or white text, whichever contrasts most with a background colour
+function inkOn(hex){
+  const v = [1, 3, 5].map(i => parseInt(String(hex).slice(i, i + 2), 16)/255).map(c => c <= .03928 ? c/12.92 : Math.pow((c + .055)/1.055, 2.4));
+  const L = .2126*v[0] + .7152*v[1] + .0722*v[2];
+  return (L + .05)/.05 >= 1.05/(L + .05) ? '#000' : '#fff';
+}
 const PALETTE_NAMES = ['rouge','orange','jaune','citron vert','vert','turquoise','bleu','violet','rose','marron','bordeaux','kaki'];
 // Gravats: a piece of 2 cells (d), pieces of 3 cells (a, b) and 9 pieces of 5 cells. One letter per piece, never a digit or X.
 // No piece of 4 cells, on purpose. The awkward 5-cell shapes (F, W, plus sign) are left out to keep the game readable.
@@ -1219,6 +1230,25 @@ let NV = null, HN = null;       // armada: my view / host's full map
 let BOT = null;                  // host-side robot when someone plays alone
 let ML = null, HM = null;       // tape-taupe: my view / host referee
 const GAME_NAMES = { tetris:'Gravats', pong:'Les Gardiens', derby:'Derby', naval:'Armada', mole:'Tape-taupe', curling:'Curling', chairs:'Chaises musicales', master:'Code secret', kabaddi:'Kabaddi', dodge:'Balle au prisonnier', tank:'Chars', sheep:'Les bergers', drakkar:'Drakkars', lumber:'Bûcherons', agility:'Agility', galop:'Galop' };
+// the gist in two lines, for the rules slides before a game (the full text stays on the game card)
+const GAME_SHORT = {
+  tetris:'Empilez les pièces et effacez des lignes : chacune envoie des briques fendues chez les autres. Le dernier en jeu gagne.',
+  pong:'Chacun garde son but, avec 5 vies. Arrêtez les ballons : le dernier gardien debout gagne.',
+  derby:'Tracez les figures au doigt : plus c\'est propre, plus votre cheval avance. Le premier à la ligne gagne.',
+  naval:'Bataille navale sur une seule mer, chacun son tour. Le dernier bateau à flot gagne.',
+  mole:'Tapez vite les taupes des autres quand elles sortent, jamais les vôtres. Premier à 20 points.',
+  curling:'Lancez vos pierres vers la cible et frottez la glace pour les guider. Le plus proche du centre marque.',
+  chairs:'Quand le disque s\'arrête, touchez vite une chaise libre. Gare aux faux arrêts !',
+  master:'Trouvez avant les autres le code secret de 4 couleurs, grâce à vos indices. Trois manches.',
+  kabaddi:'Attaquez en retenant votre souffle, touchez des défenseurs et rentrez chez vous à temps.',
+  dodge:'Ramassez, lancez, esquivez, attrapez. Chaque balle reçue coûte un cœur : le dernier debout gagne.',
+  tank:'Deux par char, l\'un pilote, l\'autre tire, sans se parler. Le dernier char debout gagne.',
+  sheep:'Ensemble, rabattez le troupeau dans l\'enclos avant la nuit, et chassez les loups.',
+  drakkar:'Tout le salon rame dans le même drakkar : en rythme avec le tambour pour battre les robots.',
+  lumber:'Choisissez où tombe votre arbre, puis sciez-le proprement. N\'écrasez rien !',
+  agility:'Choisissez un chien et guidez-le sur le parcours : chaque obstacle a son geste. Le meilleur temps gagne.',
+  galop:'Choisissez un cheval, placez-vous et dosez son énergie sur 3000 m. Le premier à la ligne gagne.'
+};
 const GAME_DESC = {
   tetris:'Empilez des pièces de 2, 3 et 5 briques. Chaque ligne effacée envoie des briques fendues à vos adversaires. Effacez une ligne collée à une brique fendue : elle éclate et repart chez son expéditeur.',
   pong:'Chaque joueur garde un but avec 5 vies. Le terrain suit le nombre de joueurs : carré à 2, hexagone à 3, octogone à 4, décagone à 5. Deux ballons à partir de 3 joueurs. Le but d\'un joueur éliminé se ferme.',
@@ -1768,7 +1798,7 @@ function renderLobby(){
   const seen = renderLobby.seen || (renderLobby.seen = new Set());
   players.forEach(p => {
     const li = document.createElement('li');
-    const av = document.createElement('span'); av.className = 'pav'; av.style.background = p.color; av.textContent = (p.name || '?').slice(0, 1).toUpperCase(); av.setAttribute('translate', 'no');
+    const av = document.createElement('span'); av.className = 'pav'; av.style.background = p.color; av.style.color = inkOn(p.color); av.textContent = (p.name || '?').slice(0, 1).toUpperCase(); av.setAttribute('translate', 'no');
     const n = document.createElement('span'); n.className = 'pname'; n.textContent = p.name; n.setAttribute('translate', 'no');
     li.append(av, n);
     if (p.id === 'h'){ const b = document.createElement('span'); b.className = 'pbadge'; b.textContent = '👑 Hôte'; li.append(b); }
@@ -1794,8 +1824,7 @@ function renderLobby(){
     cp.append(b);
   });
   const host = players.find(p => p.id === 'h');
-  $('pickLabel').textContent = me.host ? (net && net.solo ? 'Tous les jeux : touchez pour voir la fiche et lancer' : 'Tous les jeux : touchez pour voir la fiche et lancer · les 👍 sont les envies des joueurs')
-    : 'Tous les jeux : touchez pour lire la fiche et voter pour vos envies';
+  $('pickLabel').textContent = me.host ? 'Choisissez un jeu' : 'Votez pour un jeu';
   renderVotes();
   $('lobbyHint').textContent = me.host
     ? (players.length < 2 ? 'Seul, vous jouerez contre un robot de niveau moyen. Ou attendez les autres.' : 'Lancez quand tout le monde est là.')
@@ -9738,7 +9767,7 @@ function openBrief(game, ready){
   const tr0 = $('brTrack'); tr0.textContent = '';
   const slide = (title, body) => { const s = document.createElement('div'); s.className = 'brslide'; const h = document.createElement('h3'); h.textContent = title; s.append(h, ...body); tr0.append(s); };
   const im = document.createElement('img'); im.className = 'brart'; im.alt = ''; im.src = gameImg(game);
-  const p1 = document.createElement('p'); p1.textContent = GAME_DESC[game] || '';
+  const p1 = document.createElement('p'); p1.textContent = GAME_SHORT[game] || GAME_DESC[game] || '';
   slide('Le principe', [im, p1]);
   const rows = B.ctl.map(([ic, t]) => { const r = document.createElement('div'); r.className = 'brctl'; const i = document.createElement('span'); i.className = 'bric'; i.textContent = ic; const l = document.createElement('div'); const k = document.createElement('b'); k.textContent = ic === '📱' ? 'Téléphone' : 'Ordinateur'; const x = document.createElement('p'); x.textContent = t; l.append(k, x); r.append(i, l); return r; });
   slide('Les commandes', rows);
@@ -10065,7 +10094,9 @@ $('btnInvite').onclick = async () => {
   }
   if (!ok){ window.prompt(tr('Copiez ce lien et envoyez-le à vos amis :'), url); return; }
   b.textContent = '✔ Lien copié !'; b.classList.add('ok');
-  clearTimeout(inviteT); inviteT = setTimeout(() => { b.textContent = '🔗 Copier le lien'; b.classList.remove('ok'); }, 2200); track('lien-copie');
+  const slot = document.querySelector('#lobbyList li.slot'), was = slot && slot.textContent;
+  if (slot){ slot.textContent = tr('✔ Lien copié : envoyez-le à vos amis'); slot.classList.add('ok'); }
+  clearTimeout(inviteT); inviteT = setTimeout(() => { b.textContent = '🔗 Copier le lien'; b.classList.remove('ok'); const s2 = document.querySelector('#lobbyList li.slot.ok'); if (s2){ s2.textContent = was; s2.classList.remove('ok'); } }, 2400); track('lien-copie');
 };
 (() => {
   let c = null;
