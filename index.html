@@ -412,6 +412,9 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 #agCv{display:block;width:100%;height:auto;aspect-ratio:1;touch-action:none;user-select:none;-webkit-user-select:none;border:3px solid #000;box-shadow:6px 6px 0 #000}
 #agHead{font-size:clamp(17px,4.4vw,26px)}
 #agFaults.low{background:var(--accent);color:#fff}
+.agdog{display:block;width:100%;max-width:120px;height:auto;aspect-ratio:2;margin:0 auto 2px;align-self:center}
+.agtrait{font-size:11.5px;font-weight:800;color:#444;line-height:1.25}
+@media (max-width:560px){.agtrait{display:none}}
 
 /* ---- galop ---- */
 .gppick{width:min(100%,780px);display:flex;flex-direction:column;gap:10px;align-items:center}
@@ -987,6 +990,11 @@ html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
 <!-- AGILITY -->
 <section id="scrAgility" hidden>
   <div class="naval">
+    <div id="agPick" class="gppick" hidden>
+      <div class="nvturn" id="agPickHead">Choisissez votre chien</div>
+      <div class="gpgrid" id="agGrid"></div>
+      <p class="hint">Chaque chien a 6 étoiles en tout. Vitesse : la course entre les obstacles. Saut : plus de marge sur les haies, le pneu et le triple. Énergie : slalom, tunnel, passerelle, bascule et sprint final plus rapides. Les chiens libres iront aux robots.</p>
+    </div>
     <div class="nvhead aghead"><div class="nvturn" id="agHead">Agility</div><div class="dkchips"><span class="cuend" id="agTime">⏱ 0,0 s</span><span class="cuend" id="agFaults">Fautes : 0</span></div></div>
     <div class="nvwrap" id="agWrap">
       <canvas id="agCv" width="600" height="600" aria-label="Le parcours d'agility"></canvas>
@@ -1209,7 +1217,7 @@ const GAME_DESC = {
   sheep:'Les bergers, en coopération : vous êtes des chiens de berger et devez rabattre le troupeau dans l\'enclos avant le coucher du soleil (regardez sa course dans le ciel). Les moutons fuient les chiens et ont du caractère : le peureux file, le gourmand broute les fleurs, l\'agneau suit sa mère. « Ouaf ! » fait détaler. Des loups sortent du bois : chassez-les à deux. 6 journées de plus en plus dures (plus de moutons et de loups, journées plus courtes) ; une manche ratée et c\'est fini. Seul, un chien robot vous aide.',
   drakkar:'Drakkars, en coopération : tout le salon rame dans le même drakkar et fait la course contre celui des robots jusqu\'en Angleterre. Un coup de rame par coup de tambour, en alternant GAUCHE et DROITE. Les coups de chacun s\'affichent chez tous pour se caler ensemble. Plus l\'équipage est synchro, plus le drakkar file, et le tambour accélère.',
   lumber:'Concours de bûcherons, tronçonneuse en main : vu du dessus, choisissez où tombe votre arbre sans rien écraser, puis abattez-le comme un vrai, en suivant les pointillés : les deux coupes de l\'entaille, puis le trait d\'abattage. Plus les coupes sont droites, plus l\'arbre tombe là où vous l\'avez décidé, et viser une ouverture étroite rapporte un gros bonus. Écraser une maison, une voiture ou un autre arbre élimine. Trois manches de plus en plus dures, tout le monde joue en même temps.',
-  agility:'Concours d\'agility : chacun guide son chien sur le même parcours, en même temps. Entre les obstacles, le chien court seul. Haies et pneu : touchez au bon moment. Slalom : tracez le zigzag entre les piquets. Tunnel : suivez-le du doigt. Passerelle : maintenez, puis relâchez dans la zone jaune. Table : « Couché ! » puis ne touchez plus. Chaque faute coûte 5 s, le meilleur temps gagne.',
+  agility:'Concours d\'agility : chacun choisit son chien (Border collie, Whippet, Caniche…) et le guide sur le même parcours, en même temps. Entre les obstacles, le chien court seul. Haies, pneu et triple : touchez au bon moment. Slalom : tracez le zigzag. Tunnel : suivez-le du doigt. Passerelle : maintenez, relâchez sur le jaune. Bascule : stop au milieu. Table : « Couché ! » puis ne touchez plus. Sprint final : tapez le plus vite possible. Chaque faute coûte 5 s, le meilleur temps gagne.',
   galop:'Course de galop de 3000 m, chacun sur son cheval, vue du dessus. Choisissez votre monture parmi 20, nouvelles à chaque partie (accélération, vitesse, maniabilité, et une forme du jour cachée), des robots complètent jusqu\'à 8 partants. Le cheval suit la piste tout seul : vous vous décalez à gauche ou à droite et vous demandez du galop, qui coûte de l\'énergie. Collé derrière un autre, vous récupérez plus vite et profitez de ses accélérations.',
   derby:'Course de chevaux : tout le monde reçoit la même série de figures à tracer. Chaque figure réussie fait avancer votre cheval, plus loin si elle est complexe et bien tracée. Le premier à la ligne gagne.'
 };
@@ -1606,6 +1614,8 @@ function hostHandle(id, m){
     galopPick(id, m.h);
   } else if (m.t === 'gp_in'){
     galopInput(id, m);
+  } else if (m.t === 'ag_pick'){
+    agilityPick(id, m.b);
   } else if (m.t === 'ag_p'){
     broadcast({ t:'ag_p', id, d:+m.d || 0 }, id);
   } else if (m.t === 'ag_done'){
@@ -1703,7 +1713,7 @@ function clientRecv(m){
     case 'sh_round': case 'sh_s': case 'sh_res': case 'sh_ev': sheepRecv(m); break;
     case 'dk_beat': case 'dk_s': case 'dk_tap': case 'dk_end': case 'dk_ev': drakkarRecv(m); break;
     case 'lj_round': case 'lj_res': case 'lj_sum': case 'lj_left': lumberRecv(m); break;
-    case 'ag_p': case 'ag_done': case 'ag_left': agilityRecv(m); break;
+    case 'ag_p': case 'ag_done': case 'ag_left': case 'ag_pick': case 'ag_go': agilityRecv(m); break;
     case 'gp_pick': case 'gp_race': case 'gp_go': case 'gp_s': case 'gp_fin': galopRecv(m); break;
     case 'brief': if (phase === 'lobby') openBrief(m.game, m.ready); break;
     case 'votes': VOTES = m.v && typeof m.v === 'object' ? m.v : {}; renderVotes(); if (!$('gameSheet').hidden) openGameSheet($('gameSheet').dataset.g); break;
@@ -7993,30 +8003,45 @@ function sawStop(){
 // yellow contact zone. Table: tap "down", then do not touch for 3 s. Each fault adds 5 s.
 const AG_SPEED = 230, AG_FAULT = 5, AG_LIMIT = 150, AG_VIEW = 600, AG_ZOOM = 1.3;   // the canvas shows 600/1.3 world px around the dog
 const AG_DOGS = [
-  { breed:'Border collie', body:'#1C1C22', head:'#1C1C22', mask:'#FFFFFF', ears:'semi', ear:'#1C1C22', tail:'#FFFFFF', spots:null, chest:'#FFFFFF' },
-  { breed:'Dalmatien', body:'#FFFFFF', head:'#FFFFFF', mask:null, ears:'drop', ear:'#1C1C22', tail:'#FFFFFF', spots:'#1C1C22', chest:null },
-  { breed:'Corgi', body:'#E2873A', head:'#E2873A', mask:'#FFFFFF', ears:'big', ear:'#E2873A', tail:null, spots:null, chest:'#FFFFFF' },
-  { breed:'Labrador', body:'#E3BE74', head:'#E3BE74', mask:null, ears:'drop', ear:'#C99A4E', tail:'#E3BE74', spots:null, chest:null },
-  { breed:'Husky', body:'#7D8793', head:'#7D8793', mask:'#FFFFFF', ears:'pointy', ear:'#5F6873', tail:'#7D8793', spots:null, chest:'#FFFFFF' }
+  { breed:'Border collie', s:[2, 2, 2], body:'#1C1C22', head:'#1C1C22', mask:'#FFFFFF', ears:'semi', ear:'#1C1C22', tail:'#FFFFFF', spots:null, chest:'#FFFFFF' },
+  { breed:'Dalmatien', s:[3, 2, 1], body:'#FFFFFF', head:'#FFFFFF', mask:null, ears:'drop', ear:'#1C1C22', tail:'#FFFFFF', spots:'#1C1C22', chest:null },
+  { breed:'Corgi', s:[1, 2, 3], body:'#E2873A', head:'#E2873A', mask:'#FFFFFF', ears:'big', ear:'#E2873A', tail:null, spots:null, chest:'#FFFFFF' },
+  { breed:'Labrador', s:[2, 2, 2], body:'#E3BE74', head:'#E3BE74', mask:null, ears:'drop', ear:'#C99A4E', tail:'#E3BE74', spots:null, chest:null },
+  { breed:'Husky', s:[2, 1, 3], body:'#7D8793', head:'#7D8793', mask:'#FFFFFF', ears:'pointy', ear:'#5F6873', tail:'#7D8793', spots:null, chest:'#FFFFFF' },
+  { breed:'Whippet', s:[3, 1, 2], body:'#C7A982', head:'#C7A982', mask:null, ears:'semi', ear:'#A88760', tail:'#C7A982', spots:null, chest:'#FFFFFF', slim:true },
+  { breed:'Jack Russell', s:[2, 3, 1], body:'#FFFFFF', head:'#9A5B2C', mask:'#FFFFFF', ears:'drop', ear:'#7A4420', tail:'#FFFFFF', spots:null, chest:null, saddle:'#9A5B2C' },
+  { breed:'Caniche', s:[1, 3, 2], body:'#F1E7D3', head:'#F1E7D3', mask:null, ears:'drop', ear:'#E2D3B4', tail:'#F1E7D3', spots:null, chest:null, curly:true }
 ];
-const AG_NAMES = { jump:'Haie', tire:'Pneu', weave:'Slalom', tunnel:'Tunnel', walk:'Passerelle', table:'Table' };
+// what each star is worth: Vitesse (running between obstacles), Saut (wider tap windows on the bars), Énergie (weave,
+// tunnel, dog walk, seesaw and sprint). Every breed has 6 stars, so none is better overall.
+const AG_STAR = { spd:[0, .95, 1, 1.05], jx:[0, -8, 0, 10], nrg:[0, .9, 1, 1.1] }, AG_PICK = 15;
+const agKs = D => ({ spd:AG_STAR.spd[D.s[0]], jx:AG_STAR.jx[D.s[1]], nrg:AG_STAR.nrg[D.s[2]] });
+const AG_NAMES = { jump:'Haie', tire:'Pneu', weave:'Slalom', tunnel:'Tunnel', walk:'Passerelle', table:'Table', combo:'Triple', seesaw:'Bascule', sprint:'Sprint final' };
 const AG_HELP = {
   run:'Le chien court tout seul : préparez-vous pour le prochain obstacle.',
   jump:'HAIE : un seul tap, quand le cercle devient vert.',
   tire:'PNEU : un seul tap, quand le cercle devient vert (fenêtre plus courte).',
+  combo:'TRIPLE : trois haies rapprochées, un tap à chaque cercle vert, en rythme.',
   weave:'SLALOM : refaites du doigt le zigzag montré en pointillés.',
   tunnel:'TUNNEL : posez le doigt sur le chien et glissez le long du tunnel.',
   walk:'PASSERELLE : restez appuyé, lâchez quand le chien est sur le jaune.',
   table:'TABLE : un tap, puis ne touchez plus pendant 3 s.',
+  seesaw:'BASCULE : tapez quand le chien arrive sur la zone verte au milieu, il attend que la planche bascule.',
+  sprint:'SPRINT FINAL : tapez le plus vite possible, plus vous tapez vite, plus il court vite.',
   done:'Arrivé ! On attend les autres chiens.'
 };
+// bars to clear: one for a jump or the tyre, three in a row for the triple
+const agIsHurdle = ob => ob.type === 'jump' || ob.type === 'tire' || ob.type === 'combo';
+const agHurdles = ob => ob.type === 'combo' ? [ob.s0 + 30, ob.s0 + 110, ob.s0 + 190] : [ob.sx];
+const agHKey = (ob, k) => ob.type === 'combo' ? ob.i + '.' + k : String(ob.i);
+function agWin(type, jx){ const w = type === 'tire' ? [22, 48] : [14, 62], e = (jx || 0)/2; return [w[0] - e, w[1] + e]; }
 let HAG = null, AG = null;
 
 // ---- the course: legs of free running, each ending in an obstacle, turning in between ----
 function agCourseTry(R, seed){
-  const pool = ['tire', 'weave', 'tunnel', 'walk', 'table', 'jump', 'tire', 'jump'];
+  const pool = ['tire', 'weave', 'tunnel', 'walk', 'table', 'combo', 'seesaw', 'jump'];
   for (let i = pool.length - 1; i > 0; i--){ const j = Math.floor(R()*(i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
-  const types = ['jump', ...pool];
+  const types = ['jump', ...pool, 'sprint'];                      // always a sprint down the home straight
   const pts = [[0, 0]], obs = [];
   let x = 0, y = 0, a = -Math.PI/2, len = 0;
   const step = (dist, turn) => {                    // walk forward, possibly curving, adding points every 8 px
@@ -8030,14 +8055,18 @@ function agCourseTry(R, seed){
     step(60);                                                    // straight approach
     const s0 = len, ax = x, ay = y, ah = a;
     if (type === 'jump' || type === 'tire') step(60);
+    else if (type === 'combo') step(220);
+    else if (type === 'seesaw') step(260);
+    else if (type === 'sprint') step(560);
     else if (type === 'weave') step(6*36 + 30);
     else if (type === 'tunnel') step(240, (R() < .5 ? -1 : 1) * (1.6 + R()*1.2));
     else if (type === 'walk') step(300);
     else if (type === 'table') step(70);
-    obs.push({ i, type, s0, s1:len, sx:s0 + (type === 'table' ? 35 : 30), x:ax, y:ay, a:ah });
+    obs.push({ i, type, s0, s1:len, sx:s0 + (type === 'table' ? 35 : type === 'seesaw' ? 130 : 30), x:ax, y:ay, a:ah });
     step(40);
   });
   step(150);
+  const last = obs[obs.length - 1]; if (last.type === 'sprint') last.s1 = len - 40;   // the sprint runs right to the finish line
   // cumulative distances
   const cum = [0]; for (let k = 1; k < pts.length; k++) cum.push(cum[k - 1] + Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][1] - pts[k - 1][1]));
   return { seed, pts, cum, len:cum[cum.length - 1], obs };
@@ -8074,9 +8103,29 @@ function agilityHostStart(){
   H.stats = {};
   for (const p of players) H.stats[p.id] = { time:0, faults:0, total:0, done:false, left:false };
   const seed = Math.floor(Math.random() * 2**31);
-  HAG = { timers:[], seed, C:agCourse(seed), t0:performance.now() + 3200, bots:{}, lastSend:0 };
-  for (const p of players) if (p.bot) HAG.bots[p.id] = agBotPlan(HAG.C);
+  HAG = { timers:[], seed, C:agCourse(seed), t0:0, bots:{}, lastSend:0, ph:'pick', picks:{}, end:performance.now() + AG_PICK*1000 };
   broadcast({ t:'start', players, game:'agility', seed });
+  agPickSend();
+  agLater(agGo, AG_PICK*1000 + 300);
+}
+// first everyone picks a breed (one dog per player), then the countdown
+function agPickSend(){ broadcast({ t:'ag_pick', picks:HAG.picks, left:Math.max(0, Math.round((HAG.end - performance.now())/1000)) }); }
+const agAllPicked = () => players.every(p => p.bot || HAG.picks[p.id] != null || (H.stats[p.id] && H.stats[p.id].left));
+function agilityPick(id, b){
+  if (!HAG || HAG.ph !== 'pick' || !H.stats[id]) return;
+  b = b|0; if (b < 0 || b >= AG_DOGS.length) return;
+  if (Object.entries(HAG.picks).some(([o, x]) => x === b && o !== id)) return;     // already taken
+  HAG.picks[id] = b; agPickSend();
+  if (agAllPicked()) agLater(agGo, 900);
+}
+function agGo(){
+  if (!HAG || HAG.ph !== 'pick') return;
+  HAG.ph = 'run';
+  const free = () => AG_DOGS.map((_, i) => i).filter(i => !Object.values(HAG.picks).includes(i));
+  for (const p of players) if (HAG.picks[p.id] == null){ const f = free(); HAG.picks[p.id] = f.length ? f[Math.floor(Math.random()*f.length)] : 0; }
+  for (const p of players) if (p.bot) HAG.bots[p.id] = agBotPlan(HAG.C, AG_DOGS[HAG.picks[p.id]]);
+  HAG.t0 = performance.now() + 3200;
+  broadcast({ t:'ag_go', picks:HAG.picks });
   agLater(agilityFinish, 3200 + AG_LIMIT*1000);
 }
 function agilityDone(id, m){
@@ -8103,23 +8152,25 @@ function agilityDrop(id){
   if (!H || H.over || !H.stats[id]) return;
   H.stats[id].left = true; broadcast({ t:'ag_left', id });
   if (!players.some(p => !p.bot && !H.stats[p.id].left)) return agilityFinish();
+  if (HAG && HAG.ph === 'pick'){ if (agAllPicked()) agLater(agGo, 500); return; }
   if (Object.values(H.stats).every(s => s.done || s.left)) agLater(agilityFinish, 1500);
 }
 // robot: runs the course with plausible times per obstacle and the odd fault
-function agBotPlan(C){
-  const R = Math.random, marks = [[0, 0]];
+function agBotPlan(C, D){
+  const R = Math.random, marks = [[0, 0]], K = agKs(D || AG_DOGS[0]), v = AG_SPEED*K.spd;
   let t = 0, d = 0, faults = 0;
   for (const ob of C.obs){
-    t += (ob.s0 - d)/AG_SPEED; d = ob.s0; marks.push([t, d]);
-    const extra = { jump:0, tire:0, weave:3.2 + R()*2.2, tunnel:1.6 + R()*1.4, walk:1.9 + R()*1.2, table:3.9 + R()*1.3 }[ob.type];
-    if (R() < { jump:.12, tire:.2, weave:.25, tunnel:0, walk:.2, table:0 }[ob.type]){ faults++; t += ob.type === 'jump' || ob.type === 'tire' ? .7 : 0; }
-    t += extra + (ob.s1 - ob.s0)/AG_SPEED; d = ob.s1; marks.push([t, d]);
+    t += (ob.s0 - d)/v; d = ob.s0; marks.push([t, d]);
+    const extra = { jump:0, tire:0, combo:0, weave:3.2 + R()*2.2, tunnel:1.6 + R()*1.4, walk:1.9 + R()*1.2, table:3.9 + R()*1.3, seesaw:.7 + R()*.8, sprint:0 }[ob.type]/K.nrg;
+    const bars = ob.type === 'combo' ? 3 : 1;
+    for (let k = 0; k < bars; k++) if (R() < ({ jump:.12, tire:.2, combo:.15, weave:.25, tunnel:0, walk:.2, table:0, seesaw:.15, sprint:0 }[ob.type] - K.jx/200)){ faults++; t += agIsHurdle(ob) ? .7 : 0; }
+    t += extra + (ob.s1 - ob.s0)/(ob.type === 'sprint' ? (190 + R()*180)*K.nrg : v); d = ob.s1; marks.push([t, d]);
   }
-  t += (C.len - d)/AG_SPEED; marks.push([t, C.len]);
+  t += (C.len - d)/v; marks.push([t, C.len]);
   return { marks, total:t, faults, done:false };
 }
 function agilityHostFrame(now){
-  if (!HAG || !H || H.over) return;
+  if (!HAG || !H || H.over || HAG.ph !== 'run') return;
   const el = (now - HAG.t0)/1000;
   if (el < 0 || now - HAG.lastSend < 300) return;
   HAG.lastSend = now;
@@ -8137,16 +8188,59 @@ function agilityHostFrame(now){
 const agcv = $('agCv'), agctx = agcv.getContext('2d');
 function startAgility(m){
   lastCountShown = null;
-  players = m.players; cur = 'agility'; G = null; PG = null; D = null; phase = 'count';
+  players = m.players; cur = 'agility'; G = null; PG = null; D = null; phase = 'pick';
   $('scrEnd').hidden = true; show('scrAgility');
-  const C = agCourse(m.seed|0), myIdx = Math.max(0, players.findIndex(p => p.id === me.id));
+  const C = agCourse(m.seed|0);
   const spec = players.some(p => p.id === me.id);
   AG = { C, d:0, mode:spec ? 'count' : 'watch', next:0, t:0, faults:0, count:3, cam:agPos(C, 0), trace:null, follow:null, hold:false, finger:null,
-    table:null, wait:0, jumpT:-1, knocked:{}, res:{}, others:new Map(), lastSend:0, done:false, dog:AG_DOGS[myIdx % AG_DOGS.length], over:false,
-    fx:[], keys:{}, stepT:0, walkSafe:false };
+    table:null, wait:0, jumpT:-1, knocked:{}, res:{}, hop:{}, others:new Map(), lastSend:0, done:false, dog:AG_DOGS[0], ks:agKs(AG_DOGS[0]), over:false,
+    fx:[], keys:{}, stepT:0, walkSafe:false, ph:'pick', picks:{}, left:AG_PICK, pickT:performance.now(), spec:!spec, ss:null, spv:0, spTop:0 };
   for (const p of players) if (p.id !== me.id) AG.others.set(p.id, { d:0, done:false, total:0, faults:0 });
-  agMsg(''); agHead(spec ? 'À vos marques…' : 'Spectateur'); agChips(); renderAgPlayers();
-  $('agHelp').textContent = 'Votre chien : ' + AG.dog.breed + '. ' + AG_HELP.run;
+  agMsg(''); agChips();
+  agShowPick(true); renderAgPick();
+}
+function agShowPick(on){
+  $('agPick').hidden = !on;
+  for (const el of [$('agHead').parentNode, $('agWrap'), $('agPlayers'), $('agHelp')]) el.hidden = on;
+}
+const agDogOf = (id, i) => AG_DOGS[AG && AG.picks[id] != null ? AG.picks[id] : i % AG_DOGS.length] || AG_DOGS[0];
+const agStars = n => '★'.repeat(n) + '☆'.repeat(3 - n);
+const AG_TRAITS = { 'Border collie':'Polyvalent', 'Dalmatien':'Rapide', 'Corgi':'Infatigable', 'Labrador':'Polyvalent', 'Husky':'Endurant', 'Whippet':'Fusée', 'Jack Russell':'Sauteur', 'Caniche':'Sauteur agile' };
+function renderAgPick(){
+  const grid = $('agGrid'); grid.textContent = '';
+  const mine = AG.picks[me.id];
+  AG_DOGS.forEach((D0, i) => {
+    const owner = Object.entries(AG.picks).find(([, x]) => x === i);
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'gpcard';
+    if (owner) b.classList.add(owner[0] === me.id ? 'mine' : 'taken');
+    const cv = document.createElement('canvas'); cv.className = 'agdog'; cv.width = 120; cv.height = 60;
+    const c = cv.getContext('2d'); c.save(); c.translate(52, 30); c.scale(1.35, 1.35); agDog(c, 0, 0, 0, D0, owner ? (players.find(x => x.id === owner[0]) || {}).color || '#888' : '#FFFFFF', .3, -1, 1); c.restore();
+    const nm = document.createElement('b'); nm.textContent = D0.breed;
+    const tr0 = document.createElement('small'); tr0.className = 'agtrait'; tr0.textContent = AG_TRAITS[D0.breed] || '';
+    const st = document.createElement('span'); st.className = 'gpstars';
+    for (const [lab, v] of [['Vitesse', D0.s[0]], ['Saut', D0.s[1]], ['Énergie', D0.s[2]]]){ const l = document.createElement('span'); l.textContent = lab + ' ' + agStars(v); st.append(l); }
+    b.append(cv, nm, tr0, st);
+    if (owner){ const p = players.find(x => x.id === owner[0]); const w = document.createElement('i'); w.textContent = p ? p.name : ''; if (p) w.style.background = p.color; b.append(w); }
+    b.disabled = AG.spec || (!!owner && owner[0] !== me.id);
+    b.onclick = () => { if (AG.ph !== 'pick') return; toHost({ t:'ag_pick', b:i }); sfx('place'); };
+    grid.append(b);
+  });
+  agPickHead();
+}
+function agPickHead(){
+  const l = Math.max(0, AG.left - Math.floor((performance.now() - AG.pickT)/1000)), mine = AG.picks[me.id];
+  if (l === AG.shownLeft && mine === AG.shownMine) return;
+  AG.shownLeft = l; AG.shownMine = mine;
+  $('agPickHead').textContent = AG.spec ? 'Les joueurs choisissent leur chien · ' + l + ' s' : mine != null ? 'Votre chien : ' + AG_DOGS[mine].breed + ' · départ dans ' + l + ' s' : 'Choisissez votre chien · ' + l + ' s';
+}
+function agGoRecv(m){
+  if (AG.ph !== 'pick') return;
+  AG.ph = 'run'; AG.picks = m.picks || {}; phase = 'count'; AG.count = 3; lastCountShown = null;
+  const mine = AG.picks[me.id];
+  if (mine != null && AG_DOGS[mine]){ AG.dog = AG_DOGS[mine]; AG.ks = agKs(AG.dog); }
+  agShowPick(false);
+  agHead(AG.mode === 'watch' ? 'Spectateur' : 'À vos marques…'); renderAgPlayers();
+  $('agHelp').textContent = AG.mode === 'watch' ? 'Vous regardez le parcours.' : 'Votre chien : ' + AG.dog.breed + '. ' + AG_HELP.run;
 }
 const agMsg = big => { const m = $('agMsg'); m.textContent = ''; if (big){ const s = document.createElement('strong'); s.textContent = big; m.append(s); } };
 let agToastT = null;
@@ -8165,7 +8259,7 @@ function renderAgPlayers(){
     const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color;
     const o = p.id === me.id ? { d:AG.d, done:AG.done, total:AG.t + AG.faults*AG_FAULT, faults:AG.faults } : AG.others.get(p.id) || {};
     const t = document.createElement('span');
-    t.textContent = p.name + (p.id === me.id ? ' (vous)' : '') + ' · ' + AG_DOGS[i % AG_DOGS.length].breed + ' · ' + (o.done ? agFmt(o.total) : Math.round(100*(o.d || 0)/AG.C.len) + ' %');
+    t.textContent = p.name + (p.id === me.id ? ' (vous)' : '') + ' · ' + agDogOf(p.id, i).breed + ' · ' + (o.done ? agFmt(o.total) : Math.round(100*(o.d || 0)/AG.C.len) + ' %');
     li.append(d, t); ul.append(li);
   });
 }
@@ -8175,7 +8269,9 @@ function agFault(why){
 }
 function agilityRecv(m){
   if (!AG) return;
-  if (m.t === 'ag_p'){ const o = AG.others.get(m.id); if (o) o.d = +m.d || 0; }
+  if (m.t === 'ag_pick'){ if (AG.ph !== 'pick') return; AG.picks = m.picks || {}; AG.left = m.left|0; AG.pickT = performance.now(); AG.shownLeft = null; renderAgPick(); }
+  else if (m.t === 'ag_go') agGoRecv(m);
+  else if (m.t === 'ag_p'){ const o = AG.others.get(m.id); if (o) o.d = +m.d || 0; }
   else if (m.t === 'ag_done'){
     const o = AG.others.get(m.id);
     if (o){ o.done = true; o.total = +m.total; o.faults = m.faults|0; o.d = AG.C.len; const p = players.find(x => x.id === m.id); if (p) agToast(p.name + ' arrive : ' + agFmt(+m.total)); }
@@ -8185,7 +8281,7 @@ function agilityRecv(m){
 // what the obstacle ahead is, and the help that goes with it
 function agUpcoming(){ return AG.C.obs[AG.next] || null; }
 function agSetHelp(){
-  const ob = agUpcoming(), key = AG.done ? 'done' : AG.mode === 'run' || AG.mode === 'count' ? (ob && ob.s0 - AG.d < 260 ? ob.type : 'run') : AG.mode === 'weavego' ? 'weave' : AG.mode;
+  const ob = agUpcoming(), key = AG.done ? 'done' : AG.mode === 'run' || AG.mode === 'count' ? (ob && ob.s0 - AG.d < 260 ? ob.type : 'run') : AG.mode === 'weavego' ? 'weave' : AG.mode === 'zone' || AG.mode === 'refus' ? 'run' : AG.mode;
   if (AG.helpKey === key) return;
   AG.helpKey = key;
   $('agHelp').textContent = AG_HELP[key] || AG_HELP.run;
@@ -8202,14 +8298,24 @@ function agTap(){
   if (!AG || phase !== 'play' || AG.done) return;
   if (AG.mode === 'run'){
     const ob = agUpcoming();
-    if (ob && (ob.type === 'jump' || ob.type === 'tire') && !AG.res[ob.i]){
-      const dist = ob.sx - AG.d;
-      if (dist > 170 || dist < -12) return;
-      const win = ob.type === 'jump' ? [14, 62] : [22, 48];
+    if (ob && agIsHurdle(ob)){
+      const hs = agHurdles(ob), k = hs.findIndex((_, j) => !AG.res[agHKey(ob, j)]);
+      if (k < 0) return;
+      const key = agHKey(ob, k), dist = hs[k] - AG.d;
+      if (dist > (ob.type === 'combo' ? 92 : 170) || dist < -12) return;      // in the triple, a tap too far from the next bar is ignored
+      const win = agWin(ob.type, AG.ks.jx);
       AG.jumpT = 0; sfx('pop');
-      if (dist >= win[0] && dist <= win[1]){ AG.res[ob.i] = 'ok'; boom(ob.type === 'jump' ? 'HOP !' : 'DANS LE MILLE !', { size:26, x:.5, y:.3, pal:BOOM_COLORS[1], ms:700 }); }
-      else { AG.res[ob.i] = 'bad'; AG.knocked[ob.i] = 0; setTimeout(() => sfx('clack'), 180); agFault(dist > win[1] ? 'Trop tôt, barre tombée' : 'Trop tard, barre tombée'); }
+      if (dist >= win[0] && dist <= win[1]){ AG.res[key] = 'ok'; boom(ob.type === 'tire' ? 'DANS LE MILLE !' : ob.type === 'combo' ? ['HOP !', 'ET HOP !', 'TRIPLÉ !'][k] : 'HOP !', { size:26, x:.5, y:.3, pal:BOOM_COLORS[1], ms:600 }); }
+      else { AG.res[key] = 'bad'; AG.knocked[key] = 0; setTimeout(() => sfx('clack'), 180); agFault(dist > win[1] ? 'Trop tôt, barre tombée' : 'Trop tard, barre tombée'); }
     }
+  } else if (AG.mode === 'sprint'){
+    AG.spv = Math.min(520, AG.spv + 50*AG.ks.nrg); AG.taps = (AG.taps || 0) + 1;
+    tone(300 + Math.min(400, AG.spv - 100), .03, 'square', .035);
+  } else if (AG.mode === 'seesaw'){
+    const ob = agUpcoming(); if (!ob || AG.ss !== 'up') return;
+    const dd = AG.d - ob.sx;
+    if (dd >= -36 && dd <= 10){ AG.ss = 'stop'; AG.tilt = AG.tilt || 0; sfx('place'); boom('STOP !', { size:26, x:.5, y:.3, pal:BOOM_COLORS[1], ms:600 }); }
+    else if (dd < -36){ AG.ssWait = .5; agToast('Trop tôt : il hésite'); sfx('fail'); }
   } else if (AG.mode === 'table'){
     if (AG.table === 'stand'){ AG.table = 'down'; AG.tableN = 3; sfx('place'); boom('COUCHÉ !', { size:26, x:.5, y:.3, pal:BOOM_COLORS[0], ms:700 }); }
     else if (AG.table === 'down'){ AG.tableN = 3; agToast('Il a bougé ! On recommence le compte'); sfx('fail'); }
@@ -8278,19 +8384,28 @@ function agilityFrame(dtMs, now){
   if (!AG) return;
   const dt = Math.min(.05, dtMs/1000), C = AG.C;
   if (me.host) agilityHostFrame(now);
+  if (AG.ph === 'pick'){ agPickHead(); return; }
   if (phase === 'count'){ AG.count -= dt; if (AG.count > 0) countBeep(Math.ceil(AG.count)); else { countBeep(0); phase = 'play'; if (AG.mode === 'count'){ AG.mode = 'run'; sfx('bark'); } } }
   if (phase === 'play' && !AG.done && AG.mode !== 'watch'){
     AG.t += dt;
     const ob = agUpcoming();
     if (AG.wait > 0){ AG.wait -= dt; if (AG.wait <= 0) AG.mode = 'run'; }
     else if (AG.mode === 'run'){
-      AG.d += AG_SPEED*dt;
+      AG.d += AG_SPEED*AG.ks.spd*dt;
       if (ob){
-        if (AG.res[ob.i] === 'refus' && AG.jumpT < 0 && !ob.hopped && AG.d >= ob.sx - 26){ ob.hopped = true; AG.jumpT = 0; }   // after a refusal, the dog jumps on the second try
-        if ((ob.type === 'jump' || ob.type === 'tire') && !AG.res[ob.i] && AG.d >= ob.sx - 6){
-          AG.res[ob.i] = 'refus'; AG.d = ob.sx - 30; AG.mode = 'refus'; AG.wait = .8; agFault('Refus');
-          boom('REFUS !', { size:26, x:.5, y:.3, pal:BOOM_COLORS[2], ms:700 });
+        if (agIsHurdle(ob)){
+          const hs = agHurdles(ob);
+          for (let k = 0; k < hs.length; k++){
+            const key = agHKey(ob, k);
+            if (AG.res[key] === 'refus' && AG.jumpT < 0 && !AG.hop[key] && AG.d >= hs[k] - 26){ AG.hop[key] = true; AG.jumpT = 0; }   // after a refusal, the dog jumps on the second try
+            if (!AG.res[key] && AG.d >= hs[k] - 6){
+              AG.res[key] = 'refus'; AG.d = hs[k] - 30; AG.mode = 'refus'; AG.wait = .8; agFault('Refus');
+              boom('REFUS !', { size:26, x:.5, y:.3, pal:BOOM_COLORS[2], ms:700 }); break;
+            }
+          }
         } else if (ob.type === 'weave' && AG.d >= ob.s0){ AG.d = ob.s0; AG.mode = 'weave'; }
+        else if (ob.type === 'seesaw' && AG.d >= ob.s0){ AG.d = ob.s0; AG.mode = 'seesaw'; AG.ss = 'up'; AG.tilt = 0; AG.ssWait = 0; }
+        else if (ob.type === 'sprint' && AG.d >= ob.s0){ AG.d = ob.s0; AG.mode = 'sprint'; AG.spv = AG_SPEED*AG.ks.spd; AG.spTop = 0; AG.taps = 0; sfx('bark'); }
         else if (ob.type === 'tunnel' && AG.d >= ob.s0){ AG.d = ob.s0; AG.mode = 'tunnel'; }
         else if (ob.type === 'walk' && AG.d >= ob.s0){ AG.d = ob.s0; AG.mode = 'walk'; AG.hold = !!AG.keys.space; }
         else if (ob.type === 'table' && AG.d >= ob.sx){ AG.d = ob.sx; AG.mode = 'table'; AG.table = 'stand'; }
@@ -8304,7 +8419,7 @@ function agilityFrame(dtMs, now){
       pts.push([agPos(C, ob.s1).x, agPos(C, ob.s1).y]);
       const st = agPos(C, AG.d); AG.follow = { pts, k:0, x:st.x, y:st.y, ob, slow:true }; AG.mode = 'weavego';
     } else if (AG.mode === 'weavego'){
-      const F = AG.follow, sp = F.slow ? 120 : 210;
+      const F = AG.follow, sp = (F.slow ? 120 : 210)*AG.ks.nrg;
       let left = sp*dt;
       while (left > 0 && F.k < F.pts.length){
         const [tx, ty] = F.pts[F.k], dx = tx - F.x, dy = ty - F.y, L = Math.hypot(dx, dy);
@@ -8314,20 +8429,41 @@ function agilityFrame(dtMs, now){
       if (F.k >= F.pts.length){ AG.d = F.ob.s1; AG.follow = null; AG.next++; AG.mode = 'run'; }
     } else if (AG.mode === 'tunnel'){
       let target = AG.d;
-      if (AG.keys.space) target = AG.d + 200*dt;
+      if (AG.keys.space) target = AG.d + 200*AG.ks.nrg*dt;
       else if (AG.finger){
         let bd = 1e9, bs = AG.d;
         const lim = Math.min(ob.s1, AG.d + 140);
         for (let s = AG.d; ; s = Math.min(lim, s + 6)){ const p = agPos(C, s), dd = Math.hypot(p.x - AG.finger[0], p.y - AG.finger[1]); if (dd < bd){ bd = dd; bs = s; } if (s >= lim) break; }   // the exit itself counts too
         if (bd < 55) target = bs;
       }
-      if (target > AG.d) AG.d = Math.min(target, AG.d + 320*dt);
+      if (target > AG.d) AG.d = Math.min(target, AG.d + 320*AG.ks.nrg*dt);
       if (AG.d >= ob.s1){ AG.d = ob.s1; AG.next++; AG.mode = 'run'; sfx('ok'); }
     } else if (AG.mode === 'walk'){
       const zone = ob.s1 - 55;
-      if (AG.hold){ AG.d += 165*dt; AG.stepT -= dt; if (AG.stepT <= 0){ AG.stepT = .22; tone(240 + Math.random()*40, .04, 'triangle', .05); } }
+      if (AG.hold){ AG.d += 165*AG.ks.nrg*dt; AG.stepT -= dt; if (AG.stepT <= 0){ AG.stepT = .22; tone(240 + Math.random()*40, .04, 'triangle', .05); } }
       if (AG.d >= ob.s1){ AG.d = ob.s1; AG.next++; AG.mode = 'run'; agFault('Zone de contact sautée'); }
       else if (!AG.hold && AG.d >= zone){ AG.next++; AG.mode = 'run'; AG.wait = .25; AG.mode = 'zone'; sfx('ok'); boom('ZONE !', { size:24, x:.5, y:.3, pal:BOOM_COLORS[1], ms:700 }); }
+    } else if (AG.mode === 'seesaw'){
+      // climb to the middle, stop there (tap) while the plank tips over, then walk down
+      const sp = 150*AG.ks.nrg;
+      if (AG.ssWait > 0) AG.ssWait -= dt;
+      else if (AG.ss === 'up'){
+        AG.d += sp*dt; AG.stepT -= dt; if (AG.stepT <= 0){ AG.stepT = .22; tone(220 + Math.random()*40, .04, 'triangle', .05); }
+        if (AG.d > ob.sx + 10){ AG.ss = 'slam'; agFault('Bascule claquée'); noise(.3, .25, 300, 80); }
+      } else if (AG.ss === 'stop'){
+        AG.tilt = Math.min(1, AG.tilt + dt/(.65/AG.ks.nrg));
+        if (AG.tilt >= 1){ AG.ss = 'down'; sfx('clack'); }
+      } else {
+        if (AG.ss === 'slam') AG.tilt = Math.min(1, AG.tilt + dt*6);
+        AG.d += sp*dt;
+        if (AG.d >= ob.s1){ AG.d = ob.s1; AG.ss = null; AG.next++; AG.mode = 'run'; }
+      }
+    } else if (AG.mode === 'sprint'){
+      // speed decays towards a trot; every tap pushes it up: the faster you tap, the faster the dog
+      AG.spv -= (AG.spv - 60)*Math.min(1, 1.2*dt);
+      AG.spTop = Math.max(AG.spTop, AG.spv);
+      AG.d += AG.spv*dt;
+      if (AG.d >= ob.s1){ AG.next++; AG.mode = 'run'; const kmh = Math.round(AG.spTop/230*32); boom(kmh >= 48 ? 'FUSÉE ! ' + kmh + ' KM/H' : kmh + ' KM/H', { size:26, x:.5, y:.3, pal:BOOM_COLORS[kmh >= 48 ? 1 : 0], ms:900 }); }
     } else if (AG.mode === 'table'){
       if (AG.table === 'down'){
         const n0 = Math.ceil(AG.tableN); AG.tableN -= dt; const n1 = Math.ceil(AG.tableN);
@@ -8338,6 +8474,7 @@ function agilityFrame(dtMs, now){
     if (AG.mode === 'tunnel' && (AG.finger || AG.keys.space)){ AG.stepT -= dt; if (AG.stepT <= 0){ AG.stepT = .3; noise(.25, .05, 600, 200); } }   // rumble in the tube
     if (AG.jumpT >= 0){ AG.jumpT += dt; if (AG.jumpT > .45) AG.jumpT = -1; }
     for (const k in AG.knocked) AG.knocked[k] = Math.min(1, AG.knocked[k] + dt*3);
+    if (AG.mode === 'sprint'){ AG.stepT -= dt; if (AG.stepT <= 0){ AG.stepT = Math.max(.08, 40/AG.spv); tone(180 + Math.random()*30, .03, 'triangle', .04); } }
     if (now - AG.lastSend > 250){ AG.lastSend = now; toHost({ t:'ag_p', d:Math.round(AG.d) }); renderAgPlayers(); }
     agChips(); agSetHelp();
   }
@@ -8375,7 +8512,9 @@ function agDog(ctx, x, y, a, D, col, t, k, alpha){
   if (D.tail){ ctx.strokeStyle = '#000'; ctx.lineWidth = 7; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-16, 0); ctx.quadraticCurveTo(-24, Math.sin(t*14)*6, -28, Math.sin(t*14)*9); ctx.stroke();
     ctx.strokeStyle = D.tail; ctx.lineWidth = 4; ctx.stroke(); }
   ctx.fillStyle = D.body; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5;
-  ctx.beginPath(); ctx.ellipse(0, 0, 18, 10, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+  if (D.curly){ for (let k = 0; k < 12; k++){ const q = k/12*Math.PI*2; ctx.beginPath(); ctx.arc(Math.cos(q)*16, Math.sin(q)*8.5, 4.2, 0, Math.PI*2); ctx.fill(); ctx.stroke(); } }
+  ctx.beginPath(); ctx.ellipse(0, 0, D.slim ? 19 : 18, D.slim ? 7.5 : 10, 0, 0, Math.PI*2); ctx.fill(); if (!D.curly) ctx.stroke();
+  if (D.saddle){ ctx.fillStyle = D.saddle; ctx.beginPath(); ctx.ellipse(-5, -1, 7, 6, .3, 0, Math.PI*2); ctx.fill(); }
   if (D.spots){ ctx.fillStyle = D.spots; for (const [sx, sy, r] of [[-8, -3, 2.5], [-2, 4, 2], [5, -4, 2.2], [-12, 4, 1.8], [9, 3, 1.6], [1, -6, 1.5]]){ ctx.beginPath(); ctx.arc(sx, sy, r, 0, Math.PI*2); ctx.fill(); } }
   if (D.chest){ ctx.fillStyle = D.chest; ctx.beginPath(); ctx.ellipse(12, 0, 5, 7, 0, 0, Math.PI*2); ctx.fill(); }
   ctx.strokeStyle = col; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(15, -7); ctx.lineTo(15, 7); ctx.stroke();           // collar in the player's colour
@@ -8395,21 +8534,67 @@ function agDog(ctx, x, y, a, D, col, t, k, alpha){
   }
   ctx.restore();
 }
+// one striped bar between two wings; k: how far it has fallen (null when standing)
+function agBar(ctx, p, k){
+  const nx = -Math.sin(p.a), ny = Math.cos(p.a);
+  ctx.lineCap = 'butt';
+  for (const s of [-1, 1]){ ctx.fillStyle = '#FFFFFF'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
+    ctx.save(); ctx.translate(p.x + nx*s*38, p.y + ny*s*38); ctx.rotate(p.a); ctx.fillRect(-8, -5, 16, 10); ctx.strokeRect(-8, -5, 16, 10); ctx.restore(); }
+  ctx.save();
+  if (k != null){ ctx.translate(p.x + Math.cos(p.a)*18*k, p.y + Math.sin(p.a)*18*k); ctx.rotate(p.a + Math.PI/2 + k*.5); }
+  else { ctx.translate(p.x, p.y); ctx.rotate(p.a + Math.PI/2); }
+  ctx.fillStyle = '#000'; ctx.fillRect(-36, -4, 72, 8);
+  for (let i = 0; i < 6; i++){ ctx.fillStyle = i % 2 ? '#FFFFFF' : '#E6262B'; ctx.fillRect(-34 + i*11.4, -2.5, 11.4, 5); }
+  ctx.restore();
+}
+// timing ring for my next bar: green when the moment is right
+function agRing(ctx, p, dist, win){
+  if (!(dist < 200 && dist > -10)) return;
+  const good = dist >= win[0] && dist <= win[1];
+  ctx.strokeStyle = good ? '#3DDC97' : '#FFFFFF'; ctx.lineWidth = good ? 6 : 3; ctx.setLineDash(good ? [] : [6, 5]);
+  ctx.beginPath(); ctx.arc(p.x, p.y, 30 + Math.max(0, dist - win[1])*.5, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+}
 function agObstacle(ctx, ob, now){
   const C = AG.C;
-  if (ob.type === 'jump' || ob.type === 'tire'){
-    const p = agPos(C, ob.sx), nx = -Math.sin(p.a), ny = Math.cos(p.a), k = AG.knocked[ob.i];
+  if (ob.type === 'combo'){
+    agHurdles(ob).forEach((sx, j) => agBar(ctx, agPos(C, sx), AG.knocked[agHKey(ob, j)]));
+    const hs = agHurdles(ob), j = hs.findIndex((_, q) => !AG.res[agHKey(ob, q)]);
+    if (AG.next === ob.i && j >= 0 && !AG.done) agRing(ctx, agPos(C, hs[j]), hs[j] - AG.d, agWin('combo', AG.ks.jx));
+  } else if (ob.type === 'seesaw'){
+    const a = agPos(C, ob.s0), b = agPos(C, ob.s1), ang = Math.atan2(b.y - a.y, b.x - a.x), L = ob.s1 - ob.s0, piv = ob.sx - ob.s0;
+    const mineNow = AG.next === ob.i && AG.mode === 'seesaw', tl = mineNow ? AG.tilt || 0 : AG.next > ob.i ? 1 : 0;
+    const wa = 12 + 6*(1 - tl), wb = 12 + 6*tl;                    // the raised end looks wider: it is closer to us
+    ctx.save(); ctx.translate(a.x, a.y); ctx.rotate(ang);
+    ctx.fillStyle = 'rgba(0,0,0,.22)'; ctx.beginPath(); ctx.moveTo(4 + (1 - tl)*10, -wa + 8); ctx.lineTo(L + 4 + tl*10, -wb + 8); ctx.lineTo(L + 4 + tl*10, wb + 8); ctx.lineTo(4 + (1 - tl)*10, wa + 8); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#555'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(piv - 12, 22); ctx.lineTo(piv + 12, 22); ctx.lineTo(piv, -2); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#C9935A'; ctx.beginPath(); ctx.moveTo(0, -wa); ctx.lineTo(L, -wb); ctx.lineTo(L, wb); ctx.lineTo(0, wa); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#FFD21F'; ctx.beginPath(); ctx.moveTo(0, -wa); ctx.lineTo(45, -wa + (wa - wb)*45/L); ctx.lineTo(45, wa - (wa - wb)*45/L); ctx.lineTo(0, wa); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(L - 45, -wb - (wa - wb)*45/L); ctx.lineTo(L, -wb); ctx.lineTo(L, wb); ctx.lineTo(L - 45, wb + (wa - wb)*45/L); ctx.closePath(); ctx.fill();
+    if (mineNow && AG.ss === 'up'){ ctx.fillStyle = 'rgba(61,220,151,.85)'; ctx.fillRect(piv - 36, -11, 46, 22); }
+    ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(0, -wa); ctx.lineTo(L, -wb); ctx.lineTo(L, wb); ctx.lineTo(0, wa); ctx.closePath(); ctx.stroke();
+    ctx.restore();
+  } else if (ob.type === 'sprint'){
+    // the home straight: chevrons on the ground and a banner over the start
+    const n = Math.floor((ob.s1 - ob.s0)/46);
+    for (let k = 0; k < n; k++){
+      const p = agPos(C, ob.s0 + 24 + k*46), ux = Math.cos(p.a), uy = Math.sin(p.a), nx = -uy, ny = ux;
+      const lit = AG.next === ob.i && AG.mode === 'sprint' && Math.floor(now/90 - k) % 4 === 0;
+      ctx.strokeStyle = lit ? '#FFFFFF' : 'rgba(230,38,43,.55)'; ctx.lineWidth = 7; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(p.x - ux*9 + nx*16, p.y - uy*9 + ny*16); ctx.lineTo(p.x + ux*7, p.y + uy*7); ctx.lineTo(p.x - ux*9 - nx*16, p.y - uy*9 - ny*16); ctx.stroke();
+    }
+    const p = agPos(C, ob.s0), nx = -Math.sin(p.a), ny = Math.cos(p.a);
+    for (const sd of [-1, 1]){ ctx.fillStyle = '#fff'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(p.x + nx*sd*40, p.y + ny*sd*40, 6, 0, Math.PI*2); ctx.fill(); ctx.stroke(); }
+    ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.a + Math.PI/2);
+    ctx.fillStyle = '#E6262B'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.fillRect(-40, -9, 80, 18); ctx.strokeRect(-40, -9, 80, 18);
+    ctx.fillStyle = '#fff'; ctx.font = '16px Bangers, Impact, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('SPRINT', 0, 1); ctx.textBaseline = 'alphabetic';
+    ctx.restore();
+  } else if (ob.type === 'jump' || ob.type === 'tire'){
+    const p = agPos(C, ob.sx), nx = -Math.sin(p.a), ny = Math.cos(p.a), k = AG.knocked[agHKey(ob, 0)];
     ctx.lineCap = 'butt';
-    for (const s of [-1, 1]){ ctx.fillStyle = '#FFFFFF'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
-      ctx.save(); ctx.translate(p.x + nx*s*38, p.y + ny*s*38); ctx.rotate(p.a); ctx.fillRect(-8, -5, 16, 10); ctx.strokeRect(-8, -5, 16, 10); ctx.restore(); }
-    if (ob.type === 'jump'){
-      ctx.save();
-      if (k != null){ ctx.translate(p.x + Math.cos(p.a)*18*k, p.y + Math.sin(p.a)*18*k); ctx.rotate(p.a + Math.PI/2 + k*.5); }
-      else { ctx.translate(p.x, p.y); ctx.rotate(p.a + Math.PI/2); }
-      ctx.fillStyle = '#000'; ctx.fillRect(-36, -4, 72, 8);
-      for (let i = 0; i < 6; i++){ ctx.fillStyle = i % 2 ? '#FFFFFF' : '#E6262B'; ctx.fillRect(-34 + i*11.4, -2.5, 11.4, 5); }
-      ctx.restore();
-    } else {
+    if (ob.type === 'jump') agBar(ctx, p, k);
+    else {
+      for (const s of [-1, 1]){ ctx.fillStyle = '#FFFFFF'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
+        ctx.save(); ctx.translate(p.x + nx*s*38, p.y + ny*s*38); ctx.rotate(p.a); ctx.fillRect(-8, -5, 16, 10); ctx.strokeRect(-8, -5, 16, 10); ctx.restore(); }
       ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.a);
       ctx.strokeStyle = '#000'; ctx.lineWidth = 11; ctx.beginPath(); ctx.ellipse(0, 0, 7, 24, 0, 0, Math.PI*2); ctx.stroke();
       ctx.strokeStyle = '#FFD21F'; ctx.lineWidth = 6; ctx.setLineDash([8, 6]); ctx.beginPath(); ctx.ellipse(0, 0, 7, 24, 0, 0, Math.PI*2); ctx.stroke();
@@ -8418,14 +8603,7 @@ function agObstacle(ctx, ob, now){
       ctx.restore();
     }
     // timing ring for my next jump: green when the moment is right
-    if (AG.next === ob.i && !AG.res[ob.i] && !AG.done){
-      const dist = ob.sx - AG.d, win = ob.type === 'jump' ? [14, 62] : [22, 48];
-      if (dist < 200 && dist > -10){
-        const good = dist >= win[0] && dist <= win[1];
-        ctx.strokeStyle = good ? '#3DDC97' : '#FFFFFF'; ctx.lineWidth = good ? 6 : 3; ctx.setLineDash(good ? [] : [6, 5]);
-        ctx.beginPath(); ctx.arc(p.x, p.y, 30 + Math.max(0, dist - win[1])*.5, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
-      }
-    }
+    if (AG.next === ob.i && !AG.res[agHKey(ob, 0)] && !AG.done) agRing(ctx, p, ob.sx - AG.d, agWin(ob.type, AG.ks.jx));
   } else if (ob.type === 'weave'){
     agPoles(C, ob).forEach((p, k) => {
       ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.beginPath(); ctx.arc(p.x + 3, p.y + 4, 6, 0, Math.PI*2); ctx.fill();
@@ -8504,16 +8682,16 @@ function drawAgility(now, dp){
     if (p.id === me.id) return;
     const o = AG.others.get(p.id); if (!o) return;
     const q = agPos(C, o.d);
-    agDog(ctx, q.x, q.y, q.a, AG_DOGS[i % AG_DOGS.length], p.color, now/1000 + i, -1, .45);
+    agDog(ctx, q.x, q.y, q.a, agDogOf(p.id, i), p.color, now/1000 + i, -1, .45);
     ctx.font = '900 12px Nunito, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 3; ctx.strokeStyle = '#000'; ctx.fillStyle = p.color;
     ctx.strokeText(p.name, q.x, q.y - 26); ctx.fillText(p.name, q.x, q.y - 26);
   });
   // my dog (on the table, lying down)
   if (AG.mode !== 'watch'){
     const myCol = (players.find(p => p.id === me.id) || {}).color || '#fff';
-    const moving = ['run', 'weavego', 'tunnel'].includes(AG.mode) || (AG.mode === 'walk' && AG.hold);
+    const moving = ['run', 'weavego', 'tunnel', 'sprint'].includes(AG.mode) || (AG.mode === 'walk' && AG.hold) || (AG.mode === 'seesaw' && AG.ss !== 'stop' && !(AG.ssWait > 0));
     const inTunnel = AG.mode === 'tunnel' && AG.d > C.obs[AG.next].s0 + 6;
-    agDog(ctx, dp.x, dp.y, dp.a, AG.dog, myCol, moving ? now/1000 : 0, AG.jumpT, inTunnel ? .35 : 1);
+    agDog(ctx, dp.x, dp.y, dp.a, AG.dog, myCol, moving ? now/1000*(AG.mode === 'sprint' ? Math.max(1, AG.spv/230) : 1) : 0, AG.jumpT, inTunnel ? .35 : 1);
     if (AG.mode === 'table' && AG.table === 'down'){
       ctx.font = '30px Bangers, Impact, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 5; ctx.strokeStyle = '#000'; ctx.fillStyle = '#FFD21F';
       const n = String(Math.max(1, Math.ceil(AG.tableN))); ctx.strokeText(n, dp.x, dp.y - 34); ctx.fillText(n, dp.x, dp.y - 34);
@@ -8542,9 +8720,13 @@ function drawAgility(now, dp){
     finger(p.x, p.y, true);
   } else if (ob && !AG.done && AG.mode === 'walk' && !AG.hold){
     finger(dp.x, dp.y, Math.floor(now/400) % 2 === 0);
-  } else if (ob && !AG.done && AG.mode === 'run' && (ob.type === 'jump' || ob.type === 'tire') && !AG.res[ob.i] && ob.sx - AG.d < 170){
-    const p = agPos(C, ob.sx), win = ob.type === 'jump' ? [14, 62] : [22, 48], dist = ob.sx - AG.d;
-    if (dist >= win[0] && dist <= win[1]) finger(p.x, p.y, true);
+  } else if (ob && !AG.done && AG.mode === 'sprint'){
+    finger(dp.x, dp.y, Math.floor(now/90) % 2 === 0);
+  } else if (ob && !AG.done && AG.mode === 'seesaw' && AG.ss === 'up' && AG.d >= ob.sx - 36){
+    const p = agPos(C, ob.sx); finger(p.x, p.y, true);
+  } else if (ob && !AG.done && AG.mode === 'run' && agIsHurdle(ob)){
+    const hs = agHurdles(ob), k = hs.findIndex((_, j) => !AG.res[agHKey(ob, j)]);
+    if (k >= 0){ const win = agWin(ob.type, AG.ks.jx), dist = hs[k] - AG.d; if (dist >= win[0] && dist <= win[1]){ const p = agPos(C, hs[k]); finger(p.x, p.y, true); } }
   }
   ctx.restore();
   // one simple instruction card at the bottom: an icon and a few words, green when it is the moment to act
@@ -8560,17 +8742,29 @@ function drawAgility(now, dp){
     } else if (AG.mode === 'table'){
       if (AG.table === 'stand'){ icon = '👆'; txt = 'TAPE UNE FOIS'; go = true; }
       else { icon = '🚫'; txt = 'NE TOUCHE PLUS : ' + Math.max(1, Math.ceil(AG.tableN)); }
+    } else if (AG.mode === 'sprint'){ icon = '👆'; txt = 'TAPE TRÈS VITE !'; go = true; }
+    else if (AG.mode === 'seesaw'){
+      if (AG.ss === 'up' && ob && AG.d >= ob.sx - 36){ icon = '👆'; txt = 'TAPE : STOP !'; go = true; }
+      else if (AG.ss === 'up'){ icon = '👆'; txt = 'TAPE QUAND IL ARRIVE AU VERT'; }
+      else if (AG.ss === 'stop'){ icon = '✋'; txt = 'ÇA BASCULE…'; }
     } else if (AG.mode === 'run' && ob){
-      const dist = ob.s0 - AG.d;
-      if ((ob.type === 'jump' || ob.type === 'tire') && !AG.res[ob.i] && ob.sx - AG.d < 220){
-        const win = ob.type === 'jump' ? [14, 62] : [22, 48], dd = ob.sx - AG.d;
-        if (dd >= win[0] && dd <= win[1]){ icon = '👆'; txt = 'TAPE !'; go = true; }
-        else if (dd > win[1]){ icon = '👆'; txt = 'PRÊT… TAPE QUAND C\'EST VERT'; }
-      } else if (dist < 220 && dist > 0){
-        icon = { weave:'☝', tunnel:'☝', walk:'✋', table:'👆' }[ob.type] || '';
-        txt = { weave:'SLALOM : IL FAUDRA TRACER', tunnel:'TUNNEL : IL FAUDRA GLISSER', walk:'PASSERELLE : IL FAUDRA TENIR', table:'TABLE : TAPE PUIS ATTENDS' }[ob.type] || '';
+      const dist = ob.s0 - AG.d, hs = agIsHurdle(ob) ? agHurdles(ob) : null, hk = hs ? hs.findIndex((_, j) => !AG.res[agHKey(ob, j)]) : -1;
+      if (hs && hk >= 0 && hs[hk] - AG.d < 220){
+        const win = agWin(ob.type, AG.ks.jx), dd = hs[hk] - AG.d;
+        if (dd >= win[0] && dd <= win[1]){ icon = '👆'; txt = ob.type === 'combo' ? 'TAPE ! (' + (hk + 1) + '/3)' : 'TAPE !'; go = true; }
+        else if (dd > win[1]){ icon = '👆'; txt = ob.type === 'combo' && hk === 0 ? 'TRIPLE : 3 TAPS EN RYTHME' : 'PRÊT… TAPE QUAND C\'EST VERT'; }
+      } else if (!hs && dist < 220 && dist > 0){
+        icon = { weave:'☝', tunnel:'☝', walk:'✋', table:'👆', seesaw:'👆', sprint:'👆' }[ob.type] || '';
+        txt = { weave:'SLALOM : IL FAUDRA TRACER', tunnel:'TUNNEL : IL FAUDRA GLISSER', walk:'PASSERELLE : IL FAUDRA TENIR', table:'TABLE : TAPE PUIS ATTENDS', seesaw:'BASCULE : STOP AU MILIEU', sprint:'SPRINT : PRÉPARE TES DOIGTS' }[ob.type] || '';
       }
     }
+  }
+  if (AG.mode === 'sprint' && !AG.done){
+    const f = Math.max(0, Math.min(1, (AG.spv - 60)/460)), w = 300, x = V/2 - w/2, y = V - 96;
+    ctx.fillStyle = '#fff'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.fillRect(x, y, w, 20); ctx.strokeRect(x, y, w, 20);
+    ctx.fillStyle = f > .7 ? '#E6262B' : f > .4 ? '#FF8A1F' : '#FFD21F'; ctx.fillRect(x + 3, y + 3, (w - 6)*f, 14);
+    ctx.font = '18px Bangers, Impact, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 4; ctx.strokeStyle = '#000'; ctx.fillStyle = '#fff';
+    const kmh = Math.round(AG.spv/230*32) + ' KM/H'; ctx.strokeText(kmh, V/2, y - 6); ctx.fillText(kmh, V/2, y - 6);
   }
   if (txt){
     const flash = go && Math.floor(now/180) % 2 === 0;
@@ -9491,8 +9685,8 @@ const BRIEF = {
     tip:'Le tambour accélère quand tout l\'équipage est synchro : calez-vous ensemble.' },
   lumber:{ ctl:[['📱', '1. Touchez le jardin pour choisir où tombe l\'arbre, puis validez. 2. Sciez en suivant les pointillés : l\'entaille d\'un seul geste, puis le trait d\'abattage.'], ['💻', 'Tout à la souris (cliquer et glisser), ou au clavier : ← → viser, Entrée valider, Espace scier, ↑ ↓ corriger.']],
     tip:'Ne rien écraser ! Une coupe bâclée envoie l\'arbre n\'importe où, parfois même en arrière. Viser une ouverture étroite, ou tomber au ras d\'un obstacle avec une coupe propre, rapporte un gros bonus.' },
-  agility:{ ctl:[['📱', 'Haie et pneu : un tap quand le cercle est vert. Slalom : tracez le zigzag. Tunnel : doigt sur le chien, glissez. Passerelle : restez appuyé, lâchez sur le jaune. Table : un tap puis plus rien.'], ['💻', 'Les mêmes gestes à la souris (clic, clic maintenu, glisser).']],
-    tip:'Entre les obstacles le chien court seul. Une consigne s\'affiche avant chaque obstacle.' },
+  agility:{ ctl:[['📱', 'Choisissez un chien. Haie, pneu, triple : un tap quand le cercle est vert. Slalom : tracez le zigzag. Tunnel : doigt sur le chien, glissez. Passerelle : restez appuyé, lâchez sur le jaune. Bascule : un tap sur le vert au milieu. Table : un tap puis plus rien. Sprint final : tapez à toute vitesse.'], ['💻', 'Les mêmes gestes à la souris, ou Espace (à marteler pour le sprint).']],
+    tip:'Chaque race a 6 étoiles : Vitesse, Saut ou Énergie. Un Whippet file entre les obstacles, un Jack Russell a plus de marge sur les haies, un Corgi va plus vite au sprint et dans les obstacles longs.' },
   galop:{ ctl:[['📱', 'Choisissez un cheval. ◀ ▶ pour vous décaler, GALOP pour accélérer (coûte de l\'énergie), RALENTIR pour souffler.'], ['💻', '← → se décaler · ↑ ou Espace galop · ↓ ralentir. Ou cliquez les boutons.']],
     tip:'Partir au galop donne un départ rapide mais entame l\'énergie. Collé derrière un cheval, vous récupérez plus vite.' }
 };
