@@ -1323,7 +1323,7 @@ const GAME_DESC = {
   lumber:'Concours de bûcherons, tronçonneuse en main : vu du dessus, choisissez où tombe votre arbre sans rien écraser, puis abattez-le comme un vrai, en suivant les pointillés : les deux coupes de l\'entaille, puis le trait d\'abattage. Plus les coupes sont droites, plus l\'arbre tombe là où vous l\'avez décidé, et viser une ouverture étroite rapporte un gros bonus. Écraser une maison, une voiture ou un autre arbre élimine. Trois manches de plus en plus dures, tout le monde joue en même temps.',
   agility:'Concours d\'agility : chacun choisit son chien (Border collie, Whippet, Caniche…) et le guide sur le même parcours, en même temps. Entre les obstacles, le chien court seul. Haies, pneu et triple : touchez au bon moment. Slalom : tracez le zigzag. Tunnel : suivez-le du doigt. Passerelle : maintenez, relâchez sur le jaune. Bascule : stop au milieu. Table : « Couché ! » puis ne touchez plus. Sprint final : tapez le plus vite possible. Chaque faute coûte 5 s, le meilleur temps gagne.',
   galop:'Course de galop de 3000 m, chacun sur son cheval, vue du dessus. Choisissez votre monture parmi 20, nouvelles à chaque partie (accélération, vitesse, maniabilité, et une forme du jour cachée), des robots complètent jusqu\'à 8 partants. Le cheval suit la piste tout seul : vous vous décalez à gauche ou à droite et vous demandez du galop, qui coûte de l\'énergie. Collé derrière un autre, vous récupérez plus vite et profitez de ses accélérations.',
-  meduse:'Le radeau de la Méduse, en version bande dessinée : tout le monde est sur un radeau qui prend l\'eau et vogue vers le navire de secours. Chaque tour, chacun choisit en secret : écoper, pagayer, s\'agripper, ou pousser quelqu\'un à l\'eau. Pousser quelqu\'un qui s\'agrippe, c\'est tomber soi-même. À l\'arrivée, ceux qui sont à bord se partagent 100 points : moins on est, plus la part est grosse. Mais si le radeau coule, personne ne marque. Tombé à l\'eau, on remonte à bord au tour suivant, ou on secoue le radeau. Trois traversées.',
+  meduse:'Le radeau de la Méduse, en version bande dessinée : tout le monde est sur un radeau qui prend l\'eau et vogue vers le navire de secours. Chaque tour, chacun choisit en secret : écoper, pagayer, s\'agripper, ou pousser quelqu\'un à l\'eau. Pousser quelqu\'un qui s\'agrippe, c\'est tomber soi-même. À l\'arrivée, ceux qui sont à bord se partagent 100 points : moins on est, plus la part est grosse. Mais si le radeau coule, personne ne marque. Tombé à l\'eau, on peut remonter à bord au tour suivant, sauf si quelqu\'un pagaie : le radeau s\'éloigne et on reste en arrière jusqu\'à la traversée suivante. Trois traversées.',
   derby:'Course de chevaux : tout le monde reçoit la même série de figures à tracer. Chaque figure réussie fait avancer votre cheval, plus loin si elle est complexe et bien tracée. Le premier à la ligne gagne.'
 };
 
@@ -9788,6 +9788,7 @@ let HMD = null, MD = null;
 function mdLater(fn, ms){ const g = HMD; const t = setTimeout(() => { if (HMD === g && H && !H.over) fn(); }, ms); HMD.timers.push(t); }
 function mdClear(){ if (HMD) HMD.timers.forEach(t => clearTimeout(t)); }
 const mdIn = id => !!(H && H.stats[id] && !H.stats[id].left);
+const mdAct = id => mdIn(id) && !(HMD && HMD.lost.includes(id));          // still in this crossing (not left behind)
 
 // ---- host ----
 function meduseHostStart(){
@@ -9799,65 +9800,70 @@ function meduseHostStart(){
   }
   H.n = players.length;
   for (const p of players) H.stats[p.id] = { pts:0, pushes:0, dunks:0, saved:0, left:false };
-  HMD = { timers:[], r:0, t:0, W:MD_START_W, D:0, aboard:[], water:[], picks:{}, ph:'idle' };
+  HMD = { timers:[], r:0, t:0, W:MD_START_W, D:0, aboard:[], water:[], lost:[], picks:{}, ph:'idle' };
   broadcast({ t:'start', players, game:'meduse' });
   mdLater(mdRound, 1800);
 }
 function mdRound(){
   HMD.r++; HMD.t = 0; HMD.W = MD_START_W; HMD.D = 0;
-  HMD.aboard = players.filter(p => mdIn(p.id)).map(p => p.id); HMD.water = [];
+  HMD.aboard = players.filter(p => mdIn(p.id)).map(p => p.id); HMD.water = []; HMD.lost = [];
   mdTurn();
 }
 const mdScores = () => Object.fromEntries(players.map(p => [p.id, H.stats[p.id] ? H.stats[p.id].pts : 0]));
 function mdTurn(){
   HMD.t++; HMD.picks = {}; HMD.ph = 'pick'; const seq = HMD.seq = (HMD.seq || 0) + 1;     // timers from an earlier turn must not act on this one
-  broadcast({ t:'md_turn', r:HMD.r, n:HMD.t, W:Math.round(HMD.W), D:Math.round(HMD.D), aboard:HMD.aboard, water:HMD.water, left:MD_PICK, sc:mdScores() });
-  for (const p of players) if (p.bot && mdIn(p.id)) mdLater(() => { if (HMD.seq === seq) mdPick(p.id, mdBot(p.id)); }, 1500 + Math.random()*4500);
+  broadcast({ t:'md_turn', r:HMD.r, n:HMD.t, W:Math.round(HMD.W), D:Math.round(HMD.D), aboard:HMD.aboard, water:HMD.water, lost:HMD.lost, left:MD_PICK, sc:mdScores() });
+  for (const p of players) if (p.bot && mdAct(p.id)) mdLater(() => { if (HMD.seq === seq) mdPick(p.id, mdBot(p.id)); }, 1500 + Math.random()*4500);
   mdLater(() => mdResolve(seq), MD_PICK*1000 + 300);
 }
 function mdPick(id, m){
-  if (!HMD || HMD.ph !== 'pick' || !mdIn(id) || !m) return;
+  if (!HMD || HMD.ph !== 'pick' || !mdAct(id) || !m) return;
   const onRaft = HMD.aboard.includes(id), a = String(m.a || '');
   if (onRaft ? !['bail', 'paddle', 'grip', 'push'].includes(a) : !['swim', 'rock'].includes(a)) return;
   let tg = null;
   if (a === 'push'){ tg = String(m.tg || ''); if (tg === id || !HMD.aboard.includes(tg)) return; }
   HMD.picks[id] = { a, tg };
   broadcast({ t:'md_ready', ids:Object.keys(HMD.picks) });
-  if (players.every(p => !mdIn(p.id) || HMD.picks[p.id])){ const seq = HMD.seq; mdLater(() => mdResolve(seq), 600); }
+  if (players.every(p => !mdAct(p.id) || HMD.picks[p.id])){ const seq = HMD.seq; mdLater(() => mdResolve(seq), 600); }
 }
 function mdResolve(seq){
   if (!HMD || HMD.ph !== 'pick' || seq !== HMD.seq) return;
   HMD.ph = 'show';
   const P = HMD.picks, ev = [];
   for (const id of [...HMD.aboard, ...HMD.water]) if (!P[id] && mdIn(id)) P[id] = { a:HMD.aboard.includes(id) ? 'grip' : 'swim', tg:null, auto:true };
-  // 1. swimmers climb back aboard (that is their turn)
-  const back = HMD.water.filter(id => P[id] && P[id].a === 'swim');
-  HMD.water = HMD.water.filter(id => !back.includes(id)); HMD.aboard.push(...back);
-  for (const id of back) ev.push({ k:'back', a:id });
-  // 2. every push at once; pushing someone who holds on throws you in instead
+  const swimmers = HMD.water.slice();                                       // in the sea when the turn began
+  // 1. every push at once; pushing someone who holds on throws you in instead
   const fall = new Set();
   for (const [id, x] of Object.entries(P)){
-    if (x.a !== 'push' || !HMD.aboard.includes(id) || back.includes(id) || !HMD.aboard.includes(x.tg)) continue;
+    if (x.a !== 'push' || !HMD.aboard.includes(id) || !HMD.aboard.includes(x.tg)) continue;
     if (P[x.tg] && P[x.tg].a === 'grip'){ fall.add(id); ev.push({ k:'foil', a:id, b:x.tg }); }
     else { fall.add(x.tg); H.stats[id].pushes++; ev.push({ k:'push', a:id, b:x.tg }); }
   }
   for (const id of fall) H.stats[id].dunks++;
   HMD.aboard = HMD.aboard.filter(id => !fall.has(id));
   for (const id of fall) if (!HMD.water.includes(id)) HMD.water.push(id);
-  // 3. the work of whoever is still aboard, and the swimmers rocking the raft
+  // 2. the work of whoever is still aboard
   let bail = 0, pad = 0, rock = 0;
-  for (const id of HMD.aboard){ const a = P[id] && P[id].a; if (!back.includes(id)){ if (a === 'bail') bail++; else if (a === 'paddle') pad++; } }
-  for (const id of HMD.water) if (!fall.has(id) && P[id] && P[id].a === 'rock') rock++;
+  for (const id of HMD.aboard){ const a = P[id] && P[id].a; if (a === 'bail') bail++; else if (a === 'paddle') pad++; }
+  // 3. the swimmers: if anyone paddled, the raft moves off and they are left behind for this crossing;
+  //    otherwise they climb back aboard, or rock the raft
+  for (const id of swimmers){
+    if (!HMD.water.includes(id)) continue;
+    if (pad){ HMD.water = HMD.water.filter(x => x !== id); HMD.lost.push(id); ev.push({ k:'adrift', a:id }); }
+    else if (P[id] && P[id].a === 'swim'){ HMD.water = HMD.water.filter(x => x !== id); HMD.aboard.push(id); ev.push({ k:'back', a:id }); }
+    else if (P[id] && P[id].a === 'rock') rock++;
+  }
   const inflow = mdInflow(HMD.aboard.length, rock);
   HMD.W = Math.max(0, HMD.W + inflow - MD_BAIL*bail);
   HMD.D = Math.min(100, HMD.D + MD_DRIFT + MD_PAD*pad);
   if (HMD.t >= MD_MAXT) HMD.D = 100;                                         // the ship comes to fetch them in the end
-  const fin = HMD.D >= 100 ? 'ok' : HMD.W >= 100 ? 'sunk' : null;
+  // nobody left aboard or nearby: the empty raft drifts off, the crossing is over
+  const fin = HMD.D >= 100 ? 'ok' : HMD.W >= 100 || (!HMD.aboard.length && !HMD.water.length) ? 'sunk' : null;
   let share = 0;
   if (fin === 'ok' && HMD.aboard.length){ share = Math.round(100/HMD.aboard.length); for (const id of HMD.aboard){ H.stats[id].pts += share; H.stats[id].saved++; } }
   if (fin === 'sunk'){ HMD.water.push(...HMD.aboard); HMD.aboard = []; }
   const acts = {}; for (const [id, x] of Object.entries(P)) acts[id] = { a:x.a, tg:x.tg };
-  broadcast({ t:'md_res', acts, ev, W:Math.round(HMD.W), D:Math.round(HMD.D), aboard:HMD.aboard, water:HMD.water, bail, pad, rock, fin, share, sc:mdScores() });
+  broadcast({ t:'md_res', acts, ev, W:Math.round(HMD.W), D:Math.round(HMD.D), aboard:HMD.aboard, water:HMD.water, lost:HMD.lost, bail, pad, rock, fin, share, sc:mdScores() });
   const show = MD_STEP*(ev.length + 1) + 1600;
   if (!fin) return mdLater(mdTurn, show);
   if (HMD.r >= MD_ROUNDS) return mdLater(mdFinish, show + 2500);
@@ -9873,15 +9879,15 @@ function mdFinish(){
 function meduseDrop(id){
   if (!H || H.over || !H.stats[id]) return;
   H.stats[id].left = true;
-  if (HMD){ HMD.aboard = HMD.aboard.filter(x => x !== id); HMD.water = HMD.water.filter(x => x !== id); delete HMD.picks[id]; }
+  if (HMD){ HMD.aboard = HMD.aboard.filter(x => x !== id); HMD.water = HMD.water.filter(x => x !== id); HMD.lost = HMD.lost.filter(x => x !== id); delete HMD.picks[id]; }
   broadcast({ t:'md_left', id });
   if (!players.some(p => !p.bot && mdIn(p.id))) return mdFinish();
-  if (HMD && HMD.ph === 'pick' && players.every(p => !mdIn(p.id) || HMD.picks[p.id])){ const seq = HMD.seq; mdLater(() => mdResolve(seq), 400); }
+  if (HMD && HMD.ph === 'pick' && players.every(p => !mdAct(p.id) || HMD.picks[p.id])){ const seq = HMD.seq; mdLater(() => mdResolve(seq), 400); }
 }
 // robot: bails when the water gets high, paddles otherwise, and turns nasty when the ship is close
 function mdBot(id){
   const R = Math.random, others = HMD.aboard.filter(x => x !== id);
-  if (!HMD.aboard.includes(id)) return { a:R() < (HMD.D > 70 ? .3 : .12) ? 'rock' : 'swim' };
+  if (!HMD.aboard.includes(id)) return { a:R() < (HMD.D > 70 ? .25 : .08) ? 'rock' : 'swim' };
   if (HMD.W + mdInflow(HMD.aboard.length, HMD.water.length*.3) >= 85) return { a:R() < .85 ? 'bail' : 'grip' };
   if (HMD.D >= 64 && others.length && R() < .35) return { a:'push', tg:others[Math.floor(R()*others.length)] };
   if (HMD.D >= 56 && R() < .2) return { a:'grip' };
@@ -9895,7 +9901,7 @@ function startMeduse(m){
   lastCountShown = null;
   players = m.players; cur = 'meduse'; G = null; PG = null; D = null; phase = 'play';
   $('scrEnd').hidden = true; show('scrMeduse');
-  MD = { r:0, n:0, W:MD_START_W, D:0, Wv:MD_START_W, Dv:0, aboard:players.map(p => p.id), water:[], ready:[], sc:{}, acts:null, mine:null, pushMode:false,
+  MD = { r:0, n:0, W:MD_START_W, D:0, Wv:MD_START_W, Dv:0, aboard:players.map(p => p.id), water:[], lost:[], ready:[], sc:{}, acts:null, mine:null, pushMode:false,
     deadline:0, ph:'wait', figs:new Map(), queue:[], fin:null, banner:null, splash:[], over:false, spec:!players.some(p => p.id === me.id) };
   mdHead('Méduse'); $('mdMsg').textContent = ''; mdButtons(); renderMdPlayers();
   $('mdHelp').textContent = 'Tout le monde est sur le radeau. Chaque tour, en secret : écoper, pagayer, s\'agripper ou pousser quelqu\'un à l\'eau.';
@@ -9953,7 +9959,7 @@ function renderMdPlayers(){
     const li = document.createElement('li'); if (p.left) li.classList.add('dead');
     const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color;
     const t = document.createElement('span');
-    const where = MD.aboard.includes(p.id) ? '⛵' : MD.water.includes(p.id) ? '🌊' : '';
+    const where = MD.aboard.includes(p.id) ? '⛵' : MD.water.includes(p.id) ? '🌊' : MD.lost.includes(p.id) ? '💨' : '';
     t.textContent = p.name + (p.id === me.id ? ' (vous)' : '') + ' · ' + (MD.sc[p.id] | 0) + ' pts ' + where + (MD.ph === 'pick' && MD.ready.includes(p.id) ? ' ✔' : '');
     li.append(d, t); ul.append(li);
   }
@@ -9962,13 +9968,14 @@ function meduseRecv(m){
   if (!MD) return;
   if (m.t === 'md_turn'){
     if (m.r !== MD.r){ MD.figs.clear(); MD.Wv = m.W; MD.Dv = m.D; MD.fin = null; MD.banner = null; }
-    MD.r = m.r; MD.n = m.n; MD.W = m.W; MD.D = m.D; MD.aboard = m.aboard || []; MD.water = m.water || []; MD.sc = m.sc || {};
+    MD.r = m.r; MD.n = m.n; MD.W = m.W; MD.D = m.D; MD.aboard = m.aboard || []; MD.water = m.water || []; MD.lost = m.lost || []; MD.sc = m.sc || {};
     MD.ready = []; MD.acts = null; MD.mine = null; MD.pushMode = false; MD.ph = 'pick'; MD.deadline = performance.now() + (m.left|0)*1000; MD.queue = [];
     $('mdTurn').textContent = 'Traversée ' + m.r + '/' + MD_ROUNDS + ' · tour ' + m.n;
-    mdHead(MD.spec ? 'Spectateur' : mdOnRaft() ? 'À bord : que faites-vous ?' : 'À l\'eau : que faites-vous ?');
-    $('mdHelp').textContent = MD.spec ? 'Vous regardez la traversée.' : mdOnRaft()
+    const lostMe = MD.lost.includes(me.id);
+    mdHead(MD.spec ? 'Spectateur' : lostMe ? 'Laissé en arrière…' : mdOnRaft() ? 'À bord : que faites-vous ?' : 'À l\'eau : que faites-vous ?');
+    $('mdHelp').textContent = MD.spec ? 'Vous regardez la traversée.' : lostMe ? 'Le radeau s\'est éloigné sans vous : vous reprendrez la mer à la prochaine traversée.' : mdOnRaft()
       ? 'En secret : écoper fait baisser l\'eau, pagayer rapproche du navire, s\'agripper protège, pousser jette quelqu\'un à l\'eau (sauf s\'il s\'agrippe : c\'est vous qui tombez).'
-      : 'Vous êtes à l\'eau : remontez à bord (ça prend le tour), ou secouez le radeau pour le faire couler.';
+      : 'Vous êtes à l\'eau : remontez à bord, ou secouez le radeau. Mais si quelqu\'un pagaie ce tour-ci, le radeau s\'éloigne et vous restez en arrière.';
     if (m.n === 1){ sfx('go'); boom('TRAVERSÉE ' + m.r, { size:30, x:.5, y:.35, pal:BOOM_COLORS[1], ms:1100 }); } else sfx('myturn');
     mdButtons(); renderMdPlayers();
   } else if (m.t === 'md_ready'){ MD.ready = m.ids || []; renderMdPlayers(); }
@@ -9982,11 +9989,12 @@ function meduseRecv(m){
     renderMdPlayers();
   } else if (m.t === 'md_left'){
     const p = players.find(x => x.id === m.id); if (p) p.left = true;
-    MD.aboard = MD.aboard.filter(x => x !== m.id); MD.water = MD.water.filter(x => x !== m.id); renderMdPlayers();
+    MD.aboard = MD.aboard.filter(x => x !== m.id); MD.water = MD.water.filter(x => x !== m.id); MD.lost = MD.lost.filter(x => x !== m.id); renderMdPlayers();
   }
 }
 function mdApply(e){
-  if (e.k === 'back'){ MD.water = MD.water.filter(x => x !== e.a); if (!MD.aboard.includes(e.a)) MD.aboard.push(e.a); mdToast(mdName(e.a) + ' remonte à bord'); sfx('slide'); }
+  if (e.k === 'adrift'){ MD.water = MD.water.filter(x => x !== e.a); if (!MD.lost.includes(e.a)) MD.lost.push(e.a); mdToast('Le radeau s\'éloigne : ' + mdName(e.a) + ' reste en arrière !'); if (e.a === me.id) boom('ABANDONNÉ !', { size:28, x:.5, y:.35, pal:BOOM_COLORS[3], ms:1000 }); sfx('lose'); }
+  else if (e.k === 'back'){ MD.water = MD.water.filter(x => x !== e.a); if (!MD.aboard.includes(e.a)) MD.aboard.push(e.a); mdToast(mdName(e.a) + ' remonte à bord'); sfx('slide'); }
   else if (e.k === 'push' || e.k === 'foil'){
     const faller = e.k === 'push' ? e.b : e.a;
     const f = MD.figs.get(e.a); if (f) f.lunge = { to:e.b, t:performance.now() };
@@ -10000,7 +10008,7 @@ function mdApply(e){
     else { mdToast(mdName(e.a) + ' veut pousser ' + mdName(e.b) + '… qui s\'agrippe ! ' + mdName(e.a) + ' tombe à l\'eau'); if (e.a === me.id) boom('RATÉ, PLOUF !', { size:28, x:.5, y:.35, pal:BOOM_COLORS[3], ms:1000 }); }
   } else if (e.k === 'sum'){
     const m = e.m;
-    MD.W = m.W; MD.D = m.D; MD.aboard = m.aboard || []; MD.water = m.water || [];
+    MD.W = m.W; MD.D = m.D; MD.aboard = m.aboard || []; MD.water = m.water || []; MD.lost = m.lost || [];
     const bits = [];
     if (m.bail) bits.push('🪣 ' + m.bail + ' écope' + (m.bail > 1 ? 'nt' : ''));
     if (m.pad) bits.push('🚣 ' + m.pad + ' pagaie' + (m.pad > 1 ? 'nt' : ''));
@@ -10026,15 +10034,29 @@ addEventListener('keydown', e => {
 mdcv.addEventListener('pointerdown', e => {
   if (!MD || MD.ph !== 'pick' || !mdOnRaft()) return;
   const r = mdcv.getBoundingClientRect(), x = (e.clientX - r.left)*mdcv.width/r.width, y = (e.clientY - r.top)*mdcv.height/r.height;
-  for (const [id, f] of MD.figs){ if (id !== me.id && MD.aboard.includes(id) && Math.abs(f.x - x) < 24 && y > f.y - 70 && y < f.y + 10){ MD.pushMode = true; mdChoose({ a:'push', tg:id }); return; } }
+  for (const [id, f] of MD.figs){ if (id !== me.id && MD.aboard.includes(id) && Math.abs(f.x - x) < 26 && y > f.y - 80 && y < f.y + 10){ MD.pushMode = true; mdChoose({ a:'push', tg:id }); return; } }
 });
 
 // ---- loop and drawing ----
+// The scene follows Géricault's painting (1819, public domain): a raft seen from three-quarters, the torn sail on the
+// left, a barrel on the right where the top figure waves a cloth at the tiny ship, a stormy sky turning golden on the right.
+const MD_RAFT = { BL:[160, 240], BR:[470, 226], FR:[520, 318], FL:[104, 338] };
+const MD_DECK = [[.84, .30, 1], [.62, .26], [.44, .54], [.2, .62], [.67, .72], [.32, .3], [.52, .86]];   // s, t, raised (on the barrel)
+const MD_SWIM = [[72, 322], [548, 300], [300, 380], [158, 388], [462, 386]];
+const MD_GONE = [[46, 212], [574, 204], [112, 200], [520, 196], [250, 196]];
+const MD_SKIN = ['#F2C9A0', '#C68A5A', '#E8B48C', '#8D5A3B', '#F5D5B5'];
+const MD_HAIR = ['#5A3A1E', '#E2B44C', '#1C1C1C', '#A0522D', '#3B2A20'];
+function mdDeck(s, t, dy){
+  const R = MD_RAFT, a = [R.BL[0] + (R.BR[0] - R.BL[0])*s, R.BL[1] + (R.BR[1] - R.BL[1])*s], b = [R.FL[0] + (R.FR[0] - R.FL[0])*s, R.FL[1] + (R.FR[1] - R.FL[1])*s];
+  return [a[0] + (b[0] - a[0])*t, a[1] + (b[1] - a[1])*t + (dy || 0)];
+}
+const mdSink = () => MD.Wv*.22;
 function mdSlots(){
-  // where each person should be: spread over the deck, or bobbing around the raft
-  const out = new Map(), n = MD.aboard.length, x0 = 168, w = 264;
-  MD.aboard.forEach((id, k) => out.set(id, { x:x0 + (k + .5)*w/Math.max(1, n), deck:true }));
-  MD.water.forEach((id, k) => out.set(id, { x:k % 2 ? 470 + Math.floor(k/2)*44 : 128 - Math.floor(k/2)*44, deck:false }));
+  // where each person should be: on the deck, bobbing beside the raft, or left behind far away
+  const out = new Map(), dy = mdSink();
+  MD.aboard.forEach((id, k) => { const d = MD_DECK[k % MD_DECK.length], q = mdDeck(d[0], d[1], dy); out.set(id, { x:q[0], y:q[1] - (d[2] ? 26 : 0), deck:true, raised:!!d[2], slot:k }); });
+  MD.water.forEach((id, k) => { const q = MD_SWIM[k % MD_SWIM.length]; out.set(id, { x:q[0], y:q[1], deck:false }); });
+  (MD.lost || []).forEach((id, k) => { const q = MD_GONE[k % MD_GONE.length]; out.set(id, { x:q[0], y:q[1], deck:false, gone:true }); });
   return out;
 }
 function meduseFrame(dtMs, now){
@@ -10049,106 +10071,213 @@ function meduseFrame(dtMs, now){
   const slots = mdSlots();
   for (const [id, s] of slots){
     let f = MD.figs.get(id);
-    if (!f){ f = { x:s.x, deck:s.deck, y:0 }; MD.figs.set(id, f); }
-    f.x += (s.x - f.x)*Math.min(1, dt*(f.fly && now - f.fly < 700 ? 3 : 5));
-    f.deck = s.deck;
+    if (!f){ f = { x:s.x, y:s.y, bx:s.x, by:s.y }; MD.figs.set(id, f); }
+    const k = Math.min(1, dt*(s.gone ? 1.2 : f.fly && now - f.fly < 700 ? 3 : 5));
+    f.bx += (s.x - f.bx)*k; f.by += (s.y - f.by)*k;
+    f.deck = s.deck; f.raised = s.raised; f.gone = s.gone; f.slot = s.slot;
   }
   for (const id of [...MD.figs.keys()]) if (!slots.has(id)) MD.figs.delete(id);
   mdDraw(mdctx, 600, 420, now);
 }
-function mdDraw(ctx, Wd, Ht, now, art){
-  const t = now/1000, sk = Wd/600;
-  ctx.save(); ctx.scale(sk, sk);
-  const HZ = 170, SEA = 286;
-  // sky and sea
-  let g = ctx.createLinearGradient(0, 0, 0, HZ); g.addColorStop(0, '#F6C77A'); g.addColorStop(1, '#FBE7B8'); ctx.fillStyle = g; ctx.fillRect(0, 0, 600, HZ);
-  ctx.fillStyle = 'rgba(255,255,255,.55)'; for (const [cx, cy, r] of [[90, 60, 26], [120, 52, 20], [380, 80, 30], [415, 70, 22]]){ ctx.beginPath(); ctx.arc(cx + Math.sin(t*.1)*8, cy, r, 0, Math.PI*2); ctx.fill(); }
-  g = ctx.createLinearGradient(0, HZ, 0, 420); g.addColorStop(0, '#3E7FA0'); g.addColorStop(1, '#173F5C'); ctx.fillStyle = g; ctx.fillRect(0, HZ, 600, 420 - HZ);
-  ctx.strokeStyle = 'rgba(255,255,255,.25)'; ctx.lineWidth = 2;
-  for (let y = HZ + 14; y < 420; y += 22){ ctx.beginPath(); for (let x = 0; x <= 600; x += 12) ctx.lineTo(x, y + Math.sin(x/30 + t*1.5 + y)*3*(y - HZ)/120); ctx.stroke(); }
-  // the rescue ship, growing as it comes
-  const k = .55 + MD.Dv/100*.8, sx = 520 - MD.Dv*.5, sy = HZ + 6 + MD.Dv*.35;
-  ctx.save(); ctx.translate(sx, sy); ctx.scale(k, k);
-  ctx.fillStyle = '#3B2414'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
-  ctx.beginPath(); ctx.moveTo(-60, -10); ctx.lineTo(60, -10); ctx.lineTo(46, 12); ctx.lineTo(-48, 12); ctx.closePath(); ctx.fill(); ctx.stroke();
-  for (const mx of [-28, 6, 36]){ ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(mx, -10); ctx.lineTo(mx, -78); ctx.stroke();
-    ctx.fillStyle = '#F4EBD6'; ctx.lineWidth = 2; for (const [y0, w0] of [[-74, 20], [-50, 26]]){ ctx.beginPath(); ctx.moveTo(mx - w0/2, y0); ctx.lineTo(mx + w0/2, y0); ctx.quadraticCurveTo(mx + w0/2 + 4, y0 + 10, mx + w0/2, y0 + 20); ctx.lineTo(mx - w0/2, y0 + 20); ctx.closePath(); ctx.fill(); ctx.stroke(); } }
-  ctx.fillStyle = '#E6262B'; ctx.fillRect(36, -88, 12, 7);
-  ctx.restore();
-  // the raft: the more water aboard, the lower it sits
-  const deckY = 258 + MD.Wv/100*44 + Math.sin(t*1.3)*2, tilt = Math.sin(t*.9)*.03;
-  ctx.save(); ctx.translate(300, deckY); ctx.rotate(tilt);
-  ctx.fillStyle = '#7A5230'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
-  ctx.beginPath(); ctx.moveTo(-150, 0); ctx.lineTo(150, 0); ctx.lineTo(140, 16); ctx.lineTo(-142, 16); ctx.closePath(); ctx.fill(); ctx.stroke();
-  ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.lineWidth = 2; for (let x = -130; x < 150; x += 26){ ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x - 3, 16); ctx.stroke(); }
-  // the mast and its torn sail, as in the painting
-  ctx.strokeStyle = '#000'; ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(-40, 0); ctx.lineTo(-48, -150); ctx.stroke();
-  ctx.fillStyle = '#E9DCC0'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(-47, -140); ctx.quadraticCurveTo(-110 + Math.sin(t*2)*6, -100, -100, -40); ctx.lineTo(-62, -52); ctx.lineTo(-44, -30); ctx.closePath(); ctx.fill(); ctx.stroke();
-  ctx.restore();
-  // the people
-  const acts = MD.ph === 'show' ? MD.acts : null;
-  const fig = (id, f) => {
-    const p = players.find(x => x.id === id); if (!p) return;
-    const mine = id === me.id, sw = !f.deck;
-    let x = f.x, y = sw ? SEA + 4 + Math.sin(t*2.4 + x)*3 : deckY + (x - 300)*tilt;
-    if (f.lunge && now - f.lunge.t < 400){ const o = MD.figs.get(f.lunge.to); if (o) x += (o.x - x)*.35*Math.sin((now - f.lunge.t)/400*Math.PI); }
-    if (f.fly && now - f.fly < 700){ const k2 = (now - f.fly)/700; y -= Math.sin(k2*Math.PI)*60; if (k2 > .8 && !f.splashed){ f.splashed = true; for (let i = 0; i < 10; i++) MD.splash.push({ x, y:SEA, vx:(Math.random() - .5)*120, vy:-80 - Math.random()*120, t:now }); } }
-    else if (f.fly) f.fly = null, f.splashed = false;
-    f.y = y;
-    const ink = inkOn(p.color);
-    if (!sw || (f.fly && now - f.fly < 700)){
-      ctx.strokeStyle = '#000'; ctx.lineWidth = 5; ctx.lineCap = 'round';
-      ctx.beginPath(); ctx.moveTo(x - 6, y); ctx.lineTo(x - 4, y - 18); ctx.moveTo(x + 6, y); ctx.lineTo(x + 4, y - 18); ctx.stroke();
-      const wave = MD.fin === 'ok' && MD.aboard.includes(id);
-      ctx.beginPath(); ctx.moveTo(x - 10, y - 38); ctx.lineTo(x - 18, wave ? y - 70 + Math.sin(t*8)*4 : y - 22); ctx.moveTo(x + 10, y - 38); ctx.lineTo(x + 18, wave ? y - 70 + Math.cos(t*8)*4 : y - 22); ctx.stroke();
-      if (wave && id === MD.aboard[0]){ ctx.fillStyle = '#E6262B'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x + 18, y - 72); ctx.quadraticCurveTo(x + 40, y - 86 + Math.sin(t*9)*5, x + 52, y - 74); ctx.lineTo(x + 20, y - 60); ctx.closePath(); ctx.fill(); ctx.stroke(); }
-      ctx.fillStyle = p.color; ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
-      ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x - 12, y - 46, 24, 30, 6); else ctx.rect(x - 12, y - 46, 24, 30); ctx.fill(); ctx.stroke();
-      ctx.fillStyle = ink; ctx.font = '16px Bangers, Impact, sans-serif'; ctx.textAlign = 'center'; ctx.fillText((p.name || '?').slice(0, 1).toUpperCase(), x, y - 25);
-      ctx.fillStyle = '#F2C9A0'; ctx.strokeStyle = '#000'; ctx.beginPath(); ctx.arc(x, y - 56, 11, 0, Math.PI*2); ctx.fill(); ctx.stroke();
-    } else {
-      // swimming: a head and two waving arms
-      ctx.strokeStyle = '#000'; ctx.lineWidth = 5; ctx.lineCap = 'round';
-      ctx.beginPath(); ctx.moveTo(x - 10, y - 4); ctx.lineTo(x - 22, y - 18 + Math.sin(t*6 + x)*6); ctx.moveTo(x + 10, y - 4); ctx.lineTo(x + 22, y - 18 + Math.cos(t*6 + x)*6); ctx.stroke();
-      ctx.fillStyle = '#F2C9A0'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(x, y - 10, 11, 0, Math.PI*2); ctx.fill(); ctx.stroke();
-      ctx.strokeStyle = p.color; ctx.lineWidth = 4; ctx.beginPath(); ctx.ellipse(x, y + 2, 18, 5, 0, 0, Math.PI*2); ctx.stroke();
-    }
-    // name, my marker, readiness or the revealed choice
-    const top = sw ? y - 26 : y - 70;
-    ctx.font = '900 12px Nunito, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 3; ctx.strokeStyle = '#000'; ctx.fillStyle = mine ? '#FFD93B' : '#fff';
-    const nm = mine ? 'VOUS' : p.name.slice(0, 10); ctx.strokeText(nm, x, top); ctx.fillText(nm, x, top);
-    let badge = '';
-    if (acts && acts[id]) badge = MD_ACTS[acts[id].a] ? MD_ACTS[acts[id].a].ic : '';
-    else if (MD.ph === 'pick' && MD.ready.includes(id)) badge = '✔';
-    if (badge){
-      ctx.fillStyle = '#fff'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(x, top - 22, 14, 0, Math.PI*2); ctx.fill(); ctx.stroke();
-      ctx.font = badge === '✔' ? '900 16px Nunito, sans-serif' : '16px sans-serif'; ctx.fillStyle = badge === '✔' ? '#12A150' : '#000'; ctx.textBaseline = 'middle'; ctx.fillText(badge, x, top - 21); ctx.textBaseline = 'alphabetic';
-    }
-    if (acts && acts[id] && acts[id].a === 'push' && acts[id].tg){ const o = MD.figs.get(acts[id].tg); if (o){ ctx.strokeStyle = 'rgba(230,38,43,.85)'; ctx.lineWidth = 3; ctx.setLineDash([6, 5]); ctx.beginPath(); ctx.moveTo(x, top - 8); ctx.quadraticCurveTo((x + o.x)/2, top - 40, o.x, (o.y || y) - 64); ctx.stroke(); ctx.setLineDash([]); } }
+// one castaway, comic style; pose: idle, push, paddle, bail, grip, wave, point, swim
+function mdPerson(ctx, x, y, p, i, pose, dir, t, sc, mine){
+  ctx.save(); ctx.translate(x, y); ctx.scale(sc, sc);
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  const skin = MD_SKIN[i % MD_SKIN.length], hair = MD_HAIR[(i + 2) % MD_HAIR.length];
+  const head = (hx, hy, scared) => {
+    ctx.fillStyle = skin; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(hx, hy, 11, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = hair; ctx.beginPath(); ctx.moveTo(hx - 11, hy - 2); ctx.quadraticCurveTo(hx - 9, hy - 15, hx + 2, hy - 13); ctx.quadraticCurveTo(hx + 12, hy - 12, hx + 11, hy - 3); ctx.quadraticCurveTo(hx + 4, hy - 8, hx - 11, hy - 2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(hx - 4 + dir*1.5, hy, 1.6, 0, Math.PI*2); ctx.arc(hx + 4 + dir*1.5, hy, 1.6, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); if (scared){ ctx.ellipse(hx + dir*1.5, hy + 6, 2.6, 3.4, 0, 0, Math.PI*2); ctx.fill(); } else { ctx.lineWidth = 2; ctx.arc(hx + dir*1.5, hy + 4, 3.5, .2, Math.PI - .2); ctx.stroke(); }
   };
-  for (const [id, f] of MD.figs) if (f.deck) fig(id, f);
-  // the sea over the bottom of the raft, then the swimmers in front
-  ctx.fillStyle = 'rgba(30,90,125,.82)'; ctx.beginPath(); ctx.moveTo(0, 420);
-  for (let x = 0; x <= 600; x += 10) ctx.lineTo(x, SEA + Math.sin(x/26 + t*2)*3); ctx.lineTo(600, 420); ctx.closePath(); ctx.fill();
-  ctx.strokeStyle = 'rgba(255,255,255,.6)'; ctx.lineWidth = 2; ctx.beginPath(); for (let x = 0; x <= 600; x += 10) ctx.lineTo(x, SEA + Math.sin(x/26 + t*2)*3); ctx.stroke();
-  for (const [id, f] of MD.figs) if (!f.deck) fig(id, f);
+  if (pose === 'swim'){
+    const s1 = Math.sin(t*6 + x), s2 = Math.cos(t*6 + x);
+    ctx.strokeStyle = '#000'; ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(-9, -2); ctx.lineTo(-21, -16 + s1*6); ctx.moveTo(9, -2); ctx.lineTo(21, -16 + s2*6); ctx.stroke();
+    ctx.strokeStyle = skin; ctx.lineWidth = 3; ctx.stroke();
+    ctx.fillStyle = p.color; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.ellipse(0, 2, 13, 6, 0, Math.PI, 0); ctx.fill(); ctx.stroke();
+    head(0, -9, true);
+    ctx.strokeStyle = 'rgba(255,255,255,.8)'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.ellipse(0, 4, 20 + Math.sin(t*3)*2, 5, 0, 0, Math.PI*2); ctx.stroke();
+    ctx.restore(); return;
+  }
+  const low = pose === 'grip' ? 12 : 0;
+  // legs and ragged trousers
+  ctx.strokeStyle = '#000'; ctx.lineWidth = 7;
+  ctx.beginPath(); ctx.moveTo(-5, 0); ctx.lineTo(-4 - (low ? 6 : 0), -16 + low); ctx.moveTo(5, 0); ctx.lineTo(4 + (low ? 6 : 0), -16 + low); ctx.stroke();
+  ctx.strokeStyle = '#3A4A6B'; ctx.lineWidth = 4; ctx.stroke();
+  // torn shirt
+  const by = -44 + low;
+  ctx.fillStyle = p.color; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.moveTo(-11, by); ctx.lineTo(11, by); ctx.lineTo(13, by + 26); ctx.lineTo(8, by + 22); ctx.lineTo(4, by + 28); ctx.lineTo(-1, by + 23); ctx.lineTo(-6, by + 28); ctx.lineTo(-10, by + 22); ctx.lineTo(-13, by + 26); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = inkOn(p.color); ctx.font = '13px Bangers, Impact, sans-serif'; ctx.textAlign = 'center'; ctx.fillText((p.name || '?').slice(0, 1).toUpperCase(), 0, by + 17);
+  // arms
+  const arm = (x0, y0, x1, y1, x2, y2) => { ctx.strokeStyle = '#000'; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.quadraticCurveTo(x1, y1, x2, y2); ctx.stroke(); ctx.strokeStyle = skin; ctx.lineWidth = 3; ctx.stroke(); };
+  const sh = by + 4;
+  if (pose === 'push'){ arm(-10*dir, sh, -16*dir, sh + 10, -12*dir, sh + 22); arm(10*dir, sh, 22*dir, sh - 2, 34*dir, sh - 2); }
+  else if (pose === 'paddle'){
+    const sw = Math.sin(t*4)*6;
+    ctx.strokeStyle = '#000'; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(-14 + sw, sh - 14); ctx.lineTo(18 + sw, sh + 50); ctx.stroke(); ctx.strokeStyle = '#A0703C'; ctx.lineWidth = 3; ctx.stroke();
+    ctx.fillStyle = '#A0703C'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(19 + sw, sh + 52, 4, 9, -.45, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+    arm(-10, sh, -12, sh + 4, -8 + sw, sh - 6); arm(10, sh, 8, sh + 12, 4 + sw, sh + 16);
+  } else if (pose === 'bail'){
+    const up = Math.abs(Math.sin(t*3))*10;
+    arm(-10, sh, -14, sh + 14, -8, sh + 24 - up); arm(10, sh, 14, sh + 14, 8, sh + 24 - up);
+    ctx.fillStyle = '#9AA3A8'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(-9, sh + 22 - up); ctx.lineTo(9, sh + 22 - up); ctx.lineTo(6, sh + 34 - up); ctx.lineTo(-6, sh + 34 - up); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = 'rgba(120,190,220,.9)'; for (let k = 0; k < 3; k++){ const a = (t*3 + k)%1; ctx.beginPath(); ctx.arc(14*dir + a*20*dir, sh + 18 - up + a*30, 2.2, 0, Math.PI*2); ctx.fill(); }
+  } else if (pose === 'grip'){ arm(-10, sh, -18, sh + 12, -16, sh + 30); arm(10, sh, 18, sh + 12, 16, sh + 30); }
+  else if (pose === 'wave'){
+    const w = Math.sin(t*9)*6;
+    arm(-10, sh, -14, sh + 12, -10, sh + 22); arm(10, sh, 16, sh - 14, 20 + w*.3, sh - 30);
+    // the red and white cloth, as in the painting
+    const cx = 20 + w*.3, cy = sh - 32;
+    ctx.save(); ctx.translate(cx, cy);
+    const pts = [[0, 0], [16, -8 + w], [30, -2 + w*1.4], [28, 12 + w], [14, 14 + w*.6], [2, 12]];
+    ctx.beginPath(); pts.forEach(([a, b], k) => k ? ctx.lineTo(a, b) : ctx.moveTo(a, b)); ctx.closePath();
+    ctx.fillStyle = '#fff'; ctx.fill(); ctx.save(); ctx.clip(); ctx.fillStyle = '#D91F25';
+    for (let a = -4; a < 34; a += 8) for (let b = -12; b < 20; b += 8) if (((a + b)/8 & 1) === 0) ctx.fillRect(a, b + w*.5, 4, 4);
+    ctx.restore(); ctx.strokeStyle = '#000'; ctx.lineWidth = 2; ctx.stroke(); ctx.restore();
+  } else if (pose === 'point'){ arm(-10, sh, -14, sh + 12, -10, sh + 22); arm(10, sh, 20, sh - 8, 32, sh - 16); }
+  else { arm(-10, sh, -15, sh + 12, -12, sh + 24); arm(10, sh, 15, sh + 12, 12, sh + 24); }
+  head(0, by - 10, pose === 'push' || pose === 'grip' || pose === 'wave');
+  if (mine){ ctx.strokeStyle = '#FFD93B'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(-7, by - 32); ctx.lineTo(0, by - 25); ctx.lineTo(7, by - 32); ctx.stroke(); }
+  ctx.restore();
+}
+function mdDraw(ctx, Wd, Ht, now, art){
+  const t = now/1000, sk = Wd/600, HZ = 168, dy = mdSink();
+  ctx.save(); ctx.scale(sk, sk);
+  // stormy sky on the left, golden light on the right
+  let g = ctx.createLinearGradient(0, 0, 600, 0); g.addColorStop(0, '#39414E'); g.addColorStop(.45, '#7E827E'); g.addColorStop(.8, '#E9C77E'); g.addColorStop(1, '#F7DE9C');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, 600, HZ);
+  g = ctx.createLinearGradient(0, 0, 0, HZ); g.addColorStop(0, 'rgba(20,24,32,.35)'); g.addColorStop(1, 'rgba(255,240,200,.25)'); ctx.fillStyle = g; ctx.fillRect(0, 0, 600, HZ);
+  const cloud = (cx, cy, r, col) => { ctx.fillStyle = col; ctx.beginPath();
+    for (const [ox, oy, k] of [[-1.3, .2, .7], [-.5, -.35, .95], [.45, -.25, .85], [1.2, .15, .7], [0, .3, .9]]) ctx.moveTo(cx + ox*r + k*r, cy + oy*r), ctx.arc(cx + ox*r, cy + oy*r, k*r, 0, Math.PI*2);
+    ctx.fill(); };
+  const drift = Math.sin(t*.08)*10;
+  cloud(80 + drift, 46, 34, '#2C323C'); cloud(210 + drift, 30, 28, '#3A414C'); cloud(40 + drift, 120, 26, '#454C57'); cloud(330 + drift*.5, 64, 20, '#6B6E6E');
+  cloud(470 - drift*.5, 54, 16, '#F4DDA8'); cloud(560 - drift*.5, 92, 14, '#FBE8BE');
+  // the sea, green-grey, with a golden glint under the light
+  g = ctx.createLinearGradient(0, HZ, 0, 420); g.addColorStop(0, '#6F8B7A'); g.addColorStop(1, '#2A4641'); ctx.fillStyle = g; ctx.fillRect(0, HZ, 600, 420 - HZ);
+  g = ctx.createRadialGradient(540, HZ, 4, 540, HZ, 160); g.addColorStop(0, 'rgba(255,225,150,.55)'); g.addColorStop(1, 'rgba(255,225,150,0)'); ctx.fillStyle = g; ctx.fillRect(380, HZ, 220, 140);
+  ctx.strokeStyle = 'rgba(230,240,230,.35)'; ctx.lineWidth = 2;
+  for (let y = HZ + 10; y < 420; y += 18){ const a = (y - HZ)/250; ctx.beginPath(); for (let x = -10; x <= 610; x += 10) ctx.lineTo(x, y + Math.sin(x/(22 + a*30) + t*1.4 + y)*(2 + a*5)); ctx.stroke(); }
+  // the rescue ship, a speck at first
+  const k = .28 + MD.Dv/100*.8, sx = 548 - MD.Dv*.7, sy = HZ + 2 + MD.Dv*.18;
+  ctx.save(); ctx.translate(sx, sy); ctx.scale(k, k);
+  ctx.fillStyle = '#2B1C12'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(-50, -8); ctx.lineTo(50, -8); ctx.lineTo(38, 8); ctx.lineTo(-40, 8); ctx.closePath(); ctx.fill(); ctx.stroke();
+  for (const mx of [-18, 18]){ ctx.beginPath(); ctx.moveTo(mx, -8); ctx.lineTo(mx, -62); ctx.stroke();
+    ctx.fillStyle = '#EFE4CC'; ctx.lineWidth = 2; for (const [y0, w0] of [[-58, 18], [-38, 24]]){ ctx.beginPath(); ctx.moveTo(mx - w0/2, y0); ctx.lineTo(mx + w0/2, y0); ctx.quadraticCurveTo(mx + w0/2 + 3, y0 + 8, mx + w0/2, y0 + 16); ctx.lineTo(mx - w0/2, y0 + 16); ctx.closePath(); ctx.fill(); ctx.stroke(); } ctx.lineWidth = 3; }
+  ctx.restore();
+  const acts = MD.ph === 'show' ? MD.acts : null, labels = [];
+  const draw = (id, f) => {
+    const i = players.findIndex(x => x.id === id), p = players[i]; if (!p) return;
+    const mine = id === me.id;
+    let x = f.bx, y = f.by;
+    if (f.deck) y += Math.sin(t*1.3)*2;
+    else y += Math.sin(t*2.4 + x)*3;
+    if (f.lunge && now - f.lunge.t < 400){ const o = MD.figs.get(f.lunge.to); if (o) x += (o.bx - x)*.35*Math.sin((now - f.lunge.t)/400*Math.PI); }
+    let flying = false;
+    if (f.fly && now - f.fly < 700){ const k2 = (now - f.fly)/700; flying = true; y -= Math.sin(k2*Math.PI)*70; if (k2 > .8 && !f.splashed){ f.splashed = true; for (let n = 0; n < 12; n++) MD.splash.push({ x, y:y + 6, vx:(Math.random() - .5)*140, vy:-90 - Math.random()*120, t:now }); } }
+    else if (f.fly){ f.fly = null; f.splashed = false; }
+    f.x = x; f.y = y;
+    const a = acts && acts[id] ? acts[id].a : null;
+    let dir = 1;
+    if (a === 'push' && acts[id].tg){ const o = MD.figs.get(acts[id].tg); if (o) dir = o.bx < x ? -1 : 1; }
+    let pose = 'idle';
+    if (!f.deck && !flying) pose = 'swim';
+    else if (flying) pose = 'grip';
+    else if (a && ['push', 'paddle', 'bail', 'grip'].includes(a)) pose = a;
+    else if (f.raised && (MD.Dv > 35 || MD.fin === 'ok')) pose = 'wave';
+    else if (f.slot === 1) pose = 'point';
+    else if (MD.fin === 'ok') pose = 'wave';
+    mdPerson(ctx, x, y, p, i, pose, dir, t + i, f.gone ? .55 : !f.deck && !flying ? 1.1 : 1.22, mine);
+    const top = f.gone ? y - 24 : !f.deck && !flying ? y - 30 : y - 96;
+    labels.push({ id, x, top, mine, gone:f.gone, a });
+  };
+  // people left behind, far away
+  for (const [id, f] of MD.figs) if (f.gone){ ctx.globalAlpha = .8; draw(id, f); ctx.globalAlpha = 1; }
+  // the raft: logs seen from three-quarters, lower in the water as it fills
+  const R = MD_RAFT, P = c => [c[0], c[1] + dy], th = Math.max(4, 15 - MD.Wv*.09);
+  const [bl, br, fr, fl] = [P(R.BL), P(R.BR), P(R.FR), P(R.FL)];
+  ctx.lineJoin = 'round';
+  ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.beginPath(); ctx.ellipse(310, (fl[1] + fr[1])/2 + th + 6, 210, 18, -.03, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#4E3420'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(fl[0], fl[1]); ctx.lineTo(fr[0], fr[1]); ctx.lineTo(br[0], br[1]); ctx.lineTo(br[0], br[1] + th); ctx.lineTo(fr[0], fr[1] + th); ctx.lineTo(fl[0], fl[1] + th); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#8A5E36'; ctx.beginPath(); ctx.moveTo(bl[0], bl[1]); ctx.lineTo(br[0], br[1]); ctx.lineTo(fr[0], fr[1]); ctx.lineTo(fl[0], fl[1]); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.strokeStyle = 'rgba(0,0,0,.4)'; ctx.lineWidth = 1.8;
+  for (let tt = .1; tt < 1; tt += .1){ const a = mdDeck(0, tt, dy), b = mdDeck(1, tt, dy); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); }
+  ctx.strokeStyle = 'rgba(0,0,0,.25)'; for (const s of [.3, .7]){ const a = mdDeck(s, 0, dy), b = mdDeck(s, 1, dy); ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); }
+  // water sloshing on the deck
+  if (MD.Wv > 5){ ctx.fillStyle = 'rgba(80,130,120,' + Math.min(.6, MD.Wv/100*.7) + ')'; const c = [mdDeck(.06, .12, dy), mdDeck(.94, .1, dy), mdDeck(.96, .92, dy), mdDeck(.04, .9, dy)];
+    ctx.beginPath(); c.forEach(([a, b], n) => n ? ctx.lineTo(a, b + Math.sin(t*2 + n)*2) : ctx.moveTo(a, b)); ctx.closePath(); ctx.fill(); }
+  // things on the deck, back to front: mast and sail, barrel, people
+  const items = [];
+  const mb = mdDeck(.24, .4, dy);
+  items.push({ y:mb[1], f:() => {
+    const top = [mb[0] - 26, mb[1] - 178];
+    ctx.strokeStyle = '#000'; ctx.lineWidth = 8; ctx.beginPath(); ctx.moveTo(mb[0], mb[1]); ctx.lineTo(top[0], top[1]); ctx.stroke();
+    ctx.strokeStyle = '#7A5230'; ctx.lineWidth = 5; ctx.stroke();
+    ctx.strokeStyle = '#000'; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(top[0] - 70, top[1] + 30); ctx.lineTo(top[0] + 60, top[1] - 6); ctx.stroke(); ctx.strokeStyle = '#7A5230'; ctx.lineWidth = 3; ctx.stroke();
+    // ropes
+    ctx.strokeStyle = 'rgba(40,30,20,.8)'; ctx.lineWidth = 1.5; for (const c of [mdDeck(0, .1, dy), mdDeck(.6, .2, dy), mdDeck(.05, .9, dy)]){ ctx.beginPath(); ctx.moveTo(top[0], top[1] + 4); ctx.lineTo(c[0], c[1]); ctx.stroke(); }
+    // the billowing, torn sail
+    const w = Math.sin(t*1.6)*8;
+    ctx.fillStyle = '#E3D4B2'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.moveTo(top[0] - 66, top[1] + 32); ctx.lineTo(top[0] + 4, top[1] + 12);
+    ctx.quadraticCurveTo(top[0] + 4, top[1] + 90, mb[0] - 6, mb[1] - 40);
+    ctx.lineTo(mb[0] - 30, mb[1] - 26); ctx.lineTo(mb[0] - 44, mb[1] - 40); ctx.lineTo(mb[0] - 62, mb[1] - 30);
+    ctx.quadraticCurveTo(top[0] - 130 - w, top[1] + 90, top[0] - 66, top[1] + 32); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.strokeStyle = 'rgba(120,95,60,.6)'; ctx.lineWidth = 1.5; for (let n = 1; n < 4; n++){ ctx.beginPath(); ctx.moveTo(top[0] - 66 + n*16, top[1] + 30 - n*5); ctx.quadraticCurveTo(top[0] - 90 + n*14 - w*.5, top[1] + 90, mb[0] - 60 + n*12, mb[1] - 34); ctx.stroke(); }
+    ctx.fillStyle = '#5A4A33'; ctx.beginPath(); ctx.ellipse(top[0] - 40 - w*.4, top[1] + 74, 7, 11, .4, 0, Math.PI*2); ctx.fill();   // a hole in the canvas
+  } });
+  const bb = mdDeck(.84, .3, dy);
+  items.push({ y:bb[1] - .5, f:() => {
+    ctx.fillStyle = '#7A4E2A'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.moveTo(bb[0] - 15, bb[1] - 26); ctx.lineTo(bb[0] - 17, bb[1]); ctx.quadraticCurveTo(bb[0], bb[1] + 6, bb[0] + 17, bb[1]); ctx.lineTo(bb[0] + 15, bb[1] - 26); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#9A6A3E'; ctx.beginPath(); ctx.ellipse(bb[0], bb[1] - 26, 15, 5, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.strokeStyle = '#333'; ctx.lineWidth = 2; for (const hy of [-19, -7]){ ctx.beginPath(); ctx.ellipse(bb[0], bb[1] + hy, 16.5, 4.5, 0, .1, Math.PI - .1); ctx.stroke(); }
+  } });
+  for (const [id, f] of MD.figs) if (f.deck || (f.fly && now - f.fly < 700)) items.push({ y:f.by + (f.raised ? 26 : 0) + .1, f:() => draw(id, f) });
+  items.sort((a, b) => a.y - b.y).forEach(it => it.f());
+  // swimmers, then the front waves
+  for (const [id, f] of MD.figs) if (!f.deck && !f.gone && !(f.fly && now - f.fly < 700)) draw(id, f);
+  ctx.fillStyle = 'rgba(42,70,65,.9)'; ctx.beginPath(); ctx.moveTo(0, 420);
+  for (let x = 0; x <= 600; x += 8) ctx.lineTo(x, 398 + Math.sin(x/34 + t*1.8)*6 + Math.sin(x/11 + t*3)*2); ctx.lineTo(600, 420); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = '#E8EFE6'; ctx.lineWidth = 3; ctx.beginPath(); for (let x = 0; x <= 600; x += 8) ctx.lineTo(x, 398 + Math.sin(x/34 + t*1.8)*6 + Math.sin(x/11 + t*3)*2); ctx.stroke();
+  // the big swell on the left, as in the painting
+  ctx.fillStyle = '#3F5F55'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.moveTo(0, 420); ctx.lineTo(0, 352); ctx.quadraticCurveTo(30, 330 + Math.sin(t)*4, 70, 344); ctx.quadraticCurveTo(54, 352, 62, 364); ctx.quadraticCurveTo(90, 390, 140, 420); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.strokeStyle = '#F2F5EE'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(4, 350); ctx.quadraticCurveTo(32, 334 + Math.sin(t)*4, 66, 345); ctx.stroke();
   MD.splash = MD.splash.filter(s => now - s.t < 700);
   ctx.fillStyle = '#fff'; for (const s of MD.splash){ const a = (now - s.t)/1000; ctx.beginPath(); ctx.arc(s.x + s.vx*a, s.y + s.vy*a + 300*a*a, 3, 0, Math.PI*2); ctx.fill(); }
-  // gauges: water aboard (left) and distance to the ship (top); not on the game's picture
+  // names, my marker, readiness or the revealed choice
+  for (const L of labels){
+    ctx.font = '900 12px Nunito, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 3; ctx.strokeStyle = '#000'; ctx.fillStyle = L.mine ? '#FFD93B' : '#fff';
+    const p = players.find(x => x.id === L.id), nm = L.mine ? 'VOUS' : (p ? p.name.slice(0, 10) : '');
+    ctx.strokeText(nm, L.x, L.top); ctx.fillText(nm, L.x, L.top);
+    if (L.gone) continue;
+    let badge = '';
+    if (L.a && MD_ACTS[L.a]) badge = MD_ACTS[L.a].ic;
+    else if (MD.ph === 'pick' && MD.ready.includes(L.id)) badge = '✔';
+    if (badge){
+      ctx.fillStyle = '#fff'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(L.x, L.top - 21, 13, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+      ctx.font = badge === '✔' ? '900 15px Nunito, sans-serif' : '15px sans-serif'; ctx.fillStyle = badge === '✔' ? '#12A150' : '#000'; ctx.textBaseline = 'middle'; ctx.fillText(badge, L.x, L.top - 20); ctx.textBaseline = 'alphabetic';
+    }
+    if (acts && acts[L.id] && acts[L.id].a === 'push' && acts[L.id].tg){ const o = labels.find(q => q.id === acts[L.id].tg); if (o){ ctx.strokeStyle = 'rgba(217,31,37,.9)'; ctx.lineWidth = 3; ctx.setLineDash([6, 5]); ctx.beginPath(); ctx.moveTo(L.x, L.top - 36); ctx.quadraticCurveTo((L.x + o.x)/2, Math.min(L.top, o.top) - 70, o.x, o.top - 36); ctx.stroke(); ctx.setLineDash([]); } }
+  }
   if (art){ ctx.restore(); return; }
+  // gauges: water aboard (left) and distance to the ship (top)
   const wf = Math.min(1, MD.Wv/100);
   ctx.fillStyle = '#fff'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.fillRect(16, 46, 22, 150); ctx.strokeRect(16, 46, 22, 150);
-  ctx.fillStyle = wf > .7 ? '#E6262B' : '#1E5BFF'; ctx.fillRect(19, 46 + 147*(1 - wf), 16, 147*wf);
-  ctx.font = '15px Bangers, Impact, sans-serif'; ctx.textAlign = 'center'; ctx.fillStyle = '#000'; ctx.fillText('EAU', 27, 40);
+  ctx.fillStyle = wf > .7 ? '#D91F25' : '#1E5BFF'; ctx.fillRect(19, 46 + 147*(1 - wf), 16, 147*wf);
+  ctx.font = '15px Bangers, Impact, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 3; ctx.strokeStyle = '#000'; ctx.fillStyle = '#fff'; ctx.strokeText('EAU', 27, 40); ctx.fillText('EAU', 27, 40);
   ctx.fillStyle = '#fff'; ctx.fillRect(60, 14, 480, 18); ctx.strokeRect(60, 14, 480, 18);
   ctx.fillStyle = '#3DDC97'; ctx.fillRect(62, 16, 476*Math.min(1, MD.Dv/100), 14);
-  ctx.textAlign = 'left'; ctx.fillStyle = '#000'; ctx.font = '15px Bangers, Impact, sans-serif'; ctx.fillText('NAVIRE ' + Math.round(MD.Dv) + ' %', 64, 50);
-  // end of a crossing
+  ctx.textAlign = 'left'; ctx.font = '15px Bangers, Impact, sans-serif'; ctx.strokeStyle = '#000'; ctx.fillStyle = '#fff'; ctx.strokeText('NAVIRE ' + Math.round(MD.Dv) + ' %', 64, 50); ctx.fillText('NAVIRE ' + Math.round(MD.Dv) + ' %', 64, 50);
   if (MD.banner){
-    ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.fillRect(0, 120, 600, 110);
+    ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.fillRect(0, 110, 600, 110);
     ctx.textAlign = 'center'; ctx.font = '46px Bangers, Impact, sans-serif'; ctx.lineWidth = 6; ctx.strokeStyle = '#000'; ctx.fillStyle = MD.banner.col;
-    ctx.strokeText(MD.banner.big, 300, 178); ctx.fillText(MD.banner.big, 300, 178);
-    ctx.font = '900 18px Nunito, sans-serif'; ctx.fillStyle = '#fff'; ctx.lineWidth = 4; ctx.strokeText(MD.banner.small, 300, 210); ctx.fillText(MD.banner.small, 300, 210);
+    ctx.strokeText(MD.banner.big, 300, 168); ctx.fillText(MD.banner.big, 300, 168);
+    ctx.font = '900 18px Nunito, sans-serif'; ctx.fillStyle = '#fff'; ctx.lineWidth = 4; ctx.strokeText(MD.banner.small, 300, 200); ctx.fillText(MD.banner.small, 300, 200);
   }
   ctx.restore();
 }
@@ -10187,8 +10316,8 @@ const BRIEF = {
     tip:'Ne rien écraser ! Une coupe bâclée envoie l\'arbre n\'importe où, parfois même en arrière. Viser une ouverture étroite, ou tomber au ras d\'un obstacle avec une coupe propre, rapporte un gros bonus.' },
   agility:{ ctl:[['📱', 'Choisissez un chien. Haie, pneu, triple : un tap quand le cercle est vert. Slalom : tracez le zigzag. Tunnel : doigt sur le chien, glissez. Passerelle : restez appuyé, lâchez sur le jaune. Bascule : un tap sur le vert au milieu. Table : un tap puis plus rien. Sprint final : tapez à toute vitesse.'], ['💻', 'Les mêmes gestes à la souris, ou Espace (à marteler pour le sprint).']],
     tip:'Chaque race a 6 étoiles : Vitesse, Saut ou Énergie. Un Whippet file entre les obstacles, un Jack Russell a plus de marge sur les haies, un Corgi va plus vite au sprint et dans les obstacles longs.' },
-  meduse:{ ctl:[['📱', 'À chaque tour, touchez votre choix : 🪣 écoper, 🚣 pagayer, ✊ s\'agripper, ou 👉 pousser puis le nom de la victime (ou touchez-la directement sur le radeau). À l\'eau : 🏊 remonter ou 🌊 secouer.'], ['💻', 'Cliquez les boutons, ou touches 1 à 4. Vous pouvez changer d\'avis jusqu\'à la fin des 10 secondes.']],
-    tip:'Les choix sont révélés tous en même temps. Trop de monde à bord, ça coule ; trop de traîtres, personne n\'écope. À vous de doser.' },
+  meduse:{ ctl:[['📱', 'À chaque tour, touchez votre choix : 🪣 écoper, 🚣 pagayer, ✊ s\'agripper, ou 👉 pousser puis le nom de la victime (ou touchez-la directement sur le radeau). À l\'eau : 🏊 remonter ou 🌊 secouer (si quelqu\'un pagaie, le radeau vous laisse en arrière).'], ['💻', 'Cliquez les boutons, ou touches 1 à 4. Vous pouvez changer d\'avis jusqu\'à la fin des 10 secondes.']],
+    tip:'Les choix sont révélés tous en même temps. Quelqu\'un est tombé ? Pagayer l\'abandonne pour de bon, attendre lui laisse une chance de remonter. Trop de monde à bord, ça coule ; trop de traîtres, personne n\'écope.' },
   galop:{ ctl:[['📱', 'Choisissez un cheval. ◀ ▶ pour vous décaler, GALOP pour accélérer (coûte de l\'énergie), RALENTIR pour souffler.'], ['💻', '← → se décaler · ↑ ou Espace galop · ↓ ralentir. Ou cliquez les boutons.']],
     tip:'Partir au galop donne un départ rapide mais entame l\'énergie. Collé derrière un cheval, vous récupérez plus vite.' }
 };
