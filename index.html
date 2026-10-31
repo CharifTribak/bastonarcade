@@ -1323,7 +1323,7 @@ const GAME_DESC = {
   lumber:'Concours de bûcherons, tronçonneuse en main : vu du dessus, choisissez où tombe votre arbre sans rien écraser, puis abattez-le comme un vrai, en suivant les pointillés : les deux coupes de l\'entaille, puis le trait d\'abattage. Plus les coupes sont droites, plus l\'arbre tombe là où vous l\'avez décidé, et viser une ouverture étroite rapporte un gros bonus. Écraser une maison, une voiture ou un autre arbre élimine. Trois manches de plus en plus dures, tout le monde joue en même temps.',
   agility:'Concours d\'agility : chacun choisit son chien (Border collie, Whippet, Caniche…) et le guide sur le même parcours, en même temps. Entre les obstacles, le chien court seul. Haies, pneu et triple : touchez au bon moment. Slalom : tracez le zigzag. Tunnel : suivez-le du doigt. Passerelle : maintenez, relâchez sur le jaune. Bascule : stop au milieu. Table : « Couché ! » puis ne touchez plus. Sprint final : tapez le plus vite possible. Chaque faute coûte 5 s, le meilleur temps gagne.',
   galop:'Course de galop de 3000 m, chacun sur son cheval, vue du dessus. Choisissez votre monture parmi 20, nouvelles à chaque partie (accélération, vitesse, maniabilité, et une forme du jour cachée), des robots complètent jusqu\'à 8 partants. Le cheval suit la piste tout seul : vous vous décalez à gauche ou à droite et vous demandez du galop, qui coûte de l\'énergie. Collé derrière un autre, vous récupérez plus vite et profitez de ses accélérations.',
-  meduse:'Le radeau de la Méduse, en version bande dessinée : tout le monde est sur un radeau qui prend l\'eau et vogue vers le navire de secours. Chaque tour, chacun choisit en secret : écoper, pagayer, s\'agripper, ou pousser quelqu\'un à l\'eau. Pousser quelqu\'un qui s\'agrippe, c\'est tomber soi-même. À l\'arrivée, ceux qui sont à bord se partagent 100 points : moins on est, plus la part est grosse. Mais si le radeau coule, personne ne marque. Tombé à l\'eau, on peut remonter à bord au tour suivant, sauf si au moins deux joueurs pagaient : le radeau s\'éloigne et on reste en arrière jusqu\'à la traversée suivante. Trois traversées.',
+  meduse:'Le radeau de la Méduse, en version bande dessinée : tout le monde est sur un radeau qui prend l\'eau et vogue vers le navire de secours. Chaque tour, chacun choisit en secret : écoper, pagayer, s\'agripper, ou pousser quelqu\'un à l\'eau. Pousser quelqu\'un qui s\'agrippe, c\'est tomber soi-même ; mais on ne peut pas s\'agripper deux tours de suite. À l\'arrivée, ceux qui sont à bord se partagent 100 points : moins on est, plus la part est grosse. Mais si le radeau coule, personne ne marque. Tombé à l\'eau, on peut remonter à bord au tour suivant, sauf si au moins deux joueurs pagaient : le radeau s\'éloigne et on reste en arrière jusqu\'à la traversée suivante. Des robots complètent l\'équipage jusqu\'à 8. Trois traversées.',
   derby:'Course de chevaux : tout le monde reçoit la même série de figures à tracer. Chaque figure réussie fait avancer votre cheval, plus loin si elle est complexe et bien tracée. Le premier à la ligne gagne.'
 };
 
@@ -9779,11 +9779,11 @@ for (const b of $('stRange').querySelectorAll('button')) b.onclick = () => { ST.
 // bail, paddle, hold on, or push someone into the sea. Pushing someone who holds on sends you in instead. Overboard, you
 // swim back (it takes the turn) or rock the raft. On arrival the people aboard share 100 points: the fewer, the bigger
 // the share. If the raft sinks, nobody scores. Three crossings; robots make up a crew of at least 4.
-const MD_ROUNDS = 3, MD_PICK = 10, MD_STEP = 950, MD_MAXT = 14, MD_MINP = 4;
-const MD_START_W = 15, MD_BAIL = 10, MD_PAD = 5, MD_DRIFT = 4, MD_ROCK = 7;
+const MD_ROUNDS = 3, MD_PICK = 10, MD_STEP = 950, MD_MAXT = 14, MD_MINP = 8;
+const MD_START_W = 15, MD_BAIL = 10, MD_PAD = 3, MD_DRIFT = 4, MD_ROCK = 7;
 const mdInflow = (n, rock) => 5 + 3*n + MD_ROCK*rock;
 const MD_ACTS = { bail:{ ic:'🪣', n:'Écoper' }, paddle:{ ic:'🚣', n:'Pagayer' }, grip:{ ic:'✊', n:'S\'agripper' }, push:{ ic:'👉', n:'Pousser' },
-  swim:{ ic:'🏊', n:'Remonter' }, rock:{ ic:'🌊', n:'Secouer' } };
+  swim:{ ic:'🏊', n:'Remonter' }, rock:{ ic:'🌊', n:'Secouer' }, idle:{ ic:'💤', n:'Rien' } };
 let HMD = null, MD = null;
 function mdLater(fn, ms){ const g = HMD; const t = setTimeout(() => { if (HMD === g && H && !H.over) fn(); }, ms); HMD.timers.push(t); }
 function mdClear(){ if (HMD) HMD.timers.forEach(t => clearTimeout(t)); }
@@ -9792,7 +9792,7 @@ const mdAct = id => mdIn(id) && !(HMD && HMD.lost.includes(id));          // sti
 
 // ---- host ----
 function meduseHostStart(){
-  for (const id of ['ai', 'ai2', 'ai3']){
+  for (const id of ['ai', 'ai2', 'ai3', 'ai4', 'ai5', 'ai6', 'ai7']){
     if (players.length >= MD_MINP) break;
     if (players.some(p => p.id === id)) continue;
     players.push({ id, name:id === 'ai' ? 'Robot' : 'Robot ' + id.slice(2), color:pickColor(), bot:true });
@@ -9800,19 +9800,19 @@ function meduseHostStart(){
   }
   H.n = players.length;
   for (const p of players) H.stats[p.id] = { pts:0, pushes:0, dunks:0, saved:0, left:false };
-  HMD = { timers:[], r:0, t:0, W:MD_START_W, D:0, aboard:[], water:[], lost:[], picks:{}, ph:'idle' };
+  HMD = { timers:[], r:0, t:0, W:MD_START_W, D:0, aboard:[], water:[], lost:[], picks:{}, ph:'idle', cramp:[], prev:{} };
   broadcast({ t:'start', players, game:'meduse' });
   mdLater(mdRound, 1800);
 }
 function mdRound(){
   HMD.r++; HMD.t = 0; HMD.W = MD_START_W; HMD.D = 0;
-  HMD.aboard = players.filter(p => mdIn(p.id)).map(p => p.id); HMD.water = []; HMD.lost = [];
+  HMD.aboard = players.filter(p => mdIn(p.id)).map(p => p.id); HMD.water = []; HMD.lost = []; HMD.cramp = []; HMD.prev = {};
   mdTurn();
 }
 const mdScores = () => Object.fromEntries(players.map(p => [p.id, H.stats[p.id] ? H.stats[p.id].pts : 0]));
 function mdTurn(){
   HMD.t++; HMD.picks = {}; HMD.ph = 'pick'; const seq = HMD.seq = (HMD.seq || 0) + 1;     // timers from an earlier turn must not act on this one
-  broadcast({ t:'md_turn', r:HMD.r, n:HMD.t, W:Math.round(HMD.W), D:Math.round(HMD.D), aboard:HMD.aboard, water:HMD.water, lost:HMD.lost, left:MD_PICK, sc:mdScores() });
+  broadcast({ t:'md_turn', r:HMD.r, n:HMD.t, W:Math.round(HMD.W), D:Math.round(HMD.D), aboard:HMD.aboard, water:HMD.water, lost:HMD.lost, cramp:HMD.cramp, left:MD_PICK, sc:mdScores() });
   for (const p of players) if (p.bot && mdAct(p.id)) mdLater(() => { if (HMD.seq === seq) mdPick(p.id, mdBot(p.id)); }, 1500 + Math.random()*4500);
   mdLater(() => mdResolve(seq), MD_PICK*1000 + 300);
 }
@@ -9820,6 +9820,7 @@ function mdPick(id, m){
   if (!HMD || HMD.ph !== 'pick' || !mdAct(id) || !m) return;
   const onRaft = HMD.aboard.includes(id), a = String(m.a || '');
   if (onRaft ? !['bail', 'paddle', 'grip', 'push'].includes(a) : !['swim', 'rock'].includes(a)) return;
+  if (a === 'grip' && HMD.cramp.includes(id)) return;                        // no holding on two turns running
   let tg = null;
   if (a === 'push'){ tg = String(m.tg || ''); if (tg === id || !HMD.aboard.includes(tg)) return; }
   HMD.picks[id] = { a, tg };
@@ -9830,7 +9831,7 @@ function mdResolve(seq){
   if (!HMD || HMD.ph !== 'pick' || seq !== HMD.seq) return;
   HMD.ph = 'show';
   const P = HMD.picks, ev = [];
-  for (const id of [...HMD.aboard, ...HMD.water]) if (!P[id] && mdIn(id)) P[id] = { a:HMD.aboard.includes(id) ? 'grip' : 'swim', tg:null, auto:true };
+  for (const id of [...HMD.aboard, ...HMD.water]) if (!P[id] && mdIn(id)) P[id] = { a:HMD.aboard.includes(id) ? 'idle' : 'swim', tg:null, auto:true };   // undecided: does nothing (and is not holding on)
   const swimmers = HMD.water.slice();                                       // in the sea when the turn began
   // 1. every push at once; pushing someone who holds on throws you in instead
   const fall = new Set();
@@ -9862,7 +9863,9 @@ function mdResolve(seq){
   let share = 0;
   if (fin === 'ok' && HMD.aboard.length){ share = Math.round(100/HMD.aboard.length); for (const id of HMD.aboard){ H.stats[id].pts += share; H.stats[id].saved++; } }
   if (fin === 'sunk'){ HMD.water.push(...HMD.aboard); HMD.aboard = []; }
+  HMD.cramp = Object.keys(P).filter(id => P[id].a === 'grip' && HMD.aboard.includes(id));
   const acts = {}; for (const [id, x] of Object.entries(P)) acts[id] = { a:x.a, tg:x.tg };
+  HMD.prev = acts;
   broadcast({ t:'md_res', acts, ev, W:Math.round(HMD.W), D:Math.round(HMD.D), aboard:HMD.aboard, water:HMD.water, lost:HMD.lost, bail, pad, rock, fin, share, sc:mdScores() });
   const show = MD_STEP*(ev.length + 1) + 1600;
   if (!fin) return mdLater(mdTurn, show);
@@ -9888,9 +9891,12 @@ function meduseDrop(id){
 function mdBot(id){
   const R = Math.random, others = HMD.aboard.filter(x => x !== id);
   if (!HMD.aboard.includes(id)) return { a:R() < (HMD.D > 70 ? .25 : .08) ? 'rock' : 'swim' };
-  if (HMD.W + mdInflow(HMD.aboard.length, HMD.water.length*.3) >= 85) return { a:R() < .85 ? 'bail' : 'grip' };
-  if (HMD.D >= 64 && others.length && R() < .35) return { a:'push', tg:others[Math.floor(R()*others.length)] };
-  if (HMD.D >= 56 && R() < .2) return { a:'grip' };
+  if (HMD.W + mdInflow(HMD.aboard.length, HMD.water.length*.3) >= 85) return { a:R() < .85 || HMD.cramp.includes(id) ? 'bail' : 'grip' };
+  // the slackers of last turn (held on, did nothing) cannot hold on now: they are the safest targets
+  const slack = others.filter(x => HMD.cramp.includes(x) || (HMD.prev[x] && HMD.prev[x].a === 'idle'));
+  if (slack.length && R() < (HMD.D >= 50 ? .55 : .25)) return { a:'push', tg:slack[Math.floor(R()*slack.length)] };
+  if (HMD.D >= 64 && others.length && R() < .3) return { a:'push', tg:others[Math.floor(R()*others.length)] };
+  if (HMD.D >= 56 && !HMD.cramp.includes(id) && R() < .2) return { a:'grip' };
   const n = HMD.aboard.length, pb = Math.max(.12, Math.min(.9, (HMD.W + mdInflow(n, 0) - 40)/(MD_BAIL*n)));   // bail about as much as needed to keep the water at bay
   return { a:R() < pb ? 'bail' : 'paddle' };
 }
@@ -9925,6 +9931,7 @@ function mdButtons(){
     const l = document.createElement('span'); l.textContent = MD_ACTS[a].n;
     b.append(i, l);
     b.setAttribute('aria-pressed', String(MD.mine ? MD.mine.a === a : a === 'push' && MD.pushMode));
+    if (a === 'grip' && (MD.cramp || []).includes(me.id)){ b.disabled = true; l.textContent = 'Crampe !'; b.title = 'Vous vous êtes agrippé au tour précédent : pas deux fois de suite.'; }
     b.onclick = () => {
       if (a === 'push'){ MD.pushMode = !MD.pushMode; mdButtons(); return; }
       MD.pushMode = false; mdChoose({ a });
@@ -9968,13 +9975,13 @@ function meduseRecv(m){
   if (!MD) return;
   if (m.t === 'md_turn'){
     if (m.r !== MD.r){ MD.figs.clear(); MD.Wv = m.W; MD.Dv = m.D; MD.fin = null; MD.banner = null; }
-    MD.r = m.r; MD.n = m.n; MD.W = m.W; MD.D = m.D; MD.aboard = m.aboard || []; MD.water = m.water || []; MD.lost = m.lost || []; MD.sc = m.sc || {};
+    MD.r = m.r; MD.n = m.n; MD.W = m.W; MD.D = m.D; MD.aboard = m.aboard || []; MD.water = m.water || []; MD.lost = m.lost || []; MD.cramp = m.cramp || []; MD.sc = m.sc || {};
     MD.ready = []; MD.acts = null; MD.mine = null; MD.pushMode = false; MD.ph = 'pick'; MD.deadline = performance.now() + (m.left|0)*1000; MD.queue = [];
     $('mdTurn').textContent = 'Traversée ' + m.r + '/' + MD_ROUNDS + ' · tour ' + m.n;
     const lostMe = MD.lost.includes(me.id);
     mdHead(MD.spec ? 'Spectateur' : lostMe ? 'Laissé en arrière…' : mdOnRaft() ? 'À bord : que faites-vous ?' : 'À l\'eau : que faites-vous ?');
     $('mdHelp').textContent = MD.spec ? 'Vous regardez la traversée.' : lostMe ? 'Le radeau s\'est éloigné sans vous : vous reprendrez la mer à la prochaine traversée.' : mdOnRaft()
-      ? 'En secret : écoper fait baisser l\'eau, pagayer rapproche du navire, s\'agripper protège, pousser jette quelqu\'un à l\'eau (sauf s\'il s\'agrippe : c\'est vous qui tombez).'
+      ? ((MD.cramp || []).includes(me.id) ? 'Crampe : vous vous êtes agrippé au tour précédent, impossible ce tour-ci. ' : '') + 'En secret : écoper fait baisser l\'eau, pagayer rapproche du navire, s\'agripper protège (pas deux tours de suite), pousser jette quelqu\'un à l\'eau (sauf s\'il s\'agrippe : c\'est vous qui tombez). Sans choix, vous ne faites rien.'
       : 'Vous êtes à l\'eau : remontez à bord, ou secouez le radeau. Mais si deux joueurs pagaient ce tour-ci, le radeau s\'éloigne et vous restez en arrière.';
     if (m.n === 1){ sfx('go'); boom('TRAVERSÉE ' + m.r, { size:30, x:.5, y:.35, pal:BOOM_COLORS[1], ms:1100 }); } else sfx('myturn');
     mdButtons(); renderMdPlayers();
@@ -10028,7 +10035,7 @@ function mdApply(e){
 addEventListener('keydown', e => {
   if (cur !== 'meduse' || !MD || MD.ph !== 'pick' || e.target.tagName === 'INPUT') return;
   const list = mdOnRaft() ? ['bail', 'paddle', 'grip', 'push'] : ['swim', 'rock'], k = '1234'.indexOf(e.key);
-  if (k >= 0 && k < list.length){ e.preventDefault(); if (list[k] === 'push'){ MD.pushMode = true; mdButtons(); } else mdChoose({ a:list[k] }); }
+  if (k >= 0 && k < list.length && !(list[k] === 'grip' && (MD.cramp || []).includes(me.id))){ e.preventDefault(); if (list[k] === 'push'){ MD.pushMode = true; mdButtons(); } else mdChoose({ a:list[k] }); }
 });
 // tapping someone on the raft = pushing them
 mdcv.addEventListener('pointerdown', e => {
@@ -10041,16 +10048,17 @@ mdcv.addEventListener('pointerdown', e => {
 // The scene follows Géricault's painting (1819, public domain): a raft seen from three-quarters, the torn sail on the
 // left, a barrel on the right where the top figure waves a cloth at the tiny ship, a stormy sky turning golden on the right.
 const MD_RAFT = { BL:[160, 240], BR:[470, 226], FR:[520, 318], FL:[104, 338] };
-const MD_DECK = [[.84, .30, 1], [.62, .26], [.44, .54], [.2, .62], [.67, .72], [.32, .3], [.52, .86]];   // s, t, raised (on the barrel)
-const MD_SWIM = [[72, 322], [548, 300], [300, 380], [158, 388], [462, 386]];
-const MD_GONE = [[46, 212], [574, 204], [112, 200], [520, 196], [250, 196]];
+const MD_DECK = [[.84, .30, 1], [.62, .24], [.44, .5], [.2, .62], [.68, .66], [.33, .28], [.52, .86], [.86, .8], [.1, .86]];   // s, t, raised (on the barrel)
+const MD_SWIM = [[72, 322], [548, 300], [300, 384], [158, 390], [462, 388], [570, 360], [40, 380], [380, 392]];
+const MD_GONE = [[46, 212], [574, 204], [112, 200], [520, 196], [250, 196], [170, 206], [420, 200], [330, 194]];
 const MD_SKIN = ['#F2C9A0', '#C68A5A', '#E8B48C', '#8D5A3B', '#F5D5B5'];
 const MD_HAIR = ['#5A3A1E', '#E2B44C', '#1C1C1C', '#A0522D', '#3B2A20'];
 function mdDeck(s, t, dy){
   const R = MD_RAFT, a = [R.BL[0] + (R.BR[0] - R.BL[0])*s, R.BL[1] + (R.BR[1] - R.BL[1])*s], b = [R.FL[0] + (R.FR[0] - R.FL[0])*s, R.FL[1] + (R.FR[1] - R.FL[1])*s];
   return [a[0] + (b[0] - a[0])*t, a[1] + (b[1] - a[1])*t + (dy || 0)];
 }
-const mdSink = () => MD.Wv*.22;
+const mdFlood = () => Math.max(0, Math.min(1, (MD.Wv - 70)/30));             // 0 until the gauge turns red, 1 when it sinks
+const mdSink = () => MD.Wv*.22 + mdFlood()*16;
 function mdSlots(){
   // where each person should be: on the deck, bobbing beside the raft, or left behind far away
   const out = new Map(), dy = mdSink();
@@ -10212,6 +10220,17 @@ function mdDraw(ctx, Wd, Ht, now, art){
   // water sloshing on the deck
   if (MD.Wv > 5){ ctx.fillStyle = 'rgba(80,130,120,' + Math.min(.6, MD.Wv/100*.7) + ')'; const c = [mdDeck(.06, .12, dy), mdDeck(.94, .1, dy), mdDeck(.96, .92, dy), mdDeck(.04, .9, dy)];
     ctx.beginPath(); c.forEach(([a, b], n) => n ? ctx.lineTo(a, b + Math.sin(t*2 + n)*2) : ctx.moveTo(a, b)); ctx.closePath(); ctx.fill(); }
+  // the gauge is red: the sea washes over the deck, from the front edge backwards
+  const fld = mdFlood();
+  if (fld > 0){
+    const back = 1 - fld*.95, crest = tt => { const pts = []; for (let n = 0; n <= 24; n++){ const ss = n/24, q = mdDeck(ss, tt, dy); pts.push([q[0], q[1] + Math.sin(ss*14 + t*3)*3]); } return pts; };
+    const top = crest(back), bot = [mdDeck(1, 1, dy), mdDeck(0, 1, dy)].map(([a, b]) => [a, b + th + 2]);
+    ctx.fillStyle = 'rgba(58,92,84,.88)'; ctx.beginPath(); top.forEach(([a, b], n) => n ? ctx.lineTo(a, b) : ctx.moveTo(a, b)); bot.forEach(([a, b]) => ctx.lineTo(a, b)); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = '#F2F5EE'; ctx.lineWidth = 3; ctx.beginPath(); top.forEach(([a, b], n) => n ? ctx.lineTo(a, b) : ctx.moveTo(a, b)); ctx.stroke();
+    // spray where the waves break over the logs
+    ctx.fillStyle = 'rgba(255,255,255,.85)';
+    for (let n = 0; n < 10; n++){ const ss = (n*.137 + t*.21) % 1, q = mdDeck(ss, back, dy), h = Math.abs(Math.sin(t*4 + n*1.7))*10*fld; ctx.beginPath(); ctx.arc(q[0], q[1] - h, 2.5, 0, Math.PI*2); ctx.fill(); }
+  }
   // things on the deck, back to front: mast and sail, barrel, people
   const items = [];
   const mb = mdDeck(.24, .4, dy);
@@ -10320,7 +10339,7 @@ const BRIEF = {
   agility:{ ctl:[['📱', 'Choisissez un chien. Haie, pneu, triple : un tap quand le cercle est vert. Slalom : tracez le zigzag. Tunnel : doigt sur le chien, glissez. Passerelle : restez appuyé, lâchez sur le jaune. Bascule : un tap sur le vert au milieu. Table : un tap puis plus rien. Sprint final : tapez à toute vitesse.'], ['💻', 'Les mêmes gestes à la souris, ou Espace (à marteler pour le sprint).']],
     tip:'Chaque race a 6 étoiles : Vitesse, Saut ou Énergie. Un Whippet file entre les obstacles, un Jack Russell a plus de marge sur les haies, un Corgi va plus vite au sprint et dans les obstacles longs.' },
   meduse:{ ctl:[['📱', 'À chaque tour, touchez votre choix : 🪣 écoper, 🚣 pagayer, ✊ s\'agripper, ou 👉 pousser puis le nom de la victime (ou touchez-la directement sur le radeau). À l\'eau : 🏊 remonter ou 🌊 secouer (si deux joueurs pagaient, le radeau vous laisse en arrière).'], ['💻', 'Cliquez les boutons, ou touches 1 à 4. Vous pouvez changer d\'avis jusqu\'à la fin des 10 secondes.']],
-    tip:'Les choix sont révélés tous en même temps. Quelqu\'un est tombé ? À deux pagayeurs, on l\'abandonne pour de bon ; sinon il peut remonter. Trop de monde à bord, ça coule ; trop de traîtres, personne n\'écope.' },
+    tip:'Les choix sont révélés tous en même temps. On ne peut pas s\'agripper deux tours de suite : celui qui vient de le faire est une cible facile. Quelqu\'un est tombé ? À deux pagayeurs, on l\'abandonne pour de bon ; sinon il peut remonter. Trop de monde à bord, ça coule ; trop de traîtres, personne n\'écope.' },
   galop:{ ctl:[['📱', 'Choisissez un cheval. ◀ ▶ pour vous décaler, GALOP pour accélérer (coûte de l\'énergie), RALENTIR pour souffler.'], ['💻', '← → se décaler · ↑ ou Espace galop · ↓ ralentir. Ou cliquez les boutons.']],
     tip:'Partir au galop donne un départ rapide mais entame l\'énergie. Collé derrière un cheval, vous récupérez plus vite.' }
 };
