@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Baston Arcade</title>
-<meta name="description" content="Seize jeux multijoueurs dans le navigateur : Gravats, Les Gardiens, Derby, Armada, Tape-taupe, Curling, Chaises musicales, Code secret, Kabaddi, Balle au prisonnier, Chars, Les bergers, Drakkars, Bûcherons, Agility et Galop. Un salon, un code, de 1 à 5 joueurs.">
+<meta name="description" content="Dix-sept jeux multijoueurs dans le navigateur : Gravats, Les Gardiens, Derby, Armada, Tape-taupe, Curling, Chaises musicales, Code secret, Kabaddi, Balle au prisonnier, Chars, Les bergers, Drakkars, Bûcherons, Agility, Galop et Méduse. Un salon, un code, de 1 à 5 joueurs.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Baston Arcade">
-<meta property="og:description" content="Seize jeux multijoueurs dans le navigateur. Créez un salon, partagez le code, et que le meilleur gagne.">
+<meta property="og:description" content="Dix-sept jeux multijoueurs dans le navigateur. Créez un salon, partagez le code, et que le meilleur gagne.">
 <meta property="og:image" content="https://bastonarcade.com/img/share.jpg?v=2">
 <meta property="og:url" content="https://bastonarcade.com/">
 <link rel="canonical" href="https://bastonarcade.com/">
@@ -434,6 +434,22 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .agtrait{font-size:11.5px;font-weight:800;color:#444;line-height:1.25}
 @media (max-width:560px){.agtrait{display:none}}
 
+/* ---- méduse ---- */
+#mdWrap,.mdhead,.mdbtns,.mdtargets{width:min(100%,64vh,600px)}
+#mdCv{display:block;width:100%;height:auto;aspect-ratio:600/420;touch-action:manipulation;border:3px solid #000;box-shadow:6px 6px 0 #000}
+#mdTime.low{background:var(--accent);color:#fff}
+.mdbtns{display:grid;gap:8px}
+.mdbtns.n4{grid-template-columns:repeat(4,1fr)}
+.mdbtns.n2{grid-template-columns:repeat(2,1fr)}
+.mdbtns button{display:flex;flex-direction:column;align-items:center;gap:2px;background:#fff;color:#000;font-size:clamp(14px,3.8vw,19px);padding:8px 4px;min-height:64px;touch-action:manipulation}
+.mdbtns button .mdic{font-size:24px;line-height:1}
+.mdbtns button[aria-pressed="true"]{background:#FFD21F;box-shadow:2px 2px 0 #000;transform:translate(2px,2px)}
+.mdtargets{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;background:#fff;border:3px solid #000;padding:8px}
+.mdtargets b{font-size:14px;width:100%;text-align:center}
+.mdtg{display:flex;align-items:center;gap:6px;background:#fff;color:#000;font-family:var(--body);font-weight:900;font-size:15px;letter-spacing:0;padding:6px 12px;min-height:44px}
+.mdtg i{width:16px;height:16px;border-radius:50%;border:2px solid #000}
+.mdtg[aria-pressed="true"]{background:var(--accent);color:#fff}
+
 /* ---- galop ---- */
 .gppick{width:min(100%,780px);display:flex;flex-direction:column;gap:10px;align-items:center}
 .gpgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;width:100%}
@@ -619,7 +635,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
 <section id="scrMenu" class="center">
   <div class="card">
     <h1 class="logosvg" data-appname><svg viewBox="0 0 520 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Baston Arcade"><polygon points="260,8 292,62 352,22 356,86 428,58 404,118 494,120 438,166 508,214 428,226 456,292 384,270 372,322 318,276 262,318 222,270 156,306 152,248 76,262 104,206 18,184 92,148 36,92 116,94 102,30 172,62 204,8 228,58" fill="#000" transform="translate(7,7)"/><polygon points="260,8 292,62 352,22 356,86 428,58 404,118 494,120 438,166 508,214 428,226 456,292 384,270 372,322 318,276 262,318 222,270 156,306 152,248 76,262 104,206 18,184 92,148 36,92 116,94 102,30 172,62 204,8 228,58" fill="#E6262B" stroke="#000" stroke-width="5" stroke-linejoin="round"/><g transform="rotate(-6 260 168)"><text x="264" y="196" text-anchor="middle" font-family="Bangers, Impact, sans-serif" font-size="112" letter-spacing="3" fill="#000">BASTON !</text><text x="258" y="190" text-anchor="middle" font-family="Bangers, Impact, sans-serif" font-size="112" letter-spacing="3" fill="#fff" stroke="#000" stroke-width="6" paint-order="stroke" stroke-linejoin="round">BASTON !</text><text x="383" y="252" text-anchor="end" font-family="Bangers, Impact, sans-serif" font-size="52" letter-spacing="6" fill="#000">ARCADE</text><text x="379" y="248" text-anchor="end" font-family="Bangers, Impact, sans-serif" font-size="52" letter-spacing="6" fill="#FFD93B" stroke="#000" stroke-width="5" paint-order="stroke" stroke-linejoin="round">ARCADE</text></g><path d="M60 46 l26 14 M44 76 l30 6 M462 260 l-26 -12 M476 232 l-30 -4" stroke="#000" stroke-width="5" stroke-linecap="round"/></svg></h1>
-    <p class="tagline">Seize jeux, de 1 à 5 joueurs</p>
+    <p class="tagline">Dix-sept jeux, de 1 à 5 joueurs</p>
     <div class="hello" id="helloBox" hidden><span>Salut</span> <b id="helloName"></b><button id="btnName" class="ghost" type="button" aria-label="Changer de nom">✎</button></div>
     <div class="field" id="nameField">
       <label for="nameIn">Votre nom</label>
@@ -740,6 +756,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
       <button data-g="lumber" aria-pressed="false"><img src="img/lumber.jpg" alt=""><span>Bûcherons</span></button>
       <button data-g="agility" aria-pressed="false"><img src="img/agility.jpg" alt=""><span>Agility</span></button>
       <button data-g="galop" aria-pressed="false"><img src="img/galop.jpg" alt=""><span>Galop</span></button>
+      <button data-g="meduse" aria-pressed="false"><img src="img/meduse.jpg" alt=""><span>Méduse</span></button>
     </div>
     </div>
     <div class="lobbyfoot">
@@ -1048,6 +1065,22 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
   </div>
 </section>
 
+<!-- MÉDUSE -->
+<section id="scrMeduse" hidden>
+  <div class="naval">
+    <div class="nvhead mdhead"><div class="nvturn" id="mdHead">Méduse</div><div class="dkchips"><span class="cuend" id="mdTurn">Traversée 1/3</span><span class="cuend" id="mdTime">⏱ –</span></div></div>
+    <div class="nvwrap" id="mdWrap">
+      <canvas id="mdCv" width="600" height="420" aria-label="Le radeau"></canvas>
+      <div class="msg pm" id="mdMsg"></div>
+      <div class="toast pm" id="mdToast" aria-live="polite"></div>
+    </div>
+    <div class="mdbtns n4" id="mdBtns" hidden></div>
+    <div class="mdtargets" id="mdTargets" hidden></div>
+    <ul class="nvplayers" id="mdPlayers"></ul>
+    <p class="hint ctlhelp" id="mdHelp"></p>
+  </div>
+</section>
+
 <!-- GALOP -->
 <section id="scrGalop" hidden>
   <div class="naval">
@@ -1114,6 +1147,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
       <button data-f="sheep" aria-pressed="false">Bergers</button>
       <button data-f="drakkar" aria-pressed="false">Drakkars</button>
       <button data-f="lumber" aria-pressed="false">Bûcherons</button>
+      <button data-f="meduse" aria-pressed="false">Méduse</button>
       <button data-f="agility" aria-pressed="false">Agility</button>
       <button data-f="galop" aria-pressed="false">Galop</button>
     </div>
@@ -1251,7 +1285,7 @@ let D = null;                   // derby state
 let NV = null, HN = null;       // armada: my view / host's full map
 let BOT = null;                  // host-side robot when someone plays alone
 let ML = null, HM = null;       // tape-taupe: my view / host referee
-const GAME_NAMES = { tetris:'Gravats', pong:'Les Gardiens', derby:'Derby', naval:'Armada', mole:'Tape-taupe', curling:'Curling', chairs:'Chaises musicales', master:'Code secret', kabaddi:'Kabaddi', dodge:'Balle au prisonnier', tank:'Chars', sheep:'Les bergers', drakkar:'Drakkars', lumber:'Bûcherons', agility:'Agility', galop:'Galop' };
+const GAME_NAMES = { tetris:'Gravats', pong:'Les Gardiens', derby:'Derby', naval:'Armada', mole:'Tape-taupe', curling:'Curling', chairs:'Chaises musicales', master:'Code secret', kabaddi:'Kabaddi', dodge:'Balle au prisonnier', tank:'Chars', sheep:'Les bergers', drakkar:'Drakkars', lumber:'Bûcherons', agility:'Agility', galop:'Galop', meduse:'Méduse' };
 // the gist in two lines, for the rules slides before a game (the full text stays on the game card)
 const GAME_SHORT = {
   tetris:'Empilez les pièces et effacez des lignes : chacune envoie des briques fendues chez les autres. Le dernier en jeu gagne.',
@@ -1269,7 +1303,8 @@ const GAME_SHORT = {
   drakkar:'Tout le salon rame dans le même drakkar : en rythme avec le tambour pour battre les robots.',
   lumber:'Choisissez où tombe votre arbre, puis sciez-le proprement. N\'écrasez rien !',
   agility:'Choisissez un chien et guidez-le sur le parcours : chaque obstacle a son geste. Le meilleur temps gagne.',
-  galop:'Choisissez un cheval, placez-vous et dosez son énergie sur 3000 m. Le premier à la ligne gagne.'
+  galop:'Choisissez un cheval, placez-vous et dosez son énergie sur 3000 m. Le premier à la ligne gagne.',
+  meduse:'Tous sur un radeau qui prend l\'eau. Chaque tour, en secret : écoper, pagayer, s\'agripper ou pousser un autre à l\'eau.'
 };
 const GAME_DESC = {
   tetris:'Empilez des pièces de 2, 3 et 5 briques. Chaque ligne effacée envoie des briques fendues à vos adversaires. Effacez une ligne collée à une brique fendue : elle éclate et repart chez son expéditeur.',
@@ -1288,6 +1323,7 @@ const GAME_DESC = {
   lumber:'Concours de bûcherons, tronçonneuse en main : vu du dessus, choisissez où tombe votre arbre sans rien écraser, puis abattez-le comme un vrai, en suivant les pointillés : les deux coupes de l\'entaille, puis le trait d\'abattage. Plus les coupes sont droites, plus l\'arbre tombe là où vous l\'avez décidé, et viser une ouverture étroite rapporte un gros bonus. Écraser une maison, une voiture ou un autre arbre élimine. Trois manches de plus en plus dures, tout le monde joue en même temps.',
   agility:'Concours d\'agility : chacun choisit son chien (Border collie, Whippet, Caniche…) et le guide sur le même parcours, en même temps. Entre les obstacles, le chien court seul. Haies, pneu et triple : touchez au bon moment. Slalom : tracez le zigzag. Tunnel : suivez-le du doigt. Passerelle : maintenez, relâchez sur le jaune. Bascule : stop au milieu. Table : « Couché ! » puis ne touchez plus. Sprint final : tapez le plus vite possible. Chaque faute coûte 5 s, le meilleur temps gagne.',
   galop:'Course de galop de 3000 m, chacun sur son cheval, vue du dessus. Choisissez votre monture parmi 20, nouvelles à chaque partie (accélération, vitesse, maniabilité, et une forme du jour cachée), des robots complètent jusqu\'à 8 partants. Le cheval suit la piste tout seul : vous vous décalez à gauche ou à droite et vous demandez du galop, qui coûte de l\'énergie. Collé derrière un autre, vous récupérez plus vite et profitez de ses accélérations.',
+  meduse:'Le radeau de la Méduse, en version bande dessinée : tout le monde est sur un radeau qui prend l\'eau et vogue vers le navire de secours. Chaque tour, chacun choisit en secret : écoper, pagayer, s\'agripper, ou pousser quelqu\'un à l\'eau. Pousser quelqu\'un qui s\'agrippe, c\'est tomber soi-même. À l\'arrivée, ceux qui sont à bord se partagent 100 points : moins on est, plus la part est grosse. Mais si le radeau coule, personne ne marque. Tombé à l\'eau, on remonte à bord au tour suivant, ou on secoue le radeau. Trois traversées.',
   derby:'Course de chevaux : tout le monde reçoit la même série de figures à tracer. Chaque figure réussie fait avancer votre cheval, plus loin si elle est complexe et bien tracée. Le premier à la ligne gagne.'
 };
 
@@ -1295,7 +1331,7 @@ const cleanName = s => String(s || '').replace(/[\u0000-\u001f<>]/g,'').trim().s
 // names shown to everyone in the public list: anything that looks like a link or an address is replaced
 const publicName = s => { const n = cleanName(s); return /https?|www|\.\s*[a-z]{2,}|@|\/\/|discord|t\.me|bit\.ly/i.test(n) ? (LANG === 'en' ? 'Player' : 'Joueur') : n; };
 const genCode = () => { const a='ABCDEFGHJKMNPQRSTUVWXYZ23456789'; let s=''; for(let i=0;i<4;i++) s+=a[Math.floor(Math.random()*a.length)]; return s; };
-const show = id => { for (const s of ['scrMenu','scrStats','scrLobby','scrGame','scrPong','scrDerby','scrNaval','scrMole','scrCurl','scrChairs','scrMaster','scrKabaddi','scrDodge','scrTank','scrSheep','scrDrakkar','scrLumber','scrAgility','scrGalop']) $(s).hidden = s !== id; if (id === 'scrKabaddi') try { window.scrollTo(0, 0); } catch(_){} document.documentElement.classList.toggle('joyon', ['scrKabaddi','scrDodge','scrTank','scrSheep'].includes(id)); };
+const show = id => { for (const s of ['scrMenu','scrStats','scrLobby','scrGame','scrPong','scrDerby','scrNaval','scrMole','scrCurl','scrChairs','scrMaster','scrKabaddi','scrDodge','scrTank','scrSheep','scrDrakkar','scrLumber','scrAgility','scrGalop','scrMeduse']) $(s).hidden = s !== id; if (id === 'scrKabaddi') try { window.scrollTo(0, 0); } catch(_){} document.documentElement.classList.toggle('joyon', ['scrKabaddi','scrDodge','scrTank','scrSheep'].includes(id)); };
 const store = { get(k){ try { return localStorage.getItem(k); } catch(_) { return null; } }, set(k,v){ try { localStorage.setItem(k,v); } catch(_){} } };
 
 $('nameIn').value = store.get('tm-name') || ((LANG === 'en' ? 'Player' : 'Joueur') + Math.floor(Math.random()*90+10));
@@ -1369,7 +1405,7 @@ function teardown(){
   if (HN && HN.timer) clearTimeout(HN.timer);
   if (HM) moleClearTimers();
   if (HC) clearTimeout(HC.timer);
-  HC = null; CU = null; mcClear(); HMC = null; MC = null; mmClear(); HMM = null; MM = null; kbClear(); HKB = null; KB = null; dbClear(); HDB = null; DB = null; tkClear(); HTK = null; TK = null; shClear(); HSH = null; SHV = null; dkClear(); HDK = null; ljClear(); HLJ = null; LJ = null; sawStop(); agClear(); HAG = null; AG = null; gpClear(); HGP = null; GP = null; DK = null;
+  HC = null; CU = null; mcClear(); HMC = null; MC = null; mmClear(); HMM = null; MM = null; kbClear(); HKB = null; KB = null; dbClear(); HDB = null; DB = null; tkClear(); HTK = null; TK = null; shClear(); HSH = null; SHV = null; dkClear(); HDK = null; ljClear(); HLJ = null; LJ = null; sawStop(); agClear(); HAG = null; AG = null; gpClear(); HGP = null; GP = null; DK = null; mdClear(); HMD = null; MD = null;
   CHAT.length = 0; renderChat();
   net = null; H = null; G = null; PG = null; D = null; NV = null; HN = null; cur = null; me.host = false; me.id = null; players = []; opps.clear();
 }
@@ -1580,7 +1616,7 @@ function hostDrop(conn){
   net.conns.delete(id);
   if (phase === 'lobby'){ const p = players.find(x => x.id === id); players = players.filter(p => p.id !== id); if (VOTES[id]){ delete VOTES[id]; broadcast({ t:'votes', v:VOTES }); } sendLobby(false); briefCheck(); if (BR) briefStatus(); if (p) chatSys(p.name + ' a quitté le salon'); return; }
   if (H && H.alive.has(id)){
-    if (H.game === 'pong') pongDrop(id); else if (H.game === 'curling') curlDrop(id); else if (H.game === 'chairs') chairsDrop(id); else if (H.game === 'master') masterDrop(id); else if (H.game === 'kabaddi') kabaddiDrop(id); else if (H.game === 'dodge') dodgeDrop(id); else if (H.game === 'tank') tankDrop(id); else if (H.game === 'sheep') sheepDrop(id); else if (H.game === 'drakkar') drakkarDrop(id); else if (H.game === 'lumber') lumberDrop(id); else if (H.game === 'agility') agilityDrop(id); else if (H.game === 'galop') galopDrop(id); else if (H.game === 'derby') derbyDrop(id); else if (H.game === 'naval') navalDrop(id); else if (H.game === 'mole') moleDrop(id); else hostHandle(id, { t:'dead', left:true });
+    if (H.game === 'pong') pongDrop(id); else if (H.game === 'curling') curlDrop(id); else if (H.game === 'chairs') chairsDrop(id); else if (H.game === 'master') masterDrop(id); else if (H.game === 'kabaddi') kabaddiDrop(id); else if (H.game === 'dodge') dodgeDrop(id); else if (H.game === 'tank') tankDrop(id); else if (H.game === 'sheep') sheepDrop(id); else if (H.game === 'drakkar') drakkarDrop(id); else if (H.game === 'lumber') lumberDrop(id); else if (H.game === 'agility') agilityDrop(id); else if (H.game === 'galop') galopDrop(id); else if (H.game === 'meduse') meduseDrop(id); else if (H.game === 'derby') derbyDrop(id); else if (H.game === 'naval') navalDrop(id); else if (H.game === 'mole') moleDrop(id); else hostHandle(id, { t:'dead', left:true });
   }
 }
 
@@ -1642,6 +1678,7 @@ function hostLaunch(){
   if (gameKind === 'lumber') return lumberHostStart();
   if (gameKind === 'agility') return agilityHostStart();
   if (gameKind === 'galop') return galopHostStart();
+  if (gameKind === 'meduse') return meduseHostStart();
   unannounce();                                   // a started game leaves the public list at once
   broadcast({ t:'start', players, game:gameKind, seed:Math.floor(Math.random() * 2**31) });
 }
@@ -1690,6 +1727,8 @@ function hostHandle(id, m){
     galopPick(id, m.h);
   } else if (m.t === 'gp_in'){
     galopInput(id, m);
+  } else if (m.t === 'md_pick'){
+    mdPick(id, m);
   } else if (m.t === 'ag_pick'){
     agilityPick(id, m.b);
   } else if (m.t === 'ag_p'){
@@ -1762,9 +1801,9 @@ function clientRecv(m){
       players = (Array.isArray(m.players) ? m.players : []).slice(0, MAXP).filter(p => p && typeof p.id === 'string').map(p => ({ ...p, id:p.id.slice(0, 12), name:cleanName(p.name), color:PALETTE.includes(p.color) ? p.color : '#888' }));
       if (m.you) me.id = m.you;
       if (net && !net.solo && !me.host) try { sessionStorage.setItem('ba-room', net.code); } catch(_){}   // after an accidental reload, come straight back
-      if (['tetris','pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber','agility','galop'].includes(m.game)) gameKind = m.game;
+      if (['tetris','pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber','agility','galop','meduse'].includes(m.game)) gameKind = m.game;
       if (phase === 'menu' || phase === 'lobby' || m.back){
-        phase = 'lobby'; $('scrEnd').hidden = true; G = null; PG = null; D = null; NV = null; ML = null; CU = null; MC = null; MM = null; KB = null; DB = null; TK = null; SHV = null; DK = null; if (LJ){ LJ = null; sawStop(); } AG = null; GP = null; cur = null; show('scrLobby'); renderLobby();
+        phase = 'lobby'; $('scrEnd').hidden = true; G = null; PG = null; D = null; NV = null; ML = null; CU = null; MC = null; MM = null; KB = null; DB = null; TK = null; SHV = null; DK = null; if (LJ){ LJ = null; sawStop(); } AG = null; GP = null; MD = null; cur = null; show('scrLobby'); renderLobby();
       }
       break;
     case 'nv_start': startNaval(m); break;
@@ -1791,13 +1830,14 @@ function clientRecv(m){
     case 'dk_beat': case 'dk_s': case 'dk_tap': case 'dk_end': case 'dk_ev': drakkarRecv(m); break;
     case 'lj_round': case 'lj_res': case 'lj_sum': case 'lj_left': lumberRecv(m); break;
     case 'ag_p': case 'ag_done': case 'ag_left': case 'ag_pick': case 'ag_go': agilityRecv(m); break;
+    case 'md_turn': case 'md_ready': case 'md_res': case 'md_left': meduseRecv(m); break;
     case 'gp_pick': case 'gp_race': case 'gp_go': case 'gp_s': case 'gp_fin': galopRecv(m); break;
     case 'brief': if (phase === 'lobby') openBrief(m.game, m.ready); break;
     case 'votes': VOTES = m.v && typeof m.v === 'object' ? m.v : {}; renderVotes(); if (!$('gameSheet').hidden) openGameSheet($('gameSheet').dataset.g); break;
     case 'peek': if (!me.host){ PEEK = GAME_NAMES[m.g] ? m.g : null; renderVotes(); } break;
     case 'brief_st': if (BR){ BR.ready = new Set(m.ready || []); briefStatus(); } break;
     case 'brief_off': closeBrief(); break;
-    case 'start': closeGameSheet(); closeBrief(); PEEK = null; VOTES = {}; $('colPick').hidden = true; if (m.game === 'galop') startGalop(m); else if (m.game === 'agility') startAgility(m); else if (m.game === 'lumber') startLumber(m); else if (m.game === 'drakkar') startDrakkar(m); else if (m.game === 'sheep') startSheep(m); else if (m.game === 'tank') startTank(m); else if (m.game === 'dodge') startDodge(m); else if (m.game === 'kabaddi') startKabaddi(m); else if (m.game === 'master') startMaster(m); else if (m.game === 'chairs') startChairs(m); else if (m.game === 'curling') startCurling(m); else if (m.game === 'pong') startPong(m.players); else if (m.game === 'derby') startDerby(m.players, m.seed|0); else startGame(m.players); break;
+    case 'start': closeGameSheet(); closeBrief(); PEEK = null; VOTES = {}; $('colPick').hidden = true; if (m.game === 'galop') startGalop(m); else if (m.game === 'meduse') startMeduse(m); else if (m.game === 'agility') startAgility(m); else if (m.game === 'lumber') startLumber(m); else if (m.game === 'drakkar') startDrakkar(m); else if (m.game === 'sheep') startSheep(m); else if (m.game === 'tank') startTank(m); else if (m.game === 'dodge') startDodge(m); else if (m.game === 'kabaddi') startKabaddi(m); else if (m.game === 'master') startMaster(m); else if (m.game === 'chairs') startChairs(m); else if (m.game === 'curling') startCurling(m); else if (m.game === 'pong') startPong(m.players); else if (m.game === 'derby') startDerby(m.players, m.seed|0); else startGame(m.players); break;
     case 'dr': derbyRemote(m); break;
     case 'ps': pongState(m); break;
     case 'pg': pongGoalFx(m.side|0); break;
@@ -2092,7 +2132,7 @@ function showEnd(ranking, game){
   phase = 'end';
   if (G) G.p = null;
   if (PG) PG.ph = 'over';
-  const pong = game === 'pong', derby = game === 'derby', naval = game === 'naval', mole = game === 'mole', curl = game === 'curling', chairs = game === 'chairs', master = game === 'master', kab = game === 'kabaddi', dodge = game === 'dodge', tank = game === 'tank', coop = game === 'sheep', viking = game === 'drakkar', lumber = game === 'lumber', agil = game === 'agility', galop = game === 'galop';
+  const pong = game === 'pong', derby = game === 'derby', naval = game === 'naval', mole = game === 'mole', curl = game === 'curling', chairs = game === 'chairs', master = game === 'master', kab = game === 'kabaddi', dodge = game === 'dodge', tank = game === 'tank', coop = game === 'sheep', viking = game === 'drakkar', lumber = game === 'lumber', agil = game === 'agility', galop = game === 'galop', medu = game === 'meduse';
   if (ML) ML.over = true;
   if (NV) NV.over = true;
   if (D) D.over = true;
@@ -2107,11 +2147,12 @@ function showEnd(ranking, game){
   if (LJ){ LJ.over = true; LJ.ph = 'end'; sawStop(); }
   if (AG){ AG.over = true; if (!AG.done) AG.mode = 'watch'; }
   if (GP) GP.over = true;
+  if (MD){ MD.over = true; MD.ph = 'end'; MD.queue = []; }
   const hd = $('rankHead'); hd.textContent = '';
-  for (const h of ['#','Joueur', ...(galop ? ['Cheval','Temps','Écart'] : agil ? ['Temps','Fautes','Total'] : lumber ? ['Points','Précision','Manches'] : viking ? ['Rôle','Coups','Synchro'] : coop ? ['Manches','Moutons','Ouaf'] : tank ? ['Char','Rôle','Touches'] : dodge ? ['Vies','Touches','Arrêts'] : kab ? ['Points','Raids réussis','Plaquages'] : master ? ['Points','Trouvés','Essais'] : chairs ? ['Vies','Chaises','Réflexe'] : curl ? ['Points','Maison','Meilleure'] : pong ? ['Vies','Arrêts'] : derby ? ['Figures','Distance','Temps'] : naval ? ['Tirs','Touchés','À flot'] : mole ? ['Points','Tapées','Échappées'] : ['Lignes','Briques','Score'])]){
+  for (const h of ['#','Joueur', ...(medu ? ['Points','Sauvé','Poussés','Plongeons'] : galop ? ['Cheval','Temps','Écart'] : agil ? ['Temps','Fautes','Total'] : lumber ? ['Points','Précision','Manches'] : viking ? ['Rôle','Coups','Synchro'] : coop ? ['Manches','Moutons','Ouaf'] : tank ? ['Char','Rôle','Touches'] : dodge ? ['Vies','Touches','Arrêts'] : kab ? ['Points','Raids réussis','Plaquages'] : master ? ['Points','Trouvés','Essais'] : chairs ? ['Vies','Chaises','Réflexe'] : curl ? ['Points','Maison','Meilleure'] : pong ? ['Vies','Arrêts'] : derby ? ['Figures','Distance','Temps'] : naval ? ['Tirs','Touchés','À flot'] : mole ? ['Points','Tapées','Échappées'] : ['Lignes','Briques','Score'])]){
     const th = document.createElement('th'); th.textContent = h; hd.append(th);
   }
-  $('rankNote').textContent = galop ? '« Écart » : retard sur le vainqueur à l\'arrivée, en secondes. Les chevaux des robots sont classés avec les autres.' : agil ? '« Total » : temps du parcours plus 5 s par faute. Un chien qui n\'a pas fini est classé après les autres.' : lumber ? '« Précision » : moyenne de vos coupes. « Manches » : manches finies sans rien écraser. Un joueur qui écrase quelque chose est éliminé.' : viking ? 'Course en équipe. « Synchro » : coups de rame donnés en rythme avec le tambour.' : coop ? 'Partie en équipe : tout le monde partage le score. « Moutons » : moutons rentrés au total, « Ouaf » : aboiements.' : tank ? 'Les deux membres d\'un équipage partagent la même place. « Touches » : obus du canonnier qui ont fait mouche.' : dodge ? '« Touches » : balles qui ont atteint un adversaire. « Arrêts » : balles attrapées.' : kab ? '« Raids réussis » : raids rentrés avec au moins un défenseur touché. « Plaquages » : attaquants retenus jusqu\'au bout du souffle.' : master ? '« Trouvés » : codes trouvés. « Essais » : total des essais sur la partie.' : chairs ? '« Chaises » : chaises gagnées. « Réflexe » : votre plus rapide, de l\'arrêt du disque à la chaise.' : curl ? '« Maison » : pierres dans la maison en fin de manche. « Meilleure » : pierre la plus proche du centre.' : mole ? '« Tapées » : taupes adverses tapées. « Échappées » : vos taupes que personne n\'a eues.' : naval ? '« À flot » : cases de bateau encore intactes à la fin.' : pong ? '« Arrêts » : ballons repoussés par le gardien.' : derby ? '« Temps » : durée pour franchir la ligne, pour ceux qui l\'ont franchie.' : '« Briques » : nombre de briques envoyées aux adversaires.';
+  $('rankNote').textContent = medu ? '« Sauvé » : traversées finies à bord. « Poussés » : adversaires jetés à l\'eau. « Plongeons » : fois où vous êtes tombé.' : galop ? '« Écart » : retard sur le vainqueur à l\'arrivée, en secondes. Les chevaux des robots sont classés avec les autres.' : agil ? '« Total » : temps du parcours plus 5 s par faute. Un chien qui n\'a pas fini est classé après les autres.' : lumber ? '« Précision » : moyenne de vos coupes. « Manches » : manches finies sans rien écraser. Un joueur qui écrase quelque chose est éliminé.' : viking ? 'Course en équipe. « Synchro » : coups de rame donnés en rythme avec le tambour.' : coop ? 'Partie en équipe : tout le monde partage le score. « Moutons » : moutons rentrés au total, « Ouaf » : aboiements.' : tank ? 'Les deux membres d\'un équipage partagent la même place. « Touches » : obus du canonnier qui ont fait mouche.' : dodge ? '« Touches » : balles qui ont atteint un adversaire. « Arrêts » : balles attrapées.' : kab ? '« Raids réussis » : raids rentrés avec au moins un défenseur touché. « Plaquages » : attaquants retenus jusqu\'au bout du souffle.' : master ? '« Trouvés » : codes trouvés. « Essais » : total des essais sur la partie.' : chairs ? '« Chaises » : chaises gagnées. « Réflexe » : votre plus rapide, de l\'arrêt du disque à la chaise.' : curl ? '« Maison » : pierres dans la maison en fin de manche. « Meilleure » : pierre la plus proche du centre.' : mole ? '« Tapées » : taupes adverses tapées. « Échappées » : vos taupes que personne n\'a eues.' : naval ? '« À flot » : cases de bateau encore intactes à la fin.' : pong ? '« Arrêts » : ballons repoussés par le gardien.' : derby ? '« Temps » : durée pour franchir la ligne, pour ceux qui l\'ont franchie.' : '« Briques » : nombre de briques envoyées aux adversaires.';
   const tb = $('rankBody'); tb.textContent = '';
   (ranking || []).forEach(r => {
     const tr = document.createElement('tr'); if (r.place === 1) tr.className = 'win';
@@ -2120,7 +2161,8 @@ function showEnd(ranking, game){
     const d = document.createElement('span'); d.className = 'dot'; d.style.background = r.color;
     const s = document.createElement('span'); s.textContent = r.name + (r.id === me.id ? ' (vous)' : '') + (r.left ? ' · parti' : '');
     w.append(d, s); nm.append(w);
-    if (galop) tr.append(td(r.place), nm, td(r.horse || ''), td(r.t ? fmtSec(r.t) : '–'), td(r.gap == null ? '–' : r.gap > 0 ? '+' + r.gap.toLocaleString('fr-FR', { minimumFractionDigits:2, maximumFractionDigits:2 }) : '')); if (galop) [...tr.children].slice(-2).forEach(c => c.style.whiteSpace = 'nowrap');
+    if (medu) tr.append(td(r.place), nm, td(r.pts|0), td((r.saved|0) + '/' + MD_ROUNDS), td(r.pushes|0), td(r.dunks|0));
+    else if (galop){ tr.append(td(r.place), nm, td(r.horse || ''), td(r.t ? fmtSec(r.t) : '–'), td(r.gap == null ? '–' : r.gap > 0 ? '+' + r.gap.toLocaleString('fr-FR', { minimumFractionDigits:2, maximumFractionDigits:2 }) : '')); [...tr.children].slice(-2).forEach(c => c.style.whiteSpace = 'nowrap'); }
     else if (agil) tr.append(td(r.place), nm, td(r.done ? fmtSec(Math.round(r.time*1000)) : '–'), td(r.done ? r.faults|0 : '–'), td(r.done ? fmtSec(Math.round(r.total*1000)) : 'abandon'));
     else if (lumber) tr.append(td(r.place), nm, td(r.pts|0), td((r.sync|0) + ' %'), td((r.rounds|0) + '/' + LJ_ROUNDS + (r.out ? ' ✗' : '')));
     else if (viking) tr.append(td(r.win ? '★' : '–'), nm, td(r.role || ''), td(r.strokes|0), td((r.sync|0) + ' %'));
@@ -2147,7 +2189,7 @@ function showEnd(ranking, game){
   $('winPanel').style.background = viking ? (iWon ? '#3DDC97' : '#8A84B0') : coop ? '#3DDC97' : win ? win.color : '#FFD93B';
   $('winName').textContent = viking ? (iWon ? 'L\'Angleterre est à vous !' : 'Les autres Vikings arrivent avant vous') : coop ? 'Score d\'équipe : ' + ((win && win.score) | 0) : win ? (iWon ? 'Vous gagnez !' : (galop && win.bot && win.horse ? win.horse : win.name) + ' gagne !') : '';
   $('myPlace').textContent = viking ? 'Drakkars' + (iWon && win.t ? ' · ' + fmtSec(win.t) : '') : coop ? 'Les bergers · ' + ((win && win.rounds) | 0) + '/' + SH_ROUNDS + ' manches réussies' : (GAME_NAMES[game] || 'Gravats') + (mine ? ' · vous finissez ' + (mine.place === 1 ? '1er' : mine.place + 'e') + ' sur ' + ranking.length : '');
-  (galop ? (t => { const el = $('gpMsg'); if (el) el.textContent = t || ''; }) : agil ? agMsg : lumber ? ljMsg : viking ? drakkarMsg : coop ? sheepMsg : tank ? tankMsg : dodge ? dodgeMsg : kab ? kabaddiMsg : master ? masterMsg : chairs ? chairsMsg : curl ? curlMsg : pong ? pongMsg : derby ? derbyMsg : naval ? navalMsg : mole ? moleMsg : setMsg)('', '');
+  (medu ? (t => { const el = $('mdMsg'); if (el) el.textContent = t || ''; }) : galop ? (t => { const el = $('gpMsg'); if (el) el.textContent = t || ''; }) : agil ? agMsg : lumber ? ljMsg : viking ? drakkarMsg : coop ? sheepMsg : tank ? tankMsg : dodge ? dodgeMsg : kab ? kabaddiMsg : master ? masterMsg : chairs ? chairsMsg : curl ? curlMsg : pong ? pongMsg : derby ? derbyMsg : naval ? navalMsg : mole ? moleMsg : setMsg)('', '');
   $('btnAgain').hidden = false; $('btnReplay').hidden = !me.host; $('btnAgain').classList.toggle('ghost', me.host);
   $('endHint').textContent = me.host ? '' : 'Le créateur choisit la suite : rejouer ou revenir au salon.';
   $('btnAgain').style.gridColumn = me.host ? '' : '1 / -1';
@@ -2354,7 +2396,7 @@ function release(a){
 const KEYMAP = { arrowleft:'left', arrowright:'right', arrowdown:'down', arrowup:'rotr', x:'rotr', z:'rotl', w:'rotl', control:'rotl', ' ':'drop', c:'hold', shift:'hold' };
 addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT') return;
-  if (cur === 'curl' || cur === 'chairs' || cur === 'master' || cur === 'kabaddi' || cur === 'dodge' || cur === 'tank' || cur === 'sheep' || cur === 'drakkar' || cur === 'lumber' || cur === 'agility' || cur === 'galop') return;
+  if (cur === 'curl' || cur === 'chairs' || cur === 'master' || cur === 'kabaddi' || cur === 'dodge' || cur === 'tank' || cur === 'sheep' || cur === 'drakkar' || cur === 'lumber' || cur === 'agility' || cur === 'galop' || cur === 'meduse') return;
   if (cur === 'pong'){ const k = PKEYS[e.key.toLowerCase()]; if (k){ e.preventDefault(); pin[k] = true; } return; }
   const a = KEYMAP[e.key.toLowerCase()]; if (!a) return;
   e.preventDefault();
@@ -9356,7 +9398,7 @@ function drawGalop(now){
 const BOOM_COLORS = [['#FFD93B','#E6262B'], ['#FFFFFF','#1E5BFF'], ['#E6262B','#FFFFFF'], ['#1E5BFF','#FFD93B']];
 function gameWrap(){
   return cur === 'tetris' ? document.querySelector('#play .well') : cur === 'pong' ? $('pwrap') : cur === 'derby' ? $('padwrap')
-    : cur === 'naval' ? document.querySelector('#scrNaval .nvwrap') : cur === 'mole' ? $('mlWrap') : cur === 'curl' ? $('cuWrap') : cur === 'chairs' ? $('mcWrap') : cur === 'master' ? $('mmWrap') : cur === 'kabaddi' ? $('kbWrap') : cur === 'dodge' ? $('dbWrap') : cur === 'tank' ? $('tkWrap') : cur === 'sheep' ? $('shWrap') : cur === 'drakkar' ? $('dkWrap') : cur === 'lumber' ? $('ljWrap') : cur === 'agility' ? $('agWrap') : cur === 'galop' ? $('gpWrap') : null;
+    : cur === 'naval' ? document.querySelector('#scrNaval .nvwrap') : cur === 'mole' ? $('mlWrap') : cur === 'curl' ? $('cuWrap') : cur === 'chairs' ? $('mcWrap') : cur === 'master' ? $('mmWrap') : cur === 'kabaddi' ? $('kbWrap') : cur === 'dodge' ? $('dbWrap') : cur === 'tank' ? $('tkWrap') : cur === 'sheep' ? $('shWrap') : cur === 'drakkar' ? $('dkWrap') : cur === 'lumber' ? $('ljWrap') : cur === 'agility' ? $('agWrap') : cur === 'galop' ? $('gpWrap') : cur === 'meduse' ? $('mdWrap') : null;
 }
 // x, y: position in the wrap (0..1); size in px; pal: one of BOOM_COLORS
 function boom(text, o = {}){
@@ -9551,7 +9593,7 @@ async function resultCard(){
   // footer: where to play
   c.fillStyle = '#000'; c.fillRect(0, H - 120, W, 120);
   c.fillStyle = '#FFD93B'; c.textAlign = 'center'; c.font = '58px Bangers, Impact, sans-serif'; c.fillText('Viens jouer : bastonarcade.com', W/2, H - 64);
-  c.fillStyle = '#fff'; c.font = '700 26px Nunito, sans-serif'; c.fillText('16 jeux à plusieurs, gratuits, sans compte, sans pub', W/2, H - 22);
+  c.fillStyle = '#fff'; c.font = '700 26px Nunito, sans-serif'; c.fillText('17 jeux à plusieurs, gratuits, sans compte, sans pub', W/2, H - 22);
   return cv;
 }
 $('btnShare').onclick = async () => {
@@ -9732,6 +9774,385 @@ $('stRefresh').onclick = () => stLoad();
 for (const b of $('stRange').querySelectorAll('button')) b.onclick = () => { ST.days = +b.dataset.d; stLoad(); };
 
 
+// ================= MÉDUSE : a raft taking on water, everyone chooses in secret =================
+// After Géricault's painting. Everyone is on a raft heading for the rescue ship. Each turn, all at once and in secret:
+// bail, paddle, hold on, or push someone into the sea. Pushing someone who holds on sends you in instead. Overboard, you
+// swim back (it takes the turn) or rock the raft. On arrival the people aboard share 100 points: the fewer, the bigger
+// the share. If the raft sinks, nobody scores. Three crossings; robots make up a crew of at least 4.
+const MD_ROUNDS = 3, MD_PICK = 10, MD_STEP = 950, MD_MAXT = 14, MD_MINP = 4;
+const MD_START_W = 15, MD_BAIL = 10, MD_PAD = 5, MD_DRIFT = 4, MD_ROCK = 7;
+const mdInflow = (n, rock) => 5 + 3*n + MD_ROCK*rock;
+const MD_ACTS = { bail:{ ic:'🪣', n:'Écoper' }, paddle:{ ic:'🚣', n:'Pagayer' }, grip:{ ic:'✊', n:'S\'agripper' }, push:{ ic:'👉', n:'Pousser' },
+  swim:{ ic:'🏊', n:'Remonter' }, rock:{ ic:'🌊', n:'Secouer' } };
+let HMD = null, MD = null;
+function mdLater(fn, ms){ const g = HMD; const t = setTimeout(() => { if (HMD === g && H && !H.over) fn(); }, ms); HMD.timers.push(t); }
+function mdClear(){ if (HMD) HMD.timers.forEach(t => clearTimeout(t)); }
+const mdIn = id => !!(H && H.stats[id] && !H.stats[id].left);
+
+// ---- host ----
+function meduseHostStart(){
+  for (const id of ['ai', 'ai2', 'ai3']){
+    if (players.length >= MD_MINP) break;
+    if (players.some(p => p.id === id)) continue;
+    players.push({ id, name:id === 'ai' ? 'Robot' : 'Robot ' + id.slice(2), color:pickColor(), bot:true });
+    H.alive.add(id);
+  }
+  H.n = players.length;
+  for (const p of players) H.stats[p.id] = { pts:0, pushes:0, dunks:0, saved:0, left:false };
+  HMD = { timers:[], r:0, t:0, W:MD_START_W, D:0, aboard:[], water:[], picks:{}, ph:'idle' };
+  broadcast({ t:'start', players, game:'meduse' });
+  mdLater(mdRound, 1800);
+}
+function mdRound(){
+  HMD.r++; HMD.t = 0; HMD.W = MD_START_W; HMD.D = 0;
+  HMD.aboard = players.filter(p => mdIn(p.id)).map(p => p.id); HMD.water = [];
+  mdTurn();
+}
+const mdScores = () => Object.fromEntries(players.map(p => [p.id, H.stats[p.id] ? H.stats[p.id].pts : 0]));
+function mdTurn(){
+  HMD.t++; HMD.picks = {}; HMD.ph = 'pick'; const seq = HMD.seq = (HMD.seq || 0) + 1;     // timers from an earlier turn must not act on this one
+  broadcast({ t:'md_turn', r:HMD.r, n:HMD.t, W:Math.round(HMD.W), D:Math.round(HMD.D), aboard:HMD.aboard, water:HMD.water, left:MD_PICK, sc:mdScores() });
+  for (const p of players) if (p.bot && mdIn(p.id)) mdLater(() => { if (HMD.seq === seq) mdPick(p.id, mdBot(p.id)); }, 1500 + Math.random()*4500);
+  mdLater(() => mdResolve(seq), MD_PICK*1000 + 300);
+}
+function mdPick(id, m){
+  if (!HMD || HMD.ph !== 'pick' || !mdIn(id) || !m) return;
+  const onRaft = HMD.aboard.includes(id), a = String(m.a || '');
+  if (onRaft ? !['bail', 'paddle', 'grip', 'push'].includes(a) : !['swim', 'rock'].includes(a)) return;
+  let tg = null;
+  if (a === 'push'){ tg = String(m.tg || ''); if (tg === id || !HMD.aboard.includes(tg)) return; }
+  HMD.picks[id] = { a, tg };
+  broadcast({ t:'md_ready', ids:Object.keys(HMD.picks) });
+  if (players.every(p => !mdIn(p.id) || HMD.picks[p.id])){ const seq = HMD.seq; mdLater(() => mdResolve(seq), 600); }
+}
+function mdResolve(seq){
+  if (!HMD || HMD.ph !== 'pick' || seq !== HMD.seq) return;
+  HMD.ph = 'show';
+  const P = HMD.picks, ev = [];
+  for (const id of [...HMD.aboard, ...HMD.water]) if (!P[id] && mdIn(id)) P[id] = { a:HMD.aboard.includes(id) ? 'grip' : 'swim', tg:null, auto:true };
+  // 1. swimmers climb back aboard (that is their turn)
+  const back = HMD.water.filter(id => P[id] && P[id].a === 'swim');
+  HMD.water = HMD.water.filter(id => !back.includes(id)); HMD.aboard.push(...back);
+  for (const id of back) ev.push({ k:'back', a:id });
+  // 2. every push at once; pushing someone who holds on throws you in instead
+  const fall = new Set();
+  for (const [id, x] of Object.entries(P)){
+    if (x.a !== 'push' || !HMD.aboard.includes(id) || back.includes(id) || !HMD.aboard.includes(x.tg)) continue;
+    if (P[x.tg] && P[x.tg].a === 'grip'){ fall.add(id); ev.push({ k:'foil', a:id, b:x.tg }); }
+    else { fall.add(x.tg); H.stats[id].pushes++; ev.push({ k:'push', a:id, b:x.tg }); }
+  }
+  for (const id of fall) H.stats[id].dunks++;
+  HMD.aboard = HMD.aboard.filter(id => !fall.has(id));
+  for (const id of fall) if (!HMD.water.includes(id)) HMD.water.push(id);
+  // 3. the work of whoever is still aboard, and the swimmers rocking the raft
+  let bail = 0, pad = 0, rock = 0;
+  for (const id of HMD.aboard){ const a = P[id] && P[id].a; if (!back.includes(id)){ if (a === 'bail') bail++; else if (a === 'paddle') pad++; } }
+  for (const id of HMD.water) if (!fall.has(id) && P[id] && P[id].a === 'rock') rock++;
+  const inflow = mdInflow(HMD.aboard.length, rock);
+  HMD.W = Math.max(0, HMD.W + inflow - MD_BAIL*bail);
+  HMD.D = Math.min(100, HMD.D + MD_DRIFT + MD_PAD*pad);
+  if (HMD.t >= MD_MAXT) HMD.D = 100;                                         // the ship comes to fetch them in the end
+  const fin = HMD.D >= 100 ? 'ok' : HMD.W >= 100 ? 'sunk' : null;
+  let share = 0;
+  if (fin === 'ok' && HMD.aboard.length){ share = Math.round(100/HMD.aboard.length); for (const id of HMD.aboard){ H.stats[id].pts += share; H.stats[id].saved++; } }
+  if (fin === 'sunk'){ HMD.water.push(...HMD.aboard); HMD.aboard = []; }
+  const acts = {}; for (const [id, x] of Object.entries(P)) acts[id] = { a:x.a, tg:x.tg };
+  broadcast({ t:'md_res', acts, ev, W:Math.round(HMD.W), D:Math.round(HMD.D), aboard:HMD.aboard, water:HMD.water, bail, pad, rock, fin, share, sc:mdScores() });
+  const show = MD_STEP*(ev.length + 1) + 1600;
+  if (!fin) return mdLater(mdTurn, show);
+  if (HMD.r >= MD_ROUNDS) return mdLater(mdFinish, show + 2500);
+  mdLater(mdRound, show + 3500);
+}
+function mdFinish(){
+  if (!H || H.over) return;
+  H.over = true; mdClear();
+  const ids = Object.keys(H.stats).sort((a, b) => { const A = H.stats[a], B = H.stats[b]; if (A.left !== B.left) return A.left ? 1 : -1; return B.pts - A.pts || A.dunks - B.dunks; });
+  const ranking = ids.map((pid, i) => { const p = players.find(x => x.id === pid) || { name:'?', color:'#888' }; return { id:pid, name:p.name, color:p.color, place:i + 1, ...H.stats[pid] }; });
+  setTimeout(() => broadcast({ t:'end', ranking, game:'meduse' }), 400);
+}
+function meduseDrop(id){
+  if (!H || H.over || !H.stats[id]) return;
+  H.stats[id].left = true;
+  if (HMD){ HMD.aboard = HMD.aboard.filter(x => x !== id); HMD.water = HMD.water.filter(x => x !== id); delete HMD.picks[id]; }
+  broadcast({ t:'md_left', id });
+  if (!players.some(p => !p.bot && mdIn(p.id))) return mdFinish();
+  if (HMD && HMD.ph === 'pick' && players.every(p => !mdIn(p.id) || HMD.picks[p.id])){ const seq = HMD.seq; mdLater(() => mdResolve(seq), 400); }
+}
+// robot: bails when the water gets high, paddles otherwise, and turns nasty when the ship is close
+function mdBot(id){
+  const R = Math.random, others = HMD.aboard.filter(x => x !== id);
+  if (!HMD.aboard.includes(id)) return { a:R() < (HMD.D > 70 ? .3 : .12) ? 'rock' : 'swim' };
+  if (HMD.W + mdInflow(HMD.aboard.length, HMD.water.length*.3) >= 85) return { a:R() < .85 ? 'bail' : 'grip' };
+  if (HMD.D >= 64 && others.length && R() < .35) return { a:'push', tg:others[Math.floor(R()*others.length)] };
+  if (HMD.D >= 56 && R() < .2) return { a:'grip' };
+  const n = HMD.aboard.length, pb = Math.max(.12, Math.min(.9, (HMD.W + mdInflow(n, 0) - 40)/(MD_BAIL*n)));   // bail about as much as needed to keep the water at bay
+  return { a:R() < pb ? 'bail' : 'paddle' };
+}
+
+// ---- my view ----
+const mdcv = $('mdCv'), mdctx = mdcv.getContext('2d');
+function startMeduse(m){
+  lastCountShown = null;
+  players = m.players; cur = 'meduse'; G = null; PG = null; D = null; phase = 'play';
+  $('scrEnd').hidden = true; show('scrMeduse');
+  MD = { r:0, n:0, W:MD_START_W, D:0, Wv:MD_START_W, Dv:0, aboard:players.map(p => p.id), water:[], ready:[], sc:{}, acts:null, mine:null, pushMode:false,
+    deadline:0, ph:'wait', figs:new Map(), queue:[], fin:null, banner:null, splash:[], over:false, spec:!players.some(p => p.id === me.id) };
+  mdHead('Méduse'); $('mdMsg').textContent = ''; mdButtons(); renderMdPlayers();
+  $('mdHelp').textContent = 'Tout le monde est sur le radeau. Chaque tour, en secret : écoper, pagayer, s\'agripper ou pousser quelqu\'un à l\'eau.';
+}
+function mdHead(t){ $('mdHead').textContent = t; }
+let mdToastT = null;
+function mdToast(t){ const el = $('mdToast'); el.textContent = t; el.classList.add('on'); clearTimeout(mdToastT); mdToastT = setTimeout(() => el.classList.remove('on'), 2200); }
+const mdName = id => { const p = players.find(x => x.id === id); return p ? p.name : '?'; };
+const mdOnRaft = () => MD.aboard.includes(me.id);
+function mdButtons(){
+  const box = $('mdBtns'); box.textContent = '';
+  const tgs = $('mdTargets'); tgs.textContent = ''; tgs.hidden = true;
+  const live = MD.ph === 'pick' && !MD.spec && (MD.aboard.includes(me.id) || MD.water.includes(me.id));
+  box.hidden = !live;
+  if (!live) return;
+  const list = mdOnRaft() ? ['bail', 'paddle', 'grip', 'push'] : ['swim', 'rock'];
+  box.className = 'mdbtns n' + list.length;
+  for (const a of list){
+    const b = document.createElement('button'); b.type = 'button';
+    const i = document.createElement('span'); i.className = 'mdic'; i.textContent = MD_ACTS[a].ic;
+    const l = document.createElement('span'); l.textContent = MD_ACTS[a].n;
+    b.append(i, l);
+    b.setAttribute('aria-pressed', String(MD.mine ? MD.mine.a === a : a === 'push' && MD.pushMode));
+    b.onclick = () => {
+      if (a === 'push'){ MD.pushMode = !MD.pushMode; mdButtons(); return; }
+      MD.pushMode = false; mdChoose({ a });
+    };
+    box.append(b);
+  }
+  if (MD.pushMode){
+    tgs.hidden = false;
+    const h = document.createElement('b'); h.textContent = 'Qui pousser ?'; tgs.append(h);
+    for (const id of MD.aboard){
+      if (id === me.id) continue;
+      const p = players.find(x => x.id === id); if (!p) continue;
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'mdtg';
+      const d = document.createElement('i'); d.style.background = p.color;
+      const n = document.createElement('span'); n.textContent = p.name; n.setAttribute('translate', 'no');
+      b.append(d, n); b.setAttribute('aria-pressed', String(!!(MD.mine && MD.mine.a === 'push' && MD.mine.tg === id)));
+      b.onclick = () => mdChoose({ a:'push', tg:id });
+      tgs.append(b);
+    }
+  }
+}
+function mdChoose(c){
+  if (!MD || MD.ph !== 'pick') return;
+  MD.mine = c; if (c.a !== 'push') MD.pushMode = false;
+  toHost({ t:'md_pick', a:c.a, tg:c.tg || null }); sfx('place');
+  mdButtons();
+  $('mdHelp').textContent = 'Votre choix : ' + MD_ACTS[c.a].n + (c.tg ? ' ' + mdName(c.tg) : '') + '. Vous pouvez changer d\'avis jusqu\'à la fin du compte à rebours.';
+}
+function renderMdPlayers(){
+  const ul = $('mdPlayers'); ul.textContent = '';
+  for (const p of players){
+    const li = document.createElement('li'); if (p.left) li.classList.add('dead');
+    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color;
+    const t = document.createElement('span');
+    const where = MD.aboard.includes(p.id) ? '⛵' : MD.water.includes(p.id) ? '🌊' : '';
+    t.textContent = p.name + (p.id === me.id ? ' (vous)' : '') + ' · ' + (MD.sc[p.id] | 0) + ' pts ' + where + (MD.ph === 'pick' && MD.ready.includes(p.id) ? ' ✔' : '');
+    li.append(d, t); ul.append(li);
+  }
+}
+function meduseRecv(m){
+  if (!MD) return;
+  if (m.t === 'md_turn'){
+    if (m.r !== MD.r){ MD.figs.clear(); MD.Wv = m.W; MD.Dv = m.D; MD.fin = null; MD.banner = null; }
+    MD.r = m.r; MD.n = m.n; MD.W = m.W; MD.D = m.D; MD.aboard = m.aboard || []; MD.water = m.water || []; MD.sc = m.sc || {};
+    MD.ready = []; MD.acts = null; MD.mine = null; MD.pushMode = false; MD.ph = 'pick'; MD.deadline = performance.now() + (m.left|0)*1000; MD.queue = [];
+    $('mdTurn').textContent = 'Traversée ' + m.r + '/' + MD_ROUNDS + ' · tour ' + m.n;
+    mdHead(MD.spec ? 'Spectateur' : mdOnRaft() ? 'À bord : que faites-vous ?' : 'À l\'eau : que faites-vous ?');
+    $('mdHelp').textContent = MD.spec ? 'Vous regardez la traversée.' : mdOnRaft()
+      ? 'En secret : écoper fait baisser l\'eau, pagayer rapproche du navire, s\'agripper protège, pousser jette quelqu\'un à l\'eau (sauf s\'il s\'agrippe : c\'est vous qui tombez).'
+      : 'Vous êtes à l\'eau : remontez à bord (ça prend le tour), ou secouez le radeau pour le faire couler.';
+    if (m.n === 1){ sfx('go'); boom('TRAVERSÉE ' + m.r, { size:30, x:.5, y:.35, pal:BOOM_COLORS[1], ms:1100 }); } else sfx('myturn');
+    mdButtons(); renderMdPlayers();
+  } else if (m.t === 'md_ready'){ MD.ready = m.ids || []; renderMdPlayers(); }
+  else if (m.t === 'md_res'){
+    MD.ph = 'show'; MD.acts = m.acts || {}; MD.sc = m.sc || MD.sc; MD.pushMode = false;
+    mdButtons(); mdHead('Révélation !'); sfx('clack');
+    // replay the events one by one, then the water and the distance move
+    const t0 = performance.now(), evs = m.ev || [];
+    evs.forEach((e, i) => MD.queue.push({ at:t0 + 600 + i*MD_STEP, e }));
+    MD.queue.push({ at:t0 + 600 + evs.length*MD_STEP, e:{ k:'sum', m } });
+    renderMdPlayers();
+  } else if (m.t === 'md_left'){
+    const p = players.find(x => x.id === m.id); if (p) p.left = true;
+    MD.aboard = MD.aboard.filter(x => x !== m.id); MD.water = MD.water.filter(x => x !== m.id); renderMdPlayers();
+  }
+}
+function mdApply(e){
+  if (e.k === 'back'){ MD.water = MD.water.filter(x => x !== e.a); if (!MD.aboard.includes(e.a)) MD.aboard.push(e.a); mdToast(mdName(e.a) + ' remonte à bord'); sfx('slide'); }
+  else if (e.k === 'push' || e.k === 'foil'){
+    const faller = e.k === 'push' ? e.b : e.a;
+    const f = MD.figs.get(e.a); if (f) f.lunge = { to:e.b, t:performance.now() };
+    setTimeout(() => {
+      if (!MD) return;
+      MD.aboard = MD.aboard.filter(x => x !== faller); if (!MD.water.includes(faller)) MD.water.push(faller);
+      const g = MD.figs.get(faller); if (g) g.fly = performance.now();
+      sfx('splash');
+    }, 280);
+    if (e.k === 'push'){ mdToast(mdName(e.a) + ' pousse ' + mdName(e.b) + ' à l\'eau !'); if (e.b === me.id) boom('PLOUF !', { size:32, x:.5, y:.35, pal:BOOM_COLORS[3], ms:900 }); }
+    else { mdToast(mdName(e.a) + ' veut pousser ' + mdName(e.b) + '… qui s\'agrippe ! ' + mdName(e.a) + ' tombe à l\'eau'); if (e.a === me.id) boom('RATÉ, PLOUF !', { size:28, x:.5, y:.35, pal:BOOM_COLORS[3], ms:1000 }); }
+  } else if (e.k === 'sum'){
+    const m = e.m;
+    MD.W = m.W; MD.D = m.D; MD.aboard = m.aboard || []; MD.water = m.water || [];
+    const bits = [];
+    if (m.bail) bits.push('🪣 ' + m.bail + ' écope' + (m.bail > 1 ? 'nt' : ''));
+    if (m.pad) bits.push('🚣 ' + m.pad + ' pagaie' + (m.pad > 1 ? 'nt' : ''));
+    if (m.rock) bits.push('🌊 ' + m.rock + ' secoue' + (m.rock > 1 ? 'nt' : '') + ' le radeau');
+    if (!m.fin) mdToast(bits.length ? bits.join(' · ') : 'Personne ne fait rien…');
+    if (m.fin === 'ok'){
+      const n = MD.aboard.length;
+      MD.banner = { big:'SAUVÉS !', small:n ? n + ' rescapé' + (n > 1 ? 's' : '') + ' : ' + m.share + ' points chacun' : 'Plus personne à bord…', col:'#3DDC97' };
+      MD.fin = 'ok'; sfx(MD.aboard.includes(me.id) ? 'win' : 'lose');
+    } else if (m.fin === 'sunk'){
+      MD.banner = { big:'LE RADEAU COULE !', small:'Personne ne marque', col:'#E6262B' }; MD.fin = 'sunk'; sfx('sunk');
+    }
+    mdHead(m.fin ? (m.fin === 'ok' ? 'Le navire est là !' : 'Naufrage…') : 'Tour suivant…');
+    renderMdPlayers();
+  }
+}
+addEventListener('keydown', e => {
+  if (cur !== 'meduse' || !MD || MD.ph !== 'pick' || e.target.tagName === 'INPUT') return;
+  const list = mdOnRaft() ? ['bail', 'paddle', 'grip', 'push'] : ['swim', 'rock'], k = '1234'.indexOf(e.key);
+  if (k >= 0 && k < list.length){ e.preventDefault(); if (list[k] === 'push'){ MD.pushMode = true; mdButtons(); } else mdChoose({ a:list[k] }); }
+});
+// tapping someone on the raft = pushing them
+mdcv.addEventListener('pointerdown', e => {
+  if (!MD || MD.ph !== 'pick' || !mdOnRaft()) return;
+  const r = mdcv.getBoundingClientRect(), x = (e.clientX - r.left)*mdcv.width/r.width, y = (e.clientY - r.top)*mdcv.height/r.height;
+  for (const [id, f] of MD.figs){ if (id !== me.id && MD.aboard.includes(id) && Math.abs(f.x - x) < 24 && y > f.y - 70 && y < f.y + 10){ MD.pushMode = true; mdChoose({ a:'push', tg:id }); return; } }
+});
+
+// ---- loop and drawing ----
+function mdSlots(){
+  // where each person should be: spread over the deck, or bobbing around the raft
+  const out = new Map(), n = MD.aboard.length, x0 = 168, w = 264;
+  MD.aboard.forEach((id, k) => out.set(id, { x:x0 + (k + .5)*w/Math.max(1, n), deck:true }));
+  MD.water.forEach((id, k) => out.set(id, { x:k % 2 ? 470 + Math.floor(k/2)*44 : 128 - Math.floor(k/2)*44, deck:false }));
+  return out;
+}
+function meduseFrame(dtMs, now){
+  if (!MD) return;
+  const dt = Math.min(.05, dtMs/1000);
+  while (MD.queue.length && MD.queue[0].at <= now) mdApply(MD.queue.shift().e);
+  if (MD.ph === 'pick'){
+    const left = Math.max(0, Math.ceil((MD.deadline - now)/1000));
+    if (left !== MD.shownLeft){ MD.shownLeft = left; $('mdTime').textContent = '⏱ ' + left + ' s'; $('mdTime').classList.toggle('low', left <= 3); if (left <= 3 && left > 0 && !MD.mine) sfx('count'); }
+  } else if (MD.shownLeft !== -1){ MD.shownLeft = -1; $('mdTime').textContent = '⏱ –'; $('mdTime').classList.remove('low'); }
+  MD.Wv += (MD.W - MD.Wv)*Math.min(1, dt*2); MD.Dv += (MD.D - MD.Dv)*Math.min(1, dt*2);
+  const slots = mdSlots();
+  for (const [id, s] of slots){
+    let f = MD.figs.get(id);
+    if (!f){ f = { x:s.x, deck:s.deck, y:0 }; MD.figs.set(id, f); }
+    f.x += (s.x - f.x)*Math.min(1, dt*(f.fly && now - f.fly < 700 ? 3 : 5));
+    f.deck = s.deck;
+  }
+  for (const id of [...MD.figs.keys()]) if (!slots.has(id)) MD.figs.delete(id);
+  mdDraw(mdctx, 600, 420, now);
+}
+function mdDraw(ctx, Wd, Ht, now, art){
+  const t = now/1000, sk = Wd/600;
+  ctx.save(); ctx.scale(sk, sk);
+  const HZ = 170, SEA = 286;
+  // sky and sea
+  let g = ctx.createLinearGradient(0, 0, 0, HZ); g.addColorStop(0, '#F6C77A'); g.addColorStop(1, '#FBE7B8'); ctx.fillStyle = g; ctx.fillRect(0, 0, 600, HZ);
+  ctx.fillStyle = 'rgba(255,255,255,.55)'; for (const [cx, cy, r] of [[90, 60, 26], [120, 52, 20], [380, 80, 30], [415, 70, 22]]){ ctx.beginPath(); ctx.arc(cx + Math.sin(t*.1)*8, cy, r, 0, Math.PI*2); ctx.fill(); }
+  g = ctx.createLinearGradient(0, HZ, 0, 420); g.addColorStop(0, '#3E7FA0'); g.addColorStop(1, '#173F5C'); ctx.fillStyle = g; ctx.fillRect(0, HZ, 600, 420 - HZ);
+  ctx.strokeStyle = 'rgba(255,255,255,.25)'; ctx.lineWidth = 2;
+  for (let y = HZ + 14; y < 420; y += 22){ ctx.beginPath(); for (let x = 0; x <= 600; x += 12) ctx.lineTo(x, y + Math.sin(x/30 + t*1.5 + y)*3*(y - HZ)/120); ctx.stroke(); }
+  // the rescue ship, growing as it comes
+  const k = .55 + MD.Dv/100*.8, sx = 520 - MD.Dv*.5, sy = HZ + 6 + MD.Dv*.35;
+  ctx.save(); ctx.translate(sx, sy); ctx.scale(k, k);
+  ctx.fillStyle = '#3B2414'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(-60, -10); ctx.lineTo(60, -10); ctx.lineTo(46, 12); ctx.lineTo(-48, 12); ctx.closePath(); ctx.fill(); ctx.stroke();
+  for (const mx of [-28, 6, 36]){ ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(mx, -10); ctx.lineTo(mx, -78); ctx.stroke();
+    ctx.fillStyle = '#F4EBD6'; ctx.lineWidth = 2; for (const [y0, w0] of [[-74, 20], [-50, 26]]){ ctx.beginPath(); ctx.moveTo(mx - w0/2, y0); ctx.lineTo(mx + w0/2, y0); ctx.quadraticCurveTo(mx + w0/2 + 4, y0 + 10, mx + w0/2, y0 + 20); ctx.lineTo(mx - w0/2, y0 + 20); ctx.closePath(); ctx.fill(); ctx.stroke(); } }
+  ctx.fillStyle = '#E6262B'; ctx.fillRect(36, -88, 12, 7);
+  ctx.restore();
+  // the raft: the more water aboard, the lower it sits
+  const deckY = 258 + MD.Wv/100*44 + Math.sin(t*1.3)*2, tilt = Math.sin(t*.9)*.03;
+  ctx.save(); ctx.translate(300, deckY); ctx.rotate(tilt);
+  ctx.fillStyle = '#7A5230'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(-150, 0); ctx.lineTo(150, 0); ctx.lineTo(140, 16); ctx.lineTo(-142, 16); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.lineWidth = 2; for (let x = -130; x < 150; x += 26){ ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x - 3, 16); ctx.stroke(); }
+  // the mast and its torn sail, as in the painting
+  ctx.strokeStyle = '#000'; ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(-40, 0); ctx.lineTo(-48, -150); ctx.stroke();
+  ctx.fillStyle = '#E9DCC0'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(-47, -140); ctx.quadraticCurveTo(-110 + Math.sin(t*2)*6, -100, -100, -40); ctx.lineTo(-62, -52); ctx.lineTo(-44, -30); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.restore();
+  // the people
+  const acts = MD.ph === 'show' ? MD.acts : null;
+  const fig = (id, f) => {
+    const p = players.find(x => x.id === id); if (!p) return;
+    const mine = id === me.id, sw = !f.deck;
+    let x = f.x, y = sw ? SEA + 4 + Math.sin(t*2.4 + x)*3 : deckY + (x - 300)*tilt;
+    if (f.lunge && now - f.lunge.t < 400){ const o = MD.figs.get(f.lunge.to); if (o) x += (o.x - x)*.35*Math.sin((now - f.lunge.t)/400*Math.PI); }
+    if (f.fly && now - f.fly < 700){ const k2 = (now - f.fly)/700; y -= Math.sin(k2*Math.PI)*60; if (k2 > .8 && !f.splashed){ f.splashed = true; for (let i = 0; i < 10; i++) MD.splash.push({ x, y:SEA, vx:(Math.random() - .5)*120, vy:-80 - Math.random()*120, t:now }); } }
+    else if (f.fly) f.fly = null, f.splashed = false;
+    f.y = y;
+    const ink = inkOn(p.color);
+    if (!sw || (f.fly && now - f.fly < 700)){
+      ctx.strokeStyle = '#000'; ctx.lineWidth = 5; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(x - 6, y); ctx.lineTo(x - 4, y - 18); ctx.moveTo(x + 6, y); ctx.lineTo(x + 4, y - 18); ctx.stroke();
+      const wave = MD.fin === 'ok' && MD.aboard.includes(id);
+      ctx.beginPath(); ctx.moveTo(x - 10, y - 38); ctx.lineTo(x - 18, wave ? y - 70 + Math.sin(t*8)*4 : y - 22); ctx.moveTo(x + 10, y - 38); ctx.lineTo(x + 18, wave ? y - 70 + Math.cos(t*8)*4 : y - 22); ctx.stroke();
+      if (wave && id === MD.aboard[0]){ ctx.fillStyle = '#E6262B'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x + 18, y - 72); ctx.quadraticCurveTo(x + 40, y - 86 + Math.sin(t*9)*5, x + 52, y - 74); ctx.lineTo(x + 20, y - 60); ctx.closePath(); ctx.fill(); ctx.stroke(); }
+      ctx.fillStyle = p.color; ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
+      ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x - 12, y - 46, 24, 30, 6); else ctx.rect(x - 12, y - 46, 24, 30); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = ink; ctx.font = '16px Bangers, Impact, sans-serif'; ctx.textAlign = 'center'; ctx.fillText((p.name || '?').slice(0, 1).toUpperCase(), x, y - 25);
+      ctx.fillStyle = '#F2C9A0'; ctx.strokeStyle = '#000'; ctx.beginPath(); ctx.arc(x, y - 56, 11, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+    } else {
+      // swimming: a head and two waving arms
+      ctx.strokeStyle = '#000'; ctx.lineWidth = 5; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(x - 10, y - 4); ctx.lineTo(x - 22, y - 18 + Math.sin(t*6 + x)*6); ctx.moveTo(x + 10, y - 4); ctx.lineTo(x + 22, y - 18 + Math.cos(t*6 + x)*6); ctx.stroke();
+      ctx.fillStyle = '#F2C9A0'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(x, y - 10, 11, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+      ctx.strokeStyle = p.color; ctx.lineWidth = 4; ctx.beginPath(); ctx.ellipse(x, y + 2, 18, 5, 0, 0, Math.PI*2); ctx.stroke();
+    }
+    // name, my marker, readiness or the revealed choice
+    const top = sw ? y - 26 : y - 70;
+    ctx.font = '900 12px Nunito, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 3; ctx.strokeStyle = '#000'; ctx.fillStyle = mine ? '#FFD93B' : '#fff';
+    const nm = mine ? 'VOUS' : p.name.slice(0, 10); ctx.strokeText(nm, x, top); ctx.fillText(nm, x, top);
+    let badge = '';
+    if (acts && acts[id]) badge = MD_ACTS[acts[id].a] ? MD_ACTS[acts[id].a].ic : '';
+    else if (MD.ph === 'pick' && MD.ready.includes(id)) badge = '✔';
+    if (badge){
+      ctx.fillStyle = '#fff'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(x, top - 22, 14, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+      ctx.font = badge === '✔' ? '900 16px Nunito, sans-serif' : '16px sans-serif'; ctx.fillStyle = badge === '✔' ? '#12A150' : '#000'; ctx.textBaseline = 'middle'; ctx.fillText(badge, x, top - 21); ctx.textBaseline = 'alphabetic';
+    }
+    if (acts && acts[id] && acts[id].a === 'push' && acts[id].tg){ const o = MD.figs.get(acts[id].tg); if (o){ ctx.strokeStyle = 'rgba(230,38,43,.85)'; ctx.lineWidth = 3; ctx.setLineDash([6, 5]); ctx.beginPath(); ctx.moveTo(x, top - 8); ctx.quadraticCurveTo((x + o.x)/2, top - 40, o.x, (o.y || y) - 64); ctx.stroke(); ctx.setLineDash([]); } }
+  };
+  for (const [id, f] of MD.figs) if (f.deck) fig(id, f);
+  // the sea over the bottom of the raft, then the swimmers in front
+  ctx.fillStyle = 'rgba(30,90,125,.82)'; ctx.beginPath(); ctx.moveTo(0, 420);
+  for (let x = 0; x <= 600; x += 10) ctx.lineTo(x, SEA + Math.sin(x/26 + t*2)*3); ctx.lineTo(600, 420); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,.6)'; ctx.lineWidth = 2; ctx.beginPath(); for (let x = 0; x <= 600; x += 10) ctx.lineTo(x, SEA + Math.sin(x/26 + t*2)*3); ctx.stroke();
+  for (const [id, f] of MD.figs) if (!f.deck) fig(id, f);
+  MD.splash = MD.splash.filter(s => now - s.t < 700);
+  ctx.fillStyle = '#fff'; for (const s of MD.splash){ const a = (now - s.t)/1000; ctx.beginPath(); ctx.arc(s.x + s.vx*a, s.y + s.vy*a + 300*a*a, 3, 0, Math.PI*2); ctx.fill(); }
+  // gauges: water aboard (left) and distance to the ship (top); not on the game's picture
+  if (art){ ctx.restore(); return; }
+  const wf = Math.min(1, MD.Wv/100);
+  ctx.fillStyle = '#fff'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.fillRect(16, 46, 22, 150); ctx.strokeRect(16, 46, 22, 150);
+  ctx.fillStyle = wf > .7 ? '#E6262B' : '#1E5BFF'; ctx.fillRect(19, 46 + 147*(1 - wf), 16, 147*wf);
+  ctx.font = '15px Bangers, Impact, sans-serif'; ctx.textAlign = 'center'; ctx.fillStyle = '#000'; ctx.fillText('EAU', 27, 40);
+  ctx.fillStyle = '#fff'; ctx.fillRect(60, 14, 480, 18); ctx.strokeRect(60, 14, 480, 18);
+  ctx.fillStyle = '#3DDC97'; ctx.fillRect(62, 16, 476*Math.min(1, MD.Dv/100), 14);
+  ctx.textAlign = 'left'; ctx.fillStyle = '#000'; ctx.font = '15px Bangers, Impact, sans-serif'; ctx.fillText('NAVIRE ' + Math.round(MD.Dv) + ' %', 64, 50);
+  // end of a crossing
+  if (MD.banner){
+    ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.fillRect(0, 120, 600, 110);
+    ctx.textAlign = 'center'; ctx.font = '46px Bangers, Impact, sans-serif'; ctx.lineWidth = 6; ctx.strokeStyle = '#000'; ctx.fillStyle = MD.banner.col;
+    ctx.strokeText(MD.banner.big, 300, 178); ctx.fillText(MD.banner.big, 300, 178);
+    ctx.font = '900 18px Nunito, sans-serif'; ctx.fillStyle = '#fff'; ctx.lineWidth = 4; ctx.strokeText(MD.banner.small, 300, 210); ctx.fillText(MD.banner.small, 300, 210);
+  }
+  ctx.restore();
+}
+
 // ================= before each game: the rules in 2-3 slides, then everyone taps "Prêt" =================
 // The creator's "start" opens this briefing for the whole room; the game really starts once every player is ready
 // (or when the creator decides not to wait). "Rejouer" skips it: everybody already knows the game.
@@ -9766,6 +10187,8 @@ const BRIEF = {
     tip:'Ne rien écraser ! Une coupe bâclée envoie l\'arbre n\'importe où, parfois même en arrière. Viser une ouverture étroite, ou tomber au ras d\'un obstacle avec une coupe propre, rapporte un gros bonus.' },
   agility:{ ctl:[['📱', 'Choisissez un chien. Haie, pneu, triple : un tap quand le cercle est vert. Slalom : tracez le zigzag. Tunnel : doigt sur le chien, glissez. Passerelle : restez appuyé, lâchez sur le jaune. Bascule : un tap sur le vert au milieu. Table : un tap puis plus rien. Sprint final : tapez à toute vitesse.'], ['💻', 'Les mêmes gestes à la souris, ou Espace (à marteler pour le sprint).']],
     tip:'Chaque race a 6 étoiles : Vitesse, Saut ou Énergie. Un Whippet file entre les obstacles, un Jack Russell a plus de marge sur les haies, un Corgi va plus vite au sprint et dans les obstacles longs.' },
+  meduse:{ ctl:[['📱', 'À chaque tour, touchez votre choix : 🪣 écoper, 🚣 pagayer, ✊ s\'agripper, ou 👉 pousser puis le nom de la victime (ou touchez-la directement sur le radeau). À l\'eau : 🏊 remonter ou 🌊 secouer.'], ['💻', 'Cliquez les boutons, ou touches 1 à 4. Vous pouvez changer d\'avis jusqu\'à la fin des 10 secondes.']],
+    tip:'Les choix sont révélés tous en même temps. Trop de monde à bord, ça coule ; trop de traîtres, personne n\'écope. À vous de doser.' },
   galop:{ ctl:[['📱', 'Choisissez un cheval. ◀ ▶ pour vous décaler, GALOP pour accélérer (coûte de l\'énergie), RALENTIR pour souffler.'], ['💻', '← → se décaler · ↑ ou Espace galop · ↓ ralentir. Ou cliquez les boutons.']],
     tip:'Partir au galop donne un départ rapide mais entame l\'énergie. Collé derrière un cheval, vous récupérez plus vite.' }
 };
@@ -9922,7 +10345,7 @@ function saveGame(ranking, game){
   if (!Array.isArray(ranking) || !ranking.length || lastSaved === ranking) return;
   lastSaved = ranking;
   const h = loadHist();
-  h.unshift({ at:Date.now(), game:['pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber','agility','galop'].includes(game) ? game : 'tetris', n:ranking.length,
+  h.unshift({ at:Date.now(), game:['pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber','agility','galop','meduse'].includes(game) ? game : 'tetris', n:ranking.length,
     p:ranking.map(r => ({ name:String(r.name).slice(0,14), color:r.color, place:r.place|0, sc:r.sc|0, ln:r.ln|0, sent:r.sent|0, score:r.score|0, sync:r.sync|0, lives:r.lives|0, seats:r.seats|0, catches:r.catches|0, tank:r.tank|0, role:String(r.role || '').slice(0, 8), hits:r.hits|0, pts:r.pts|0, whacks:r.whacks|0, shots:r.shots|0, afloat:r.afloat|0, shapes:r.shapes|0, d:Math.round(r.d||0), t:+r.t||0, me:r.id === me.id })) });
   store.set(HIST_KEY, JSON.stringify(h.slice(0, HIST_MAX)));
 }
@@ -9938,13 +10361,13 @@ function renderBoard(){
     a.games++; if (p.place === 1 && g.n > 1) a.wins++;
     a.pts += Math.max(0, g.n - p.place);                  // 1 point per player finished ahead of
     if (g.game === 'derby' || g.game === 'agility' || g.game === 'galop'){ if (p.t > 0 && (!a.bestT || p.t < a.bestT)) a.bestT = p.t; }
-    else a.best = Math.max(a.best, (g.game === 'pong' || g.game === 'naval') ? p.hits : g.game === 'mole' ? (p.whacks || 0) : g.game === 'curling' ? (p.pts || 0) : g.game === 'chairs' ? (p.seats || 0) : (g.game === 'dodge' || g.game === 'tank') ? (p.hits || 0) : g.game === 'sheep' ? (p.score || 0) : g.game === 'drakkar' ? (p.sync || 0) : (g.game === 'master' || g.game === 'kabaddi' || g.game === 'lumber') ? (p.pts || 0) : p.sc);
+    else a.best = Math.max(a.best, (g.game === 'pong' || g.game === 'naval') ? p.hits : g.game === 'mole' ? (p.whacks || 0) : g.game === 'curling' ? (p.pts || 0) : g.game === 'chairs' ? (p.seats || 0) : (g.game === 'dodge' || g.game === 'tank') ? (p.hits || 0) : g.game === 'sheep' ? (p.score || 0) : g.game === 'drakkar' ? (p.sync || 0) : (g.game === 'master' || g.game === 'kabaddi' || g.game === 'lumber' || g.game === 'meduse') ? (p.pts || 0) : p.sc);
     agg.set(k, a);
   }
   const rows = [...agg.values()].sort((x, y) => y.pts - x.pts || y.wins - x.wins || x.games - y.games);
   const showBest = lbFilter !== 'all';
   const hd = $('lbHead'); hd.textContent = '';
-  for (const t of ['#','Joueur','Parties','Victoires','Points', ...(showBest ? [lbFilter === 'pong' ? 'Arrêts max' : (lbFilter === 'derby' || lbFilter === 'agility' || lbFilter === 'galop') ? 'Meilleur temps' : lbFilter === 'naval' ? 'Touchés max' : lbFilter === 'mole' ? 'Taupes tapées max' : lbFilter === 'curling' ? 'Points max' : lbFilter === 'chairs' ? 'Chaises max' : (lbFilter === 'dodge' || lbFilter === 'tank') ? 'Touches max' : lbFilter === 'sheep' ? 'Record d\'équipe' : lbFilter === 'drakkar' ? 'Synchro max (%)' : (lbFilter === 'master' || lbFilter === 'kabaddi' || lbFilter === 'lumber') ? 'Points max' : 'Meilleur score'] : [])]){
+  for (const t of ['#','Joueur','Parties','Victoires','Points', ...(showBest ? [lbFilter === 'pong' ? 'Arrêts max' : (lbFilter === 'derby' || lbFilter === 'agility' || lbFilter === 'galop') ? 'Meilleur temps' : lbFilter === 'naval' ? 'Touchés max' : lbFilter === 'mole' ? 'Taupes tapées max' : lbFilter === 'curling' ? 'Points max' : lbFilter === 'chairs' ? 'Chaises max' : (lbFilter === 'dodge' || lbFilter === 'tank') ? 'Touches max' : lbFilter === 'sheep' ? 'Record d\'équipe' : lbFilter === 'drakkar' ? 'Synchro max (%)' : (lbFilter === 'master' || lbFilter === 'kabaddi' || lbFilter === 'lumber' || lbFilter === 'meduse') ? 'Points max' : 'Meilleur score'] : [])]){
     const th = document.createElement('th'); th.textContent = t; hd.append(th);
   }
   const tb = $('lbBody'); tb.textContent = '';
@@ -10005,7 +10428,8 @@ function frame(now){
   if (cur === 'drakkar') drakkarFrame(dt, now);
   if (cur === 'lumber') lumberFrame(dt, now);
   if (cur === 'agility') agilityFrame(dt, now);
-  if (cur === 'galop') try { galopFrame(dt, now); } catch(e){ console.error(e); }   // one bad frame must not freeze the race
+  if (cur === 'galop') try { galopFrame(dt, now); } catch(e){ console.error(e); }
+  if (cur === 'meduse') meduseFrame(dt, now);   // one bad frame must not freeze the race
   if (cur === 'tetris' && G && phase === 'count'){
     G.count -= dt/1000;
     if (G.count <= 0){ phase = 'play'; setMsg('', ''); countBeep(0); }
@@ -10144,11 +10568,11 @@ $('btnQuit').onclick = () => toMenu('');
 function backToLobby(){
   if (me.host){
     if (H) H.over = true;
-    H = null; if (HC) clearTimeout(HC.timer); HC = null; mcClear(); HMC = null; mmClear(); HMM = null; kbClear(); HKB = null; dbClear(); HDB = null; tkClear(); HTK = null; shClear(); HSH = null; dkClear(); HDK = null; ljClear(); HLJ = null; agClear(); HAG = null; gpClear(); HGP = null;
+    H = null; if (HC) clearTimeout(HC.timer); HC = null; mcClear(); HMC = null; mmClear(); HMM = null; kbClear(); HKB = null; dbClear(); HDB = null; tkClear(); HTK = null; shClear(); HSH = null; dkClear(); HDK = null; ljClear(); HLJ = null; agClear(); HAG = null; gpClear(); HGP = null; mdClear(); HMD = null;
     players = players.filter(p => p.id === 'h' || net.conns.has(p.id));
     sendLobby(true);                                       // everyone goes back
   } else {
-    phase = 'lobby'; $('scrEnd').hidden = true; G = null; PG = null; D = null; NV = null; ML = null; CU = null; MC = null; MM = null; KB = null; DB = null; TK = null; SHV = null; DK = null; if (LJ){ LJ = null; sawStop(); } AG = null; GP = null; cur = null;
+    phase = 'lobby'; $('scrEnd').hidden = true; G = null; PG = null; D = null; NV = null; ML = null; CU = null; MC = null; MM = null; KB = null; DB = null; TK = null; SHV = null; DK = null; if (LJ){ LJ = null; sawStop(); } AG = null; GP = null; MD = null; cur = null;
     if (HM) moleClearTimers();
     show('scrLobby'); renderLobby();                      // wait there for the creator
   }
