@@ -1323,7 +1323,7 @@ const GAME_DESC = {
   lumber:'Concours de bûcherons, tronçonneuse en main : vu du dessus, choisissez où tombe votre arbre sans rien écraser, puis abattez-le comme un vrai, en suivant les pointillés : les deux coupes de l\'entaille, puis le trait d\'abattage. Plus les coupes sont droites, plus l\'arbre tombe là où vous l\'avez décidé, et viser une ouverture étroite rapporte un gros bonus. Écraser une maison, une voiture ou un autre arbre élimine. Trois manches de plus en plus dures, tout le monde joue en même temps.',
   agility:'Concours d\'agility : chacun choisit son chien (Border collie, Whippet, Caniche…) et le guide sur le même parcours, en même temps. Entre les obstacles, le chien court seul. Haies, pneu et triple : touchez au bon moment. Slalom : tracez le zigzag. Tunnel : suivez-le du doigt. Passerelle : maintenez, relâchez sur le jaune. Bascule : stop au milieu. Table : « Couché ! » puis ne touchez plus. Sprint final : tapez le plus vite possible. Chaque faute coûte 5 s, le meilleur temps gagne.',
   galop:'Course de galop de 3000 m, chacun sur son cheval, vue du dessus. Choisissez votre monture parmi 20, nouvelles à chaque partie (accélération, vitesse, maniabilité, et une forme du jour cachée), des robots complètent jusqu\'à 8 partants. Le cheval suit la piste tout seul : vous vous décalez à gauche ou à droite et vous demandez du galop, qui coûte de l\'énergie. Collé derrière un autre, vous récupérez plus vite et profitez de ses accélérations.',
-  meduse:'Le radeau de la Méduse, en version bande dessinée : tout le monde est sur un radeau qui prend l\'eau et vogue vers le navire de secours. Chaque tour, chacun choisit en secret : écoper, pagayer, s\'agripper, ou pousser quelqu\'un à l\'eau. Pousser quelqu\'un qui s\'agrippe, c\'est tomber soi-même. À l\'arrivée, ceux qui sont à bord se partagent 100 points : moins on est, plus la part est grosse. Mais si le radeau coule, personne ne marque. Tombé à l\'eau, on peut remonter à bord au tour suivant, sauf si quelqu\'un pagaie : le radeau s\'éloigne et on reste en arrière jusqu\'à la traversée suivante. Trois traversées.',
+  meduse:'Le radeau de la Méduse, en version bande dessinée : tout le monde est sur un radeau qui prend l\'eau et vogue vers le navire de secours. Chaque tour, chacun choisit en secret : écoper, pagayer, s\'agripper, ou pousser quelqu\'un à l\'eau. Pousser quelqu\'un qui s\'agrippe, c\'est tomber soi-même. À l\'arrivée, ceux qui sont à bord se partagent 100 points : moins on est, plus la part est grosse. Mais si le radeau coule, personne ne marque. Tombé à l\'eau, on peut remonter à bord au tour suivant, sauf si au moins deux joueurs pagaient : le radeau s\'éloigne et on reste en arrière jusqu\'à la traversée suivante. Trois traversées.',
   derby:'Course de chevaux : tout le monde reçoit la même série de figures à tracer. Chaque figure réussie fait avancer votre cheval, plus loin si elle est complexe et bien tracée. Le premier à la ligne gagne.'
 };
 
@@ -9845,11 +9845,11 @@ function mdResolve(seq){
   // 2. the work of whoever is still aboard
   let bail = 0, pad = 0, rock = 0;
   for (const id of HMD.aboard){ const a = P[id] && P[id].a; if (a === 'bail') bail++; else if (a === 'paddle') pad++; }
-  // 3. the swimmers: if anyone paddled, the raft moves off and they are left behind for this crossing;
+  // 3. the swimmers: if two or more paddled, the raft moves off and they are left behind for this crossing;
   //    otherwise they climb back aboard, or rock the raft
   for (const id of swimmers){
     if (!HMD.water.includes(id)) continue;
-    if (pad){ HMD.water = HMD.water.filter(x => x !== id); HMD.lost.push(id); ev.push({ k:'adrift', a:id }); }
+    if (pad >= 2){ HMD.water = HMD.water.filter(x => x !== id); HMD.lost.push(id); ev.push({ k:'adrift', a:id }); }
     else if (P[id] && P[id].a === 'swim'){ HMD.water = HMD.water.filter(x => x !== id); HMD.aboard.push(id); ev.push({ k:'back', a:id }); }
     else if (P[id] && P[id].a === 'rock') rock++;
   }
@@ -9975,7 +9975,7 @@ function meduseRecv(m){
     mdHead(MD.spec ? 'Spectateur' : lostMe ? 'Laissé en arrière…' : mdOnRaft() ? 'À bord : que faites-vous ?' : 'À l\'eau : que faites-vous ?');
     $('mdHelp').textContent = MD.spec ? 'Vous regardez la traversée.' : lostMe ? 'Le radeau s\'est éloigné sans vous : vous reprendrez la mer à la prochaine traversée.' : mdOnRaft()
       ? 'En secret : écoper fait baisser l\'eau, pagayer rapproche du navire, s\'agripper protège, pousser jette quelqu\'un à l\'eau (sauf s\'il s\'agrippe : c\'est vous qui tombez).'
-      : 'Vous êtes à l\'eau : remontez à bord, ou secouez le radeau. Mais si quelqu\'un pagaie ce tour-ci, le radeau s\'éloigne et vous restez en arrière.';
+      : 'Vous êtes à l\'eau : remontez à bord, ou secouez le radeau. Mais si deux joueurs pagaient ce tour-ci, le radeau s\'éloigne et vous restez en arrière.';
     if (m.n === 1){ sfx('go'); boom('TRAVERSÉE ' + m.r, { size:30, x:.5, y:.35, pal:BOOM_COLORS[1], ms:1100 }); } else sfx('myturn');
     mdButtons(); renderMdPlayers();
   } else if (m.t === 'md_ready'){ MD.ready = m.ids || []; renderMdPlayers(); }
@@ -10072,7 +10072,7 @@ function meduseFrame(dtMs, now){
   for (const [id, s] of slots){
     let f = MD.figs.get(id);
     if (!f){ f = { x:s.x, y:s.y, bx:s.x, by:s.y }; MD.figs.set(id, f); }
-    const k = Math.min(1, dt*(s.gone ? 1.2 : f.fly && now - f.fly < 700 ? 3 : 5));
+    const k = Math.min(1, dt*(s.gone ? .45 : f.fly && now - f.fly < 700 ? 3 : 5));
     f.bx += (s.x - f.bx)*k; f.by += (s.y - f.by)*k;
     f.deck = s.deck; f.raised = s.raised; f.gone = s.gone; f.slot = s.slot;
   }
@@ -10189,8 +10189,11 @@ function mdDraw(ctx, Wd, Ht, now, art){
     else if (f.raised && (MD.Dv > 35 || MD.fin === 'ok')) pose = 'wave';
     else if (f.slot === 1) pose = 'point';
     else if (MD.fin === 'ok') pose = 'wave';
-    mdPerson(ctx, x, y, p, i, pose, dir, t + i, f.gone ? .55 : !f.deck && !flying ? 1.1 : 1.22, mine);
-    const top = f.gone ? y - 24 : !f.deck && !flying ? y - 30 : y - 96;
+    const far = f.gone ? Math.max(0, Math.min(1, (330 - f.by)/120)) : 0;              // drifting off: smaller as it nears the horizon
+    mdPerson(ctx, x, y, p, i, pose, dir, t + i, f.gone ? 1.1 - far*.55 : !f.deck && !flying ? 1.1 : 1.22, mine);
+    if (f.gone && far < .9){ ctx.font = '900 13px Nunito, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 3; ctx.strokeStyle = '#000'; ctx.fillStyle = '#FFD93B'; const h = 'À l\'aide !'; const hy = y - 40 - (1 - far)*8; ctx.strokeText(h, x, hy); ctx.fillText(h, x, hy);
+      ctx.strokeStyle = 'rgba(255,255,255,.55)'; ctx.lineWidth = 2; for (let n = 1; n < 4; n++){ ctx.beginPath(); ctx.ellipse(x, y + 4 + n*4, 18 + n*8, 4 + n, 0, 0, Math.PI*2); ctx.stroke(); } }
+    const top = f.gone ? y - 24 - (1 - far)*8 : !f.deck && !flying ? y - 30 : y - 96;
     labels.push({ id, x, top, mine, gone:f.gone, a });
   };
   // people left behind, far away
@@ -10316,8 +10319,8 @@ const BRIEF = {
     tip:'Ne rien écraser ! Une coupe bâclée envoie l\'arbre n\'importe où, parfois même en arrière. Viser une ouverture étroite, ou tomber au ras d\'un obstacle avec une coupe propre, rapporte un gros bonus.' },
   agility:{ ctl:[['📱', 'Choisissez un chien. Haie, pneu, triple : un tap quand le cercle est vert. Slalom : tracez le zigzag. Tunnel : doigt sur le chien, glissez. Passerelle : restez appuyé, lâchez sur le jaune. Bascule : un tap sur le vert au milieu. Table : un tap puis plus rien. Sprint final : tapez à toute vitesse.'], ['💻', 'Les mêmes gestes à la souris, ou Espace (à marteler pour le sprint).']],
     tip:'Chaque race a 6 étoiles : Vitesse, Saut ou Énergie. Un Whippet file entre les obstacles, un Jack Russell a plus de marge sur les haies, un Corgi va plus vite au sprint et dans les obstacles longs.' },
-  meduse:{ ctl:[['📱', 'À chaque tour, touchez votre choix : 🪣 écoper, 🚣 pagayer, ✊ s\'agripper, ou 👉 pousser puis le nom de la victime (ou touchez-la directement sur le radeau). À l\'eau : 🏊 remonter ou 🌊 secouer (si quelqu\'un pagaie, le radeau vous laisse en arrière).'], ['💻', 'Cliquez les boutons, ou touches 1 à 4. Vous pouvez changer d\'avis jusqu\'à la fin des 10 secondes.']],
-    tip:'Les choix sont révélés tous en même temps. Quelqu\'un est tombé ? Pagayer l\'abandonne pour de bon, attendre lui laisse une chance de remonter. Trop de monde à bord, ça coule ; trop de traîtres, personne n\'écope.' },
+  meduse:{ ctl:[['📱', 'À chaque tour, touchez votre choix : 🪣 écoper, 🚣 pagayer, ✊ s\'agripper, ou 👉 pousser puis le nom de la victime (ou touchez-la directement sur le radeau). À l\'eau : 🏊 remonter ou 🌊 secouer (si deux joueurs pagaient, le radeau vous laisse en arrière).'], ['💻', 'Cliquez les boutons, ou touches 1 à 4. Vous pouvez changer d\'avis jusqu\'à la fin des 10 secondes.']],
+    tip:'Les choix sont révélés tous en même temps. Quelqu\'un est tombé ? À deux pagayeurs, on l\'abandonne pour de bon ; sinon il peut remonter. Trop de monde à bord, ça coule ; trop de traîtres, personne n\'écope.' },
   galop:{ ctl:[['📱', 'Choisissez un cheval. ◀ ▶ pour vous décaler, GALOP pour accélérer (coûte de l\'énergie), RALENTIR pour souffler.'], ['💻', '← → se décaler · ↑ ou Espace galop · ↓ ralentir. Ou cliquez les boutons.']],
     tip:'Partir au galop donne un départ rapide mais entame l\'énergie. Collé derrière un cheval, vous récupérez plus vite.' }
 };
