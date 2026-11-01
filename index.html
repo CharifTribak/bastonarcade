@@ -1309,7 +1309,7 @@ const GAME_SHORT = {
   lumber:'Choisissez où tombe votre arbre, puis sciez-le proprement. N\'écrasez rien !',
   agility:'Choisissez un chien et guidez-le sur le parcours : chaque obstacle a son geste. Le meilleur temps gagne.',
   galop:'Choisissez un cheval, placez-vous et dosez son énergie sur 3000 m. Le premier à la ligne gagne.',
-  meduse:'Le radeau perd une place à chaque tour. Ramassez une planche, frappez, accrochez-vous : seuls ceux à bord à l\'arrivée marquent.'
+  meduse:'Le radeau rétrécit par le bord à chaque tour. Frappez les naufragés du centre pour prendre leur place : le dernier debout gagne.'
 };
 const GAME_DESC = {
   tetris:'Empilez des pièces de 2, 3 et 5 briques. Chaque ligne effacée envoie des briques fendues à vos adversaires. Effacez une ligne collée à une brique fendue : elle éclate et repart chez son expéditeur.',
@@ -1328,7 +1328,7 @@ const GAME_DESC = {
   lumber:'Concours de bûcherons, tronçonneuse en main : vu du dessus, choisissez où tombe votre arbre sans rien écraser, puis abattez-le comme un vrai, en suivant les pointillés : les deux coupes de l\'entaille, puis le trait d\'abattage. Plus les coupes sont droites, plus l\'arbre tombe là où vous l\'avez décidé, et viser une ouverture étroite rapporte un gros bonus. Écraser une maison, une voiture ou un autre arbre élimine. Trois manches de plus en plus dures, tout le monde joue en même temps.',
   agility:'Concours d\'agility : chacun choisit son chien (Border collie, Whippet, Caniche…) et le guide sur le même parcours, en même temps. Entre les obstacles, le chien court seul. Haies, pneu et triple : touchez au bon moment. Slalom : tracez le zigzag. Tunnel : suivez-le du doigt. Passerelle : maintenez, relâchez sur le jaune. Bascule : stop au milieu. Table : « Couché ! » puis ne touchez plus. Sprint final : tapez le plus vite possible. Chaque faute coûte 5 s, le meilleur temps gagne.',
   galop:'Course de galop de 3000 m, chacun sur son cheval, vue du dessus. Choisissez votre monture parmi 20, nouvelles à chaque partie (accélération, vitesse, maniabilité, et une forme du jour cachée), des robots complètent jusqu\'à 8 partants. Le cheval suit la piste tout seul : vous vous décalez à gauche ou à droite et vous demandez du galop, qui coûte de l\'énergie. Collé derrière un autre, vous récupérez plus vite et profitez de ses accélérations.',
-  meduse:'Le radeau de la Méduse, en version bande dessinée : huit naufragés sur un radeau qui part en morceaux, et une place de moins à chaque tour. Chaque tour, chacun choisit en secret : ramasser une planche, frapper quelqu\'un avec (il tombe à l\'eau et perd une vie sur 3, la planche casse), ou s\'accrocher (on ne peut pas vous faire tomber, mais pas deux tours de suite). S\'il y a plus de monde que de places, les surnuméraires glissent à l\'eau, d\'abord ceux qui ne s\'accrochent pas. Tombé avec des vies, on remonte au tour suivant, les mains vides ; sans vie, on est emporté. Quand le navire arrive, ceux qui sont à bord se partagent 100 points. Trois traversées.',
+  meduse:'Le radeau de la Méduse, en version bande dessinée : huit naufragés, chacun sur un morceau du radeau. À chaque tour, le morceau le plus au bord se détache et ceux qui sont dessus tombent à l\'eau. Chaque tour, chacun choisit en secret : ramasser une planche, frapper quelqu\'un avec (il tombe à l\'eau et perd une vie sur 3, la planche casse, et vous prenez sa place), ou s\'accrocher (on ne peut pas vous faire tomber, mais pas deux tours de suite). Tombé avec des vies, on remonte au tour suivant sur le morceau libre le plus au bord, les mains vides. Sans vie, on est emporté. Le dernier debout gagne.',
   derby:'Course de chevaux : tout le monde reçoit la même série de figures à tracer. Chaque figure réussie fait avancer votre cheval, plus loin si elle est complexe et bien tracée. Le premier à la ligne gagne.'
 };
 
@@ -2154,10 +2154,10 @@ function showEnd(ranking, game){
   if (GP) GP.over = true;
   if (MD){ MD.over = true; MD.ph = 'end'; MD.queue = []; }
   const hd = $('rankHead'); hd.textContent = '';
-  for (const h of ['#','Joueur', ...(medu ? ['Points','Sauvé','Coups','Chutes'] : galop ? ['Cheval','Temps','Écart'] : agil ? ['Temps','Fautes','Total'] : lumber ? ['Points','Précision','Manches'] : viking ? ['Rôle','Coups','Synchro'] : coop ? ['Manches','Moutons','Ouaf'] : tank ? ['Char','Rôle','Touches'] : dodge ? ['Vies','Touches','Arrêts'] : kab ? ['Points','Raids réussis','Plaquages'] : master ? ['Points','Trouvés','Essais'] : chairs ? ['Vies','Chaises','Réflexe'] : curl ? ['Points','Maison','Meilleure'] : pong ? ['Vies','Arrêts'] : derby ? ['Figures','Distance','Temps'] : naval ? ['Tirs','Touchés','À flot'] : mole ? ['Points','Tapées','Échappées'] : ['Lignes','Briques','Score'])]){
+  for (const h of ['#','Joueur', ...(medu ? ['Tours tenus','Coups','Chutes'] : galop ? ['Cheval','Temps','Écart'] : agil ? ['Temps','Fautes','Total'] : lumber ? ['Points','Précision','Manches'] : viking ? ['Rôle','Coups','Synchro'] : coop ? ['Manches','Moutons','Ouaf'] : tank ? ['Char','Rôle','Touches'] : dodge ? ['Vies','Touches','Arrêts'] : kab ? ['Points','Raids réussis','Plaquages'] : master ? ['Points','Trouvés','Essais'] : chairs ? ['Vies','Chaises','Réflexe'] : curl ? ['Points','Maison','Meilleure'] : pong ? ['Vies','Arrêts'] : derby ? ['Figures','Distance','Temps'] : naval ? ['Tirs','Touchés','À flot'] : mole ? ['Points','Tapées','Échappées'] : ['Lignes','Briques','Score'])]){
     const th = document.createElement('th'); th.textContent = h; hd.append(th);
   }
-  $('rankNote').textContent = medu ? '« Sauvé » : traversées finies à bord. « Coups » : coups de planche portés. « Chutes » : fois où vous êtes tombé à l\'eau.' : galop ? '« Écart » : retard sur le vainqueur à l\'arrivée, en secondes. Les chevaux des robots sont classés avec les autres.' : agil ? '« Total » : temps du parcours plus 5 s par faute. Un chien qui n\'a pas fini est classé après les autres.' : lumber ? '« Précision » : moyenne de vos coupes. « Manches » : manches finies sans rien écraser. Un joueur qui écrase quelque chose est éliminé.' : viking ? 'Course en équipe. « Synchro » : coups de rame donnés en rythme avec le tambour.' : coop ? 'Partie en équipe : tout le monde partage le score. « Moutons » : moutons rentrés au total, « Ouaf » : aboiements.' : tank ? 'Les deux membres d\'un équipage partagent la même place. « Touches » : obus du canonnier qui ont fait mouche.' : dodge ? '« Touches » : balles qui ont atteint un adversaire. « Arrêts » : balles attrapées.' : kab ? '« Raids réussis » : raids rentrés avec au moins un défenseur touché. « Plaquages » : attaquants retenus jusqu\'au bout du souffle.' : master ? '« Trouvés » : codes trouvés. « Essais » : total des essais sur la partie.' : chairs ? '« Chaises » : chaises gagnées. « Réflexe » : votre plus rapide, de l\'arrêt du disque à la chaise.' : curl ? '« Maison » : pierres dans la maison en fin de manche. « Meilleure » : pierre la plus proche du centre.' : mole ? '« Tapées » : taupes adverses tapées. « Échappées » : vos taupes que personne n\'a eues.' : naval ? '« À flot » : cases de bateau encore intactes à la fin.' : pong ? '« Arrêts » : ballons repoussés par le gardien.' : derby ? '« Temps » : durée pour franchir la ligne, pour ceux qui l\'ont franchie.' : '« Briques » : nombre de briques envoyées aux adversaires.';
+  $('rankNote').textContent = medu ? 'Classement : le dernier debout d\'abord, puis dans l\'ordre inverse des noyades. « Tours tenus » : tours finis à bord. « Coups » : coups de planche portés. « Chutes » : fois où vous êtes tombé à l\'eau.' : galop ? '« Écart » : retard sur le vainqueur à l\'arrivée, en secondes. Les chevaux des robots sont classés avec les autres.' : agil ? '« Total » : temps du parcours plus 5 s par faute. Un chien qui n\'a pas fini est classé après les autres.' : lumber ? '« Précision » : moyenne de vos coupes. « Manches » : manches finies sans rien écraser. Un joueur qui écrase quelque chose est éliminé.' : viking ? 'Course en équipe. « Synchro » : coups de rame donnés en rythme avec le tambour.' : coop ? 'Partie en équipe : tout le monde partage le score. « Moutons » : moutons rentrés au total, « Ouaf » : aboiements.' : tank ? 'Les deux membres d\'un équipage partagent la même place. « Touches » : obus du canonnier qui ont fait mouche.' : dodge ? '« Touches » : balles qui ont atteint un adversaire. « Arrêts » : balles attrapées.' : kab ? '« Raids réussis » : raids rentrés avec au moins un défenseur touché. « Plaquages » : attaquants retenus jusqu\'au bout du souffle.' : master ? '« Trouvés » : codes trouvés. « Essais » : total des essais sur la partie.' : chairs ? '« Chaises » : chaises gagnées. « Réflexe » : votre plus rapide, de l\'arrêt du disque à la chaise.' : curl ? '« Maison » : pierres dans la maison en fin de manche. « Meilleure » : pierre la plus proche du centre.' : mole ? '« Tapées » : taupes adverses tapées. « Échappées » : vos taupes que personne n\'a eues.' : naval ? '« À flot » : cases de bateau encore intactes à la fin.' : pong ? '« Arrêts » : ballons repoussés par le gardien.' : derby ? '« Temps » : durée pour franchir la ligne, pour ceux qui l\'ont franchie.' : '« Briques » : nombre de briques envoyées aux adversaires.';
   const tb = $('rankBody'); tb.textContent = '';
   (ranking || []).forEach(r => {
     const tr = document.createElement('tr'); if (r.place === 1) tr.className = 'win';
@@ -2166,7 +2166,7 @@ function showEnd(ranking, game){
     const d = document.createElement('span'); d.className = 'dot'; d.style.background = r.color;
     const s = document.createElement('span'); s.textContent = r.name + (r.id === me.id ? ' (vous)' : '') + (r.left ? ' · parti' : '');
     w.append(d, s); nm.append(w);
-    if (medu) tr.append(td(r.place), nm, td(r.pts|0), td((r.saved|0) + '/' + MD_ROUNDS), td(r.hits|0), td(r.dunks|0));
+    if (medu) tr.append(td(r.place), nm, td(r.turns|0), td(r.hits|0), td(r.dunks|0));
     else if (galop){ tr.append(td(r.place), nm, td(r.horse || ''), td(r.t ? fmtSec(r.t) : '–'), td(r.gap == null ? '–' : r.gap > 0 ? '+' + r.gap.toLocaleString('fr-FR', { minimumFractionDigits:2, maximumFractionDigits:2 }) : '')); [...tr.children].slice(-2).forEach(c => c.style.whiteSpace = 'nowrap'); }
     else if (agil) tr.append(td(r.place), nm, td(r.done ? fmtSec(Math.round(r.time*1000)) : '–'), td(r.done ? r.faults|0 : '–'), td(r.done ? fmtSec(Math.round(r.total*1000)) : 'abandon'));
     else if (lumber) tr.append(td(r.place), nm, td(r.pts|0), td((r.sync|0) + ' %'), td((r.rounds|0) + '/' + LJ_ROUNDS + (r.out ? ' ✗' : '')));
@@ -9779,14 +9779,13 @@ $('stRefresh').onclick = () => stLoad();
 for (const b of $('stRange').querySelectorAll('button')) b.onclick = () => { ST.days = +b.dataset.d; stLoad(); };
 
 
-// ================= MÉDUSE : a raft that falls apart, too many people for too few places =================
-// After Géricault's painting (1819, public domain). Eight castaways (robots fill in) on a raft drifting towards the
-// rescue ship. Each turn a piece of the raft breaks off: one place fewer. Each turn, all at once and in secret:
-// pick up a plank, hit someone with your plank (they fall in and lose a life; the plank breaks), or hold on (nobody can
-// knock you off, but not two turns running). Too many people for the places left: the extra ones slip into the sea,
-// those not holding on first. Fallen with lives left, you climb back next turn, empty-handed. No lives left: drowned.
-// When the ship arrives, the people aboard share 100 points. Three crossings.
-const MD_ROUNDS = 3, MD_PICK = 10, MD_STEP = 950, MD_CREW = 8, MD_LIVES = 3, MD_FINAL = 2, MD_TURNS = MD_CREW - MD_FINAL;
+// ================= MÉDUSE : a raft that keeps shrinking, the last one standing wins =================
+// After Géricault's painting (1819, public domain). Eight castaways (robots fill in), each on a piece of the raft.
+// Every turn the outermost piece breaks off, and whoever stands on it falls into the sea. Each turn, all at once and in
+// secret: pick up a plank, hit someone with it (they fall in and lose one of 3 lives, the plank breaks, and you take their
+// place), or hold on (nobody can knock you off, but not two turns running). Fallen with lives left, you climb back next
+// turn onto the outermost free piece, empty-handed. No lives left: swept away. The last one left wins.
+const MD_PICK = 10, MD_STEP = 950, MD_CREW = 8, MD_LIVES = 3, MD_MAXT = 30;
 const MD_ACTS = { plank:{ ic:'🪵', n:'Ramasser une planche', s:'Planche' }, hit:{ ic:'💥', n:'Frapper', s:'Frapper' }, grip:{ ic:'✊', n:'S\'accrocher', s:'S\'accrocher' },
   idle:{ ic:'💤', n:'Rien', s:'Rien' } };
 let HMD = null, MD = null;
@@ -9803,26 +9802,31 @@ function meduseHostStart(){
     H.alive.add(id);
   }
   H.n = players.length;
-  for (const p of players) H.stats[p.id] = { pts:0, hits:0, dunks:0, saved:0, left:false };
-  HMD = { timers:[], r:0, t:0, places:0, aboard:[], water:[], dead:[], lives:{}, plank:{}, cramp:[], prev:{}, picks:{}, ph:'idle', seed:0 };
+  for (const p of players) H.stats[p.id] = { pts:0, turns:0, hits:0, dunks:0, out:0, left:false };
+  const seed = Math.floor(Math.random()*1e9), L = mdLayout(seed);
+  HMD = { timers:[], t:0, seed, order:L.order, places:L.cells.length, pos:{}, aboard:[], water:[], dead:[], lives:{}, plank:{}, cramp:[], prev:{}, picks:{}, ph:'idle' };
+  // everyone on a piece of the raft, at random
+  const ids = players.map(p => p.id).sort(() => Math.random() - .5);
+  ids.forEach((id, k) => { HMD.pos[id] = HMD.order[k % HMD.order.length]; HMD.lives[id] = MD_LIVES; });
+  HMD.aboard = ids;
   broadcast({ t:'start', players, game:'meduse' });
-  mdLater(mdRound, 1800);
+  mdLater(mdTurn, 1800);
 }
-function mdRound(){
-  HMD.r++; HMD.t = 0; HMD.seed = Math.floor(Math.random()*1e9);
-  HMD.aboard = players.filter(p => mdIn(p.id)).map(p => p.id); HMD.water = []; HMD.dead = [];
-  HMD.places = MD_CREW; HMD.lives = {}; HMD.plank = {}; HMD.cramp = []; HMD.prev = {};
-  for (const id of HMD.aboard) HMD.lives[id] = MD_LIVES;
-  mdTurn();
-}
-const mdScores = () => Object.fromEntries(players.map(p => [p.id, H.stats[p.id] ? H.stats[p.id].pts : 0]));
-const mdState = () => ({ places:HMD.places, aboard:HMD.aboard, water:HMD.water, dead:HMD.dead, lives:HMD.lives, plank:HMD.plank, cramp:HMD.cramp, sc:mdScores() });
+const mdScores = () => Object.fromEntries(players.map(p => [p.id, H.stats[p.id] ? H.stats[p.id].turns : 0]));
+const mdLiveCells = () => HMD.order.slice(0, HMD.places);                   // from the middle outwards
+const mdState = () => ({ seed:HMD.seed, places:HMD.places, pos:HMD.pos, aboard:HMD.aboard, water:HMD.water, dead:HMD.dead, lives:HMD.lives, plank:HMD.plank, cramp:HMD.cramp, sc:mdScores() });
 function mdTurn(){
-  // whoever fell in last turn and still has lives climbs back, empty-handed
-  for (const id of HMD.water) if (mdIn(id)) HMD.aboard.push(id);
+  // whoever fell in and still has lives climbs back onto the outermost free piece (or the outermost one if all are taken)
+  const live = mdLiveCells();
+  for (const id of HMD.water){
+    if (!mdIn(id)) continue;
+    const taken = new Set(HMD.aboard.map(x => HMD.pos[x])), free = live.filter(c => !taken.has(c));
+    HMD.pos[id] = free.length ? free[free.length - 1] : live[live.length - 1];
+    HMD.aboard.push(id);
+  }
   HMD.water = [];
   HMD.t++; HMD.picks = {}; HMD.ph = 'pick'; const seq = HMD.seq = (HMD.seq || 0) + 1;     // timers from an earlier turn must not act on this one
-  broadcast({ t:'md_turn', r:HMD.r, n:HMD.t, T:MD_TURNS, seed:HMD.seed, left:MD_PICK, ...mdState() });
+  broadcast({ t:'md_turn', n:HMD.t, left:MD_PICK, ...mdState() });
   for (const p of players) if (p.bot && HMD.aboard.includes(p.id)) mdLater(() => { if (HMD.seq === seq) mdPick(p.id, mdBot(p.id)); }, 1500 + Math.random()*4500);
   mdLater(() => mdResolve(seq), MD_PICK*1000 + 300);
 }
@@ -9847,49 +9851,66 @@ function mdResolve(seq){
   const hurt = id => { HMD.lives[id] = Math.max(0, (HMD.lives[id] || 0) - 1); fall.add(id); };
   // 1. planks picked up
   for (const id of HMD.aboard) if (P[id].a === 'plank') HMD.plank[id] = true;
-  // 2. blows, all at once; the plank breaks either way
+  // 2. blows, all at once; the plank breaks either way; whoever knocks someone off takes their place
+  const moves = [];
   for (const id of HMD.aboard){
     const x = P[id]; if (x.a !== 'hit') continue;
     HMD.plank[id] = false;
     if (grips.has(x.tg)){ ev.push({ k:'block', a:id, b:x.tg }); continue; }
-    hurt(x.tg); H.stats[id].hits++; ev.push({ k:'hit', a:id, b:x.tg });
+    if (!fall.has(x.tg)) hurt(x.tg);
+    H.stats[id].hits++; moves.push([id, HMD.pos[x.tg]]); ev.push({ k:'hit', a:id, b:x.tg, c:HMD.pos[x.tg] });
   }
-  // 3. a piece of the raft breaks off: one place fewer
-  HMD.places = Math.max(MD_FINAL, HMD.places - 1); ev.push({ k:'break', n:HMD.places });
-  // 4. too many people for the places left: the extra ones slip into the sea, those not holding on first
-  const still = HMD.aboard.filter(id => !fall.has(id));
-  let extra = still.length - HMD.places;
-  if (extra > 0){
-    const sh = a => { for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random()*(i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
-    const order = [...sh(still.filter(id => !grips.has(id))), ...sh(still.filter(id => grips.has(id)))];
-    for (const id of order.slice(0, extra)){ hurt(id); ev.push({ k:'slip', a:id }); }
+  for (const [id, c] of moves) if (!fall.has(id)) HMD.pos[id] = c;
+  // 3. the outermost piece breaks off, with whoever stands on it (holding on does not help)
+  if (HMD.places > 1){
+    const c = HMD.order[HMD.places - 1]; HMD.places--;
+    const who = HMD.aboard.filter(id => !fall.has(id) && HMD.pos[id] === c);
+    who.forEach(hurt);
+    ev.push({ k:'break', c, n:HMD.places, who });
+  } else {
+    // 4. a single piece left and several on it: one slips each turn, those not holding on first
+    const still = HMD.aboard.filter(id => !fall.has(id));
+    if (still.length > 1){
+      const pool = still.filter(id => !grips.has(id)), from = pool.length ? pool : still, id = from[Math.floor(Math.random()*from.length)];
+      hurt(id); ev.push({ k:'slip', a:id });
+    }
   }
-  // 5. into the sea: the plank is lost; no lives left means drowned
+  // 5. into the sea: the plank is lost; no lives left means swept away
   for (const id of fall){
     H.stats[id].dunks++; HMD.plank[id] = false;
     HMD.aboard = HMD.aboard.filter(x => x !== id);
-    if (HMD.lives[id] > 0) HMD.water.push(id); else { HMD.dead.push(id); ev.push({ k:'drown', a:id }); }
+    if (HMD.lives[id] > 0) HMD.water.push(id); else { HMD.dead.push(id); H.stats[id].out = HMD.t; ev.push({ k:'drown', a:id }); }
   }
-  HMD.cramp = [...grips];
+  for (const id of HMD.aboard) H.stats[id].turns++;
+  HMD.cramp = [...grips].filter(id => HMD.aboard.includes(id));
   const acts = {}; for (const [id, x] of Object.entries(P)) acts[id] = { a:x.a, tg:x.tg };
   HMD.prev = acts;
-  // the ship arrives at the end of the last turn; if nobody is left, the crossing is over
-  let fin = null, share = 0;
-  if (HMD.t >= MD_TURNS){
-    fin = HMD.aboard.length ? 'ok' : 'sunk';
-    if (fin === 'ok'){ share = Math.round(100/HMD.aboard.length); for (const id of HMD.aboard){ H.stats[id].pts += share; H.stats[id].saved++; } }
-  } else if (!HMD.aboard.length && !HMD.water.length) fin = 'sunk';
-  broadcast({ t:'md_res', acts, ev, fin, share, ...mdState() });
+  // the last one left wins
+  const alive = players.filter(p => mdIn(p.id) && HMD.lives[p.id] > 0).map(p => p.id);
+  let fin = null;
+  if (alive.length <= 1 || HMD.t >= MD_MAXT){
+    const rank = mdRanking();
+    fin = rank[0] ? rank[0].id : 'none';
+  }
+  broadcast({ t:'md_res', acts, ev, fin, ...mdState() });
   const show = MD_STEP*(ev.length + 1) + 1400;
   if (!fin) return mdLater(mdTurn, show);
-  if (HMD.r >= MD_ROUNDS) return mdLater(mdFinish, show + 2500);
-  mdLater(mdRound, show + 3500);
+  mdLater(mdFinish, show + 3000);
+}
+// the last one standing first, then in the reverse order of drowning; still alive at the time limit: most lives
+function mdRanking(){
+  const ids = Object.keys(H.stats), alive = id => HMD.lives[id] > 0 && !H.stats[id].left;
+  ids.sort((a, b) => { const A = H.stats[a], B = H.stats[b];
+    if (A.left !== B.left) return A.left ? 1 : -1;
+    if (alive(a) !== alive(b)) return alive(a) ? -1 : 1;
+    return (B.out - A.out) || ((HMD.lives[b] || 0) - (HMD.lives[a] || 0)) || (B.turns - A.turns) || (B.hits - A.hits); });
+  return ids.map((pid, i) => { const p = players.find(x => x.id === pid) || { name:'?', color:'#888' }, st = H.stats[pid];
+    return { id:pid, name:p.name, color:p.color, place:i + 1, ...st, pts:st.turns + (i === 0 ? 10 : 0) }; });
 }
 function mdFinish(){
   if (!H || H.over) return;
   H.over = true; mdClear();
-  const ids = Object.keys(H.stats).sort((a, b) => { const A = H.stats[a], B = H.stats[b]; if (A.left !== B.left) return A.left ? 1 : -1; return B.pts - A.pts || A.dunks - B.dunks; });
-  const ranking = ids.map((pid, i) => { const p = players.find(x => x.id === pid) || { name:'?', color:'#888' }; return { id:pid, name:p.name, color:p.color, place:i + 1, ...H.stats[pid] }; });
+  const ranking = mdRanking();
   setTimeout(() => broadcast({ t:'end', ranking, game:'meduse' }), 400);
 }
 function meduseDrop(id){
@@ -9900,20 +9921,19 @@ function meduseDrop(id){
   if (!players.some(p => !p.bot && mdIn(p.id))) return mdFinish();
   if (HMD && HMD.ph === 'pick' && HMD.aboard.every(x => !mdIn(x) || HMD.picks[x])){ const seq = HMD.seq; mdLater(() => mdResolve(seq), 400); }
 }
-// robot: arms itself, then hits, preferring whoever cannot hold on (held on last turn) or carries a plank
+// robot: if its piece is about to break, it strikes someone nearer the middle to take their place; otherwise it arms
+// itself and hits, preferring central places, people who cannot hold on, and people carrying a plank
 function mdBot(id){
   const R = Math.random, others = HMD.aboard.filter(x => x !== id), cramp = HMD.cramp.includes(id);
-  const crowded = HMD.aboard.length + HMD.water.length > HMD.places - 1;
-  if (!HMD.plank[id]){
-    if (!cramp && crowded && R() < .35) return { a:'grip' };
-    return { a:'plank' };
-  }
+  const rk = c => HMD.order.indexOf(c), next = HMD.places > 1 ? HMD.order[HMD.places - 1] : null, edge = HMD.pos[id] === next;
+  if (!HMD.plank[id]) return !edge && !cramp && R() < .25 ? { a:'grip' } : { a:'plank' };
   if (!others.length) return cramp ? { a:'plank' } : { a:'grip' };
-  if (!cramp && R() < .2) return { a:'grip' };
-  const w = others.map(x => (HMD.cramp.includes(x) ? 3 : 1) + (HMD.plank[x] ? 1.5 : 0) + (HMD.lives[x] || 0)*.3);
+  if (!edge && !cramp && R() < .2) return { a:'grip' };
+  const pool = edge ? others.filter(x => rk(HMD.pos[x]) < rk(HMD.pos[id])) : others, list = pool.length ? pool : others;
+  const w = list.map(x => 1 + (HMD.places - rk(HMD.pos[x]))*.5 + (HMD.cramp.includes(x) ? 2.5 : 0) + (HMD.plank[x] ? 1.5 : 0));
   let k = R()*w.reduce((a, b) => a + b, 0), i = 0;
   while (i < w.length - 1 && (k -= w[i]) > 0) i++;
-  return { a:'hit', tg:others[i] };
+  return { a:'hit', tg:list[i] };
 }
 
 // ---- my view ----
@@ -9922,11 +9942,11 @@ function startMeduse(m){
   lastCountShown = null;
   players = m.players; cur = 'meduse'; G = null; PG = null; D = null; phase = 'play';
   $('scrEnd').hidden = true; show('scrMeduse');
-  MD = { r:0, n:0, T:MD_TURNS, Dv:0, places:MD_CREW, aboard:players.map(p => p.id), water:[], dead:[], lives:{}, plank:{}, cramp:[], ready:[], sc:{}, acts:null,
+  MD = { n:0, Dv:12, places:MD_CREW, pos:{}, seed:null, aboard:players.map(p => p.id), water:[], dead:[], lives:{}, plank:{}, cramp:[], ready:[], sc:{}, acts:null,
     mine:null, hitMode:false, deadline:0, ph:'wait', figs:new Map(), queue:[], fin:null, banner:null, splash:[], over:false, cells:mdLayout(1), broke:[],
     spec:!players.some(p => p.id === me.id) };
   mdHead('Méduse'); $('mdMsg').textContent = ''; mdButtons(); renderMdPlayers();
-  $('mdHelp').textContent = 'Le radeau perd une place à chaque tour. Ramassez une planche, frappez pour faire tomber les autres, accrochez-vous pour ne pas tomber.';
+  $('mdHelp').textContent = 'Le radeau perd un morceau à chaque tour, par le bord. Frappez quelqu\'un plus au centre pour prendre sa place. Le dernier debout gagne.';
 }
 function mdHead(t){ $('mdHead').textContent = t; }
 let mdToastT = null;
@@ -9990,23 +10010,24 @@ function renderMdPlayers(){
   }
 }
 function mdSetState(m){
+  if (m.seed != null && m.seed !== MD.seed){ MD.seed = m.seed; MD.cells = mdLayout(m.seed); MD.broke = []; MD.figs.clear(); }
+  MD.pos = m.pos || MD.pos;
   MD.places = m.places; MD.aboard = m.aboard || []; MD.water = m.water || []; MD.dead = m.dead || [];
   MD.lives = m.lives || {}; MD.plank = m.plank || {}; MD.cramp = m.cramp || []; MD.sc = m.sc || MD.sc;
 }
 function meduseRecv(m){
   if (!MD) return;
   if (m.t === 'md_turn'){
-    if (m.r !== MD.r){ MD.figs.clear(); MD.Dv = 0; MD.fin = null; MD.banner = null; MD.cells = mdLayout(m.seed); MD.broke = []; }
-    MD.r = m.r; MD.n = m.n; MD.T = m.T || MD_TURNS; mdSetState(m);
+    MD.n = m.n; mdSetState(m);
     MD.ready = []; MD.acts = null; MD.mine = null; MD.hitMode = false; MD.ph = 'pick'; MD.deadline = performance.now() + (m.left|0)*1000; MD.queue = [];
-    $('mdTurn').textContent = 'Traversée ' + m.r + '/' + MD_ROUNDS + ' · tour ' + m.n + '/' + MD.T;
-    const dead = MD.dead.includes(me.id);
-    mdHead(MD.spec ? 'Spectateur' : dead ? 'Noyé…' : 'Que faites-vous ?');
-    const over = MD.aboard.length - MD.places + 1;
-    $('mdHelp').textContent = MD.spec ? 'Vous regardez la traversée.' : dead ? 'Plus de vie : vous reprendrez la mer à la prochaine traversée.'
-      : (over > 0 ? 'Après ce tour, il restera ' + (MD.places - 1) + ' places pour ' + MD.aboard.length + ' : ' + over + ' de trop glisseront à l\'eau. ' : '')
+    const alive = players.filter(p => (MD.lives[p.id] || 0) > 0 && !p.left).length;
+    $('mdTurn').textContent = 'Tour ' + m.n + ' · ' + alive + ' en vie';
+    const dead = MD.dead.includes(me.id), next = MD.places > 1 ? MD.cells.order[MD.places - 1] : null, edge = mdOnRaft() && MD.pos[me.id] === next;
+    mdHead(MD.spec ? 'Spectateur' : dead ? 'Emporté…' : edge ? 'Votre place va céder !' : 'Que faites-vous ?');
+    $('mdHelp').textContent = MD.spec ? 'Vous regardez le naufrage.' : dead ? 'Plus de vie : vous regardez la fin.'
+      : (edge ? 'Votre morceau de radeau est le prochain à céder : frappez quelqu\'un plus au centre pour prendre sa place, sinon vous tombez. ' : MD.places === 1 && MD.aboard.length > 1 ? 'Un seul morceau pour tout le monde : à chaque tour, quelqu\'un glisse, d\'abord ceux qui ne s\'accrochent pas. ' : '')
         + (MD.cramp.includes(me.id) ? 'Crampe : pas d\'accroche ce tour-ci. ' : '') + (MD.plank[me.id] ? 'Vous avez une planche : frappez quelqu\'un, ou gardez-la.' : 'Sans planche, impossible de frapper : ramassez-en une.');
-    if (m.n === 1){ sfx('go'); boom('TRAVERSÉE ' + m.r, { size:30, x:.5, y:.35, pal:BOOM_COLORS[1], ms:1100 }); } else sfx('myturn');
+    if (m.n === 1){ sfx('go'); boom('SAUVE QUI PEUT !', { size:30, x:.5, y:.35, pal:BOOM_COLORS[1], ms:1100 }); } else sfx(edge ? 'fail' : 'myturn');
     mdButtons(); renderMdPlayers();
   } else if (m.t === 'md_ready'){ MD.ready = m.ids || []; renderMdPlayers(); }
   else if (m.t === 'md_res'){
@@ -10034,17 +10055,18 @@ function mdApply(e){
     if (e.k === 'hit'){
       MD.lives[e.b] = Math.max(0, (MD.lives[e.b] ?? MD_LIVES) - 1);
       setTimeout(() => { if (MD) mdFall(e.b); }, 260);
-      mdToast(mdName(e.a) + ' frappe ' + mdName(e.b) + ' : à l\'eau, une vie en moins !');
+      setTimeout(() => { if (MD && MD.aboard.includes(e.a)) MD.pos[e.a] = e.c; }, 520);      // and takes the place
+      mdToast(mdName(e.a) + ' frappe ' + mdName(e.b) + ' et prend sa place !');
       if (e.b === me.id) boom('BAM !', { size:34, x:.5, y:.35, pal:BOOM_COLORS[2], ms:900 });
     } else mdToast(mdName(e.a) + ' frappe ' + mdName(e.b) + '… qui s\'accroche ! La planche casse');
   } else if (e.k === 'break'){
-    const gone = MD.cells.order[MD.places - 1];
-    if (gone != null){ MD.broke.push({ c:gone, t:performance.now() }); }
+    MD.broke.push({ c:e.c, t:performance.now() });
     MD.places = e.n; sfx('creak'); setTimeout(() => sfx('crash'), 300);
-    mdToast('CRAAAC ! Le radeau perd un morceau : plus que ' + e.n + ' places');
+    for (const id of e.who || []){ MD.lives[id] = Math.max(0, (MD.lives[id] ?? MD_LIVES) - 1); mdFall(id); if (id === me.id) boom('PLOUF !', { size:32, x:.5, y:.35, pal:BOOM_COLORS[3], ms:900 }); }
+    mdToast('CRAAAC ! Le radeau perd un morceau' + ((e.who || []).length ? ' : ' + e.who.map(mdName).join(', ') + ' à l\'eau' : '') + ' (plus que ' + e.n + ')');
   } else if (e.k === 'slip'){
     MD.lives[e.a] = Math.max(0, (MD.lives[e.a] ?? MD_LIVES) - 1);
-    mdFall(e.a); mdToast('Trop de monde : ' + mdName(e.a) + ' glisse à l\'eau, une vie en moins');
+    mdFall(e.a); mdToast('Trop serrés : ' + mdName(e.a) + ' glisse à l\'eau');
     if (e.a === me.id) boom('PLOUF !', { size:32, x:.5, y:.35, pal:BOOM_COLORS[3], ms:900 });
   } else if (e.k === 'drown'){
     MD.water = MD.water.filter(x => x !== e.a); if (!MD.dead.includes(e.a)) MD.dead.push(e.a);
@@ -10053,12 +10075,13 @@ function mdApply(e){
   } else if (e.k === 'sum'){
     const m = e.m;
     mdSetState(m);
-    if (m.fin === 'ok'){
-      const n = MD.aboard.length;
-      MD.banner = { big:'SAUVÉS !', small:n + ' rescapé' + (n > 1 ? 's' : '') + ' : ' + m.share + ' points chacun', col:'#3DDC97' };
-      MD.fin = 'ok'; sfx(MD.aboard.includes(me.id) ? 'win' : 'lose');
-    } else if (m.fin === 'sunk'){ MD.banner = { big:'PERSONNE À BORD !', small:'Le navire ne trouve que des planches', col:'#E6262B' }; MD.fin = 'sunk'; sfx('sunk'); }
-    mdHead(m.fin ? (m.fin === 'ok' ? 'Le navire est là !' : 'Naufrage…') : 'Tour suivant…');
+    if (m.fin){
+      const w = m.fin === 'none' ? null : m.fin;
+      MD.fin = w || 'none';
+      MD.banner = w === me.id ? { big:'VOUS GAGNEZ !', small:'Dernier debout sur le radeau', col:'#3DDC97' } : w ? { big:mdName(w).toUpperCase() + ' GAGNE !', small:'Dernier debout sur le radeau', col:'#FFD93B' } : { big:'PERSONNE !', small:'La mer a tout pris', col:'#E6262B' };
+      sfx(w === me.id ? 'win' : 'lose');
+    }
+    mdHead(m.fin ? 'Fin du naufrage' : 'Tour suivant…');
     renderMdPlayers();
   }
 }
@@ -10100,18 +10123,20 @@ function mdLayout(seed){
   cells[order[0]].mast = true; cells[order[1]].barrel = true;
   return { cells, order };
 }
-// the cells still afloat, in the order people stand on them
+// the cells still afloat, from the middle outwards
 const mdLive = () => MD.cells.order.slice(0, Math.max(0, MD.places));
-const mdSink = () => MD.n/Math.max(1, MD.T)*12;
+const mdSink = () => Math.min(MD.n, 8)/8*12;
 function mdSlots(){
-  const out = new Map(), dy = mdSink(), live = mdLive();
-  // people on the remaining places; when there are too many, they squeeze on the same logs
-  MD.aboard.forEach((id, k) => {
-    const ci = live[k % Math.max(1, live.length)], c = MD.cells.cells[ci], dup = Math.floor(k/Math.max(1, live.length));
-    if (!c){ const q = MD_SWIM[k % MD_SWIM.length]; out.set(id, { x:q[0], y:q[1], deck:false }); return; }
-    const q = mdDeck(c.s + (dup ? (dup % 2 ? -.05 : .05) : 0), c.t + (dup ? .04 : 0), dy);
-    out.set(id, { x:q[0], y:q[1] - (c.barrel && !dup ? 26 : 0), deck:true, raised:c.barrel && !dup, squeezed:dup > 0 || MD.aboard.length > live.length, cell:ci });
-  });
+  const out = new Map(), dy = mdSink(), live = mdLive(), byCell = new Map();
+  for (const id of MD.aboard){ let c = MD.pos[id]; if (!live.includes(c)) c = live[live.length - 1]; if (!byCell.has(c)) byCell.set(c, []); byCell.get(c).push(id); }
+  // several on one piece: they squeeze side by side
+  for (const [ci, ids] of byCell){
+    const c = MD.cells.cells[ci]; if (!c) continue;
+    ids.forEach((id, k) => {
+      const off = ids.length > 1 ? (k - (ids.length - 1)/2)*.06 : 0, q = mdDeck(c.s + off, c.t + Math.abs(off)*.3, dy);
+      out.set(id, { x:q[0], y:q[1] - (c.barrel && ids.length === 1 ? 26 : 0), deck:true, raised:c.barrel && ids.length === 1, squeezed:ids.length > 1, cell:ci });
+    });
+  }
   MD.water.forEach((id, k) => { const q = MD_SWIM[k % MD_SWIM.length]; out.set(id, { x:q[0], y:q[1], deck:false }); });
   MD.dead.forEach((id, k) => { const q = MD_GONE[k % MD_GONE.length]; out.set(id, { x:q[0], y:q[1], deck:false, gone:true }); });
   return out;
@@ -10124,8 +10149,6 @@ function meduseFrame(dtMs, now){
     const left = Math.max(0, Math.ceil((MD.deadline - now)/1000));
     if (left !== MD.shownLeft){ MD.shownLeft = left; $('mdTime').textContent = '⏱ ' + left + ' s'; $('mdTime').classList.toggle('low', left <= 3); if (left <= 3 && left > 0 && !MD.mine && mdOnRaft()) sfx('count'); }
   } else if (MD.shownLeft !== -1){ MD.shownLeft = -1; $('mdTime').textContent = '⏱ –'; $('mdTime').classList.remove('low'); }
-  const dTarget = 100*Math.min(1, (MD.n - (MD.ph === 'pick' ? 1 : 0))/Math.max(1, MD.T));
-  MD.Dv += (dTarget - MD.Dv)*Math.min(1, dt*1.5);
   const slots = mdSlots();
   for (const [id, s] of slots){
     let f = MD.figs.get(id);
@@ -10272,8 +10295,8 @@ function mdDraw(ctx, Wd, Ht, now, art){
     if (!f.deck && !flying) pose = 'swim';
     else if (flying) pose = 'grip';
     else if (a && ['hit', 'plank', 'grip'].includes(a)) pose = a;
-    else if (f.raised && (MD.Dv > 35 || MD.fin === 'ok') && !MD.plank[id]) pose = 'wave';
-    else if (MD.fin === 'ok') pose = 'wave';
+    else if (MD.fin && MD.fin === id) pose = 'wave';
+    else if (f.raised && !MD.plank[id]) pose = 'wave';
     const far = f.gone ? Math.max(0, Math.min(1, (330 - f.by)/120)) : 0;
     mdPerson(ctx, x, y, p, i, pose, dir, t + i, f.gone ? 1.1 - far*.55 : 1.05, mine, !!MD.plank[id] && f.deck && !flying);
     if (f.gone && far < .9){ ctx.font = '900 13px Nunito, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 3; ctx.strokeStyle = '#000'; ctx.fillStyle = '#FFD93B'; const h = 'À l\'aide !', hy = y - 40 - (1 - far)*8; ctx.strokeText(h, x, hy); ctx.fillText(h, x, hy);
@@ -10289,7 +10312,7 @@ function mdDraw(ctx, Wd, Ht, now, art){
     mdCell(ctx, c, dy, dx*k2, dyy*k2 + 26*k2*k2, 1 - k2, false, t);
   }
   // the raft that is left, back to front, with the mast, the barrel and the people
-  const live = mdLive(), warnCell = MD.ph !== 'show' && MD.places > MD_FINAL && MD.n < MD.T ? MD.cells.order[MD.places - 1] : null;
+  const live = mdLive(), warnCell = MD.ph !== 'show' && MD.places > 1 && !MD.fin ? MD.cells.order[MD.places - 1] : null;
   const items = [];
   for (const ci of live){
     const c = MD.cells.cells[ci], q = mdDeck(c.s, c.t, dy);
@@ -10328,25 +10351,20 @@ function mdDraw(ctx, Wd, Ht, now, art){
   }
   if (art){ ctx.restore(); return; }
   // the places left: one log icon per place, crossed when gone; red when there are too many people
-  const n = MD.aboard.length, over = n > MD.places;
+  const n = players.filter(p => (MD.lives[p.id] ?? MD_LIVES) > 0 && !p.left).length;
   ctx.fillStyle = 'rgba(255,255,255,.92)'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
-  ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(12, 40, 236, 34, 8); else ctx.rect(12, 40, 236, 34); ctx.fill(); ctx.stroke();
-  ctx.font = '15px Bangers, Impact, sans-serif'; ctx.textAlign = 'left'; ctx.fillStyle = '#000'; ctx.fillText('PLACES', 20, 62);
+  ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(12, 12, 236, 34, 8); else ctx.rect(12, 12, 236, 34); ctx.fill(); ctx.stroke();
+  ctx.font = '15px Bangers, Impact, sans-serif'; ctx.textAlign = 'left'; ctx.fillStyle = '#000'; ctx.fillText('RADEAU', 20, 34);
   for (let i = 0; i < MD_CREW; i++){
-    const x = 78 + i*20, ok = i < MD.places, warn = i === MD.places - 1 && warnCell != null;
-    ctx.save(); ctx.translate(x, 57);
+    const x = 82 + i*20, ok = i < MD.places, warn = i === MD.places - 1 && warnCell != null;
+    ctx.save(); ctx.translate(x, 29);
     ctx.fillStyle = ok ? (warn ? (Math.floor(now/300) % 2 ? '#E6262B' : '#8A5E36') : '#8A5E36') : '#B9D4CF';
     ctx.strokeStyle = '#000'; ctx.lineWidth = 2; ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(-7, -9, 14, 18, 3); else ctx.rect(-7, -9, 14, 18); ctx.fill(); ctx.stroke();
     if (!ok){ ctx.strokeStyle = '#1E5BFF'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(-6, 2); ctx.quadraticCurveTo(-2, -2, 0, 2); ctx.quadraticCurveTo(3, 6, 6, 2); ctx.stroke(); }
     ctx.restore();
   }
-  ctx.font = '15px Bangers, Impact, sans-serif'; ctx.textAlign = 'left'; ctx.lineWidth = 3; ctx.strokeStyle = '#000'; ctx.fillStyle = over ? '#FF5A5F' : '#fff';
-  const tx = 'À BORD ' + n + ' / ' + MD.places + (over ? ' : TROP !' : ''); ctx.strokeText(tx, 16, 92); ctx.fillText(tx, 16, 92);
-  // the ship coming
-  ctx.fillStyle = '#fff'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.fillRect(60, 14, 480, 18); ctx.strokeRect(60, 14, 480, 18);
-  ctx.fillStyle = '#3DDC97'; ctx.fillRect(62, 16, 476*Math.min(1, MD.Dv/100), 14);
-  ctx.textAlign = 'right'; ctx.font = '15px Bangers, Impact, sans-serif'; ctx.strokeStyle = '#000'; ctx.fillStyle = '#fff'; ctx.lineWidth = 3;
-  const sl = 'NAVIRE : ' + Math.max(0, MD.T - MD.n + (MD.ph === 'pick' ? 1 : 0)) + ' TOUR' + (MD.T - MD.n + (MD.ph === 'pick' ? 1 : 0) > 1 ? 'S' : ''); ctx.strokeText(sl, 538, 50); ctx.fillText(sl, 538, 50);
+  ctx.font = '15px Bangers, Impact, sans-serif'; ctx.textAlign = 'left'; ctx.lineWidth = 3; ctx.strokeStyle = '#000'; ctx.fillStyle = '#fff';
+  const tx = 'ENCORE EN VIE : ' + n; ctx.strokeText(tx, 16, 64); ctx.fillText(tx, 16, 64);
   if (MD.banner){
     ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.fillRect(0, 110, 600, 110);
     ctx.textAlign = 'center'; ctx.font = '46px Bangers, Impact, sans-serif'; ctx.lineWidth = 6; ctx.strokeStyle = '#000'; ctx.fillStyle = MD.banner.col;
@@ -10411,7 +10429,7 @@ const BRIEF = {
   agility:{ ctl:[['📱', 'Choisissez un chien. Haie, pneu, triple : un tap quand le cercle est vert. Slalom : tracez le zigzag. Tunnel : doigt sur le chien, glissez. Passerelle : restez appuyé, lâchez sur le jaune. Bascule : un tap sur le vert au milieu. Table : un tap puis plus rien. Sprint final : tapez à toute vitesse.'], ['💻', 'Les mêmes gestes à la souris, ou Espace (à marteler pour le sprint).']],
     tip:'Chaque race a 6 étoiles : Vitesse, Saut ou Énergie. Un Whippet file entre les obstacles, un Jack Russell a plus de marge sur les haies, un Corgi va plus vite au sprint et dans les obstacles longs.' },
   meduse:{ ctl:[['📱', 'À chaque tour, touchez votre choix : 🪵 ramasser une planche, 💥 frapper (avec une planche en main, puis le nom de la victime, ou touchez-la sur le radeau), ✊ s\'accrocher.'], ['💻', 'Cliquez les boutons, ou touches 1 (planche), 2 (frapper), 3 (s\'accrocher). Vous pouvez changer d\'avis jusqu\'à la fin des 10 secondes.']],
-    tip:'Les places en haut à gauche : la prochaine à céder clignote en rouge. Trop de monde à bord, et les surnuméraires glissent à l\'eau, d\'abord ceux qui ne s\'accrochent pas. On ne peut pas s\'accrocher deux tours de suite.' },
+    tip:'Le morceau qui va céder clignote en rouge : si vous êtes dessus, frappez quelqu\'un plus au centre pour prendre sa place. Ceux qui remontent de l\'eau prennent les places du bord. On ne peut pas s\'accrocher deux tours de suite.' },
   galop:{ ctl:[['📱', 'Choisissez un cheval. ◀ ▶ pour vous décaler, GALOP pour accélérer (coûte de l\'énergie), RALENTIR pour souffler.'], ['💻', '← → se décaler · ↑ ou Espace galop · ↓ ralentir. Ou cliquez les boutons.']],
     tip:'Partir au galop donne un départ rapide mais entame l\'énergie. Collé derrière un cheval, vous récupérez plus vite.' }
 };
