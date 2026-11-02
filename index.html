@@ -1225,6 +1225,7 @@ const LANG_KEY = PREFIX + 'lang';
 const LANG = (() => {
   let l = null;
   try { l = localStorage.getItem(LANG_KEY); } catch(_){}
+  try { const q = new URLSearchParams(location.search).get('lang'); if (q === 'fr' || q === 'en'){ l = q; localStorage.setItem(LANG_KEY, q); } } catch(_){}   // from a game page in that language
   if (l !== 'fr' && l !== 'en') l = /^fr\b/i.test(navigator.language || '') ? 'fr' : 'en';
   return window.BASTON_EN ? l : 'fr';
 })();
