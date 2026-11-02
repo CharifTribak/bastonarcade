@@ -1336,7 +1336,7 @@ const GAME_DESC = {
   lumber:'Concours de bûcherons, tronçonneuse en main : vu du dessus, choisissez où tombe votre arbre sans rien écraser, puis abattez-le comme un vrai, en suivant les pointillés : les deux coupes de l\'entaille, puis le trait d\'abattage. Plus les coupes sont droites, plus l\'arbre tombe là où vous l\'avez décidé, et viser une ouverture étroite rapporte un gros bonus. Écraser une maison, une voiture ou un autre arbre élimine. Trois manches de plus en plus dures, tout le monde joue en même temps.',
   agility:'Concours d\'agility : chacun choisit son chien (Border collie, Whippet, Caniche…) et le guide sur le même parcours, en même temps. Entre les obstacles, le chien court seul. Haies, pneu et triple : touchez au bon moment. Slalom : tracez le zigzag. Tunnel : suivez-le du doigt. Passerelle : maintenez, relâchez sur le jaune. Bascule : stop au milieu. Table : « Couché ! » puis ne touchez plus. Sprint final : tapez le plus vite possible. Chaque faute coûte 5 s, le meilleur temps gagne.',
   galop:'Course de galop de 3000 m, chacun sur son cheval, vue du dessus. Choisissez votre monture parmi 20, nouvelles à chaque partie (accélération, vitesse, maniabilité, et une forme du jour cachée), des robots complètent jusqu\'à 8 partants. Le cheval suit la piste tout seul : vous vous décalez à gauche ou à droite et vous demandez du galop, qui coûte de l\'énergie. Collé derrière un autre, vous récupérez plus vite et profitez de ses accélérations.',
-  meduse:'Le radeau de la Méduse, en version bande dessinée : huit naufragés, chacun sur un morceau du radeau. À chaque tour, le morceau le plus au bord se détache et ceux qui sont dessus tombent à l\'eau. Chaque tour, chacun choisit en secret : ramasser une planche, frapper quelqu\'un avec (il tombe à l\'eau et perd une vie sur 3, la planche casse, et vous prenez sa place), ou s\'accrocher (on ne peut pas vous faire tomber, mais pas deux tours de suite). Tombé avec des vies, on remonte au tour suivant sur le morceau libre le plus au bord, les mains vides. Sans vie, on est emporté. Le dernier debout gagne.',
+  meduse:'Le radeau de la Méduse, en version bande dessinée : cinq naufragés (des robots complètent), chacun sur un morceau du radeau. À chaque tour, le morceau le plus au bord se détache et ceux qui sont dessus tombent à l\'eau. Chaque tour, chacun choisit en secret : ramasser une planche, frapper quelqu\'un avec (il tombe à l\'eau et perd une vie sur 3, la planche casse, et vous prenez sa place), ou s\'accrocher (on ne peut pas vous faire tomber, mais pas deux tours de suite). Tombé avec des vies, on remonte au tour suivant sur le morceau libre le plus au bord, les mains vides. Sans vie, on est emporté. Le dernier debout gagne.',
   derby:'Course de chevaux : tout le monde reçoit la même série de figures à tracer. Chaque figure réussie fait avancer votre cheval, plus loin si elle est complexe et bien tracée. Le premier à la ligne gagne.'
 };
 
@@ -9805,12 +9805,12 @@ for (const b of $('stRange').querySelectorAll('button')) b.onclick = () => { ST.
 
 
 // ================= MÉDUSE : a raft that keeps shrinking, the last one standing wins =================
-// After Géricault's painting (1819, public domain). Eight castaways (robots fill in), each on a piece of the raft.
+// After Géricault's painting (1819, public domain). Five castaways (robots fill in), each on a piece of the raft.
 // Every turn the outermost piece breaks off, and whoever stands on it falls into the sea. Each turn, all at once and in
 // secret: pick up a plank, hit someone with it (they fall in and lose one of 3 lives, the plank breaks, and you take their
 // place), or hold on (nobody can knock you off, but not two turns running). Fallen with lives left, you climb back next
 // turn onto the outermost free piece, empty-handed. No lives left: swept away. The last one left wins.
-const MD_PICK = 10, MD_STEP = 950, MD_CREW = 8, MD_LIVES = 3, MD_MAXT = 30;
+const MD_PICK = 10, MD_STEP = 950, MD_CREW = 5, MD_LIVES = 3, MD_MAXT = 30;
 const MD_ACTS = { plank:{ ic:'🪵', n:'Ramasser une planche', s:'Planche' }, hit:{ ic:'💥', n:'Frapper', s:'Frapper' }, grip:{ ic:'✊', n:'S\'accrocher', s:'S\'accrocher' },
   idle:{ ic:'💤', n:'Rien', s:'Rien' } };
 let HMD = null, MD = null;
@@ -9829,7 +9829,7 @@ function meduseHostStart(){
   H.n = players.length;
   for (const p of players) H.stats[p.id] = { pts:0, turns:0, hits:0, dunks:0, out:0, left:false };
   const seed = Math.floor(Math.random()*1e9), L = mdLayout(seed);
-  HMD = { timers:[], t:0, seed, order:L.order, places:L.cells.length, pos:{}, aboard:[], water:[], dead:[], lives:{}, plank:{}, cramp:[], prev:{}, picks:{}, ph:'idle' };
+  HMD = { timers:[], t:0, seed, order:L.order, places:MD_CREW, pos:{}, aboard:[], water:[], dead:[], lives:{}, plank:{}, cramp:[], prev:{}, picks:{}, ph:'idle' };
   // everyone on a piece of the raft, at random
   const ids = players.map(p => p.id).sort(() => Math.random() - .5);
   ids.forEach((id, k) => { HMD.pos[id] = HMD.order[k % HMD.order.length]; HMD.lives[id] = MD_LIVES; });
@@ -9955,7 +9955,7 @@ function mdBot(id){
   if (!others.length) return cramp ? { a:'plank' } : { a:'grip' };
   if (!edge && !cramp && R() < .2) return { a:'grip' };
   const pool = edge ? others.filter(x => rk(HMD.pos[x]) < rk(HMD.pos[id])) : others, list = pool.length ? pool : others;
-  const w = list.map(x => 1 + (HMD.places - rk(HMD.pos[x]))*.5 + (HMD.cramp.includes(x) ? 2.5 : 0) + (HMD.plank[x] ? 1.5 : 0));
+  const w = list.map(x => 1 + (HMD.places - rk(HMD.pos[x]))*.5 + (HMD.cramp.includes(x) ? 6 : 0) + (HMD.plank[x] ? 1.5 : 0));
   let k = R()*w.reduce((a, b) => a + b, 0), i = 0;
   while (i < w.length - 1 && (k -= w[i]) > 0) i++;
   return { a:'hit', tg:list[i] };
