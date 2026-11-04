@@ -441,21 +441,18 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 @media (max-width:560px){.agtrait{display:none}}
 
 /* ---- méduse ---- */
-#mdWrap,.mdhead,.mdbtns,.mdtargets{width:min(100%,64vh,600px)}
-#mdCv{display:block;width:100%;height:auto;aspect-ratio:600/420;touch-action:manipulation;border:3px solid #000;box-shadow:6px 6px 0 #000}
-#mdTime.low{background:var(--accent);color:#fff}
-.mdbtns{display:grid;gap:8px}
-.mdbtns.n4{grid-template-columns:repeat(4,1fr)}
-.mdbtns.n2{grid-template-columns:repeat(2,1fr)}
-.mdbtns.n3{grid-template-columns:repeat(3,1fr)}
-.mdbtns button:disabled{opacity:.5;background:#ddd}
-.mdbtns button{display:flex;flex-direction:column;align-items:center;gap:2px;background:#fff;color:#000;font-size:clamp(14px,3.8vw,19px);padding:8px 4px;min-height:64px;touch-action:manipulation}
-.mdbtns button .mdic{font-size:24px;line-height:1}
-.mdbtns button[aria-pressed="true"]{background:#FFD21F;box-shadow:2px 2px 0 #000;transform:translate(2px,2px)}
-.mdtargets{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;background:#fff;border:3px solid #000;padding:8px}
-.mdtargets b{font-size:14px;width:100%;text-align:center}
-.mdtg{display:flex;align-items:center;gap:6px;background:#fff;color:#000;font-family:var(--body);font-weight:900;font-size:15px;letter-spacing:0;padding:6px 12px;min-height:44px}
-.mdtg i{width:16px;height:16px;border-radius:50%;border:2px solid #000}
+#mdWrap,.mdhead,.mdctl,.mdtilt{width:min(100%,64vh,600px)}
+#mdCv{display:block;width:100%;height:auto;aspect-ratio:600/420;touch-action:none;border:3px solid #000;box-shadow:6px 6px 0 #000}
+.mdctl{display:grid;grid-template-columns:1fr 70px 1fr;gap:10px;align-items:center}
+.mdctl button{font-size:clamp(16px,4.4vw,22px);min-height:64px;padding:8px 4px;touch-action:none;user-select:none;-webkit-user-select:none}
+#mdGrip{background:#fff;color:#000}
+#mdGrip.on{background:#FFD21F;transform:translate(3px,3px);box-shadow:none}
+#mdPush{background:var(--accent);color:#fff}
+.mdctl button:disabled{opacity:.45}
+.mdst{height:18px;border:3px solid #000;background:#fff}
+.mdst i{display:block;height:100%;background:#3DDC97;transition:width .1s}
+.mdst i.low{background:#E6262B}
+.mdtilt{background:#1E5BFF;color:#fff;font-size:18px;min-height:48px}
 #mdPlayers{gap:5px}
 #mdPlayers li{font-size:12px;padding:2px 8px 2px 4px}
 #mdPlayers li.me{background:#FFF3B0}
@@ -1080,14 +1077,18 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
 <!-- MÉDUSE -->
 <section id="scrMeduse" hidden>
   <div class="naval">
-    <div class="nvhead mdhead"><div class="nvturn" id="mdHead">Méduse</div><div class="dkchips"><span class="cuend" id="mdTurn">Traversée 1/3</span><span class="cuend" id="mdTime">⏱ –</span></div></div>
+    <div class="nvhead mdhead"><div class="nvturn" id="mdHead">Méduse</div><div class="dkchips"><span class="cuend" id="mdTurn">Manche 1</span><span class="cuend" id="mdTime">⏱ –</span></div></div>
     <div class="nvwrap" id="mdWrap">
       <canvas id="mdCv" width="600" height="420" aria-label="Le radeau"></canvas>
       <div class="msg pm" id="mdMsg"></div>
       <div class="toast pm" id="mdToast" aria-live="polite"></div>
     </div>
-    <div class="mdbtns n4" id="mdBtns" hidden></div>
-    <div class="mdtargets" id="mdTargets" hidden></div>
+    <button class="mdtilt" id="mdTiltBtn" type="button" hidden>📱 Activer l'inclinaison</button>
+    <div class="mdctl" id="mdCtl">
+      <button id="mdGrip" type="button">✊ S'accrocher</button>
+      <div class="mdst" title="Force"><i id="mdSt"></i></div>
+      <button id="mdPush" type="button">💥 Pousser</button>
+    </div>
     <ul class="nvplayers" id="mdPlayers"></ul>
     <p class="hint ctlhelp" id="mdHelp"></p>
   </div>
@@ -1317,7 +1318,7 @@ const GAME_SHORT = {
   lumber:'Choisissez où tombe votre arbre, puis sciez-le proprement. N\'écrasez rien !',
   agility:'Choisissez un chien et guidez-le sur le parcours : chaque obstacle a son geste. Le meilleur temps gagne.',
   galop:'Choisissez un cheval, placez-vous et dosez son énergie sur 3000 m. Le premier à la ligne gagne.',
-  meduse:'Le radeau rétrécit par le bord à chaque tour. Frappez les naufragés du centre pour prendre leur place : le dernier debout gagne.'
+  meduse:'Inclinez le téléphone pour garder l\'équilibre sur un radeau qui penche, et poussez les autres à l\'eau. Le dernier à bord gagne.'
 };
 const GAME_DESC = {
   tetris:'Empilez des pièces de 2, 3 et 5 briques. Chaque ligne effacée envoie des briques fendues à vos adversaires. Effacez une ligne collée à une brique fendue : elle éclate et repart chez son expéditeur.',
@@ -1336,7 +1337,7 @@ const GAME_DESC = {
   lumber:'Concours de bûcherons, tronçonneuse en main : vu du dessus, choisissez où tombe votre arbre sans rien écraser, puis abattez-le comme un vrai, en suivant les pointillés : les deux coupes de l\'entaille, puis le trait d\'abattage. Plus les coupes sont droites, plus l\'arbre tombe là où vous l\'avez décidé, et viser une ouverture étroite rapporte un gros bonus. Écraser une maison, une voiture ou un autre arbre élimine. Trois manches de plus en plus dures, tout le monde joue en même temps.',
   agility:'Concours d\'agility : chacun choisit son chien (Border collie, Whippet, Caniche…) et le guide sur le même parcours, en même temps. Entre les obstacles, le chien court seul. Haies, pneu et triple : touchez au bon moment. Slalom : tracez le zigzag. Tunnel : suivez-le du doigt. Passerelle : maintenez, relâchez sur le jaune. Bascule : stop au milieu. Table : « Couché ! » puis ne touchez plus. Sprint final : tapez le plus vite possible. Chaque faute coûte 5 s, le meilleur temps gagne.',
   galop:'Course de galop de 3000 m, chacun sur son cheval, vue du dessus. Choisissez votre monture parmi 20, nouvelles à chaque partie (accélération, vitesse, maniabilité, et une forme du jour cachée), des robots complètent jusqu\'à 8 partants. Le cheval suit la piste tout seul : vous vous décalez à gauche ou à droite et vous demandez du galop, qui coûte de l\'énergie. Collé derrière un autre, vous récupérez plus vite et profitez de ses accélérations.',
-  meduse:'Le radeau de la Méduse, en version bande dessinée : cinq naufragés (des robots complètent), chacun sur un morceau du radeau. À chaque tour, le morceau le plus au bord se détache et ceux qui sont dessus tombent à l\'eau. Chaque tour, chacun choisit en secret : ramasser une planche, frapper quelqu\'un avec (il tombe à l\'eau et perd une vie sur 3, la planche casse, et vous prenez sa place), ou s\'accrocher (on ne peut pas vous faire tomber, mais pas deux tours de suite). Tombé avec des vies, on remonte au tour suivant sur le morceau libre le plus au bord, les mains vides. Sans vie, on est emporté. Le dernier debout gagne.',
+  meduse:'Le radeau de la Méduse, en version bande dessinée : jusqu\'à cinq naufragés (des robots complètent) sur un radeau qui penche. On marche en inclinant son téléphone, le radeau bascule avec le poids de tout le monde et les vagues, et l\'on glisse vers le bord. « S\'accrocher » empêche de glisser mais vide votre force ; « Pousser » donne un coup d\'épaule au plus proche et en coûte un gros morceau. La mer grossit, d\'autant plus qu\'il y a de monde à bord : jeter quelqu\'un à l\'eau calme les vagues. Le dernier sur le radeau gagne la manche, le premier à 2 manches gagne.',
   derby:'Course de chevaux : tout le monde reçoit la même série de figures à tracer. Chaque figure réussie fait avancer votre cheval, plus loin si elle est complexe et bien tracée. Le premier à la ligne gagne.'
 };
 
@@ -1757,8 +1758,10 @@ function hostHandle(id, m){
     galopPick(id, m.h);
   } else if (m.t === 'gp_in'){
     galopInput(id, m);
-  } else if (m.t === 'md_pick'){
-    mdPick(id, m);
+  } else if (m.t === 'md_in'){
+    meduseInput(id, m);
+  } else if (m.t === 'md_push'){
+    medusePush(id);
   } else if (m.t === 'ag_pick'){
     agilityPick(id, m.b);
   } else if (m.t === 'ag_p'){
@@ -1860,7 +1863,7 @@ function clientRecv(m){
     case 'dk_beat': case 'dk_s': case 'dk_tap': case 'dk_end': case 'dk_ev': drakkarRecv(m); break;
     case 'lj_round': case 'lj_res': case 'lj_sum': case 'lj_left': lumberRecv(m); break;
     case 'ag_p': case 'ag_done': case 'ag_left': case 'ag_pick': case 'ag_go': agilityRecv(m); break;
-    case 'md_turn': case 'md_ready': case 'md_res': case 'md_left': meduseRecv(m); break;
+    case 'md_round': case 'md_go': case 'md_s': case 'md_ev': case 'md_res': meduseRecv(m); break;
     case 'gp_pick': case 'gp_race': case 'gp_go': case 'gp_s': case 'gp_fin': galopRecv(m); break;
     case 'brief': if (phase === 'lobby') openBrief(m.game, m.ready); break;
     case 'votes': VOTES = m.v && typeof m.v === 'object' ? m.v : {}; renderVotes(); if (!$('gameSheet').hidden) openGameSheet($('gameSheet').dataset.g); break;
@@ -2177,12 +2180,12 @@ function showEnd(ranking, game){
   if (LJ){ LJ.over = true; LJ.ph = 'end'; sawStop(); }
   if (AG){ AG.over = true; if (!AG.done) AG.mode = 'watch'; }
   if (GP) GP.over = true;
-  if (MD){ MD.over = true; MD.ph = 'end'; MD.queue = []; }
+  if (MD){ MD.over = true; MD.ph = 'end'; }
   const hd = $('rankHead'); hd.textContent = '';
-  for (const h of ['#','Joueur', ...(medu ? ['Tours tenus','Coups','Chutes'] : galop ? ['Cheval','Temps','Écart'] : agil ? ['Temps','Fautes','Total'] : lumber ? ['Points','Précision','Manches'] : viking ? ['Rôle','Coups','Synchro'] : coop ? ['Manches','Moutons','Ouaf'] : tank ? ['Char','Rôle','Touches'] : dodge ? ['Vies','Touches','Arrêts'] : kab ? ['Points','Raids réussis','Plaquages'] : master ? ['Points','Trouvés','Essais'] : chairs ? ['Vies','Chaises','Réflexe'] : curl ? ['Points','Maison','Meilleure'] : pong ? ['Vies','Arrêts'] : derby ? ['Figures','Distance','Temps'] : naval ? ['Tirs','Touchés','À flot'] : mole ? ['Points','Tapées','Échappées'] : ['Lignes','Briques','Score'])]){
+  for (const h of ['#','Joueur', ...(medu ? ['Manches','Poussées','Chutes','Tenu'] : galop ? ['Cheval','Temps','Écart'] : agil ? ['Temps','Fautes','Total'] : lumber ? ['Points','Précision','Manches'] : viking ? ['Rôle','Coups','Synchro'] : coop ? ['Manches','Moutons','Ouaf'] : tank ? ['Char','Rôle','Touches'] : dodge ? ['Vies','Touches','Arrêts'] : kab ? ['Points','Raids réussis','Plaquages'] : master ? ['Points','Trouvés','Essais'] : chairs ? ['Vies','Chaises','Réflexe'] : curl ? ['Points','Maison','Meilleure'] : pong ? ['Vies','Arrêts'] : derby ? ['Figures','Distance','Temps'] : naval ? ['Tirs','Touchés','À flot'] : mole ? ['Points','Tapées','Échappées'] : ['Lignes','Briques','Score'])]){
     const th = document.createElement('th'); th.textContent = h; hd.append(th);
   }
-  $('rankNote').textContent = medu ? 'Classement : le dernier debout d\'abord, puis dans l\'ordre inverse des noyades. « Tours tenus » : tours finis à bord. « Coups » : coups de planche portés. « Chutes » : fois où vous êtes tombé à l\'eau.' : galop ? '« Écart » : retard sur le vainqueur à l\'arrivée, en secondes. Les chevaux des robots sont classés avec les autres.' : agil ? '« Total » : temps du parcours plus 5 s par faute. Un chien qui n\'a pas fini est classé après les autres.' : lumber ? '« Précision » : moyenne de vos coupes. « Manches » : manches finies sans rien écraser. Un joueur qui écrase quelque chose est éliminé.' : viking ? 'Course en équipe. « Synchro » : coups de rame donnés en rythme avec le tambour.' : coop ? 'Partie en équipe : tout le monde partage le score. « Moutons » : moutons rentrés au total, « Ouaf » : aboiements.' : tank ? 'Les deux membres d\'un équipage partagent la même place. « Touches » : obus du canonnier qui ont fait mouche.' : dodge ? '« Touches » : balles qui ont atteint un adversaire. « Arrêts » : balles attrapées.' : kab ? '« Raids réussis » : raids rentrés avec au moins un défenseur touché. « Plaquages » : attaquants retenus jusqu\'au bout du souffle.' : master ? '« Trouvés » : codes trouvés. « Essais » : total des essais sur la partie.' : chairs ? '« Chaises » : chaises gagnées. « Réflexe » : votre plus rapide, de l\'arrêt du disque à la chaise.' : curl ? '« Maison » : pierres dans la maison en fin de manche. « Meilleure » : pierre la plus proche du centre.' : mole ? '« Tapées » : taupes adverses tapées. « Échappées » : vos taupes que personne n\'a eues.' : naval ? '« À flot » : cases de bateau encore intactes à la fin.' : pong ? '« Arrêts » : ballons repoussés par le gardien.' : derby ? '« Temps » : durée pour franchir la ligne, pour ceux qui l\'ont franchie.' : '« Briques » : nombre de briques envoyées aux adversaires.';
+  $('rankNote').textContent = medu ? '« Manches » : manches gagnées. « Poussées » : coups d\'épaule donnés. « Chutes » : fois tombé à l\'eau. « Tenu » : temps passé sur le radeau.' : galop ? '« Écart » : retard sur le vainqueur à l\'arrivée, en secondes. Les chevaux des robots sont classés avec les autres.' : agil ? '« Total » : temps du parcours plus 5 s par faute. Un chien qui n\'a pas fini est classé après les autres.' : lumber ? '« Précision » : moyenne de vos coupes. « Manches » : manches finies sans rien écraser. Un joueur qui écrase quelque chose est éliminé.' : viking ? 'Course en équipe. « Synchro » : coups de rame donnés en rythme avec le tambour.' : coop ? 'Partie en équipe : tout le monde partage le score. « Moutons » : moutons rentrés au total, « Ouaf » : aboiements.' : tank ? 'Les deux membres d\'un équipage partagent la même place. « Touches » : obus du canonnier qui ont fait mouche.' : dodge ? '« Touches » : balles qui ont atteint un adversaire. « Arrêts » : balles attrapées.' : kab ? '« Raids réussis » : raids rentrés avec au moins un défenseur touché. « Plaquages » : attaquants retenus jusqu\'au bout du souffle.' : master ? '« Trouvés » : codes trouvés. « Essais » : total des essais sur la partie.' : chairs ? '« Chaises » : chaises gagnées. « Réflexe » : votre plus rapide, de l\'arrêt du disque à la chaise.' : curl ? '« Maison » : pierres dans la maison en fin de manche. « Meilleure » : pierre la plus proche du centre.' : mole ? '« Tapées » : taupes adverses tapées. « Échappées » : vos taupes que personne n\'a eues.' : naval ? '« À flot » : cases de bateau encore intactes à la fin.' : pong ? '« Arrêts » : ballons repoussés par le gardien.' : derby ? '« Temps » : durée pour franchir la ligne, pour ceux qui l\'ont franchie.' : '« Briques » : nombre de briques envoyées aux adversaires.';
   const tb = $('rankBody'); tb.textContent = '';
   (ranking || []).forEach(r => {
     const tr = document.createElement('tr'); if (r.place === 1) tr.className = 'win';
@@ -2191,7 +2194,7 @@ function showEnd(ranking, game){
     const d = document.createElement('span'); d.className = 'dot'; d.style.background = r.color;
     const s = document.createElement('span'); s.textContent = r.name + (r.id === me.id ? ' (vous)' : '') + (r.left ? ' · parti' : '');
     w.append(d, s); nm.append(w);
-    if (medu) tr.append(td(r.place), nm, td(r.turns|0), td(r.hits|0), td(r.dunks|0));
+    if (medu) tr.append(td(r.place), nm, td(r.wins|0), td(r.pushes|0), td(r.dunks|0), td((r.time|0) + ' s'));
     else if (galop){ tr.append(td(r.place), nm, td(r.horse || ''), td(r.t ? fmtSec(r.t) : '–'), td(r.gap == null ? '–' : r.gap > 0 ? '+' + r.gap.toLocaleString('fr-FR', { minimumFractionDigits:2, maximumFractionDigits:2 }) : '')); [...tr.children].slice(-2).forEach(c => c.style.whiteSpace = 'nowrap'); }
     else if (agil) tr.append(td(r.place), nm, td(r.done ? fmtSec(Math.round(r.time*1000)) : '–'), td(r.done ? r.faults|0 : '–'), td(r.done ? fmtSec(Math.round(r.total*1000)) : 'abandon'));
     else if (lumber) tr.append(td(r.place), nm, td(r.pts|0), td((r.sync|0) + ' %'), td((r.rounds|0) + '/' + LJ_ROUNDS + (r.out ? ' ✗' : '')));
@@ -9804,388 +9807,448 @@ $('stRefresh').onclick = () => stLoad();
 for (const b of $('stRange').querySelectorAll('button')) b.onclick = () => { ST.days = +b.dataset.d; stLoad(); };
 
 
-// ================= MÉDUSE : a raft that keeps shrinking, the last one standing wins =================
-// After Géricault's painting (1819, public domain). Five castaways (robots fill in), each on a piece of the raft.
-// Every turn the outermost piece breaks off, and whoever stands on it falls into the sea. Each turn, all at once and in
-// secret: pick up a plank, hit someone with it (they fall in and lose one of 3 lives, the plank breaks, and you take their
-// place), or hold on (nobody can knock you off, but not two turns running). Fallen with lives left, you climb back next
-// turn onto the outermost free piece, empty-handed. No lives left: swept away. The last one left wins.
-const MD_PICK = 10, MD_STEP = 950, MD_CREW = 5, MD_LIVES = 3, MD_MAXT = 30;
-const MD_ACTS = { plank:{ ic:'🪵', n:'Ramasser une planche', s:'Planche' }, hit:{ ic:'💥', n:'Frapper', s:'Frapper' }, grip:{ ic:'✊', n:'S\'accrocher', s:'S\'accrocher' },
-  idle:{ ic:'💤', n:'Rien', s:'Rien' } };
+// ================= MÉDUSE : keep your balance on a raft that tips, push the others off =================
+// After Géricault's painting (1819, public domain). Up to five castaways (robots fill in) on a single raft. Real time:
+// you walk by tilting your phone (or keys, or a joystick); the raft leans with everyone's weight and the waves, and
+// people slide downhill. Hold on to stop sliding (it drains your strength), or shoulder-charge someone (it costs a big
+// chunk of it). The sea grows rougher; after a few waves, the more people aboard, the bigger the waves: knocking someone
+// off makes the raft lighter and the sea calmer. Last one aboard wins the round; first to 2 rounds wins.
+const MD_SEA0 = .6, MD_SEAT = 10, MD_G = 1300, MD_WALK = 330, MD_TILT = .6;
+const MD_FR = 2.4;
+const MD_CREW = 5, MD_WINS = 2, MD_R = 14, MD_PUSH_COST = .35, MD_PUSH_RANGE = 46, MD_TMAX = 90;
+// the raft, a single irregular piece (local units, about 380 x 230), as in the painting
+const MD_SHAPE = [[-188, -38], [-150, -96], [-70, -112], [20, -104], [96, -118], [168, -84], [196, -20], [182, 52], [130, 104], [40, 116], [-56, 106], [-140, 92], [-192, 40]];
 let HMD = null, MD = null;
 function mdLater(fn, ms){ const g = HMD; const t = setTimeout(() => { if (HMD === g && H && !H.over) fn(); }, ms); HMD.timers.push(t); }
 function mdClear(){ if (HMD) HMD.timers.forEach(t => clearTimeout(t)); }
 const mdIn = id => !!(H && H.stats[id] && !H.stats[id].left);
+function mdInside(x, y){
+  let c = false; const P = MD_SHAPE;
+  for (let i = 0, j = P.length - 1; i < P.length; j = i++){
+    const [xi, yi] = P[i], [xj, yj] = P[j];
+    if ((yi > y) !== (yj > y) && x < (xj - xi)*(y - yi)/(yj - yi) + xi) c = !c;
+  }
+  return c;
+}
+// distance to the edge (positive inside)
+function mdEdge(x, y){
+  let d = Infinity; const P = MD_SHAPE;
+  for (let i = 0, j = P.length - 1; i < P.length; j = i++){
+    const [ax, ay] = P[j], [bx, by] = P[i], vx = bx - ax, vy = by - ay, L = vx*vx + vy*vy;
+    const k = Math.max(0, Math.min(1, ((x - ax)*vx + (y - ay)*vy)/L)), qx = ax + vx*k - x, qy = ay + vy*k - y;
+    d = Math.min(d, Math.hypot(qx, qy));
+  }
+  return mdInside(x, y) ? d : -d;
+}
 
 // ---- host ----
 function meduseHostStart(){
-  for (const id of ['ai', 'ai2', 'ai3', 'ai4', 'ai5', 'ai6', 'ai7']){
+  for (const id of ['ai', 'ai2', 'ai3', 'ai4']){
     if (players.length >= MD_CREW) break;
     if (players.some(p => p.id === id)) continue;
     players.push({ id, name:id === 'ai' ? 'Robot' : 'Robot ' + id.slice(2), color:pickColor(), bot:true });
     H.alive.add(id);
   }
   H.n = players.length;
-  for (const p of players) H.stats[p.id] = { pts:0, turns:0, hits:0, dunks:0, out:0, left:false };
-  const seed = Math.floor(Math.random()*1e9), L = mdLayout(seed);
-  HMD = { timers:[], t:0, seed, order:L.order, places:MD_CREW, pos:{}, aboard:[], water:[], dead:[], lives:{}, plank:{}, cramp:[], prev:{}, picks:{}, ph:'idle' };
-  // everyone on a piece of the raft, at random
-  const ids = players.map(p => p.id).sort(() => Math.random() - .5);
-  ids.forEach((id, k) => { HMD.pos[id] = HMD.order[k % HMD.order.length]; HMD.lives[id] = MD_LIVES; });
-  HMD.aboard = ids;
+  for (const p of players) H.stats[p.id] = { wins:0, pushes:0, dunks:0, time:0, left:false };
+  HMD = { timers:[], r:0, ph:'wait', t:0, P:{}, IN:{}, tilt:[0, 0], tv:[0, 0], wd:0, lastSend:0, bot:{} };
+  for (const p of players) HMD.IN[p.id] = { kx:0, ky:0, grip:false };
   broadcast({ t:'start', players, game:'meduse' });
-  mdLater(mdTurn, 1800);
+  mdLater(mdRound, 1500);
 }
-const mdScores = () => Object.fromEntries(players.map(p => [p.id, H.stats[p.id] ? H.stats[p.id].turns : 0]));
-const mdLiveCells = () => HMD.order.slice(0, HMD.places);                   // from the middle outwards
-const mdState = () => ({ seed:HMD.seed, places:HMD.places, pos:HMD.pos, aboard:HMD.aboard, water:HMD.water, dead:HMD.dead, lives:HMD.lives, plank:HMD.plank, cramp:HMD.cramp, sc:mdScores() });
-function mdTurn(){
-  // whoever fell in and still has lives climbs back onto the outermost free piece (or the outermost one if all are taken)
-  const live = mdLiveCells();
-  for (const id of HMD.water){
-    if (!mdIn(id)) continue;
-    const taken = new Set(HMD.aboard.map(x => HMD.pos[x])), free = live.filter(c => !taken.has(c));
-    HMD.pos[id] = free.length ? free[free.length - 1] : live[live.length - 1];
-    HMD.aboard.push(id);
+function mdRound(){
+  HMD.r++; HMD.t = 0; HMD.ph = 'count'; HMD.tilt = [0, 0]; HMD.tv = [0, 0]; HMD.wd = Math.random()*Math.PI*2;
+  const ids = players.filter(p => mdIn(p.id)).map(p => p.id);
+  HMD.P = {};
+  ids.forEach((id, k) => {
+    const a = k/ids.length*Math.PI*2 + .4;
+    HMD.P[id] = { x:Math.cos(a)*70, y:Math.sin(a)*42, vx:0, vy:0, st:1, grip:false, cd:0, alive:true, fx:Math.cos(a + Math.PI), fy:Math.sin(a + Math.PI), hit:0 };
+  });
+  broadcast({ t:'md_round', r:HMD.r, wins:mdWins(), ids });
+  mdLater(() => { HMD.ph = 'play'; broadcast({ t:'md_go' }); }, 3200);
+}
+const mdWins = () => Object.fromEntries(players.map(p => [p.id, H.stats[p.id] ? H.stats[p.id].wins : 0]));
+function meduseInput(id, m){
+  const I = HMD && HMD.IN[id]; if (!I) return;
+  I.kx = Math.max(-1, Math.min(1, +m.kx || 0)); I.ky = Math.max(-1, Math.min(1, +m.ky || 0)); I.grip = !!m.g;
+}
+function medusePush(id){
+  if (!HMD || HMD.ph !== 'play') return;
+  const a = HMD.P[id]; if (!a || !a.alive || a.cd > 0 || a.st < MD_PUSH_COST) return;
+  // the nearest castaway, preferably in front
+  let best = null, bs = Infinity;
+  for (const [oid, o] of Object.entries(HMD.P)){
+    if (oid === id || !o.alive) continue;
+    const dx = o.x - a.x, dy = o.y - a.y, L = Math.hypot(dx, dy);
+    if (L > MD_PUSH_RANGE) continue;
+    const front = (dx*a.fx + dy*a.fy)/(L || 1), score = L - front*14;
+    if (score < bs){ bs = score; best = [oid, o, dx/(L || 1), dy/(L || 1)]; }
   }
-  HMD.water = [];
-  HMD.t++; HMD.picks = {}; HMD.ph = 'pick'; const seq = HMD.seq = (HMD.seq || 0) + 1;     // timers from an earlier turn must not act on this one
-  broadcast({ t:'md_turn', n:HMD.t, left:MD_PICK, ...mdState() });
-  for (const p of players) if (p.bot && HMD.aboard.includes(p.id)) mdLater(() => { if (HMD.seq === seq) mdPick(p.id, mdBot(p.id)); }, 1500 + Math.random()*4500);
-  mdLater(() => mdResolve(seq), MD_PICK*1000 + 300);
+  a.st -= MD_PUSH_COST; a.cd = .6;
+  if (!best){ broadcast({ t:'md_ev', k:'miss', a:id }); return; }
+  const [oid, o, ux, uy] = best, f = o.grip ? 110 : 290;
+  o.vx += ux*f; o.vy += uy*f; o.hit = .5; o.by = id;
+  a.vx -= ux*40; a.vy -= uy*40;
+  H.stats[id].pushes++;
+  broadcast({ t:'md_ev', k:'push', a:id, b:oid, g:o.grip ? 1 : 0 });
 }
-function mdPick(id, m){
-  if (!HMD || HMD.ph !== 'pick' || !mdIn(id) || !HMD.aboard.includes(id) || !m) return;
-  const a = String(m.a || '');
-  if (!['plank', 'hit', 'grip'].includes(a)) return;
-  if (a === 'plank' && HMD.plank[id]) return;
-  if (a === 'grip' && HMD.cramp.includes(id)) return;                        // no holding on two turns running
-  let tg = null;
-  if (a === 'hit'){ tg = String(m.tg || ''); if (!HMD.plank[id] || tg === id || !HMD.aboard.includes(tg)) return; }
-  HMD.picks[id] = { a, tg };
-  broadcast({ t:'md_ready', ids:Object.keys(HMD.picks) });
-  if (HMD.aboard.every(x => !mdIn(x) || HMD.picks[x])){ const seq = HMD.seq; mdLater(() => mdResolve(seq), 600); }
+// the sea: grows with time; after a few waves, the more people aboard, the bigger
+function mdSea(t, n){
+  const grow = MD_SEA0 + t/MD_SEAT, load = t > 9 ? .45 + .55*n/MD_CREW : 1;
+  return grow*load;
 }
-function mdResolve(seq){
-  if (!HMD || HMD.ph !== 'pick' || seq !== HMD.seq) return;
-  HMD.ph = 'show';
-  const P = HMD.picks, ev = [], fall = new Set();
-  for (const id of HMD.aboard) if (!P[id]) P[id] = { a:'idle', tg:null, auto:true };      // undecided: does nothing (and is not holding on)
-  const grips = new Set(HMD.aboard.filter(id => P[id].a === 'grip'));
-  const hurt = id => { HMD.lives[id] = Math.max(0, (HMD.lives[id] || 0) - 1); fall.add(id); };
-  // 1. planks picked up
-  for (const id of HMD.aboard) if (P[id].a === 'plank') HMD.plank[id] = true;
-  // 2. blows, all at once; the plank breaks either way; whoever knocks someone off takes their place
-  const moves = [];
-  for (const id of HMD.aboard){
-    const x = P[id]; if (x.a !== 'hit') continue;
-    HMD.plank[id] = false;
-    if (grips.has(x.tg)){ ev.push({ k:'block', a:id, b:x.tg }); continue; }
-    if (!fall.has(x.tg)) hurt(x.tg);
-    H.stats[id].hits++; moves.push([id, HMD.pos[x.tg]]); ev.push({ k:'hit', a:id, b:x.tg, c:HMD.pos[x.tg] });
+function mdStep(dt){
+  const P = HMD.P, alive = Object.entries(P).filter(([, p]) => p.alive), n = alive.length;
+  HMD.t += dt;
+  // the raft: a damped spring, pushed by the waves and by everyone's weight
+  const A = mdSea(HMD.t, n), w = HMD.t*1.3;
+  HMD.wd += dt*.12;
+  const wx = Math.cos(HMD.wd)*Math.sin(w)*A*.1 + Math.sin(w*.37 + 1)*A*.04, wy = Math.sin(HMD.wd)*Math.sin(w)*A*.1 + Math.cos(w*.53)*A*.04;
+  let mx = 0, my = 0; for (const [, p] of alive){ mx += p.x/190; my += p.y/115; }
+  const load = .055, tx = wx + mx*load, ty = wy + my*load;
+  for (const k of [0, 1]){
+    const target = k ? ty : tx;
+    HMD.tv[k] += ((target - HMD.tilt[k])*9 - HMD.tv[k]*3.2)*dt;
+    HMD.tilt[k] += HMD.tv[k]*dt;
+    HMD.tilt[k] = Math.max(-MD_TILT, Math.min(MD_TILT, HMD.tilt[k]));
   }
-  for (const [id, c] of moves) if (!fall.has(id)) HMD.pos[id] = c;
-  // 3. the outermost piece breaks off, with whoever stands on it (holding on does not help)
-  if (HMD.places > 1){
-    const c = HMD.order[HMD.places - 1]; HMD.places--;
-    const who = HMD.aboard.filter(id => !fall.has(id) && HMD.pos[id] === c);
-    who.forEach(hurt);
-    ev.push({ k:'break', c, n:HMD.places, who });
-  } else {
-    // 4. a single piece left and several on it: one slips each turn, those not holding on first
-    const still = HMD.aboard.filter(id => !fall.has(id));
-    if (still.length > 1){
-      const pool = still.filter(id => !grips.has(id)), from = pool.length ? pool : still, id = from[Math.floor(Math.random()*from.length)];
-      hurt(id); ev.push({ k:'slip', a:id });
+  // the castaways: walk where they lean, slide downhill, hold on to stop
+  for (const [id, p] of alive){
+    const I = HMD.IN[id] || { kx:0, ky:0, grip:false };
+    p.cd = Math.max(0, p.cd - dt); p.hit = Math.max(0, p.hit - dt);
+    p.grip = I.grip && p.st > .02;
+    if (p.grip){ p.st = Math.max(0, p.st - dt*.32); }
+    else p.st = Math.min(1, p.st + dt*.16);
+    const g = MD_G, slide = p.grip ? .12 : 1;
+    p.vx += HMD.tilt[0]*g*slide*dt; p.vy += HMD.tilt[1]*g*slide*dt;
+    if (!p.grip){
+      const L = Math.hypot(I.kx, I.ky);
+      if (L > .08){ const s = Math.min(1, L); p.vx += I.kx/L*s*MD_WALK*dt; p.vy += I.ky/L*s*MD_WALK*dt; p.fx = I.kx/L; p.fy = I.ky/L; }
+    }
+    const fr = p.grip ? 9 : MD_FR;
+    p.vx -= p.vx*Math.min(1, fr*dt); p.vy -= p.vy*Math.min(1, fr*dt);
+    const sp = Math.hypot(p.vx, p.vy), max = p.hit > 0 ? 420 : 170; if (sp > max){ p.vx *= max/sp; p.vy *= max/sp; }
+    p.x += p.vx*dt; p.y += p.vy*dt;
+    H.stats[id].time += dt;
+  }
+  // bumping into each other
+  for (let i = 0; i < alive.length; i++) for (let j = i + 1; j < alive.length; j++){
+    const a = alive[i][1], b = alive[j][1], dx = b.x - a.x, dy = b.y - a.y, L = Math.hypot(dx, dy);
+    if (L > 0 && L < MD_R*2){
+      const o = (MD_R*2 - L)/2, ux = dx/L, uy = dy/L, ma = a.grip ? 3 : 1, mb = b.grip ? 3 : 1;
+      a.x -= ux*o*2*mb/(ma + mb); a.y -= uy*o*2*mb/(ma + mb); b.x += ux*o*2*ma/(ma + mb); b.y += uy*o*2*ma/(ma + mb);
+      const rv = (b.vx - a.vx)*ux + (b.vy - a.vy)*uy;
+      if (rv < 0){ const imp = -rv*.8; a.vx -= ux*imp*mb/(ma + mb); a.vy -= uy*imp*mb/(ma + mb); b.vx += ux*imp*ma/(ma + mb); b.vy += uy*imp*ma/(ma + mb); }
     }
   }
-  // 5. into the sea: the plank is lost; no lives left means swept away
-  for (const id of fall){
-    H.stats[id].dunks++; HMD.plank[id] = false;
-    HMD.aboard = HMD.aboard.filter(x => x !== id);
-    if (HMD.lives[id] > 0) HMD.water.push(id); else { HMD.dead.push(id); H.stats[id].out = HMD.t; ev.push({ k:'drown', a:id }); }
+  // overboard
+  for (const [id, p] of alive){
+    if (mdInside(p.x, p.y)) continue;
+    p.alive = false; H.stats[id].dunks++;
+    broadcast({ t:'md_ev', k:'fall', a:id, by:p.hit > 0 ? p.by : null, x:Math.round(p.x), y:Math.round(p.y) });
   }
-  for (const id of HMD.aboard) H.stats[id].turns++;
-  HMD.cramp = [...grips].filter(id => HMD.aboard.includes(id));
-  const acts = {}; for (const [id, x] of Object.entries(P)) acts[id] = { a:x.a, tg:x.tg };
-  HMD.prev = acts;
-  // the last one left wins
-  const alive = players.filter(p => mdIn(p.id) && HMD.lives[p.id] > 0).map(p => p.id);
-  let fin = null;
-  if (alive.length <= 1 || HMD.t >= MD_MAXT){
-    const rank = mdRanking();
-    fin = rank[0] ? rank[0].id : 'none';
-  }
-  broadcast({ t:'md_res', acts, ev, fin, ...mdState() });
-  const show = MD_STEP*(ev.length + 1) + 1400;
-  if (!fin) return mdLater(mdTurn, show);
-  mdLater(mdFinish, show + 3000);
 }
-// the last one standing first, then in the reverse order of drowning; still alive at the time limit: most lives
-function mdRanking(){
-  const ids = Object.keys(H.stats), alive = id => HMD.lives[id] > 0 && !H.stats[id].left;
-  ids.sort((a, b) => { const A = H.stats[a], B = H.stats[b];
-    if (A.left !== B.left) return A.left ? 1 : -1;
-    if (alive(a) !== alive(b)) return alive(a) ? -1 : 1;
-    return (B.out - A.out) || ((HMD.lives[b] || 0) - (HMD.lives[a] || 0)) || (B.turns - A.turns) || (B.hits - A.hits); });
-  return ids.map((pid, i) => { const p = players.find(x => x.id === pid) || { name:'?', color:'#888' }, st = H.stats[pid];
-    return { id:pid, name:p.name, color:p.color, place:i + 1, ...st, pts:st.turns + (i === 0 ? 10 : 0) }; });
+function meduseHostFrame(dt, now){
+  if (!HMD || !H || H.over || HMD.ph !== 'play') return;
+  mdBots(dt);
+  const n = Math.ceil(dt/(1/60));
+  for (let i = 0; i < n; i++) mdStep(dt/n);
+  const left = Object.entries(HMD.P).filter(([, p]) => p.alive);
+  if (HMD.t > MD_TMAX && left.length > 1){ left.sort((a, b) => mdEdge(b[1].x, b[1].y) - mdEdge(a[1].x, a[1].y)); return mdRoundEnd(left[0][0]); }   // time's up: the one nearest the middle
+  if (left.length <= 1) return mdRoundEnd(left.length === 1 ? left[0][0] : null);
+  if (now - HMD.lastSend > 40){
+    HMD.lastSend = now; const r = v => Math.round(v);
+    broadcastSnap({ t:'md_s', tl:[Math.round(HMD.tilt[0]*1000), Math.round(HMD.tilt[1]*1000)], sea:Math.round(mdSea(HMD.t, left.length)*100), tt:Math.round(HMD.t*10),
+      p:Object.entries(HMD.P).map(([id, p]) => [id, r(p.x), r(p.y), p.alive ? 1 : 0, p.grip ? 1 : 0, Math.round(p.st*100), Math.round(Math.atan2(p.fy, p.fx)*100), p.hit > 0 ? 1 : 0]) });
+  }
+}
+function mdRoundEnd(win){
+  HMD.ph = 'res';
+  if (win && H.stats[win]) H.stats[win].wins++;
+  const champ = players.find(p => H.stats[p.id] && H.stats[p.id].wins >= MD_WINS);
+  broadcast({ t:'md_res', win, wins:mdWins(), last:!!champ });
+  if (champ) return mdLater(mdFinish, 3500);
+  mdLater(mdRound, 4200);
 }
 function mdFinish(){
   if (!H || H.over) return;
   H.over = true; mdClear();
-  const ranking = mdRanking();
+  const ids = Object.keys(H.stats).sort((a, b) => { const A = H.stats[a], B = H.stats[b]; if (A.left !== B.left) return A.left ? 1 : -1; return B.wins - A.wins || B.time - A.time || B.pushes - A.pushes; });
+  const ranking = ids.map((pid, i) => { const p = players.find(x => x.id === pid) || { name:'?', color:'#888' }, st = H.stats[pid];
+    return { id:pid, name:p.name, color:p.color, place:i + 1, ...st, time:Math.round(st.time), pts:st.wins*10 + st.pushes }; });
   setTimeout(() => broadcast({ t:'end', ranking, game:'meduse' }), 400);
 }
 function meduseDrop(id){
   if (!H || H.over || !H.stats[id]) return;
   H.stats[id].left = true;
-  if (HMD){ HMD.aboard = HMD.aboard.filter(x => x !== id); HMD.water = HMD.water.filter(x => x !== id); delete HMD.picks[id]; }
-  broadcast({ t:'md_left', id });
+  if (HMD && HMD.P[id]) HMD.P[id].alive = false;
+  broadcast({ t:'md_ev', k:'left', a:id });
   if (!players.some(p => !p.bot && mdIn(p.id))) return mdFinish();
-  if (HMD && HMD.ph === 'pick' && HMD.aboard.every(x => !mdIn(x) || HMD.picks[x])){ const seq = HMD.seq; mdLater(() => mdResolve(seq), 400); }
 }
-// robot: if its piece is about to break, it strikes someone nearer the middle to take their place; otherwise it arms
-// itself and hits, preferring central places, people who cannot hold on, and people carrying a plank
-function mdBot(id){
-  const R = Math.random, others = HMD.aboard.filter(x => x !== id), cramp = HMD.cramp.includes(id);
-  const rk = c => HMD.order.indexOf(c), next = HMD.places > 1 ? HMD.order[HMD.places - 1] : null, edge = HMD.pos[id] === next;
-  if (!HMD.plank[id]) return !edge && !cramp && R() < .25 ? { a:'grip' } : { a:'plank' };
-  if (!others.length) return cramp ? { a:'plank' } : { a:'grip' };
-  if (!edge && !cramp && R() < .2) return { a:'grip' };
-  const pool = edge ? others.filter(x => rk(HMD.pos[x]) < rk(HMD.pos[id])) : others, list = pool.length ? pool : others;
-  const w = list.map(x => 1 + (HMD.places - rk(HMD.pos[x]))*.5 + (HMD.cramp.includes(x) ? 6 : 0) + (HMD.plank[x] ? 1.5 : 0));
-  let k = R()*w.reduce((a, b) => a + b, 0), i = 0;
-  while (i < w.length - 1 && (k -= w[i]) > 0) i++;
-  return { a:'hit', tg:list[i] };
+// robots: keep to the high side and the middle, hold on when it tips hard near the edge, shoulder-charge
+// whoever is close to the edge
+function mdBots(dt){
+  for (const p of players){
+    if (!p.bot) continue;
+    const me0 = HMD.P[p.id], I = HMD.IN[p.id]; if (!me0 || !me0.alive || !I) continue;
+    const B = HMD.bot[p.id] || (HMD.bot[p.id] = { t:0, push:0 });
+    B.t -= dt; B.push -= dt; if (B.t > 0) continue;
+    B.t = .12 + Math.random()*.1;
+    const e = mdEdge(me0.x, me0.y), tl = HMD.tilt, steep = Math.hypot(tl[0], tl[1]);
+    // head for a point a little uphill of the centre
+    let gx = -tl[0]*160 - me0.x*.6, gy = -tl[1]*110 - me0.y*.6;
+    const L = Math.hypot(gx, gy) || 1;
+    I.kx = gx/L*Math.min(1, L/40); I.ky = gy/L*Math.min(1, L/40);
+    I.grip = (e < 34 && steep > .12 && me0.st > .25) || (me0.hit > 0 && me0.st > .2);
+    if (B.push <= 0 && me0.st > .55 && me0.cd <= 0){
+      for (const [oid, o] of Object.entries(HMD.P)){
+        if (oid === p.id || !o.alive) continue;
+        const d = Math.hypot(o.x - me0.x, o.y - me0.y);
+        if (d < MD_PUSH_RANGE - 4 && mdEdge(o.x, o.y) < 60 && Math.random() < .5){ me0.fx = (o.x - me0.x)/d; me0.fy = (o.y - me0.y)/d; medusePush(p.id); B.push = 1.2; break; }
+      }
+    }
+  }
 }
 
 // ---- my view ----
 const mdcv = $('mdCv'), mdctx = mdcv.getContext('2d');
 function startMeduse(m){
   lastCountShown = null;
-  players = m.players; cur = 'meduse'; G = null; PG = null; D = null; phase = 'play';
+  players = m.players; cur = 'meduse'; G = null; PG = null; D = null; phase = 'count';
   $('scrEnd').hidden = true; show('scrMeduse');
-  MD = { n:0, Dv:12, places:MD_CREW, pos:{}, seed:null, aboard:players.map(p => p.id), water:[], dead:[], lives:{}, plank:{}, cramp:[], ready:[], sc:{}, acts:null,
-    mine:null, hitMode:false, deadline:0, ph:'wait', figs:new Map(), queue:[], fin:null, banner:null, splash:[], over:false, cells:mdLayout(1), broke:[],
-    spec:!players.some(p => p.id === me.id) };
-  mdHead('Méduse'); $('mdMsg').textContent = ''; mdButtons(); renderMdPlayers();
-  $('mdHelp').textContent = 'Le radeau perd un morceau à chaque tour, par le bord. Frappez quelqu\'un plus au centre pour prendre sa place. Le dernier debout gagne.';
+  MD = { r:0, wins:{}, tilt:[0, 0], tt:[0, 0], sea:0, t:0, figs:new Map(), in:{ kx:0, ky:0, g:false }, sent:'', lastSend:0, keys:{}, joyOn:false,
+    count:3, ph:'wait', banner:null, splash:[], fx:[], swim:new Map(), over:false, spec:!players.some(p => p.id === me.id), st:1,
+    tiltOn:false, calib:true, beta0:null };
+  $('mdMsg').textContent = ''; mdHead('Méduse'); renderMdPlayers(); mdTiltSetup();
+  $('mdHelp').textContent = 'Inclinez le téléphone pour marcher (ou glissez le doigt, ou flèches / ZQSD). Restez appuyé sur « S\'accrocher » pour ne plus glisser. « Pousser » donne un coup d\'épaule au plus proche. Le dernier sur le radeau gagne la manche.';
 }
 function mdHead(t){ $('mdHead').textContent = t; }
 let mdToastT = null;
 function mdToast(t){ const el = $('mdToast'); el.textContent = t; el.classList.add('on'); clearTimeout(mdToastT); mdToastT = setTimeout(() => el.classList.remove('on'), 2200); }
 const mdName = id => { const p = players.find(x => x.id === id); return p ? p.name : '?'; };
-const mdOnRaft = () => MD.aboard.includes(me.id);
-function mdButtons(){
-  const box = $('mdBtns'); box.textContent = '';
-  const tgs = $('mdTargets'); tgs.textContent = ''; tgs.hidden = true;
-  const live = MD.ph === 'pick' && !MD.spec && mdOnRaft();
-  box.hidden = !live;
-  if (!live) return;
-  box.className = 'mdbtns n3';
-  for (const a of ['plank', 'hit', 'grip']){
-    const b = document.createElement('button'); b.type = 'button';
-    const i = document.createElement('span'); i.className = 'mdic'; i.textContent = MD_ACTS[a].ic;
-    const l = document.createElement('span'); l.textContent = MD_ACTS[a].s;
-    b.append(i, l);
-    b.setAttribute('aria-pressed', String(MD.mine ? MD.mine.a === a : a === 'hit' && MD.hitMode));
-    if (a === 'plank' && MD.plank[me.id]){ b.disabled = true; l.textContent = 'En main'; }
-    if (a === 'hit' && !MD.plank[me.id]){ b.disabled = true; l.textContent = 'Sans planche'; }
-    if (a === 'grip' && MD.cramp.includes(me.id)){ b.disabled = true; l.textContent = 'Crampe !'; b.title = 'Vous vous êtes accroché au tour précédent : pas deux fois de suite.'; }
-    b.onclick = () => {
-      if (a === 'hit'){ MD.hitMode = !MD.hitMode; mdButtons(); return; }
-      MD.hitMode = false; mdChoose({ a });
-    };
-    box.append(b);
-  }
-  if (MD.hitMode){
-    tgs.hidden = false;
-    const h = document.createElement('b'); h.textContent = 'Qui frapper ?'; tgs.append(h);
-    for (const id of MD.aboard){
-      if (id === me.id) continue;
-      const p = players.find(x => x.id === id); if (!p) continue;
-      const b = document.createElement('button'); b.type = 'button'; b.className = 'mdtg';
-      const d = document.createElement('i'); d.style.background = p.color;
-      const n = document.createElement('span'); n.textContent = p.name + ' ' + '♥'.repeat(MD.lives[id] || 0) + (MD.plank[id] ? ' 🪵' : ''); n.setAttribute('translate', 'no');
-      b.append(d, n); b.setAttribute('aria-pressed', String(!!(MD.mine && MD.mine.a === 'hit' && MD.mine.tg === id)));
-      b.onclick = () => mdChoose({ a:'hit', tg:id });
-      tgs.append(b);
-    }
-  }
-}
-function mdChoose(c){
-  if (!MD || MD.ph !== 'pick') return;
-  MD.mine = c; if (c.a !== 'hit') MD.hitMode = false;
-  toHost({ t:'md_pick', a:c.a, tg:c.tg || null }); sfx('place');
-  mdButtons();
-  $('mdHelp').textContent = 'Votre choix : ' + MD_ACTS[c.a].n + (c.tg ? ' ' + mdName(c.tg) : '') + '. Vous pouvez changer d\'avis jusqu\'à la fin du compte à rebours.';
-}
 function renderMdPlayers(){
   const ul = $('mdPlayers'); ul.textContent = '';
   for (const p of players){
-    const li = document.createElement('li'); if (p.left || MD.dead.includes(p.id)) li.classList.add('dead');
-    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color;
-    const t = document.createElement('span');
-    const lv = MD.lives[p.id] ?? MD_LIVES, where = MD.dead.includes(p.id) ? ' 💀' : MD.water.includes(p.id) ? ' 🌊' : '';
-    t.textContent = p.name + ' ' + '♥'.repeat(lv) + where + (MD.plank[p.id] ? ' 🪵' : '') + ' ' + (MD.sc[p.id] | 0) + (MD.ph === 'pick' && MD.ready.includes(p.id) ? ' ✔' : '');
+    const li = document.createElement('li'); const f = MD.figs.get(p.id);
+    if (p.left || (f && !f.alive && MD.ph === 'play')) li.classList.add('dead');
     if (p.id === me.id) li.classList.add('me');
+    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color;
+    const t = document.createElement('span'); t.textContent = p.name + ' ' + '★'.repeat(MD.wins[p.id] || 0);
     li.append(d, t); ul.append(li);
   }
 }
-function mdSetState(m){
-  if (m.seed != null && m.seed !== MD.seed){ MD.seed = m.seed; MD.cells = mdLayout(m.seed); MD.broke = []; MD.figs.clear(); }
-  MD.pos = m.pos || MD.pos;
-  MD.places = m.places; MD.aboard = m.aboard || []; MD.water = m.water || []; MD.dead = m.dead || [];
-  MD.lives = m.lives || {}; MD.plank = m.plank || {}; MD.cramp = m.cramp || []; MD.sc = m.sc || MD.sc;
-}
 function meduseRecv(m){
   if (!MD) return;
-  if (m.t === 'md_turn'){
-    MD.n = m.n; mdSetState(m);
-    MD.ready = []; MD.acts = null; MD.mine = null; MD.hitMode = false; MD.ph = 'pick'; MD.deadline = performance.now() + (m.left|0)*1000; MD.queue = [];
-    const alive = players.filter(p => (MD.lives[p.id] || 0) > 0 && !p.left).length;
-    $('mdTurn').textContent = 'Tour ' + m.n + ' · ' + alive + ' en vie';
-    const dead = MD.dead.includes(me.id), next = MD.places > 1 ? MD.cells.order[MD.places - 1] : null, edge = mdOnRaft() && MD.pos[me.id] === next;
-    mdHead(MD.spec ? 'Spectateur' : dead ? 'Emporté…' : edge ? 'Votre place va céder !' : 'Que faites-vous ?');
-    $('mdHelp').textContent = MD.spec ? 'Vous regardez le naufrage.' : dead ? 'Plus de vie : vous regardez la fin.'
-      : (edge ? 'Votre morceau de radeau est le prochain à céder : frappez quelqu\'un plus au centre pour prendre sa place, sinon vous tombez. ' : MD.places === 1 && MD.aboard.length > 1 ? 'Un seul morceau pour tout le monde : à chaque tour, quelqu\'un glisse, d\'abord ceux qui ne s\'accrochent pas. ' : '')
-        + (MD.cramp.includes(me.id) ? 'Crampe : pas d\'accroche ce tour-ci. ' : '') + (MD.plank[me.id] ? 'Vous avez une planche : frappez quelqu\'un, ou gardez-la.' : 'Sans planche, impossible de frapper : ramassez-en une.');
-    if (m.n === 1){ sfx('go'); boom('SAUVE QUI PEUT !', { size:30, x:.5, y:.35, pal:BOOM_COLORS[1], ms:1100 }); } else sfx(edge ? 'fail' : 'myturn');
-    mdButtons(); renderMdPlayers();
-  } else if (m.t === 'md_ready'){ MD.ready = m.ids || []; renderMdPlayers(); }
-  else if (m.t === 'md_res'){
-    MD.ph = 'show'; MD.acts = m.acts || {}; MD.hitMode = false;
-    mdButtons(); mdHead('Révélation !'); sfx('clack');
-    const t0 = performance.now(), evs = m.ev || [];
-    evs.forEach((e, i) => MD.queue.push({ at:t0 + 600 + i*MD_STEP, e }));
-    MD.queue.push({ at:t0 + 600 + evs.length*MD_STEP, e:{ k:'sum', m } });
+  if (m.t === 'md_round'){
+    MD.r = m.r; MD.wins = m.wins || {}; MD.ph = 'count'; phase = 'count'; MD.count = 3; lastCountShown = null; MD.banner = null; MD.calib = true;
+    MD.figs.clear(); MD.swim.clear(); MD.tilt = [0, 0]; MD.tt = [0, 0]; MD.sea = 0;
+    $('mdTurn').textContent = 'Manche ' + m.r; mdHead('Manche ' + m.r + ' · premier à ' + MD_WINS);
     renderMdPlayers();
-  } else if (m.t === 'md_left'){
-    const p = players.find(x => x.id === m.id); if (p) p.left = true;
-    MD.aboard = MD.aboard.filter(x => x !== m.id); MD.water = MD.water.filter(x => x !== m.id); renderMdPlayers();
-  }
-}
-function mdFall(id){
-  MD.aboard = MD.aboard.filter(x => x !== id); if (!MD.water.includes(id)) MD.water.push(id);
-  MD.plank[id] = false;
-  const g = MD.figs.get(id); if (g) g.fly = performance.now();
-  sfx('splash');
-}
-function mdApply(e){
-  if (e.k === 'hit' || e.k === 'block'){
-    const f = MD.figs.get(e.a); if (f) f.lunge = { to:e.b, t:performance.now() };
-    MD.plank[e.a] = false; sfx('bonk');
-    if (e.k === 'hit'){
-      MD.lives[e.b] = Math.max(0, (MD.lives[e.b] ?? MD_LIVES) - 1);
-      setTimeout(() => { if (MD) mdFall(e.b); }, 260);
-      setTimeout(() => { if (MD && MD.aboard.includes(e.a)) MD.pos[e.a] = e.c; }, 520);      // and takes the place
-      mdToast(mdName(e.a) + ' frappe ' + mdName(e.b) + ' et prend sa place !');
-      if (e.b === me.id) boom('BAM !', { size:34, x:.5, y:.35, pal:BOOM_COLORS[2], ms:900 });
-    } else mdToast(mdName(e.a) + ' frappe ' + mdName(e.b) + '… qui s\'accroche ! La planche casse');
-  } else if (e.k === 'break'){
-    MD.broke.push({ c:e.c, t:performance.now() });
-    MD.places = e.n; sfx('creak'); setTimeout(() => sfx('crash'), 300);
-    for (const id of e.who || []){ MD.lives[id] = Math.max(0, (MD.lives[id] ?? MD_LIVES) - 1); mdFall(id); if (id === me.id) boom('PLOUF !', { size:32, x:.5, y:.35, pal:BOOM_COLORS[3], ms:900 }); }
-    mdToast('CRAAAC ! Le radeau perd un morceau' + ((e.who || []).length ? ' : ' + e.who.map(mdName).join(', ') + ' à l\'eau' : '') + ' (plus que ' + e.n + ')');
-  } else if (e.k === 'slip'){
-    MD.lives[e.a] = Math.max(0, (MD.lives[e.a] ?? MD_LIVES) - 1);
-    mdFall(e.a); mdToast('Trop serrés : ' + mdName(e.a) + ' glisse à l\'eau');
-    if (e.a === me.id) boom('PLOUF !', { size:32, x:.5, y:.35, pal:BOOM_COLORS[3], ms:900 });
-  } else if (e.k === 'drown'){
-    MD.water = MD.water.filter(x => x !== e.a); if (!MD.dead.includes(e.a)) MD.dead.push(e.a);
-    mdToast(mdName(e.a) + ' n\'a plus de vie : emporté par les flots !'); sfx('lose');
-    if (e.a === me.id) boom('NOYÉ !', { size:30, x:.5, y:.35, pal:BOOM_COLORS[3], ms:1100 });
-  } else if (e.k === 'sum'){
-    const m = e.m;
-    mdSetState(m);
-    if (m.fin){
-      const w = m.fin === 'none' ? null : m.fin;
-      MD.fin = w || 'none';
-      MD.banner = w === me.id ? { big:'VOUS GAGNEZ !', small:'Dernier debout sur le radeau', col:'#3DDC97' } : w ? { big:mdName(w).toUpperCase() + ' GAGNE !', small:'Dernier debout sur le radeau', col:'#FFD93B' } : { big:'PERSONNE !', small:'La mer a tout pris', col:'#E6262B' };
-      sfx(w === me.id ? 'win' : 'lose');
+  } else if (m.t === 'md_go'){ MD.ph = 'play'; phase = 'play'; mdHead('Tenez bon !'); }
+  else if (m.t === 'md_s'){
+    MD.tt = [m.tl[0]/1000, m.tl[1]/1000]; MD.sea = m.sea/100; MD.t = m.tt/10;
+    for (const [id, x, y, al, g, st, fa, hit] of m.p || []){
+      let f = MD.figs.get(id);
+      if (!f){ f = { x, y, tx:x, ty:y }; MD.figs.set(id, f); }
+      f.tx = x; f.ty = y; f.alive = !!al; f.grip = !!g; f.st = st/100; f.fa = fa/100; f.hit = !!hit;
+      if (id === me.id) MD.st = st/100;
     }
-    mdHead(m.fin ? 'Fin du naufrage' : 'Tour suivant…');
-    renderMdPlayers();
+  } else if (m.t === 'md_ev'){
+    if (m.k === 'push'){
+      const f = MD.figs.get(m.a); if (f) f.shove = performance.now();
+      sfx('bonk'); const b = MD.figs.get(m.b);
+      if (b){ const q = mdProj(b.x, b.y); boom(m.g ? 'TIENT BON !' : 'POUF !', { size:20, x:q[0]/600, y:Math.max(.05, q[1]/420 - .15), pal:BOOM_COLORS[m.g ? 1 : 2], ms:600 }); }
+    } else if (m.k === 'miss'){ const f = MD.figs.get(m.a); if (f) f.shove = performance.now(); sfx('slide'); }
+    else if (m.k === 'fall'){
+      const f = MD.figs.get(m.a); if (f){ f.alive = false; f.fell = performance.now(); }
+      const q = mdProj(m.x, m.y);
+      MD.swim.set(m.a, { x:m.x, y:m.y, t:performance.now() });
+      for (let n = 0; n < 14; n++) MD.splash.push({ x:q[0], y:q[1], vx:(Math.random() - .5)*160, vy:-100 - Math.random()*130, t:performance.now() });
+      sfx('splash');
+      mdToast(mdName(m.a) + ' tombe à l\'eau' + (m.by ? ', poussé par ' + mdName(m.by) : '') + ' !');
+      if (m.a === me.id) boom('PLOUF !', { size:34, x:.5, y:.35, pal:BOOM_COLORS[3], ms:1000 });
+      renderMdPlayers();
+    } else if (m.k === 'left'){ const p = players.find(x => x.id === m.a); if (p) p.left = true; renderMdPlayers(); }
+  } else if (m.t === 'md_res'){
+    MD.ph = 'res'; phase = 'res'; MD.wins = m.wins || MD.wins;
+    const w = m.win;
+    MD.banner = w === me.id ? { big:'VOUS TENEZ BON !', small:m.last ? 'Partie gagnée !' : 'Manche gagnée', col:'#3DDC97' }
+      : w ? { big:mdName(w).toUpperCase() + ' GAGNE LA MANCHE', small:m.last ? 'et la partie !' : 'Dernier sur le radeau', col:'#FFD93B' }
+      : { big:'TOUS À L\'EAU !', small:'Manche nulle, on rejoue', col:'#E6262B' };
+    sfx(w === me.id ? 'win' : w ? 'lose' : 'sunk');
+    mdHead(m.last ? 'Fin de la partie' : 'Manche suivante…'); renderMdPlayers();
   }
 }
-addEventListener('keydown', e => {
-  if (cur !== 'meduse' || !MD || MD.ph !== 'pick' || !mdOnRaft() || e.target.tagName === 'INPUT') return;
-  if (e.key === '1' && !MD.plank[me.id]){ e.preventDefault(); mdChoose({ a:'plank' }); }
-  else if (e.key === '2' && MD.plank[me.id]){ e.preventDefault(); MD.hitMode = true; mdButtons(); }
-  else if (e.key === '3' && !MD.cramp.includes(me.id)){ e.preventDefault(); mdChoose({ a:'grip' }); }
+// ---- input: tilt the phone, or a finger joystick, or the keyboard ----
+function mdTiltSetup(){
+  const coarse = matchMedia('(pointer: coarse)').matches, btn = $('mdTiltBtn');
+  btn.hidden = true;
+  if (!coarse || !('DeviceOrientationEvent' in window)) return;
+  if (typeof DeviceOrientationEvent.requestPermission === 'function'){ btn.hidden = false; return; }
+  addEventListener('deviceorientation', mdOrient);
+}
+$('mdTiltBtn').onclick = async () => {
+  try { const r = await DeviceOrientationEvent.requestPermission(); if (r === 'granted'){ addEventListener('deviceorientation', mdOrient); $('mdTiltBtn').hidden = true; } else mdToast('Inclinaison refusée : glissez le doigt pour marcher'); }
+  catch(_){ mdToast('Inclinaison indisponible : glissez le doigt pour marcher'); }
+};
+function mdOrient(e){
+  if (!MD || cur !== 'meduse' || e.gamma == null || e.beta == null) return;
+  // a phone held upright in the hand: left/right = gamma, towards/away = beta, measured from how it was held at the start
+  let gx = e.gamma, gy = e.beta;
+  const ang = (screen.orientation && screen.orientation.angle) || window.orientation || 0;
+  if (ang === 90){ [gx, gy] = [e.beta, -e.gamma]; } else if (ang === -90 || ang === 270){ [gx, gy] = [-e.beta, e.gamma]; }
+  if (MD.calib || MD.beta0 == null){ MD.beta0 = gy; MD.calib = false; }
+  MD.tiltOn = true;
+  if (MD.joyOn) return;
+  const dz = v => Math.abs(v) < .12 ? 0 : Math.max(-1, Math.min(1, v));
+  MD.in.kx = Math.round(dz(gx/22)*100)/100; MD.in.ky = Math.round(dz((gy - MD.beta0)/22)*100)/100;
+}
+const mdJoy = makeJoy('scrMeduse', {
+  active:() => !!MD && (phase === 'play' || phase === 'count'),
+  move:(vx, vy, on) => { if (!MD) return; MD.joyOn = on; MD.in.kx = Math.round(vx*100)/100; MD.in.ky = Math.round(vy*100)/100; if (!on) mdKeys(); }
 });
-// with a plank in hand, tapping someone on the raft = hitting them
-mdcv.addEventListener('pointerdown', e => {
-  if (!MD || MD.ph !== 'pick' || !mdOnRaft() || !MD.plank[me.id]) return;
-  const r = mdcv.getBoundingClientRect(), x = (e.clientX - r.left)*mdcv.width/r.width, y = (e.clientY - r.top)*mdcv.height/r.height;
-  for (const [id, f] of MD.figs){ if (id !== me.id && MD.aboard.includes(id) && Math.abs(f.x - x) < 24 && y > f.y - 80 && y < f.y + 10){ MD.hitMode = true; mdChoose({ a:'hit', tg:id }); return; } }
+function mdKeys(){ if (!MD || MD.joyOn || MD.tiltOn) return; let kx = 0, ky = 0; for (const k in MD.keys) if (MD.keys[k] && KB_KEYS[k]){ kx += KB_KEYS[k][0]; ky += KB_KEYS[k][1]; } MD.in.kx = kx; MD.in.ky = ky; }
+const mdGrip = on => { if (MD) MD.in.g = on; $('mdGrip').classList.toggle('on', !!on); };
+$('mdGrip').addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); try { e.target.setPointerCapture(e.pointerId); } catch(_){} mdGrip(true); });
+for (const ev of ['pointerup', 'pointercancel', 'lostpointercapture']) $('mdGrip').addEventListener(ev, () => mdGrip(false));
+$('mdPush').addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); if (MD && phase === 'play') toHost({ t:'md_push' }); });
+addEventListener('keydown', e => {
+  if (cur !== 'meduse' || !MD || e.target.tagName === 'INPUT') return;
+  const k = e.key.toLowerCase();
+  if (k === ' '){ e.preventDefault(); if (!e.repeat && phase === 'play') toHost({ t:'md_push' }); return; }
+  if (k === 'shift' || k === 'e'){ e.preventDefault(); mdGrip(true); return; }
+  if (!KB_KEYS[k]) return; e.preventDefault(); MD.keys[k] = true; MD.tiltOn = false; mdKeys();
+});
+addEventListener('keyup', e => {
+  if (cur !== 'meduse' || !MD) return; const k = e.key.toLowerCase();
+  if (k === 'shift' || k === 'e'){ mdGrip(false); return; }
+  if (MD.keys[k]){ MD.keys[k] = false; mdKeys(); }
 });
 
-// ---- the raft: 8 irregular rafts of logs lashed together, one per place; the outer ones break off first ----
-const MD_RAFT = { BL:[118, 226], BR:[506, 210], FR:[574, 332], FL:[54, 356] };
-const MD_SWIM = [[40, 300], [580, 288], [300, 396], [140, 398], [460, 398], [584, 380], [24, 386], [384, 402]];
-const MD_GONE = [[46, 212], [574, 204], [112, 200], [520, 196], [250, 196], [170, 206], [420, 200], [330, 194]];
-const MD_SKIN = ['#F2C9A0', '#C68A5A', '#E8B48C', '#8D5A3B', '#F5D5B5'];
-const MD_HAIR = ['#5A3A1E', '#E2B44C', '#1C1C1C', '#A0522D', '#3B2A20'];
-function mdDeck(s, t, dy){
-  const R = MD_RAFT, a = [R.BL[0] + (R.BR[0] - R.BL[0])*s, R.BL[1] + (R.BR[1] - R.BL[1])*s], b = [R.FL[0] + (R.FR[0] - R.FL[0])*s, R.FL[1] + (R.FR[1] - R.FL[1])*s];
-  return [a[0] + (b[0] - a[0])*t, a[1] + (b[1] - a[1])*t + (dy || 0)];
-}
-function mdLayout(seed){
-  const R = rng32(seed|0), cells = [];
-  // a 3-3-2 cluster, jittered, so the outline is never a neat rectangle
-  const rows = [[.2, .5, .8], [.12, .42, .72], [.3, .62]], ts = [.22, .52, .82];
-  rows.forEach((row, r) => row.forEach(s => {
-    const logs = []; const n = 3 + (R() < .4 ? 1 : 0);
-    for (let k = 0; k < n; k++) logs.push({ dt:(k - (n - 1)/2)*.085 + (R() - .5)*.02, ds:(R() - .5)*.05, len:.17 + R()*.1, a:(R() - .5)*.16, tone:R() });
-    cells.push({ s:s + (R() - .5)*.06, t:ts[r] + (R() - .5)*.05, logs, mast:false, barrel:false });
-  }));
-  // the outer cells go first: furthest from the middle, a little shuffled
-  const order = cells.map((c, i) => i).sort((a, b) => (Math.hypot(cells[a].s - .47, (cells[a].t - .52)*1.4) + R()*.12) - (Math.hypot(cells[b].s - .47, (cells[b].t - .52)*1.4) + R()*.12));
-  // order[k] = the cell lost when only k places remain: the last two hold the mast and the barrel
-  cells[order[0]].mast = true; cells[order[1]].barrel = true;
-  return { cells, order };
-}
-// the cells still afloat, from the middle outwards
-const mdLive = () => MD.cells.order.slice(0, Math.max(0, MD.places));
-const mdSink = () => Math.min(MD.n, 8)/8*12;
-function mdSlots(){
-  const out = new Map(), dy = mdSink(), live = mdLive(), byCell = new Map();
-  for (const id of MD.aboard){ let c = MD.pos[id]; if (!live.includes(c)) c = live[live.length - 1]; if (!byCell.has(c)) byCell.set(c, []); byCell.get(c).push(id); }
-  // several on one piece: they squeeze side by side
-  for (const [ci, ids] of byCell){
-    const c = MD.cells.cells[ci]; if (!c) continue;
-    ids.forEach((id, k) => {
-      const off = ids.length > 1 ? (k - (ids.length - 1)/2)*.06 : 0, q = mdDeck(c.s + off, c.t + Math.abs(off)*.3, dy);
-      out.set(id, { x:q[0], y:q[1] - (c.barrel && ids.length === 1 ? 26 : 0), deck:true, raised:c.barrel && ids.length === 1, squeezed:ids.length > 1, cell:ci });
-    });
-  }
-  MD.water.forEach((id, k) => { const q = MD_SWIM[k % MD_SWIM.length]; out.set(id, { x:q[0], y:q[1], deck:false }); });
-  MD.dead.forEach((id, k) => { const q = MD_GONE[k % MD_GONE.length]; out.set(id, { x:q[0], y:q[1], deck:false, gone:true }); });
-  return out;
+// ---- loop and drawing ----
+// local raft coordinates -> screen: three-quarter view, the low side drawn lower
+function mdProj(x, y){
+  const t = MD.tilt, bob = Math.sin((MD.t || 0)*1.3)*MD.sea*3;
+  return [300 + x*1.38, 268 + y*.86 + (x*t[0] + y*t[1])*1.15 + bob];
 }
 function meduseFrame(dtMs, now){
   if (!MD) return;
   const dt = Math.min(.05, dtMs/1000);
-  while (MD.queue.length && MD.queue[0].at <= now) mdApply(MD.queue.shift().e);
-  if (MD.ph === 'pick'){
-    const left = Math.max(0, Math.ceil((MD.deadline - now)/1000));
-    if (left !== MD.shownLeft){ MD.shownLeft = left; $('mdTime').textContent = '⏱ ' + left + ' s'; $('mdTime').classList.toggle('low', left <= 3); if (left <= 3 && left > 0 && !MD.mine && mdOnRaft()) sfx('count'); }
-  } else if (MD.shownLeft !== -1){ MD.shownLeft = -1; $('mdTime').textContent = '⏱ –'; $('mdTime').classList.remove('low'); }
-  const slots = mdSlots();
-  for (const [id, s] of slots){
-    let f = MD.figs.get(id);
-    if (!f){ f = { x:s.x, y:s.y, bx:s.x, by:s.y }; MD.figs.set(id, f); }
-    const k = Math.min(1, dt*(s.gone ? .45 : f.fly && now - f.fly < 700 ? 3 : 5));
-    f.bx += (s.x - f.bx)*k; f.by += (s.y - f.by)*k;
-    f.deck = s.deck; f.raised = s.raised; f.gone = s.gone; f.squeezed = s.squeezed;
+  if (phase === 'count'){ MD.count -= dt; countBeep(MD.count > 0 ? Math.ceil(MD.count) : 0); }
+  if (phase === 'play' && !MD.spec){
+    const msg = { t:'md_in', kx:MD.in.kx, ky:MD.in.ky, g:MD.in.g ? 1 : 0 }, key = JSON.stringify(msg);
+    if (key !== MD.sent && now - MD.lastSend > 33){ MD.sent = key; MD.lastSend = now; toHost(msg); }
   }
-  for (const id of [...MD.figs.keys()]) if (!slots.has(id)) MD.figs.delete(id);
-  mdDraw(mdctx, 600, 420, now);
+  if (me.host) meduseHostFrame(dt, now);
+  const k = Math.min(1, dt*14);
+  MD.tilt[0] += (MD.tt[0] - MD.tilt[0])*k; MD.tilt[1] += (MD.tt[1] - MD.tilt[1])*k;
+  for (const f of MD.figs.values()){ f.x += (f.tx - f.x)*k; f.y += (f.ty - f.y)*k; }
+  if (!me.host) MD.t += dt;
+  const mine = MD.figs.get(me.id), out = !mine || !mine.alive;
+  $('mdSt').style.width = Math.round((MD.st || 0)*100) + '%';
+  $('mdSt').classList.toggle('low', (MD.st || 0) < MD_PUSH_COST);
+  $('mdPush').disabled = out || phase !== 'play' || (MD.st || 0) < MD_PUSH_COST;
+  $('mdGrip').disabled = out || phase !== 'play';
+  const sea = MD.sea < .8 ? 'calme' : MD.sea < 1.5 ? 'agitée' : MD.sea < 2.1 ? 'forte' : 'déchaînée';
+  $('mdTime').textContent = '🌊 Mer ' + sea;
+  mdDraw(mdctx, now);
 }
-// one castaway, comic style; pose: idle, plank (bending to pick one up), hit, grip, wave, point, swim; plank: holding one
+function mdDraw(ctx, now, art){
+  const t = now/1000, HZ = 150;
+  // stormy sky on the left, golden light on the right, as in the painting
+  let g = ctx.createLinearGradient(0, 0, 600, 0); g.addColorStop(0, '#39414E'); g.addColorStop(.45, '#7E827E'); g.addColorStop(.8, '#E9C77E'); g.addColorStop(1, '#F7DE9C');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, 600, HZ);
+  const cloud = (cx, cy, r, col) => { ctx.fillStyle = col; ctx.beginPath();
+    for (const [ox, oy, k] of [[-1.3, .2, .7], [-.5, -.35, .95], [.45, -.25, .85], [1.2, .15, .7], [0, .3, .9]]) ctx.moveTo(cx + ox*r + k*r, cy + oy*r), ctx.arc(cx + ox*r, cy + oy*r, k*r, 0, Math.PI*2);
+    ctx.fill(); };
+  const dr = Math.sin(t*.08)*10;
+  cloud(80 + dr, 40, 34, '#2C323C'); cloud(210 + dr, 26, 28, '#3A414C'); cloud(40 + dr, 108, 24, '#454C57'); cloud(470 - dr*.5, 50, 16, '#F4DDA8'); cloud(560 - dr*.5, 86, 14, '#FBE8BE');
+  // the sea, rougher as it grows
+  g = ctx.createLinearGradient(0, HZ, 0, 420); g.addColorStop(0, '#6F8B7A'); g.addColorStop(1, '#2A4641'); ctx.fillStyle = g; ctx.fillRect(0, HZ, 600, 420 - HZ);
+  g = ctx.createRadialGradient(540, HZ, 4, 540, HZ, 150); g.addColorStop(0, 'rgba(255,225,150,.55)'); g.addColorStop(1, 'rgba(255,225,150,0)'); ctx.fillStyle = g; ctx.fillRect(380, HZ, 220, 130);
+  ctx.strokeStyle = 'rgba(230,240,230,.35)'; ctx.lineWidth = 2;
+  const amp = 2 + MD.sea*3;
+  for (let y = HZ + 10; y < 420; y += 18){ const a = (y - HZ)/250; ctx.beginPath(); for (let x = -10; x <= 610; x += 10) ctx.lineTo(x, y + Math.sin(x/(22 + a*30) + t*1.4 + y)*(2 + a*amp)); ctx.stroke(); }
+  // the ship on the horizon
+  ctx.save(); ctx.translate(530, HZ + 2); ctx.scale(.3, .3); ctx.fillStyle = '#2B1C12'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(-50, -8); ctx.lineTo(50, -8); ctx.lineTo(38, 8); ctx.lineTo(-40, 8); ctx.closePath(); ctx.fill(); ctx.stroke();
+  for (const mx of [-18, 18]){ ctx.beginPath(); ctx.moveTo(mx, -8); ctx.lineTo(mx, -62); ctx.stroke(); ctx.fillStyle = '#EFE4CC'; ctx.fillRect(mx - 10, -56, 20, 16); ctx.fillRect(mx - 12, -36, 24, 16); }
+  ctx.restore();
+  // the swimmers who fell in, behind the raft when they fell at the back
+  const swimmers = [...MD.swim.entries()].map(([id, s]) => { const k = Math.min(1, (now - s.t)/1600), L = Math.hypot(s.x, s.y) || 1, x = s.x + s.x/L*(40 + 30*k), y = s.y + s.y/L*(30 + 20*k); const q = mdProj(x, y); return { id, x:q[0], y:Math.max(HZ + 20, q[1] + 18), back:s.y < 0 }; });
+  const swim = sw => { const i = players.findIndex(p => p.id === sw.id), p = players[i]; if (p) mdPerson(ctx, sw.x, sw.y + Math.sin(t*2.4 + i)*3, p, i, 'swim', 1, t + i, .9, sw.id === me.id, false); };
+  swimmers.filter(s => s.back).forEach(swim);
+  // the raft: one piece of lashed logs, its side showing below the deck
+  const P = MD_SHAPE.map(([x, y]) => mdProj(x, y));
+  ctx.lineJoin = 'round';
+  ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.beginPath(); P.forEach(([x, y], i) => i ? ctx.lineTo(x, y + 26) : ctx.moveTo(x, y + 26)); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = '#3E2A18'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
+  ctx.beginPath(); P.forEach(([x, y], i) => i ? ctx.lineTo(x, y + 14) : ctx.moveTo(x, y + 14)); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#8A5E36'; ctx.beginPath(); P.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.closePath(); ctx.fill();
+  ctx.save(); ctx.clip();
+  for (let yy = -130; yy < 130; yy += 17){
+    const a = mdProj(-210, yy), b = mdProj(210, yy);
+    ctx.strokeStyle = 'rgba(0,0,0,.4)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,220,170,.14)'; ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(a[0], a[1] + 6); ctx.lineTo(b[0], b[1] + 6); ctx.stroke();
+  }
+  for (const xx of [-120, 0, 120]){ const a = mdProj(xx, -130), b = mdProj(xx, 130); ctx.strokeStyle = '#D8C08A'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); }
+  // water washing over the low side
+  const tl = MD.tilt, slope = Math.hypot(tl[0], tl[1]);
+  if (slope > .08){
+    const ux = tl[0]/slope, uy = tl[1]/slope, depth = Math.min(1, (slope - .08)/.3);
+    const a = mdProj(ux*240 - uy*300, uy*150 + ux*300), b = mdProj(ux*240 + uy*300, uy*150 - ux*300), c = mdProj(ux*(200 - 110*depth) + uy*300, uy*(120 - 70*depth) - ux*300), d = mdProj(ux*(200 - 110*depth) - uy*300, uy*(120 - 70*depth) + ux*300);
+    ctx.fillStyle = 'rgba(70,115,105,' + (.25 + depth*.4) + ')'; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.lineTo(c[0], c[1]); ctx.lineTo(d[0], d[1]); ctx.closePath(); ctx.fill();
+  }
+  ctx.restore();
+  ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.beginPath(); P.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.closePath(); ctx.stroke();
+  // foam where the low edge dips into the sea
+  ctx.fillStyle = 'rgba(255,255,255,.85)';
+  MD_SHAPE.forEach(([x, y], i) => { const h = (x*tl[0] + y*tl[1])*1.15; if (h > 14){ const q = P[i]; for (let n = 0; n < 3; n++){ ctx.beginPath(); ctx.arc(q[0] + Math.sin(t*5 + n*2 + i)*8, q[1] + 10 + Math.cos(t*4 + n)*3, 3 + Math.min(4, h/10), 0, Math.PI*2); ctx.fill(); } } });
+  // mast and people, back to front
+  const items = [], mb = mdProj(-70, -40);
+  items.push({ y:mb[1], f:() => mdMast(ctx, mb, t) });
+  players.forEach((p, i) => {
+    const f = MD.figs.get(p.id); if (!f || (!f.alive && !(f.fell && now - f.fell < 500))) return;
+    let [x, y] = mdProj(f.x, f.y);
+    if (f.fell){ const k2 = (now - f.fell)/500; y += k2*k2*40; }
+    const dir = Math.cos(f.fa || 0) >= 0 ? 1 : -1, shoving = f.shove && now - f.shove < 300;
+    items.push({ y, f:() => {
+      ctx.save(); if (f.fell) ctx.globalAlpha = Math.max(0, 1 - (now - f.fell)/500);
+      ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.beginPath(); ctx.ellipse(x, y + 2, 14, 5, 0, 0, Math.PI*2); ctx.fill();
+      mdPerson(ctx, x + (shoving ? dir*8 : 0), y, p, i, f.grip ? 'grip' : shoving ? 'point' : f.hit ? 'grip' : 'idle', dir, t + i, 1, p.id === me.id, false);
+      ctx.restore();
+      // name, and the strength gauge of whoever holds on
+      ctx.font = '900 11px Nunito, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 3; ctx.strokeStyle = '#000'; ctx.fillStyle = p.id === me.id ? '#FFD93B' : '#fff';
+      const nm = p.id === me.id ? 'VOUS' : p.name.slice(0, 8); ctx.strokeText(nm, x, y - 84); ctx.fillText(nm, x, y - 84);
+      if (f.grip || (f.st != null && f.st < .99)){ ctx.fillStyle = '#000'; ctx.fillRect(x - 15, y - 80, 30, 5); ctx.fillStyle = f.st < MD_PUSH_COST ? '#E6262B' : '#3DDC97'; ctx.fillRect(x - 14, y - 79, 28*(f.st || 0), 3); }
+    } });
+  });
+  items.sort((a, b) => a.y - b.y).forEach(it => it.f());
+  swimmers.filter(s => !s.back).forEach(swim);
+  // front waves
+  ctx.fillStyle = 'rgba(42,70,65,.9)'; ctx.beginPath(); ctx.moveTo(0, 420);
+  for (let x = 0; x <= 600; x += 8) ctx.lineTo(x, 402 + Math.sin(x/34 + t*1.8)*(4 + MD.sea*3) + Math.sin(x/11 + t*3)*2); ctx.lineTo(600, 420); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = '#E8EFE6'; ctx.lineWidth = 3; ctx.beginPath(); for (let x = 0; x <= 600; x += 8) ctx.lineTo(x, 402 + Math.sin(x/34 + t*1.8)*(4 + MD.sea*3) + Math.sin(x/11 + t*3)*2); ctx.stroke();
+  ctx.fillStyle = '#3F5F55'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.moveTo(0, 420); ctx.lineTo(0, 356); ctx.quadraticCurveTo(30, 334 + Math.sin(t)*4, 70, 348); ctx.quadraticCurveTo(54, 356, 62, 368); ctx.quadraticCurveTo(90, 394, 140, 420); ctx.closePath(); ctx.fill(); ctx.stroke();
+  MD.splash = MD.splash.filter(s => now - s.t < 700);
+  ctx.fillStyle = '#fff'; for (const s of MD.splash){ const a = (now - s.t)/1000; ctx.beginPath(); ctx.arc(s.x + s.vx*a, s.y + s.vy*a + 300*a*a, 3, 0, Math.PI*2); ctx.fill(); }
+  if (art) return;
+  // how steep it is
+  const sl = Math.min(1, slope/.45);
+  ctx.fillStyle = 'rgba(255,255,255,.92)'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.fillRect(12, 12, 150, 26); ctx.strokeRect(12, 12, 150, 26);
+  ctx.fillStyle = sl > .6 ? '#E6262B' : sl > .3 ? '#FF8A1F' : '#3DDC97'; ctx.fillRect(66, 18, 90*sl, 14);
+  ctx.font = '14px Bangers, Impact, sans-serif'; ctx.textAlign = 'left'; ctx.fillStyle = '#000'; ctx.fillText('PENTE', 18, 31);
+  if (MD.banner){
+    ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.fillRect(0, 110, 600, 110);
+    ctx.textAlign = 'center'; ctx.font = '40px Bangers, Impact, sans-serif'; ctx.lineWidth = 6; ctx.strokeStyle = '#000'; ctx.fillStyle = MD.banner.col;
+    ctx.strokeText(MD.banner.big, 300, 166); ctx.fillText(MD.banner.big, 300, 166);
+    ctx.font = '900 18px Nunito, sans-serif'; ctx.fillStyle = '#fff'; ctx.lineWidth = 4; ctx.strokeText(MD.banner.small, 300, 198); ctx.fillText(MD.banner.small, 300, 198);
+  }
+}
+
+const MD_SKIN = ['#F2C9A0', '#C68A5A', '#E8B48C', '#8D5A3B', '#F5D5B5'];
+const MD_HAIR = ['#5A3A1E', '#E2B44C', '#1C1C1C', '#A0522D', '#3B2A20'];
 function mdPerson(ctx, x, y, p, i, pose, dir, t, sc, mine, plank){
   ctx.save(); ctx.translate(x, y); ctx.scale(sc, sc);
   ctx.lineCap = 'round'; ctx.lineJoin = 'round';
@@ -10248,156 +10311,6 @@ function mdPerson(ctx, x, y, p, i, pose, dir, t, sc, mine, plank){
   ctx.restore();
   ctx.restore();
 }
-// one place of the raft: a few logs lashed together, seen from three-quarters
-function mdCell(ctx, c, dy, ox, oy, alpha, warn, t){
-  const R = MD_RAFT, ang = Math.atan2(R.FR[1] - R.FL[1], R.FR[0] - R.FL[0]);
-  ctx.save(); ctx.globalAlpha = alpha;
-  for (const L of c.logs){
-    const q = mdDeck(c.s + L.ds, c.t + L.dt, dy), w = L.len*400, a = ang + L.a;
-    ctx.save(); ctx.translate(q[0] + ox, q[1] + oy); ctx.rotate(a);
-    ctx.fillStyle = '#3E2A18'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5;
-    ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(-w/2, -4, w, 15, 6); else ctx.rect(-w/2, -4, w, 15); ctx.fill(); ctx.stroke();      // the side of the log
-    ctx.fillStyle = L.tone < .33 ? '#8A5E36' : L.tone < .66 ? '#9A6B40' : '#7C5230';
-    ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(-w/2, -9, w, 13, 6); else ctx.rect(-w/2, -9, w, 13); ctx.fill(); ctx.stroke();
-    ctx.strokeStyle = 'rgba(0,0,0,.3)'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(-w/2 + 8, -3); ctx.lineTo(w/2 - 10, -4); ctx.stroke();
-    ctx.fillStyle = '#C79B66'; ctx.beginPath(); ctx.ellipse(w/2 - 2, -2.5, 3, 6, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();   // the cut end
-    ctx.restore();
-  }
-  // rope lashings
-  const a0 = mdDeck(c.s - .06, c.t - .12, dy), a1 = mdDeck(c.s - .06, c.t + .12, dy), b0 = mdDeck(c.s + .06, c.t - .12, dy), b1 = mdDeck(c.s + .06, c.t + .12, dy);
-  ctx.strokeStyle = '#D8C08A'; ctx.lineWidth = 2.5;
-  ctx.beginPath(); ctx.moveTo(a0[0] + ox, a0[1] + oy - 4); ctx.lineTo(a1[0] + ox, a1[1] + oy - 4); ctx.moveTo(b0[0] + ox, b0[1] + oy - 4); ctx.lineTo(b1[0] + ox, b1[1] + oy - 4); ctx.stroke();
-  if (warn){
-    // the next piece to go: cracks, and the sea washing over it
-    const q = mdDeck(c.s, c.t, dy);
-    ctx.strokeStyle = '#000'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(q[0] - 20, q[1] - 14); ctx.lineTo(q[0] - 6, q[1] - 4); ctx.lineTo(q[0] - 12, q[1] + 6); ctx.lineTo(q[0] + 4, q[1] + 14); ctx.stroke();
-    ctx.fillStyle = 'rgba(70,110,100,' + (.35 + Math.sin(t*3)*.15) + ')'; ctx.beginPath(); ctx.ellipse(q[0] + 6, q[1] + 4, 40, 15, -.05, 0, Math.PI*2); ctx.fill();
-    ctx.strokeStyle = 'rgba(255,255,255,.75)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(q[0] + 6, q[1] + 4, 40 + Math.sin(t*3)*3, 15, -.05, Math.PI*1.1, Math.PI*1.9); ctx.stroke();
-  }
-  ctx.restore();
-}
-function mdDraw(ctx, Wd, Ht, now, art){
-  const t = now/1000, sk = Wd/600, HZ = 168, dy = mdSink();
-  ctx.save(); ctx.scale(sk, sk);
-  // stormy sky on the left, golden light on the right
-  let g = ctx.createLinearGradient(0, 0, 600, 0); g.addColorStop(0, '#39414E'); g.addColorStop(.45, '#7E827E'); g.addColorStop(.8, '#E9C77E'); g.addColorStop(1, '#F7DE9C');
-  ctx.fillStyle = g; ctx.fillRect(0, 0, 600, HZ);
-  g = ctx.createLinearGradient(0, 0, 0, HZ); g.addColorStop(0, 'rgba(20,24,32,.35)'); g.addColorStop(1, 'rgba(255,240,200,.25)'); ctx.fillStyle = g; ctx.fillRect(0, 0, 600, HZ);
-  const cloud = (cx, cy, r, col) => { ctx.fillStyle = col; ctx.beginPath();
-    for (const [ox, oy, k] of [[-1.3, .2, .7], [-.5, -.35, .95], [.45, -.25, .85], [1.2, .15, .7], [0, .3, .9]]) ctx.moveTo(cx + ox*r + k*r, cy + oy*r), ctx.arc(cx + ox*r, cy + oy*r, k*r, 0, Math.PI*2);
-    ctx.fill(); };
-  const drift = Math.sin(t*.08)*10;
-  cloud(80 + drift, 46, 34, '#2C323C'); cloud(210 + drift, 30, 28, '#3A414C'); cloud(40 + drift, 120, 26, '#454C57'); cloud(330 + drift*.5, 64, 20, '#6B6E6E');
-  cloud(470 - drift*.5, 54, 16, '#F4DDA8'); cloud(560 - drift*.5, 92, 14, '#FBE8BE');
-  g = ctx.createLinearGradient(0, HZ, 0, 420); g.addColorStop(0, '#6F8B7A'); g.addColorStop(1, '#2A4641'); ctx.fillStyle = g; ctx.fillRect(0, HZ, 600, 420 - HZ);
-  g = ctx.createRadialGradient(540, HZ, 4, 540, HZ, 160); g.addColorStop(0, 'rgba(255,225,150,.55)'); g.addColorStop(1, 'rgba(255,225,150,0)'); ctx.fillStyle = g; ctx.fillRect(380, HZ, 220, 140);
-  ctx.strokeStyle = 'rgba(230,240,230,.35)'; ctx.lineWidth = 2;
-  for (let y = HZ + 10; y < 420; y += 18){ const a = (y - HZ)/250; ctx.beginPath(); for (let x = -10; x <= 610; x += 10) ctx.lineTo(x, y + Math.sin(x/(22 + a*30) + t*1.4 + y)*(2 + a*5)); ctx.stroke(); }
-  // the rescue ship, a speck at first
-  const k = .28 + MD.Dv/100*.8, sx = 548 - MD.Dv*.7, sy = HZ + 2 + MD.Dv*.18;
-  ctx.save(); ctx.translate(sx, sy); ctx.scale(k, k);
-  ctx.fillStyle = '#2B1C12'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
-  ctx.beginPath(); ctx.moveTo(-50, -8); ctx.lineTo(50, -8); ctx.lineTo(38, 8); ctx.lineTo(-40, 8); ctx.closePath(); ctx.fill(); ctx.stroke();
-  for (const mx of [-18, 18]){ ctx.beginPath(); ctx.moveTo(mx, -8); ctx.lineTo(mx, -62); ctx.stroke();
-    ctx.fillStyle = '#EFE4CC'; ctx.lineWidth = 2; for (const [y0, w0] of [[-58, 18], [-38, 24]]){ ctx.beginPath(); ctx.moveTo(mx - w0/2, y0); ctx.lineTo(mx + w0/2, y0); ctx.quadraticCurveTo(mx + w0/2 + 3, y0 + 8, mx + w0/2, y0 + 16); ctx.lineTo(mx - w0/2, y0 + 16); ctx.closePath(); ctx.fill(); ctx.stroke(); } ctx.lineWidth = 3; }
-  ctx.restore();
-  const acts = MD.ph === 'show' ? MD.acts : null, labels = [];
-  const draw = (id, f) => {
-    const i = players.findIndex(x => x.id === id), p = players[i]; if (!p) return;
-    const mine = id === me.id;
-    let x = f.bx, y = f.by;
-    if (f.deck) y += Math.sin(t*1.3)*2; else y += Math.sin(t*2.4 + x)*3;
-    if (f.squeezed && f.deck) x += Math.sin(t*7 + i)*1.5;                   // too many: they wobble
-    if (f.lunge && now - f.lunge.t < 400){ const o = MD.figs.get(f.lunge.to); if (o) x += (o.bx - x)*.35*Math.sin((now - f.lunge.t)/400*Math.PI); }
-    let flying = false;
-    if (f.fly && now - f.fly < 700){ const k2 = (now - f.fly)/700; flying = true; y -= Math.sin(k2*Math.PI)*70; if (k2 > .8 && !f.splashed){ f.splashed = true; for (let n = 0; n < 12; n++) MD.splash.push({ x, y:y + 6, vx:(Math.random() - .5)*140, vy:-90 - Math.random()*120, t:now }); } }
-    else if (f.fly){ f.fly = null; f.splashed = false; }
-    f.x = x; f.y = y;
-    const a = acts && acts[id] ? acts[id].a : null;
-    let dir = x < 300 ? 1 : -1;
-    if (a === 'hit' && acts[id].tg){ const o = MD.figs.get(acts[id].tg); if (o) dir = o.bx < x ? -1 : 1; }
-    let pose = 'idle';
-    if (!f.deck && !flying) pose = 'swim';
-    else if (flying) pose = 'grip';
-    else if (a && ['hit', 'plank', 'grip'].includes(a)) pose = a;
-    else if (MD.fin && MD.fin === id) pose = 'wave';
-    else if (f.raised && !MD.plank[id]) pose = 'wave';
-    const far = f.gone ? Math.max(0, Math.min(1, (330 - f.by)/120)) : 0;
-    mdPerson(ctx, x, y, p, i, pose, dir, t + i, f.gone ? 1.1 - far*.55 : 1.05, mine, !!MD.plank[id] && f.deck && !flying);
-    if (f.gone && far < .9){ ctx.font = '900 13px Nunito, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 3; ctx.strokeStyle = '#000'; ctx.fillStyle = '#FFD93B'; const h = 'À l\'aide !', hy = y - 40 - (1 - far)*8; ctx.strokeText(h, x, hy); ctx.fillText(h, x, hy);
-      ctx.strokeStyle = 'rgba(255,255,255,.55)'; ctx.lineWidth = 2; for (let n = 1; n < 4; n++){ ctx.beginPath(); ctx.ellipse(x, y + 4 + n*4, 18 + n*8, 4 + n, 0, 0, Math.PI*2); ctx.stroke(); } }
-    const top = f.gone ? y - 24 - (1 - far)*8 : !f.deck && !flying ? y - 30 : y - 84;
-    labels.push({ id, x, top, mine, gone:f.gone, a });
-  };
-  for (const [id, f] of MD.figs) if (f.gone){ ctx.globalAlpha = .8; draw(id, f); ctx.globalAlpha = 1; }
-  // pieces that broke off: they drift away and sink
-  MD.broke = MD.broke.filter(b => now - b.t < 2600);
-  for (const b of MD.broke){
-    const c = MD.cells.cells[b.c], k2 = (now - b.t)/2600, q = mdDeck(c.s, c.t, dy), dx = (q[0] - 300)*.35, dyy = (q[1] - 270)*.4;
-    mdCell(ctx, c, dy, dx*k2, dyy*k2 + 26*k2*k2, 1 - k2, false, t);
-  }
-  // the raft that is left, back to front, with the mast, the barrel and the people
-  const live = mdLive(), warnCell = MD.ph !== 'show' && MD.places > 1 && !MD.fin ? MD.cells.order[MD.places - 1] : null;
-  const items = [];
-  for (const ci of live){
-    const c = MD.cells.cells[ci], q = mdDeck(c.s, c.t, dy);
-    items.push({ y:q[1] - 30, f:() => mdCell(ctx, c, dy, 0, 0, 1, ci === warnCell, t) });
-    if (c.mast) items.push({ y:q[1] - 1, f:() => mdMast(ctx, q, t) });
-    if (c.barrel) items.push({ y:q[1] - .5, f:() => mdBarrel(ctx, q) });
-  }
-  for (const [id, f] of MD.figs) if (f.deck || (f.fly && now - f.fly < 700)) items.push({ y:f.by + (f.raised ? 26 : 0) + .1, f:() => draw(id, f) });
-  items.sort((a, b) => a.y - b.y).forEach(it => it.f());
-  for (const [id, f] of MD.figs) if (!f.deck && !f.gone && !(f.fly && now - f.fly < 700)) draw(id, f);
-  ctx.fillStyle = 'rgba(42,70,65,.9)'; ctx.beginPath(); ctx.moveTo(0, 420);
-  for (let x = 0; x <= 600; x += 8) ctx.lineTo(x, 400 + Math.sin(x/34 + t*1.8)*6 + Math.sin(x/11 + t*3)*2); ctx.lineTo(600, 420); ctx.closePath(); ctx.fill();
-  ctx.strokeStyle = '#E8EFE6'; ctx.lineWidth = 3; ctx.beginPath(); for (let x = 0; x <= 600; x += 8) ctx.lineTo(x, 400 + Math.sin(x/34 + t*1.8)*6 + Math.sin(x/11 + t*3)*2); ctx.stroke();
-  ctx.fillStyle = '#3F5F55'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5;
-  ctx.beginPath(); ctx.moveTo(0, 420); ctx.lineTo(0, 352); ctx.quadraticCurveTo(30, 330 + Math.sin(t)*4, 70, 344); ctx.quadraticCurveTo(54, 352, 62, 364); ctx.quadraticCurveTo(90, 390, 140, 420); ctx.closePath(); ctx.fill(); ctx.stroke();
-  ctx.strokeStyle = '#F2F5EE'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(4, 350); ctx.quadraticCurveTo(32, 334 + Math.sin(t)*4, 66, 345); ctx.stroke();
-  MD.splash = MD.splash.filter(s => now - s.t < 700);
-  ctx.fillStyle = '#fff'; for (const s of MD.splash){ const a = (now - s.t)/1000; ctx.beginPath(); ctx.arc(s.x + s.vx*a, s.y + s.vy*a + 300*a*a, 3, 0, Math.PI*2); ctx.fill(); }
-  // names, lives, readiness or the revealed choice
-  for (const L of labels){
-    ctx.font = '900 11px Nunito, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 3; ctx.strokeStyle = '#000'; ctx.fillStyle = L.mine ? '#FFD93B' : '#fff';
-    const p = players.find(x => x.id === L.id), nm = L.mine ? 'VOUS' : (p ? p.name.slice(0, 8) : '');
-    ctx.strokeText(nm, L.x, L.top); ctx.fillText(nm, L.x, L.top);
-    if (L.gone) continue;
-    const lv = MD.lives[L.id] ?? MD_LIVES;
-    ctx.font = '11px sans-serif'; ctx.fillStyle = '#E6262B'; ctx.lineWidth = 2.5; const hs = '♥'.repeat(lv) + '♡'.repeat(Math.max(0, MD_LIVES - lv));
-    ctx.strokeText(hs, L.x, L.top + 12); ctx.fillText(hs, L.x, L.top + 12);
-    let badge = '';
-    if (L.a && MD_ACTS[L.a]) badge = MD_ACTS[L.a].ic;
-    else if (MD.ph === 'pick' && MD.ready.includes(L.id)) badge = '✔';
-    if (badge){
-      ctx.fillStyle = '#fff'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(L.x, L.top - 19, 11, 0, Math.PI*2); ctx.fill(); ctx.stroke();
-      ctx.font = badge === '✔' ? '900 13px Nunito, sans-serif' : '13px sans-serif'; ctx.fillStyle = badge === '✔' ? '#12A150' : '#000'; ctx.textBaseline = 'middle'; ctx.fillText(badge, L.x, L.top - 18); ctx.textBaseline = 'alphabetic';
-    }
-    if (acts && acts[L.id] && acts[L.id].a === 'hit' && acts[L.id].tg){ const o = labels.find(q => q.id === acts[L.id].tg); if (o){ ctx.strokeStyle = 'rgba(217,31,37,.9)'; ctx.lineWidth = 3; ctx.setLineDash([6, 5]); ctx.beginPath(); ctx.moveTo(L.x, L.top - 36); ctx.quadraticCurveTo((L.x + o.x)/2, Math.min(L.top, o.top) - 70, o.x, o.top - 36); ctx.stroke(); ctx.setLineDash([]); } }
-  }
-  if (art){ ctx.restore(); return; }
-  // the places left: one log icon per place, crossed when gone; red when there are too many people
-  const n = players.filter(p => (MD.lives[p.id] ?? MD_LIVES) > 0 && !p.left).length;
-  ctx.fillStyle = 'rgba(255,255,255,.92)'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
-  ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(12, 12, 236, 34, 8); else ctx.rect(12, 12, 236, 34); ctx.fill(); ctx.stroke();
-  ctx.font = '15px Bangers, Impact, sans-serif'; ctx.textAlign = 'left'; ctx.fillStyle = '#000'; ctx.fillText('RADEAU', 20, 34);
-  for (let i = 0; i < MD_CREW; i++){
-    const x = 82 + i*20, ok = i < MD.places, warn = i === MD.places - 1 && warnCell != null;
-    ctx.save(); ctx.translate(x, 29);
-    ctx.fillStyle = ok ? (warn ? (Math.floor(now/300) % 2 ? '#E6262B' : '#8A5E36') : '#8A5E36') : '#B9D4CF';
-    ctx.strokeStyle = '#000'; ctx.lineWidth = 2; ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(-7, -9, 14, 18, 3); else ctx.rect(-7, -9, 14, 18); ctx.fill(); ctx.stroke();
-    if (!ok){ ctx.strokeStyle = '#1E5BFF'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(-6, 2); ctx.quadraticCurveTo(-2, -2, 0, 2); ctx.quadraticCurveTo(3, 6, 6, 2); ctx.stroke(); }
-    ctx.restore();
-  }
-  ctx.font = '15px Bangers, Impact, sans-serif'; ctx.textAlign = 'left'; ctx.lineWidth = 3; ctx.strokeStyle = '#000'; ctx.fillStyle = '#fff';
-  const tx = 'ENCORE EN VIE : ' + n; ctx.strokeText(tx, 16, 64); ctx.fillText(tx, 16, 64);
-  if (MD.banner){
-    ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.fillRect(0, 110, 600, 110);
-    ctx.textAlign = 'center'; ctx.font = '46px Bangers, Impact, sans-serif'; ctx.lineWidth = 6; ctx.strokeStyle = '#000'; ctx.fillStyle = MD.banner.col;
-    ctx.strokeText(MD.banner.big, 300, 168); ctx.fillText(MD.banner.big, 300, 168);
-    ctx.font = '900 18px Nunito, sans-serif'; ctx.fillStyle = '#fff'; ctx.lineWidth = 4; ctx.strokeText(MD.banner.small, 300, 200); ctx.fillText(MD.banner.small, 300, 200);
-  }
-  ctx.restore();
-}
 function mdMast(ctx, mb, t){
   const top = [mb[0] - 26, mb[1] - 178];
   ctx.strokeStyle = '#000'; ctx.lineWidth = 8; ctx.beginPath(); ctx.moveTo(mb[0], mb[1]); ctx.lineTo(top[0], top[1]); ctx.stroke();
@@ -10411,12 +10324,6 @@ function mdMast(ctx, mb, t){
   ctx.quadraticCurveTo(top[0] - 130 - w, top[1] + 90, top[0] - 66, top[1] + 32); ctx.closePath(); ctx.fill(); ctx.stroke();
   ctx.strokeStyle = 'rgba(120,95,60,.6)'; ctx.lineWidth = 1.5; for (let n = 1; n < 4; n++){ ctx.beginPath(); ctx.moveTo(top[0] - 66 + n*16, top[1] + 30 - n*5); ctx.quadraticCurveTo(top[0] - 90 + n*14 - w*.5, top[1] + 90, mb[0] - 60 + n*12, mb[1] - 34); ctx.stroke(); }
   ctx.fillStyle = '#5A4A33'; ctx.beginPath(); ctx.ellipse(top[0] - 40 - w*.4, top[1] + 74, 7, 11, .4, 0, Math.PI*2); ctx.fill();
-}
-function mdBarrel(ctx, bb){
-  ctx.fillStyle = '#7A4E2A'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5;
-  ctx.beginPath(); ctx.moveTo(bb[0] - 15, bb[1] - 26); ctx.lineTo(bb[0] - 17, bb[1]); ctx.quadraticCurveTo(bb[0], bb[1] + 6, bb[0] + 17, bb[1]); ctx.lineTo(bb[0] + 15, bb[1] - 26); ctx.closePath(); ctx.fill(); ctx.stroke();
-  ctx.fillStyle = '#9A6A3E'; ctx.beginPath(); ctx.ellipse(bb[0], bb[1] - 26, 15, 5, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
-  ctx.strokeStyle = '#333'; ctx.lineWidth = 2; for (const hy of [-19, -7]){ ctx.beginPath(); ctx.ellipse(bb[0], bb[1] + hy, 16.5, 4.5, 0, .1, Math.PI - .1); ctx.stroke(); }
 }
 
 // ================= before each game: the rules in 2-3 slides, then everyone taps "Prêt" =================
@@ -10453,8 +10360,8 @@ const BRIEF = {
     tip:'Ne rien écraser ! Une coupe bâclée envoie l\'arbre n\'importe où, parfois même en arrière. Viser une ouverture étroite, ou tomber au ras d\'un obstacle avec une coupe propre, rapporte un gros bonus.' },
   agility:{ ctl:[['📱', 'Choisissez un chien. Haie, pneu, triple : un tap quand le cercle est vert. Slalom : tracez le zigzag. Tunnel : doigt sur le chien, glissez. Passerelle : restez appuyé, lâchez sur le jaune. Bascule : un tap sur le vert au milieu. Table : un tap puis plus rien. Sprint final : tapez à toute vitesse.'], ['💻', 'Les mêmes gestes à la souris, ou Espace (à marteler pour le sprint).']],
     tip:'Chaque race a 6 étoiles : Vitesse, Saut ou Énergie. Un Whippet file entre les obstacles, un Jack Russell a plus de marge sur les haies, un Corgi va plus vite au sprint et dans les obstacles longs.' },
-  meduse:{ ctl:[['📱', 'À chaque tour, touchez votre choix : 🪵 ramasser une planche, 💥 frapper (avec une planche en main, puis le nom de la victime, ou touchez-la sur le radeau), ✊ s\'accrocher.'], ['💻', 'Cliquez les boutons, ou touches 1 (planche), 2 (frapper), 3 (s\'accrocher). Vous pouvez changer d\'avis jusqu\'à la fin des 10 secondes.']],
-    tip:'Le morceau qui va céder clignote en rouge : si vous êtes dessus, frappez quelqu\'un plus au centre pour prendre sa place. Ceux qui remontent de l\'eau prennent les places du bord. On ne peut pas s\'accrocher deux tours de suite.' },
+  meduse:{ ctl:[['📱', 'Inclinez le téléphone pour marcher (sur iPhone, touchez d\'abord « Activer l\'inclinaison »), ou glissez le doigt. Restez appuyé sur « S\'accrocher » pour ne plus glisser, touchez « Pousser » pour un coup d\'épaule.'], ['💻', 'Flèches ou ZQSD pour marcher, Maj (ou E) maintenu pour s\'accrocher, Espace pour pousser.']],
+    tip:'Le radeau penche du côté où il y a du monde : allez du côté opposé à celui que vous voulez faire basculer. S\'accrocher et pousser puisent dans la même force.' },
   galop:{ ctl:[['📱', 'Choisissez un cheval. ◀ ▶ pour vous décaler, GALOP pour accélérer (coûte de l\'énergie), RALENTIR pour souffler.'], ['💻', '← → se décaler · ↑ ou Espace galop · ↓ ralentir. Ou cliquez les boutons.']],
     tip:'Partir au galop donne un départ rapide mais entame l\'énergie. Collé derrière un cheval, vous récupérez plus vite.' }
 };
