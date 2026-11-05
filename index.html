@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Baston Arcade : 17 jeux multijoueurs gratuits, sans compte ni appli</title>
+<title>Baston Arcade : 18 jeux multijoueurs gratuits, sans compte ni appli</title>
 <meta name="description" content="Dix-sept jeux multijoueurs dans le navigateur : Gravats, Les Gardiens, Derby, Armada, Tape-taupe, Curling, Chaises musicales, Code secret, Kabaddi, Balle au prisonnier, Chars, Les bergers, Drakkars, Bûcherons, Agility, Galop et Méduse. Un salon, un code, de 1 à 5 joueurs.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Baston Arcade">
@@ -442,6 +442,15 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 
 /* ---- méduse ---- */
 #mdWrap,.mdhead,.mdctl{width:min(100%,64vh,600px)}
+#ckWrap,.ckhead,.ckmsg,.ckok{width:min(100%,58vh,520px)}
+#ckCv{display:block;width:100%;height:auto;aspect-ratio:1;touch-action:none;border:3px solid #000;box-shadow:6px 6px 0 #000}
+.ckmsg{margin:2px 0 0;min-height:2.6em;font-weight:800;text-align:center}
+.ckok{font-size:clamp(17px,4.6vw,22px);min-height:58px;background:var(--accent);color:#fff}
+.ckok:disabled{opacity:.5}
+#ckTime.hot{background:#FFD21F}
+#ckPlayers{gap:5px}
+#ckPlayers li{font-size:12px;padding:2px 8px 2px 4px}
+#ckPlayers li.me{background:#FFF3B0}
 #mdCv{display:block;width:100%;height:auto;aspect-ratio:600/420;touch-action:none;border:3px solid #000;box-shadow:6px 6px 0 #000}
 .mdctl{display:grid;grid-template-columns:1fr 1.4fr;gap:10px;align-items:center}
 .mdctl button{font-size:clamp(16px,4.4vw,22px);min-height:64px;padding:8px 4px;touch-action:none;user-select:none;-webkit-user-select:none}
@@ -683,7 +692,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
       <button id="btnSound" class="ghost" type="button" aria-label="Son : activé" title="Son : activé">🔊</button>
       <button id="btnLang" class="ghost" type="button" translate="no" aria-label="English" title="English">EN</button>
     </div>
-    <details class="seolist"><summary>Les 17 jeux en détail</summary><ul><li><a href="jeux/gravats.html"><b>Gravats</b></a> : Empilez les pièces et effacez des lignes : chacune envoie des briques fendues chez les autres. Le dernier en jeu gagne.</li><li><a href="jeux/gardiens.html"><b>Les Gardiens</b></a> : Chacun garde son but, avec 5 vies. Arrêtez les ballons : le dernier gardien debout gagne.</li><li><a href="jeux/derby.html"><b>Derby</b></a> : Tracez les figures au doigt : plus c&#x27;est propre, plus votre cheval avance. Le premier à la ligne gagne.</li><li><a href="jeux/armada.html"><b>Armada</b></a> : Bataille navale sur une seule mer, chacun son tour. Le dernier bateau à flot gagne.</li><li><a href="jeux/tape-taupe.html"><b>Tape-taupe</b></a> : Tapez vite les taupes des autres quand elles sortent, jamais les vôtres. Premier à 20 points.</li><li><a href="jeux/curling.html"><b>Curling</b></a> : Lancez vos pierres vers la cible et frottez la glace pour les guider. Le plus proche du centre marque.</li><li><a href="jeux/chaises-musicales.html"><b>Chaises musicales</b></a> : Quand le disque s&#x27;arrête, touchez vite une chaise libre. Gare aux faux arrêts !</li><li><a href="jeux/code-secret.html"><b>Code secret</b></a> : Trouvez avant les autres le code secret de 4 couleurs, grâce à vos indices. Trois manches.</li><li><a href="jeux/kabaddi.html"><b>Kabaddi</b></a> : Attaquez en retenant votre souffle, touchez des défenseurs et rentrez chez vous à temps.</li><li><a href="jeux/balle-au-prisonnier.html"><b>Balle au prisonnier</b></a> : Ramassez, lancez, esquivez, attrapez. Chaque balle reçue coûte un cœur : le dernier debout gagne.</li><li><a href="jeux/chars.html"><b>Chars</b></a> : Deux par char, l&#x27;un pilote, l&#x27;autre tire, sans se parler. Le dernier char debout gagne.</li><li><a href="jeux/bergers.html"><b>Les bergers</b></a> : Ensemble, rabattez le troupeau dans l&#x27;enclos avant la nuit, et chassez les loups.</li><li><a href="jeux/drakkars.html"><b>Drakkars</b></a> : Tout le salon rame dans le même drakkar : en rythme avec le tambour pour battre les robots.</li><li><a href="jeux/bucherons.html"><b>Bûcherons</b></a> : Choisissez où tombe votre arbre, puis sciez-le proprement. N&#x27;écrasez rien !</li><li><a href="jeux/agility.html"><b>Agility</b></a> : Choisissez un chien et guidez-le sur le parcours : chaque obstacle a son geste. Le meilleur temps gagne.</li><li><a href="jeux/galop.html"><b>Galop</b></a> : Choisissez un cheval, placez-vous et dosez son énergie sur 3000 m. Le premier à la ligne gagne.</li><li><a href="jeux/meduse.html"><b>Méduse</b></a> : Le radeau rétrécit par le bord à chaque tour. Frappez les naufragés du centre pour prendre leur place : le dernier debout gagne.</li></ul><p>Tous les jeux sont gratuits, sans compte, sans application et sans publicité. Créez un salon, vos amis scannent le QR code ou tapent le code, et c'est parti. Seul, vous jouez contre des robots.</p></details>
+    <details class="seolist"><summary>Les 18 jeux en détail</summary><ul><li><a href="jeux/gravats.html"><b>Gravats</b></a> : Empilez les pièces et effacez des lignes : chacune envoie des briques fendues chez les autres. Le dernier en jeu gagne.</li><li><a href="jeux/gardiens.html"><b>Les Gardiens</b></a> : Chacun garde son but, avec 5 vies. Arrêtez les ballons : le dernier gardien debout gagne.</li><li><a href="jeux/derby.html"><b>Derby</b></a> : Tracez les figures au doigt : plus c&#x27;est propre, plus votre cheval avance. Le premier à la ligne gagne.</li><li><a href="jeux/armada.html"><b>Armada</b></a> : Bataille navale sur une seule mer, chacun son tour. Le dernier bateau à flot gagne.</li><li><a href="jeux/tape-taupe.html"><b>Tape-taupe</b></a> : Tapez vite les taupes des autres quand elles sortent, jamais les vôtres. Premier à 20 points.</li><li><a href="jeux/curling.html"><b>Curling</b></a> : Lancez vos pierres vers la cible et frottez la glace pour les guider. Le plus proche du centre marque.</li><li><a href="jeux/chaises-musicales.html"><b>Chaises musicales</b></a> : Quand le disque s&#x27;arrête, touchez vite une chaise libre. Gare aux faux arrêts !</li><li><a href="jeux/code-secret.html"><b>Code secret</b></a> : Trouvez avant les autres le code secret de 4 couleurs, grâce à vos indices. Trois manches.</li><li><a href="jeux/kabaddi.html"><b>Kabaddi</b></a> : Attaquez en retenant votre souffle, touchez des défenseurs et rentrez chez vous à temps.</li><li><a href="jeux/balle-au-prisonnier.html"><b>Balle au prisonnier</b></a> : Ramassez, lancez, esquivez, attrapez. Chaque balle reçue coûte un cœur : le dernier debout gagne.</li><li><a href="jeux/chars.html"><b>Chars</b></a> : Deux par char, l&#x27;un pilote, l&#x27;autre tire, sans se parler. Le dernier char debout gagne.</li><li><a href="jeux/bergers.html"><b>Les bergers</b></a> : Ensemble, rabattez le troupeau dans l&#x27;enclos avant la nuit, et chassez les loups.</li><li><a href="jeux/drakkars.html"><b>Drakkars</b></a> : Tout le salon rame dans le même drakkar : en rythme avec le tambour pour battre les robots.</li><li><a href="jeux/bucherons.html"><b>Bûcherons</b></a> : Choisissez où tombe votre arbre, puis sciez-le proprement. N&#x27;écrasez rien !</li><li><a href="jeux/agility.html"><b>Agility</b></a> : Choisissez un chien et guidez-le sur le parcours : chaque obstacle a son geste. Le meilleur temps gagne.</li><li><a href="jeux/galop.html"><b>Galop</b></a> : Choisissez un cheval, placez-vous et dosez son énergie sur 3000 m. Le premier à la ligne gagne.</li><li><a href="jeux/meduse.html"><b>Méduse</b></a> : Le radeau rétrécit par le bord à chaque tour. Frappez les naufragés du centre pour prendre leur place : le dernier debout gagne.</li></ul><p>Tous les jeux sont gratuits, sans compte, sans application et sans publicité. Créez un salon, vos amis scannent le QR code ou tapent le code, et c'est parti. Seul, vous jouez contre des robots.</p></details>
     <p class="legal"><a href="legal.html">Mentions légales et confidentialité</a></p>
   </div>
 </section>
@@ -766,6 +775,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
       <button data-g="agility" aria-pressed="false"><img src="img/agility.webp" alt=""><span>Agility</span></button>
       <button data-g="galop" aria-pressed="false"><img src="img/galop.webp" alt=""><span>Galop</span></button>
       <button data-g="meduse" aria-pressed="false"><img src="img/meduse.webp" alt=""><span>Méduse</span></button>
+      <button data-g="cake" aria-pressed="false"><img src="img/cake.webp" alt=""><span>La Part du gâteau</span></button>
     </div>
     </div>
     <div class="lobbyfoot">
@@ -1092,6 +1102,20 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
   </div>
 </section>
 
+<!-- LA PART DU GÂTEAU -->
+<section id="scrCake" hidden>
+  <div class="naval">
+    <div class="nvhead ckhead"><div class="nvturn" id="ckHead">La Part du gâteau</div><div class="dkchips"><span class="cuend" id="ckRound">Manche 1</span><span class="cuend" id="ckTime">⏱ –</span></div></div>
+    <div class="nvwrap" id="ckWrap">
+      <canvas id="ckCv" width="480" height="480" aria-label="Le gâteau : le pâtissier place les couteaux, les autres choisissent une part"></canvas>
+    </div>
+    <p class="ckmsg" id="ckMsg" aria-live="polite"></p>
+    <button id="ckOk" class="ckok" type="button" hidden>✂ Servir</button>
+    <ul class="nvplayers" id="ckPlayers"></ul>
+    <p class="hint ctlhelp" id="ckHelp"></p>
+  </div>
+</section>
+
 <!-- GALOP -->
 <section id="scrGalop" hidden>
   <div class="naval">
@@ -1159,6 +1183,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
       <button data-f="drakkar" aria-pressed="false">Drakkars</button>
       <button data-f="lumber" aria-pressed="false">Bûcherons</button>
       <button data-f="meduse" aria-pressed="false">Méduse</button>
+      <button data-f="cake" aria-pressed="false">Part du gâteau</button>
       <button data-f="agility" aria-pressed="false">Agility</button>
       <button data-f="galop" aria-pressed="false">Galop</button>
     </div>
@@ -1297,7 +1322,7 @@ let D = null;                   // derby state
 let NV = null, HN = null;       // armada: my view / host's full map
 let BOT = null;                  // host-side robot when someone plays alone
 let ML = null, HM = null;       // tape-taupe: my view / host referee
-const GAME_NAMES = { tetris:'Gravats', pong:'Les Gardiens', derby:'Derby', naval:'Armada', mole:'Tape-taupe', curling:'Curling', chairs:'Chaises musicales', master:'Code secret', kabaddi:'Kabaddi', dodge:'Balle au prisonnier', tank:'Chars', sheep:'Les bergers', drakkar:'Drakkars', lumber:'Bûcherons', agility:'Agility', galop:'Galop', meduse:'Méduse' };
+const GAME_NAMES = { tetris:'Gravats', pong:'Les Gardiens', derby:'Derby', naval:'Armada', mole:'Tape-taupe', curling:'Curling', chairs:'Chaises musicales', master:'Code secret', kabaddi:'Kabaddi', dodge:'Balle au prisonnier', tank:'Chars', sheep:'Les bergers', drakkar:'Drakkars', lumber:'Bûcherons', agility:'Agility', galop:'Galop', meduse:'Méduse', cake:'La Part du gâteau' };
 // the gist in two lines, for the rules slides before a game (the full text stays on the game card)
 const GAME_SHORT = {
   tetris:'Empilez les pièces et effacez des lignes : chacune envoie des briques fendues chez les autres. Le dernier en jeu gagne.',
@@ -1316,7 +1341,8 @@ const GAME_SHORT = {
   lumber:'Choisissez où tombe votre arbre, puis sciez-le proprement. N\'écrasez rien !',
   agility:'Choisissez un chien et guidez-le sur le parcours : chaque obstacle a son geste. Le meilleur temps gagne.',
   galop:'Choisissez un cheval, placez-vous et dosez son énergie sur 3000 m. Le premier à la ligne gagne.',
-  meduse:'Empilez vos naufragés sur le radeau de Géricault : le plus haut fait signe à l\'Argus et marque des points.'
+  meduse:'Empilez vos naufragés sur le radeau de Géricault : le plus haut fait signe à l\'Argus et marque des points.',
+  cake:'Je coupe, tu choisis : à tour de rôle, partagez le gâteau. Gare aux bougies, et la fève est cachée…'
 };
 const GAME_DESC = {
   tetris:'Empilez des pièces de 2, 3 et 5 briques. Chaque ligne effacée envoie des briques fendues à vos adversaires. Effacez une ligne collée à une brique fendue : elle éclate et repart chez son expéditeur.',
@@ -1336,6 +1362,7 @@ const GAME_DESC = {
   agility:'Concours d\'agility : chacun choisit son chien (Border collie, Whippet, Caniche…) et le guide sur le même parcours, en même temps. Entre les obstacles, le chien court seul. Haies, pneu et triple : touchez au bon moment. Slalom : tracez le zigzag. Tunnel : suivez-le du doigt. Passerelle : maintenez, relâchez sur le jaune. Bascule : stop au milieu. Table : « Couché ! » puis ne touchez plus. Sprint final : tapez le plus vite possible. Chaque faute coûte 5 s, le meilleur temps gagne.',
   galop:'Course de galop de 3000 m, chacun sur son cheval, vue du dessus. Choisissez votre monture parmi 20, nouvelles à chaque partie (accélération, vitesse, maniabilité, et une forme du jour cachée), des robots complètent jusqu\'à 8 partants. Le cheval suit la piste tout seul : vous vous décalez à gauche ou à droite et vous demandez du galop, qui coûte de l\'énergie. Collé derrière un autre, vous récupérez plus vite et profitez de ses accélérations.',
   meduse:'Le radeau de la Méduse, en version bande dessinée : la pyramide de corps du tableau, c\'est vous qui la construisez. Pendant deux minutes, chacun lâche ses naufragés sur le radeau quand il veut, un toutes les trois secondes. Le corps suspendu se balance de debout à couché : à vous de choisir le moment. Les corps glissent, le radeau tangue, certains tombent à l\'eau et disparaissent. Votre naufragé le plus haut, une fois posé, marque des points tant qu\'il reste au sommet ; trois fois, l\'Argus passe à l\'horizon et le sommet vaut alors cinq fois plus. Lâcher un corps sur la tête du leader pour le déloger fait partie du jeu. Des robots complètent seul ou à deux.',
+  cake:'Je coupe, tu choisis, à plusieurs. À chaque manche, un joueur devient pâtissier : il place les couteaux pour partager le gâteau en autant de parts qu\'il y a de joueurs. Les autres se servent chacun leur tour, le dernier au classement en premier, et le pâtissier prend la dernière part. Une part vaut sa taille, plus 3 par cerise et moins 2 par bougie. La fève est cachée, seul le pâtissier sait où, et elle vaut 8. Couper juste, piéger un gourmand avec une grosse part pleine de bougies, garder la fève pour soi, prendre la part que l\'autre visait : chacun est pâtissier une fois, le plus gros total gagne.',
   derby:'Course de chevaux : tout le monde reçoit la même série de figures à tracer. Chaque figure réussie fait avancer votre cheval, plus loin si elle est complexe et bien tracée. Le premier à la ligne gagne.'
 };
 
@@ -1343,7 +1370,7 @@ const cleanName = s => String(s || '').replace(/[\u0000-\u001f<>]/g,'').trim().s
 // names shown to everyone in the public list: anything that looks like a link or an address is replaced
 const publicName = s => { const n = cleanName(s); return /https?|www|\.\s*[a-z]{2,}|@|\/\/|discord|t\.me|bit\.ly/i.test(n) ? (LANG === 'en' ? 'Player' : 'Joueur') : n; };
 const genCode = () => { const a='ABCDEFGHJKMNPQRSTUVWXYZ23456789'; let s=''; for(let i=0;i<4;i++) s+=a[Math.floor(Math.random()*a.length)]; return s; };
-const show = id => { for (const s of ['scrMenu','scrStats','scrLobby','scrGame','scrPong','scrDerby','scrNaval','scrMole','scrCurl','scrChairs','scrMaster','scrKabaddi','scrDodge','scrTank','scrSheep','scrDrakkar','scrLumber','scrAgility','scrGalop','scrMeduse']) $(s).hidden = s !== id; if (id === 'scrKabaddi') try { window.scrollTo(0, 0); } catch(_){} document.documentElement.classList.toggle('joyon', ['scrKabaddi','scrDodge','scrTank','scrSheep'].includes(id)); };
+const show = id => { for (const s of ['scrMenu','scrStats','scrLobby','scrGame','scrPong','scrDerby','scrNaval','scrMole','scrCurl','scrChairs','scrMaster','scrKabaddi','scrDodge','scrTank','scrSheep','scrDrakkar','scrLumber','scrAgility','scrGalop','scrMeduse','scrCake']) $(s).hidden = s !== id; if (id === 'scrKabaddi') try { window.scrollTo(0, 0); } catch(_){} document.documentElement.classList.toggle('joyon', ['scrKabaddi','scrDodge','scrTank','scrSheep'].includes(id)); };
 const store = { get(k){ try { return localStorage.getItem(k); } catch(_) { return null; } }, set(k,v){ try { localStorage.setItem(k,v); } catch(_){} } };
 
 $('nameIn').value = store.get('tm-name') || ((LANG === 'en' ? 'Player' : 'Joueur') + Math.floor(Math.random()*90+10));
@@ -1417,7 +1444,7 @@ function teardown(){
   if (HN && HN.timer) clearTimeout(HN.timer);
   if (HM) moleClearTimers();
   if (HC) clearTimeout(HC.timer);
-  HC = null; CU = null; mcClear(); HMC = null; MC = null; mmClear(); HMM = null; MM = null; kbClear(); HKB = null; KB = null; dbClear(); HDB = null; DB = null; tkClear(); HTK = null; TK = null; shClear(); HSH = null; SHV = null; dkClear(); HDK = null; ljClear(); HLJ = null; LJ = null; sawStop(); agClear(); HAG = null; AG = null; gpClear(); HGP = null; GP = null; DK = null; mdClear(); HMD = null; MD = null;
+  HC = null; CU = null; mcClear(); HMC = null; MC = null; mmClear(); HMM = null; MM = null; kbClear(); HKB = null; KB = null; dbClear(); HDB = null; DB = null; tkClear(); HTK = null; TK = null; shClear(); HSH = null; SHV = null; dkClear(); HDK = null; ljClear(); HLJ = null; LJ = null; sawStop(); agClear(); HAG = null; AG = null; gpClear(); HGP = null; GP = null; DK = null; mdClear(); HMD = null; MD = null; ckClear(); HCK = null; CK = null;
   CHAT.length = 0; renderChat();
   net = null; H = null; G = null; PG = null; D = null; NV = null; HN = null; cur = null; me.host = false; me.id = null; players = []; opps.clear();
 }
@@ -1443,7 +1470,7 @@ function soloCreate(){
 }
 // arriving from a game's page (?jeu=galop): once the room (or the solo game) is open, that game's card opens
 const GAME_SLUGS = { gravats:'tetris', gardiens:'pong', armada:'naval', 'tape-taupe':'mole', 'chaises-musicales':'chairs', 'code-secret':'master',
-  'balle-au-prisonnier':'dodge', chars:'tank', bergers:'sheep', drakkars:'drakkar', bucherons:'lumber' };
+  'balle-au-prisonnier':'dodge', chars:'tank', bergers:'sheep', drakkars:'drakkar', bucherons:'lumber', 'part-du-gateau':'cake' };
 let PENDING_GAME = null;
 (() => {
   let g = null; try { g = (new URLSearchParams(location.search).get('jeu') || '').trim().toLowerCase(); } catch(_){}
@@ -1645,7 +1672,7 @@ function hostDrop(conn){
   net.conns.delete(id);
   if (phase === 'lobby'){ const p = players.find(x => x.id === id); players = players.filter(p => p.id !== id); if (VOTES[id]){ delete VOTES[id]; broadcast({ t:'votes', v:VOTES }); } sendLobby(false); briefCheck(); if (BR) briefStatus(); if (p) chatSys(p.name + ' a quitté le salon'); return; }
   if (H && H.alive.has(id)){
-    if (H.game === 'pong') pongDrop(id); else if (H.game === 'curling') curlDrop(id); else if (H.game === 'chairs') chairsDrop(id); else if (H.game === 'master') masterDrop(id); else if (H.game === 'kabaddi') kabaddiDrop(id); else if (H.game === 'dodge') dodgeDrop(id); else if (H.game === 'tank') tankDrop(id); else if (H.game === 'sheep') sheepDrop(id); else if (H.game === 'drakkar') drakkarDrop(id); else if (H.game === 'lumber') lumberDrop(id); else if (H.game === 'agility') agilityDrop(id); else if (H.game === 'galop') galopDrop(id); else if (H.game === 'meduse') meduseDrop(id); else if (H.game === 'derby') derbyDrop(id); else if (H.game === 'naval') navalDrop(id); else if (H.game === 'mole') moleDrop(id); else hostHandle(id, { t:'dead', left:true });
+    if (H.game === 'pong') pongDrop(id); else if (H.game === 'curling') curlDrop(id); else if (H.game === 'chairs') chairsDrop(id); else if (H.game === 'master') masterDrop(id); else if (H.game === 'kabaddi') kabaddiDrop(id); else if (H.game === 'dodge') dodgeDrop(id); else if (H.game === 'tank') tankDrop(id); else if (H.game === 'sheep') sheepDrop(id); else if (H.game === 'drakkar') drakkarDrop(id); else if (H.game === 'lumber') lumberDrop(id); else if (H.game === 'agility') agilityDrop(id); else if (H.game === 'galop') galopDrop(id); else if (H.game === 'meduse') meduseDrop(id); else if (H.game === 'cake') cakeDrop(id); else if (H.game === 'derby') derbyDrop(id); else if (H.game === 'naval') navalDrop(id); else if (H.game === 'mole') moleDrop(id); else hostHandle(id, { t:'dead', left:true });
   }
 }
 
@@ -1708,6 +1735,7 @@ function hostLaunch(){
   if (gameKind === 'agility') return agilityHostStart();
   if (gameKind === 'galop') return galopHostStart();
   if (gameKind === 'meduse') return meduseHostStart();
+  if (gameKind === 'cake') return cakeHostStart();
   unannounce();                                   // a started game leaves the public list at once
   broadcast({ t:'start', players, game:gameKind, seed:Math.floor(Math.random() * 2**31) });
 }
@@ -1760,6 +1788,10 @@ function hostHandle(id, m){
     meduseInput(id, m);
   } else if (m.t === 'md_push'){
     medusePush(id);
+  } else if (m.t === 'ck_cuts'){
+    cakeCuts(id, m);
+  } else if (m.t === 'ck_take'){
+    cakePick(id, m);
   } else if (m.t === 'ag_pick'){
     agilityPick(id, m.b);
   } else if (m.t === 'ag_p'){
@@ -1832,9 +1864,9 @@ function clientRecv(m){
       players = (Array.isArray(m.players) ? m.players : []).slice(0, MAXP).filter(p => p && typeof p.id === 'string').map(p => ({ ...p, id:p.id.slice(0, 12), name:cleanName(p.name), color:PALETTE.includes(p.color) ? p.color : '#888' }));
       if (m.you) me.id = m.you;
       if (net && !net.solo && !me.host) try { sessionStorage.setItem('ba-room', net.code); } catch(_){}   // after an accidental reload, come straight back
-      if (['tetris','pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber','agility','galop','meduse'].includes(m.game)) gameKind = m.game;
+      if (['tetris','pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber','agility','galop','meduse','cake'].includes(m.game)) gameKind = m.game;
       if (phase === 'menu' || phase === 'lobby' || m.back){
-        phase = 'lobby'; $('scrEnd').hidden = true; G = null; PG = null; D = null; NV = null; ML = null; CU = null; MC = null; MM = null; KB = null; DB = null; TK = null; SHV = null; DK = null; if (LJ){ LJ = null; sawStop(); } AG = null; GP = null; MD = null; cur = null; show('scrLobby'); renderLobby();
+        phase = 'lobby'; $('scrEnd').hidden = true; G = null; PG = null; D = null; NV = null; ML = null; CU = null; MC = null; MM = null; KB = null; DB = null; TK = null; SHV = null; DK = null; if (LJ){ LJ = null; sawStop(); } AG = null; GP = null; MD = null; CK = null; cur = null; show('scrLobby'); renderLobby();
       }
       break;
     case 'nv_start': startNaval(m); break;
@@ -1862,13 +1894,14 @@ function clientRecv(m){
     case 'lj_round': case 'lj_res': case 'lj_sum': case 'lj_left': lumberRecv(m); break;
     case 'ag_p': case 'ag_done': case 'ag_left': case 'ag_pick': case 'ag_go': agilityRecv(m); break;
     case 'md_round': case 'md_go': case 'md_s': case 'md_ev': case 'md_res': meduseRecv(m); break;
+    case 'ck_round': case 'ck_feve': case 'ck_cuts': case 'ck_served': case 'ck_pick': case 'ck_took': case 'ck_res': case 'ck_left': cakeRecv(m); break;
     case 'gp_pick': case 'gp_race': case 'gp_go': case 'gp_s': case 'gp_fin': galopRecv(m); break;
     case 'brief': if (phase === 'lobby') openBrief(m.game, m.ready); break;
     case 'votes': VOTES = m.v && typeof m.v === 'object' ? m.v : {}; renderVotes(); if (!$('gameSheet').hidden) openGameSheet($('gameSheet').dataset.g); break;
     case 'peek': if (!me.host){ PEEK = GAME_NAMES[m.g] ? m.g : null; renderVotes(); } break;
     case 'brief_st': if (BR){ BR.ready = new Set(m.ready || []); briefStatus(); } break;
     case 'brief_off': closeBrief(); break;
-    case 'start': closeGameSheet(); closeBrief(); PEEK = null; VOTES = {}; $('colPick').hidden = true; if (m.game === 'galop') startGalop(m); else if (m.game === 'meduse') startMeduse(m); else if (m.game === 'agility') startAgility(m); else if (m.game === 'lumber') startLumber(m); else if (m.game === 'drakkar') startDrakkar(m); else if (m.game === 'sheep') startSheep(m); else if (m.game === 'tank') startTank(m); else if (m.game === 'dodge') startDodge(m); else if (m.game === 'kabaddi') startKabaddi(m); else if (m.game === 'master') startMaster(m); else if (m.game === 'chairs') startChairs(m); else if (m.game === 'curling') startCurling(m); else if (m.game === 'pong') startPong(m.players); else if (m.game === 'derby') startDerby(m.players, m.seed|0); else startGame(m.players); break;
+    case 'start': closeGameSheet(); closeBrief(); PEEK = null; VOTES = {}; $('colPick').hidden = true; if (m.game === 'galop') startGalop(m); else if (m.game === 'meduse') startMeduse(m); else if (m.game === 'cake') startCake(m); else if (m.game === 'agility') startAgility(m); else if (m.game === 'lumber') startLumber(m); else if (m.game === 'drakkar') startDrakkar(m); else if (m.game === 'sheep') startSheep(m); else if (m.game === 'tank') startTank(m); else if (m.game === 'dodge') startDodge(m); else if (m.game === 'kabaddi') startKabaddi(m); else if (m.game === 'master') startMaster(m); else if (m.game === 'chairs') startChairs(m); else if (m.game === 'curling') startCurling(m); else if (m.game === 'pong') startPong(m.players); else if (m.game === 'derby') startDerby(m.players, m.seed|0); else startGame(m.players); break;
     case 'dr': derbyRemote(m); break;
     case 'ps': pongState(m); break;
     case 'pg': pongGoalFx(m.side|0); break;
@@ -2163,7 +2196,7 @@ function showEnd(ranking, game){
   phase = 'end';
   if (G) G.p = null;
   if (PG) PG.ph = 'over';
-  const pong = game === 'pong', derby = game === 'derby', naval = game === 'naval', mole = game === 'mole', curl = game === 'curling', chairs = game === 'chairs', master = game === 'master', kab = game === 'kabaddi', dodge = game === 'dodge', tank = game === 'tank', coop = game === 'sheep', viking = game === 'drakkar', lumber = game === 'lumber', agil = game === 'agility', galop = game === 'galop', medu = game === 'meduse';
+  const pong = game === 'pong', derby = game === 'derby', naval = game === 'naval', mole = game === 'mole', curl = game === 'curling', chairs = game === 'chairs', master = game === 'master', kab = game === 'kabaddi', dodge = game === 'dodge', tank = game === 'tank', coop = game === 'sheep', viking = game === 'drakkar', lumber = game === 'lumber', agil = game === 'agility', galop = game === 'galop', medu = game === 'meduse', cake = game === 'cake';
   if (ML) ML.over = true;
   if (NV) NV.over = true;
   if (D) D.over = true;
@@ -2180,10 +2213,10 @@ function showEnd(ranking, game){
   if (GP) GP.over = true;
   if (MD){ MD.over = true; MD.ph = 'end'; }
   const hd = $('rankHead'); hd.textContent = '';
-  for (const h of ['#','Joueur', ...(medu ? ['Points','Au sommet','Lâchés','À l\'eau'] : galop ? ['Cheval','Temps','Écart'] : agil ? ['Temps','Fautes','Total'] : lumber ? ['Points','Précision','Manches'] : viking ? ['Rôle','Coups','Synchro'] : coop ? ['Manches','Moutons','Ouaf'] : tank ? ['Char','Rôle','Touches'] : dodge ? ['Vies','Touches','Arrêts'] : kab ? ['Points','Raids réussis','Plaquages'] : master ? ['Points','Trouvés','Essais'] : chairs ? ['Vies','Chaises','Réflexe'] : curl ? ['Points','Maison','Meilleure'] : pong ? ['Vies','Arrêts'] : derby ? ['Figures','Distance','Temps'] : naval ? ['Tirs','Touchés','À flot'] : mole ? ['Points','Tapées','Échappées'] : ['Lignes','Briques','Score'])]){
+  for (const h of ['#','Joueur', ...(cake ? ['Points','Cerises','Fève','Pâtissier'] : medu ? ['Points','Au sommet','Lâchés','À l\'eau'] : galop ? ['Cheval','Temps','Écart'] : agil ? ['Temps','Fautes','Total'] : lumber ? ['Points','Précision','Manches'] : viking ? ['Rôle','Coups','Synchro'] : coop ? ['Manches','Moutons','Ouaf'] : tank ? ['Char','Rôle','Touches'] : dodge ? ['Vies','Touches','Arrêts'] : kab ? ['Points','Raids réussis','Plaquages'] : master ? ['Points','Trouvés','Essais'] : chairs ? ['Vies','Chaises','Réflexe'] : curl ? ['Points','Maison','Meilleure'] : pong ? ['Vies','Arrêts'] : derby ? ['Figures','Distance','Temps'] : naval ? ['Tirs','Touchés','À flot'] : mole ? ['Points','Tapées','Échappées'] : ['Lignes','Briques','Score'])]){
     const th = document.createElement('th'); th.textContent = h; hd.append(th);
   }
-  $('rankNote').textContent = medu ? '« Points » : 1 par seconde au sommet, 5 pendant le passage de l\'Argus. « Au sommet » : temps passé tout en haut. « Lâchés » : naufragés lâchés. « À l\'eau » : naufragés tombés à la mer.' : galop ? '« Écart » : retard sur le vainqueur à l\'arrivée, en secondes. Les chevaux des robots sont classés avec les autres.' : agil ? '« Total » : temps du parcours plus 5 s par faute. Un chien qui n\'a pas fini est classé après les autres.' : lumber ? '« Précision » : moyenne de vos coupes. « Manches » : manches finies sans rien écraser. Un joueur qui écrase quelque chose est éliminé.' : viking ? 'Course en équipe. « Synchro » : coups de rame donnés en rythme avec le tambour.' : coop ? 'Partie en équipe : tout le monde partage le score. « Moutons » : moutons rentrés au total, « Ouaf » : aboiements.' : tank ? 'Les deux membres d\'un équipage partagent la même place. « Touches » : obus du canonnier qui ont fait mouche.' : dodge ? '« Touches » : balles qui ont atteint un adversaire. « Arrêts » : balles attrapées.' : kab ? '« Raids réussis » : raids rentrés avec au moins un défenseur touché. « Plaquages » : attaquants retenus jusqu\'au bout du souffle.' : master ? '« Trouvés » : codes trouvés. « Essais » : total des essais sur la partie.' : chairs ? '« Chaises » : chaises gagnées. « Réflexe » : votre plus rapide, de l\'arrêt du disque à la chaise.' : curl ? '« Maison » : pierres dans la maison en fin de manche. « Meilleure » : pierre la plus proche du centre.' : mole ? '« Tapées » : taupes adverses tapées. « Échappées » : vos taupes que personne n\'a eues.' : naval ? '« À flot » : cases de bateau encore intactes à la fin.' : pong ? '« Arrêts » : ballons repoussés par le gardien.' : derby ? '« Temps » : durée pour franchir la ligne, pour ceux qui l\'ont franchie.' : '« Briques » : nombre de briques envoyées aux adversaires.';
+  $('rankNote').textContent = cake ? '« Cerises » : cerises mangées. « Fève » : fèves trouvées. « Pâtissier » : points gagnés avec la dernière part, quand vous coupiez.' : medu ? '« Points » : 1 par seconde au sommet, 5 pendant le passage de l\'Argus. « Au sommet » : temps passé tout en haut. « Lâchés » : naufragés lâchés. « À l\'eau » : naufragés tombés à la mer.' : galop ? '« Écart » : retard sur le vainqueur à l\'arrivée, en secondes. Les chevaux des robots sont classés avec les autres.' : agil ? '« Total » : temps du parcours plus 5 s par faute. Un chien qui n\'a pas fini est classé après les autres.' : lumber ? '« Précision » : moyenne de vos coupes. « Manches » : manches finies sans rien écraser. Un joueur qui écrase quelque chose est éliminé.' : viking ? 'Course en équipe. « Synchro » : coups de rame donnés en rythme avec le tambour.' : coop ? 'Partie en équipe : tout le monde partage le score. « Moutons » : moutons rentrés au total, « Ouaf » : aboiements.' : tank ? 'Les deux membres d\'un équipage partagent la même place. « Touches » : obus du canonnier qui ont fait mouche.' : dodge ? '« Touches » : balles qui ont atteint un adversaire. « Arrêts » : balles attrapées.' : kab ? '« Raids réussis » : raids rentrés avec au moins un défenseur touché. « Plaquages » : attaquants retenus jusqu\'au bout du souffle.' : master ? '« Trouvés » : codes trouvés. « Essais » : total des essais sur la partie.' : chairs ? '« Chaises » : chaises gagnées. « Réflexe » : votre plus rapide, de l\'arrêt du disque à la chaise.' : curl ? '« Maison » : pierres dans la maison en fin de manche. « Meilleure » : pierre la plus proche du centre.' : mole ? '« Tapées » : taupes adverses tapées. « Échappées » : vos taupes que personne n\'a eues.' : naval ? '« À flot » : cases de bateau encore intactes à la fin.' : pong ? '« Arrêts » : ballons repoussés par le gardien.' : derby ? '« Temps » : durée pour franchir la ligne, pour ceux qui l\'ont franchie.' : '« Briques » : nombre de briques envoyées aux adversaires.';
   const tb = $('rankBody'); tb.textContent = '';
   (ranking || []).forEach(r => {
     const tr = document.createElement('tr'); if (r.place === 1) tr.className = 'win';
@@ -2192,7 +2225,8 @@ function showEnd(ranking, game){
     const d = document.createElement('span'); d.className = 'dot'; d.style.background = r.color;
     const s = document.createElement('span'); s.textContent = r.name + (r.id === me.id ? ' (vous)' : '') + (r.left ? ' · parti' : '');
     w.append(d, s); nm.append(w);
-    if (medu) tr.append(td(r.place), nm, td(r.pts|0), td((r.top|0) + ' s'), td(r.drops|0), td(r.lost|0));
+    if (cake) tr.append(td(r.place), nm, td(r.pts|0), td(r.cher|0), td(r.feve ? '🫘 ' + r.feve : '–'), td(r.cook|0));
+    else if (medu) tr.append(td(r.place), nm, td(r.pts|0), td((r.top|0) + ' s'), td(r.drops|0), td(r.lost|0));
     else if (galop){ tr.append(td(r.place), nm, td(r.horse || ''), td(r.t ? fmtSec(r.t) : '–'), td(r.gap == null ? '–' : r.gap > 0 ? '+' + r.gap.toLocaleString('fr-FR', { minimumFractionDigits:2, maximumFractionDigits:2 }) : '')); [...tr.children].slice(-2).forEach(c => c.style.whiteSpace = 'nowrap'); }
     else if (agil) tr.append(td(r.place), nm, td(r.done ? fmtSec(Math.round(r.time*1000)) : '–'), td(r.done ? r.faults|0 : '–'), td(r.done ? fmtSec(Math.round(r.total*1000)) : 'abandon'));
     else if (lumber) tr.append(td(r.place), nm, td(r.pts|0), td((r.sync|0) + ' %'), td((r.rounds|0) + '/' + LJ_ROUNDS + (r.out ? ' ✗' : '')));
@@ -2220,7 +2254,7 @@ function showEnd(ranking, game){
   $('winPanel').style.background = viking ? (iWon ? '#3DDC97' : '#8A84B0') : coop ? '#3DDC97' : win ? win.color : '#FFD93B';
   $('winName').textContent = viking ? (iWon ? 'L\'Angleterre est à vous !' : 'Les autres Vikings arrivent avant vous') : coop ? 'Score d\'équipe : ' + ((win && win.score) | 0) : win ? (iWon ? 'Vous gagnez !' : (galop && win.bot && win.horse ? win.horse : win.name) + ' gagne !') : '';
   $('myPlace').textContent = viking ? 'Drakkars' + (iWon && win.t ? ' · ' + fmtSec(win.t) : '') : coop ? 'Les bergers · ' + ((win && win.rounds) | 0) + '/' + SH_ROUNDS + ' manches réussies' : (GAME_NAMES[game] || 'Gravats') + (mine ? ' · vous finissez ' + (mine.place === 1 ? '1er' : mine.place + 'e') + ' sur ' + ranking.length : '');
-  (medu ? (t => { const el = $('mdMsg'); if (el) el.textContent = t || ''; }) : galop ? (t => { const el = $('gpMsg'); if (el) el.textContent = t || ''; }) : agil ? agMsg : lumber ? ljMsg : viking ? drakkarMsg : coop ? sheepMsg : tank ? tankMsg : dodge ? dodgeMsg : kab ? kabaddiMsg : master ? masterMsg : chairs ? chairsMsg : curl ? curlMsg : pong ? pongMsg : derby ? derbyMsg : naval ? navalMsg : mole ? moleMsg : setMsg)('', '');
+  (cake ? ckMsg : medu ? (t => { const el = $('mdMsg'); if (el) el.textContent = t || ''; }) : galop ? (t => { const el = $('gpMsg'); if (el) el.textContent = t || ''; }) : agil ? agMsg : lumber ? ljMsg : viking ? drakkarMsg : coop ? sheepMsg : tank ? tankMsg : dodge ? dodgeMsg : kab ? kabaddiMsg : master ? masterMsg : chairs ? chairsMsg : curl ? curlMsg : pong ? pongMsg : derby ? derbyMsg : naval ? navalMsg : mole ? moleMsg : setMsg)('', '');
   $('btnAgain').hidden = false; $('btnReplay').hidden = !me.host; $('btnAgain').classList.toggle('ghost', me.host);
   $('endHint').textContent = me.host ? '' : 'Le créateur choisit la suite : rejouer ou revenir au salon.';
   $('btnAgain').style.gridColumn = me.host ? '' : '1 / -1';
@@ -2427,7 +2461,7 @@ function release(a){
 const KEYMAP = { arrowleft:'left', arrowright:'right', arrowdown:'down', arrowup:'rotr', x:'rotr', z:'rotl', w:'rotl', control:'rotl', ' ':'drop', c:'hold', shift:'hold' };
 addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT') return;
-  if (cur === 'curl' || cur === 'chairs' || cur === 'master' || cur === 'kabaddi' || cur === 'dodge' || cur === 'tank' || cur === 'sheep' || cur === 'drakkar' || cur === 'lumber' || cur === 'agility' || cur === 'galop' || cur === 'meduse') return;
+  if (cur === 'curl' || cur === 'chairs' || cur === 'master' || cur === 'kabaddi' || cur === 'dodge' || cur === 'tank' || cur === 'sheep' || cur === 'drakkar' || cur === 'lumber' || cur === 'agility' || cur === 'galop' || cur === 'meduse' || cur === 'cake') return;
   if (cur === 'pong'){ const k = PKEYS[e.key.toLowerCase()]; if (k){ e.preventDefault(); pin[k] = true; } return; }
   const a = KEYMAP[e.key.toLowerCase()]; if (!a) return;
   e.preventDefault();
@@ -9429,7 +9463,7 @@ function drawGalop(now){
 const BOOM_COLORS = [['#FFD93B','#E6262B'], ['#FFFFFF','#1E5BFF'], ['#E6262B','#FFFFFF'], ['#1E5BFF','#FFD93B']];
 function gameWrap(){
   return cur === 'tetris' ? document.querySelector('#play .well') : cur === 'pong' ? $('pwrap') : cur === 'derby' ? $('padwrap')
-    : cur === 'naval' ? document.querySelector('#scrNaval .nvwrap') : cur === 'mole' ? $('mlWrap') : cur === 'curl' ? $('cuWrap') : cur === 'chairs' ? $('mcWrap') : cur === 'master' ? $('mmWrap') : cur === 'kabaddi' ? $('kbWrap') : cur === 'dodge' ? $('dbWrap') : cur === 'tank' ? $('tkWrap') : cur === 'sheep' ? $('shWrap') : cur === 'drakkar' ? $('dkWrap') : cur === 'lumber' ? $('ljWrap') : cur === 'agility' ? $('agWrap') : cur === 'galop' ? $('gpWrap') : cur === 'meduse' ? $('mdWrap') : null;
+    : cur === 'naval' ? document.querySelector('#scrNaval .nvwrap') : cur === 'mole' ? $('mlWrap') : cur === 'curl' ? $('cuWrap') : cur === 'chairs' ? $('mcWrap') : cur === 'master' ? $('mmWrap') : cur === 'kabaddi' ? $('kbWrap') : cur === 'dodge' ? $('dbWrap') : cur === 'tank' ? $('tkWrap') : cur === 'sheep' ? $('shWrap') : cur === 'drakkar' ? $('dkWrap') : cur === 'lumber' ? $('ljWrap') : cur === 'agility' ? $('agWrap') : cur === 'galop' ? $('gpWrap') : cur === 'meduse' ? $('mdWrap') : cur === 'cake' ? $('ckWrap') : null;
 }
 // x, y: position in the wrap (0..1); size in px; pal: one of BOOM_COLORS
 function boom(text, o = {}){
@@ -9624,7 +9658,7 @@ async function resultCard(){
   // footer: where to play
   c.fillStyle = '#000'; c.fillRect(0, H - 120, W, 120);
   c.fillStyle = '#FFD93B'; c.textAlign = 'center'; c.font = '58px Bangers, Impact, sans-serif'; c.fillText('Viens jouer : bastonarcade.com', W/2, H - 64);
-  c.fillStyle = '#fff'; c.font = '700 26px Nunito, sans-serif'; c.fillText('17 jeux à plusieurs, gratuits, sans compte, sans pub', W/2, H - 22);
+  c.fillStyle = '#fff'; c.font = '700 26px Nunito, sans-serif'; c.fillText('18 jeux à plusieurs, gratuits, sans compte, sans pub', W/2, H - 22);
   return cv;
 }
 $('btnShare').onclick = async () => {
@@ -10344,6 +10378,418 @@ function mdMast(ctx, mb, t){
   ctx.fillStyle = '#5A4A33'; ctx.beginPath(); ctx.ellipse(top[0] - 40 - w*.4, top[1] + 74, 7, 11, .4, 0, Math.PI*2); ctx.fill();
 }
 
+// ================= LA PART DU GÂTEAU : I cut, you choose =================
+// Each round one player is the pastry cook: they move the knives (straight cuts from the middle to the edge) to share
+// the cake into as many pieces as there are players. The others then pick a piece each, the last in the standings first,
+// and the cook gets whatever is left. A piece is worth its size, plus 3 per cherry and minus 2 per candle; the bean is
+// hidden (only the cook knows where it is) and is worth 8. Everyone is the cook once; the highest total wins.
+const CK_R = 170, CK_CX = 240, CK_CY = 246, CK_SIZE = 20, CK_CHERRY = 3, CK_CANDLE = -2, CK_FEVE = 8, CK_CUT_T = 30, CK_PICK_T = 15, CK_GAP = .07;
+const TAU = Math.PI*2;
+let HCK = null, CK = null;
+function ckLater(fn, ms){ const g = HCK; const t = setTimeout(() => { if (HCK === g && H && !H.over) fn(); }, ms); HCK.timers.push(t); }
+function ckClear(){ if (HCK) HCK.timers.forEach(t => clearTimeout(t)); }
+const ckIn = id => !!(H && H.stats[id] && !H.stats[id].left);
+const ckNorm = a => ((a % TAU) + TAU) % TAU;
+// piece i runs clockwise from knife i to knife i + 1
+const ckSpan = (cuts, i) => cuts.length < 2 ? TAU : ckNorm(cuts[(i + 1) % cuts.length] - cuts[i]) || TAU;
+function ckPieceAt(cuts, a){ for (let i = 0; i < cuts.length; i++) if (ckNorm(a - cuts[i]) < ckSpan(cuts, i)) return i; return 0; }
+// what a piece is worth: size (a fair share is worth CK_SIZE), cherries and candles; the bean only when it is known
+function ckValue(top, cuts, i, feve){
+  const n = cuts.length, v = { size:ckSpan(cuts, i)/TAU*CK_SIZE*n, cher:0, cand:0, feve:0 };
+  for (const q of top) if (ckPieceAt(cuts, Math.atan2(q.y, q.x)) === i){ if (q.k === 'c') v.cher++; else v.cand++; }
+  if (feve && ckPieceAt(cuts, Math.atan2(feve.y, feve.x)) === i) v.feve = 1;
+  v.tot = v.size + v.cher*CK_CHERRY + v.cand*CK_CANDLE + v.feve*CK_FEVE;
+  return v;
+}
+// knives sorted, at least CK_GAP apart
+function ckTidy(a, n){
+  if (!Array.isArray(a) || a.length !== n || a.some(x => typeof x !== 'number' || !isFinite(x))) return null;
+  const c = a.map(ckNorm).sort((x, y) => x - y);
+  for (let i = 0; i < n; i++) if (n > 1 && ckSpan(c, i) < CK_GAP - 1e-6) return null;
+  return c;
+}
+function ckTo(id, msg){
+  if (id === 'h') return clientRecv(msg);
+  const c = net && net.conns && net.conns.get(id);
+  if (c && c.open) try { c.send(msg); } catch(_){}
+}
+
+// ---- host ----
+function cakeHostStart(){
+  // alone: two robots; two players: one; three or more: none
+  const want = players.filter(p => !p.bot).length <= 2 ? 3 : 0;
+  for (const id of ['ai', 'ai2']){
+    if (players.length >= want) break;
+    if (players.some(p => p.id === id)) continue;
+    players.push({ id, name:id === 'ai' ? 'Robot' : 'Robot 2', color:pickColor(), bot:true });
+    H.alive.add(id);
+  }
+  H.n = players.length;
+  for (const p of players) H.stats[p.id] = { pts:0, cook:0, cher:0, feve:0, cand:0, left:false };
+  HCK = { timers:[], r:0, order:players.map(p => p.id).sort(() => Math.random() - .5), ph:'idle', seq:0 };
+  broadcast({ t:'start', players, game:'cake' });
+  ckLater(ckRound, 1800);
+}
+function ckBake(n){
+  // n + 1 cherries, n - 1 candles (at least one), one hidden bean, spread over the top
+  const top = [], all = [], put = k => {
+    for (let tries = 0; tries < 200; tries++){
+      const a = Math.random()*TAU, r = CK_R*(.22 + .66*Math.sqrt(Math.random())), x = Math.round(Math.cos(a)*r), y = Math.round(Math.sin(a)*r);
+      if (all.every(q => Math.hypot(q.x - x, q.y - y) > 40)){ const q = { k, x, y }; all.push(q); return q; }
+    }
+    return null;
+  };
+  for (let i = 0; i < n + 1; i++){ const q = put('c'); if (q) top.push(q); }
+  for (let i = 0; i < Math.max(1, n - 1); i++){ const q = put('b'); if (q) top.push(q); }
+  const feve = put('f');
+  return { top, feve:{ x:feve.x, y:feve.y } };
+}
+const ckScores = () => Object.fromEntries(players.map(p => [p.id, H.stats[p.id] ? Math.round(H.stats[p.id].pts) : 0]));
+function ckRound(){
+  if (!players.some(p => !p.bot && ckIn(p.id))) return ckFinish();
+  while (HCK.r < HCK.order.length && !ckIn(HCK.order[HCK.r])) HCK.r++;
+  if (HCK.r >= HCK.order.length) return ckFinish();
+  const cook = HCK.order[HCK.r++], live = players.filter(p => ckIn(p.id)).map(p => p.id), n = live.length;
+  const { top, feve } = ckBake(n), rot = Math.random()*TAU;
+  Object.assign(HCK, { cook, live, n, top, feve, cuts:[...Array(n)].map((_, i) => ckNorm(rot + i*TAU/n)).sort((a, b) => a - b), ph:'cut', own:{}, queue:[], who:null });
+  const seq = ++HCK.seq;
+  broadcast({ t:'ck_round', r:HCK.r, of:HCK.order.length, cook, top, cuts:HCK.cuts, left:CK_CUT_T, sc:ckScores() });
+  ckTo(cook, { t:'ck_feve', x:feve.x, y:feve.y });
+  if (players.find(p => p.id === cook && p.bot)) ckLater(() => ckBotCut(seq), 3500 + Math.random()*4000);
+  ckLater(() => ckCutDone(seq), CK_CUT_T*1000 + 400);
+}
+function cakeCuts(id, m){
+  if (!HCK || HCK.ph !== 'cut' || id !== HCK.cook) return;
+  const c = ckTidy(m.a, HCK.n);
+  if (c){ HCK.cuts = c; broadcast({ t:'ck_cuts', a:c.map(x => Math.round(x*1000)/1000) }, id); }
+  if (m.ok) ckCutDone(HCK.seq);
+}
+function ckCutDone(seq){
+  if (!HCK || HCK.ph !== 'cut' || seq !== HCK.seq) return;
+  HCK.ph = 'pick';
+  // the last in the standings chooses first; the cook takes what is left
+  HCK.queue = HCK.live.filter(id => id !== HCK.cook && ckIn(id)).sort((a, b) => (H.stats[a].pts - H.stats[b].pts) || (Math.random() - .5));
+  broadcast({ t:'ck_served', cuts:HCK.cuts, queue:HCK.queue });
+  ckLater(ckNextPick, 1200);
+}
+function ckFree(){ return [...Array(HCK.n).keys()].filter(i => !Object.values(HCK.own).includes(i)); }
+function ckNextPick(){
+  HCK.queue = HCK.queue.filter(ckIn);
+  if (!HCK.queue.length){
+    // the cook gets what is left
+    const f = ckFree();
+    if (ckIn(HCK.cook) && f.length){ HCK.own[HCK.cook] = f[0]; broadcast({ t:'ck_took', a:HCK.cook, i:f[0], cook:true }); }
+    return ckLater(ckResolve, 1400);
+  }
+  const who = HCK.who = HCK.queue[0], seq = ++HCK.seq;
+  broadcast({ t:'ck_pick', who, left:CK_PICK_T });
+  if (players.find(p => p.id === who && p.bot)) ckLater(() => { if (HCK.seq === seq) cakePick(who, { i:ckBotPick(who) }); }, 1800 + Math.random()*2500);
+  ckLater(() => { if (HCK.seq === seq) cakePick(who, { i:ckBestFree(), auto:true }); }, CK_PICK_T*1000 + 300);
+}
+function cakePick(id, m){
+  if (!HCK || HCK.ph !== 'pick' || id !== HCK.who) return;
+  const i = m.i | 0;
+  if (i < 0 || i >= HCK.n || Object.values(HCK.own).includes(i)) return;
+  HCK.own[id] = i; HCK.who = null; HCK.seq++;
+  HCK.queue = HCK.queue.filter(x => x !== id);
+  broadcast({ t:'ck_took', a:id, i, auto:!!m.auto });
+  ckLater(ckNextPick, 900);
+}
+// what a piece looks worth to someone who does not know where the bean is
+const ckSeen = i => ckValue(HCK.top, HCK.cuts, i).tot;
+function ckBestFree(){ return ckFree().sort((a, b) => ckSeen(b) - ckSeen(a))[0]; }
+function ckResolve(){
+  HCK.ph = 'res';
+  const pts = {};
+  for (const [id, i] of Object.entries(HCK.own)){
+    const v = ckValue(HCK.top, HCK.cuts, i, HCK.feve), s = H.stats[id]; if (!s) continue;
+    s.pts += v.tot; s.cher += v.cher; s.cand += v.cand; s.feve += v.feve;
+    if (id === HCK.cook) s.cook += v.tot;
+    pts[id] = [Math.round(v.size*10)/10, v.cher, v.cand, v.feve, Math.round(v.tot*10)/10];
+  }
+  broadcast({ t:'ck_res', own:HCK.own, pts, feve:HCK.feve, sc:ckScores() });
+  ckLater(ckRound, 7000);
+}
+function ckRanking(){
+  const ids = Object.keys(H.stats).sort((a, b) => { const A = H.stats[a], B = H.stats[b]; if (A.left !== B.left) return A.left ? 1 : -1; return B.pts - A.pts || B.feve - A.feve || B.cher - A.cher; });
+  return ids.map((pid, i) => { const p = players.find(x => x.id === pid) || { name:'?', color:'#888' }, st = H.stats[pid];
+    return { id:pid, name:p.name, color:p.color, place:i + 1, ...st, pts:Math.round(st.pts), cook:Math.round(st.cook) }; });
+}
+function ckFinish(){
+  if (!H || H.over) return;
+  H.over = true; ckClear();
+  const ranking = ckRanking();
+  setTimeout(() => broadcast({ t:'end', ranking, game:'cake' }), 600);
+}
+function cakeDrop(id){
+  if (!H || H.over || !H.stats[id]) return;
+  H.stats[id].left = true;
+  broadcast({ t:'ck_left', id });
+  if (!players.some(p => !p.bot && ckIn(p.id))) return ckFinish();
+  if (!HCK) return;
+  if (HCK.ph === 'cut' && id === HCK.cook) return ckCutDone(HCK.seq);          // the cook walked out: serve as it is
+  if (HCK.ph === 'pick' && id === HCK.who){ HCK.who = null; HCK.seq++; HCK.queue = HCK.queue.filter(x => x !== id); ckLater(ckNextPick, 500); }
+}
+// robot cook: tries many ways of cutting and keeps one where the pieces look alike, if possible with the bean in the
+// piece that looks the least tempting (which it will probably end up with); robot guest: the piece that looks best
+function ckBotCut(seq){
+  if (!HCK || HCK.ph !== 'cut' || seq !== HCK.seq) return;
+  const n = HCK.n; let best = null, bs = 1e9;
+  for (let k = 0; k < 400; k++){
+    const rot = Math.random()*TAU, c = ckTidy([...Array(n)].map((_, i) => rot + (i + (Math.random() - .5)*.9)*TAU/n), n);
+    if (!c) continue;
+    const vals = c.map((_, i) => ckValue(HCK.top, c, i).tot), lo = Math.min(...vals), fi = ckPieceAt(c, Math.atan2(HCK.feve.y, HCK.feve.x));
+    const sc = Math.max(...vals) - lo - (vals[fi] === lo ? 3 : 0) + Math.random()*1.5;
+    if (sc < bs){ bs = sc; best = c; }
+  }
+  cakeCuts(HCK.cook, { a:best || HCK.cuts, ok:true });
+}
+function ckBotPick(){ return ckFree().map(i => [i, ckSeen(i) + (Math.random() - .5)*4]).sort((a, b) => b[1] - a[1])[0][0]; }
+
+// ---- my view ----
+const ckcv = $('ckCv'), ckctx = ckcv.getContext('2d');
+function startCake(m){
+  players = m.players; cur = 'cake'; G = null; PG = null; D = null; phase = 'play';
+  $('scrEnd').hidden = true; show('scrCake');
+  CK = { r:0, of:players.length, cook:null, top:[], cuts:[], feve:null, ph:'wait', who:null, until:0, own:{}, pts:null, sc:{}, sel:-1, drag:-1, kb:0, lastSend:0, dirty:false,
+    spec:!players.some(p => p.id === me.id), anim:{}, queue:[] };
+  $('ckOk').hidden = true;
+  ckHead('La Part du gâteau'); ckMsg('Le premier pâtissier se lave les mains…'); renderCkPlayers();
+  $('ckRound').textContent = 'Manche 1'; $('ckTime').textContent = '⏱ –';
+  $('ckHelp').textContent = 'Le pâtissier fait glisser les couteaux (les poignées ✂ au bord du gâteau) puis touche « Servir ». Les autres choisissent une part chacun leur tour, le dernier au classement en premier ; le pâtissier prend la dernière. Taille + 3 par cerise − 2 par bougie ; la fève, cachée (seul le pâtissier sait où), vaut 8.';
+}
+function ckHead(t){ $('ckHead').textContent = t; }
+function ckMsg(t){ $('ckMsg').textContent = t || ''; }
+const ckName = id => { const p = players.find(x => x.id === id); return p ? p.name : '?'; };
+function renderCkPlayers(){
+  const ul = $('ckPlayers'); ul.textContent = '';
+  for (const p of [...players].sort((a, b) => (CK.sc[b.id] || 0) - (CK.sc[a.id] || 0))){
+    const li = document.createElement('li');
+    if (p.left) li.classList.add('dead');
+    if (p.id === me.id) li.classList.add('me');
+    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color;
+    const t = document.createElement('span'); t.textContent = (p.id === CK.cook ? '🔪 ' : '') + p.name + ' · ' + (CK.sc[p.id] || 0);
+    li.append(d, t); ul.append(li);
+  }
+}
+function ckButton(){
+  const b = $('ckOk');
+  if (CK.ph === 'cut' && CK.cook === me.id){ b.hidden = false; b.disabled = false; b.textContent = '✂ Servir'; }
+  else if (CK.ph === 'pick' && CK.who === me.id){ b.hidden = false; b.disabled = CK.sel < 0; b.textContent = CK.sel < 0 ? 'Touchez une part' : '🍰 Je prends cette part'; }
+  else b.hidden = true;
+}
+function cakeRecv(m){
+  if (!CK) return;
+  if (m.t === 'ck_round'){
+    Object.assign(CK, { r:m.r, of:m.of, cook:m.cook, top:m.top, cuts:m.cuts, feve:null, ph:'cut', who:null, until:performance.now() + m.left*1000, own:{}, pts:null, sc:m.sc || CK.sc, sel:-1, drag:-1, kb:0, anim:{}, queue:[] });
+    $('ckRound').textContent = 'Manche ' + m.r + '/' + m.of;
+    const mine = m.cook === me.id;
+    ckHead(mine ? 'À vous de couper !' : ckName(m.cook) + ' coupe');
+    ckMsg(mine ? 'Déplacez les couteaux, puis « Servir ». Vous aurez la dernière part.' : ckName(m.cook) + ' partage le gâteau… lui seul sait où est la fève.');
+    if (mine){ sfx('myturn'); boom('À VOUS DE COUPER !', { size:24, x:.5, y:.3, pal:BOOM_COLORS[1], ms:900 }); }
+    renderCkPlayers(); ckButton();
+  } else if (m.t === 'ck_feve'){ CK.feve = { x:m.x, y:m.y }; }
+  else if (m.t === 'ck_cuts'){ if (CK.cook !== me.id) CK.cuts = m.a; }
+  else if (m.t === 'ck_served'){
+    CK.cuts = m.cuts; CK.ph = 'pick'; CK.queue = m.queue; CK.drag = -1; CK.until = 0;
+    ckHead('Servez-vous !'); sfx('ok');
+    const k = m.queue.indexOf(me.id);
+    ckMsg(m.queue.length ? 'Ordre : ' + m.queue.map(ckName).join(', ') + (CK.cook ? ', puis ' + ckName(CK.cook) : '') + '.' + (k >= 0 ? ' Vous êtes ' + (k === 0 ? '1er' : (k + 1) + 'e') + '.' : '') : '');
+    ckButton();
+  } else if (m.t === 'ck_pick'){
+    CK.who = m.who; CK.sel = -1; CK.until = performance.now() + m.left*1000;
+    const mine = m.who === me.id;
+    ckHead(mine ? 'Choisissez votre part !' : ckName(m.who) + ' choisit');
+    if (mine){ sfx('myturn'); ckMsg('Touchez une part, puis confirmez.'); } else ckMsg(ckName(m.who) + ' hésite…');
+    ckButton();
+  } else if (m.t === 'ck_took'){
+    CK.own[m.a] = m.i; CK.anim[m.i] = performance.now(); if (CK.who === m.a) CK.who = null; CK.until = 0;
+    sfx('tap');
+    ckMsg(m.cook ? ckName(m.a) + ' prend la dernière part.' : (m.a === me.id ? 'Vous prenez cette part.' : ckName(m.a) + ' prend sa part' + (m.auto ? ' (trop lent : la plus belle restante)' : '') + '.'));
+    ckButton();
+  } else if (m.t === 'ck_res'){
+    CK.ph = 'res'; CK.own = m.own; CK.pts = m.pts; CK.feve = m.feve; CK.sc = m.sc || CK.sc; CK.until = 0; CK.resAt = performance.now();
+    const fw = Object.keys(m.pts).find(id => m.pts[id][3]);
+    ckHead('Dégustation');
+    ckMsg(fw ? (fw === me.id ? 'Vous avez la fève ! +' + CK_FEVE : ckName(fw) + ' a la fève ! +' + CK_FEVE) : 'Personne n\'a la fève.');
+    if (fw === me.id){ sfx('win'); boom('LA FÈVE !', { size:30, x:.5, y:.35, pal:BOOM_COLORS[2], ms:1100 }); }
+    renderCkPlayers(); ckButton();
+  } else if (m.t === 'ck_left'){
+    const p = players.find(x => x.id === m.id); if (p) p.left = true; renderCkPlayers();
+  }
+}
+// ---- input: the cook drags the knife handles; a guest taps a piece, then confirms ----
+const ckPos = e => { const r = ckcv.getBoundingClientRect(); return [(e.clientX - r.left)/r.width*480 - CK_CX, (e.clientY - r.top)/r.height*480 - CK_CY]; };
+function ckSendCuts(ok){ CK.lastSend = performance.now(); toHost({ t:'ck_cuts', a:CK.cuts.map(x => Math.round(x*1000)/1000), ok:ok ? 1 : 0 }); }
+// move knife k to angle a, staying between its neighbours
+function ckMoveKnife(k, a){
+  const c = CK.cuts, n = c.length; if (n < 2) { c[k] = ckNorm(a); return; }
+  const prev = c[(k - 1 + n) % n], next = c[(k + 1) % n];
+  const room = ckNorm(next - prev) || TAU, off = Math.max(CK_GAP, Math.min(room - CK_GAP, ckNorm(a - prev)));
+  c[k] = ckNorm(prev + off);
+}
+ckcv.addEventListener('pointerdown', e => {
+  if (!CK || CK.spec) return;
+  const [x, y] = ckPos(e), a = Math.atan2(y, x), r = Math.hypot(x, y);
+  if (CK.ph === 'cut' && CK.cook === me.id){
+    if (r < 30) return;
+    let best = -1, bd = .45;
+    CK.cuts.forEach((c, i) => { const d = Math.abs(Math.atan2(Math.sin(a - c), Math.cos(a - c))); if (d < bd){ bd = d; best = i; } });
+    if (best >= 0){ e.preventDefault(); CK.drag = best; CK.kb = best; try { ckcv.setPointerCapture(e.pointerId); } catch(_){} }
+  } else if (CK.ph === 'pick' && CK.who === me.id && r < CK_R + 16){
+    const i = ckPieceAt(CK.cuts, a);
+    if (!Object.values(CK.own).includes(i)){ CK.sel = i; sfx('tap'); ckButton(); }
+  }
+});
+ckcv.addEventListener('pointermove', e => {
+  if (!CK || CK.drag < 0) return;
+  const [x, y] = ckPos(e);
+  ckMoveKnife(CK.drag, Math.atan2(y, x));
+  CK.cuts.sort((a, b) => a - b);
+  if (performance.now() - CK.lastSend > 80) ckSendCuts(false);
+});
+const ckUp = () => { if (CK && CK.drag >= 0){ CK.drag = -1; ckSendCuts(false); } };
+ckcv.addEventListener('pointerup', ckUp); ckcv.addEventListener('pointercancel', ckUp);
+$('ckOk').addEventListener('click', () => {
+  if (!CK) return;
+  if (CK.ph === 'cut' && CK.cook === me.id){ ckSendCuts(true); $('ckOk').disabled = true; }
+  else if (CK.ph === 'pick' && CK.who === me.id && CK.sel >= 0){ toHost({ t:'ck_take', i:CK.sel }); $('ckOk').disabled = true; }
+});
+// keyboard: cook, 1-9 picks a knife and ← → turn it; guest, ← → go through the free pieces; Enter confirms
+addEventListener('keydown', e => {
+  if (cur !== 'cake' || !CK || e.target.tagName === 'INPUT' || CK.spec) return;
+  const k = e.key;
+  if (CK.ph === 'cut' && CK.cook === me.id){
+    if (k >= '1' && k <= '9' && +k <= CK.cuts.length){ CK.kb = +k - 1; e.preventDefault(); }
+    else if (k === 'ArrowLeft' || k === 'ArrowRight'){ e.preventDefault(); ckMoveKnife(CK.kb, CK.cuts[CK.kb] + (k === 'ArrowRight' ? 1 : -1)*TAU/180*2); ckSendCuts(false); }
+    else if (k === 'Enter'){ e.preventDefault(); $('ckOk').click(); }
+  } else if (CK.ph === 'pick' && CK.who === me.id){
+    const free = [...CK.cuts.keys()].filter(i => !Object.values(CK.own).includes(i));
+    if ((k === 'ArrowLeft' || k === 'ArrowRight') && free.length){ e.preventDefault(); const j = free.indexOf(CK.sel); CK.sel = free[(j + (k === 'ArrowRight' ? 1 : free.length - 1) + (j < 0 ? 1 : 0)) % free.length]; ckButton(); }
+    else if (k === 'Enter' && CK.sel >= 0){ e.preventDefault(); $('ckOk').click(); }
+  }
+});
+function cakeFrame(dtMs, now){
+  if (!CK) return;
+  const left = CK.until ? Math.max(0, (CK.until - now)/1000) : 0;
+  $('ckTime').textContent = CK.until ? '⏱ ' + Math.ceil(left) : '⏱ –';
+  $('ckTime').classList.toggle('hot', !!CK.until && left < 5);
+  ckDraw(ckctx, now);
+}
+// ---- drawing ----
+function ckDraw(ctx, now){
+  const t = now/1000;
+  // a gingham tablecloth
+  ctx.fillStyle = '#FFF6EC'; ctx.fillRect(0, 0, 480, 480);
+  ctx.fillStyle = 'rgba(230,38,43,.16)';
+  for (let i = 0; i < 480; i += 32){ ctx.fillRect(i, 0, 16, 480); ctx.fillRect(0, i, 480, 16); }
+  // the plate
+  ctx.fillStyle = 'rgba(0,0,0,.18)'; ctx.beginPath(); ctx.ellipse(CK_CX + 6, CK_CY + 10, CK_R + 30, CK_R + 28, 0, 0, TAU); ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(CK_CX, CK_CY, CK_R + 26, 0, TAU); ctx.fill(); ctx.stroke();
+  ctx.strokeStyle = '#D9E2EC'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(CK_CX, CK_CY, CK_R + 16, 0, TAU); ctx.stroke();
+  if (!CK.cuts.length){ ckCake(ctx, 0, TAU, 0, 0, null, t); return; }
+  const n = CK.cuts.length, owner = i => Object.keys(CK.own).find(id => CK.own[id] === i);
+  // the pieces: chosen ones slide a little out of the cake, in their owner's colour
+  for (let i = 0; i < n; i++){
+    const a0 = CK.cuts[i], a1 = a0 + ckSpan(CK.cuts, i), mid = (a0 + a1)/2, who = owner(i);
+    const k = who ? Math.min(1, (now - (CK.anim[i] || 0))/350) : (CK.sel === i ? .5 : 0), off = k*16;
+    const dx = Math.cos(mid)*off, dy = Math.sin(mid)*off, p = who && players.find(x => x.id === who);
+    ckCake(ctx, a0, a1, dx, dy, p, t, CK.sel === i && !who);
+  }
+  // the knives (and, for the cook, their handles)
+  if (CK.ph === 'cut'){
+    const mine = CK.cook === me.id;
+    CK.cuts.forEach((c, i) => {
+      const ex = CK_CX + Math.cos(c)*(CK_R + 4), ey = CK_CY + Math.sin(c)*(CK_R + 4);
+      ctx.strokeStyle = '#000'; ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(CK_CX, CK_CY); ctx.lineTo(ex, ey); ctx.stroke();
+      ctx.strokeStyle = '#C9D3DD'; ctx.lineWidth = 2.5; ctx.stroke();
+      if (mine){
+        const hx = CK_CX + Math.cos(c)*(CK_R + 30), hy = CK_CY + Math.sin(c)*(CK_R + 30), on = CK.drag === i || CK.kb === i;
+        ctx.fillStyle = on ? '#FFD21F' : '#fff'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.arc(hx, hy, 17, 0, TAU); ctx.fill(); ctx.stroke();
+        ctx.font = '18px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#000'; ctx.fillText('✂', hx, hy + 1);
+        ctx.textBaseline = 'alphabetic';
+      }
+    });
+    // the cook alone sees the share each piece is worth as it stands
+    if (mine) for (let i = 0; i < n; i++){
+      const mid = CK.cuts[i] + ckSpan(CK.cuts, i)/2, v = ckValue(CK.top, CK.cuts, i);
+      ckLabel(ctx, CK_CX + Math.cos(mid)*CK_R*.62, CK_CY + Math.sin(mid)*CK_R*.62, '≈ ' + Math.round(v.tot), '#fff', '#000', 15);
+    }
+  }
+  // names on the chosen pieces, then the points once eaten
+  for (let i = 0; i < n; i++){
+    const who = owner(i); if (!who) continue;
+    const p = players.find(x => x.id === who); if (!p) continue;
+    const mid = CK.cuts[i] + ckSpan(CK.cuts, i)/2, x = CK_CX + Math.cos(mid)*(CK_R*.6 + 16), y = CK_CY + Math.sin(mid)*(CK_R*.6 + 16);
+    ckLabel(ctx, x, y - 10, who === me.id ? 'VOUS' : p.name.slice(0, 10), p.color, inkOn(p.color), 13);
+    if (CK.pts && CK.pts[who]){
+      const k = Math.min(1, (now - CK.resAt)/500), v = CK.pts[who][4];
+      ctx.globalAlpha = k; ckLabel(ctx, x, y + 14, (v >= 0 ? '+' : '') + Math.round(v), '#FFD21F', '#000', 18); ctx.globalAlpha = 1;
+    }
+  }
+  // the bean: a ghost for the cook, revealed at the end
+  if (CK.feve){
+    const i = ckPieceAt(CK.cuts, Math.atan2(CK.feve.y, CK.feve.x)), who = owner(i), mid = CK.cuts[i] + ckSpan(CK.cuts, i)/2;
+    const off = who ? 16*Math.min(1, (now - (CK.anim[i] || 0))/350) : 0, x = CK_CX + CK.feve.x + Math.cos(mid)*off, y = CK_CY + CK.feve.y + Math.sin(mid)*off;
+    const shown = CK.ph === 'res';
+    ctx.save(); ctx.globalAlpha = shown ? 1 : .55 + .2*Math.sin(t*3);
+    if (shown){ ctx.strokeStyle = 'rgba(255,210,31,.9)'; ctx.lineWidth = 3; for (let r = 0; r < 4; r++){ const a = t*2 + r*Math.PI/2; ctx.beginPath(); ctx.moveTo(x + Math.cos(a)*18, y + Math.sin(a)*18); ctx.lineTo(x + Math.cos(a)*28, y + Math.sin(a)*28); ctx.stroke(); } }
+    ctx.fillStyle = '#E8B04B'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5; if (!shown) ctx.setLineDash([3, 3]);
+    ctx.beginPath(); ctx.ellipse(x, y, 13, 9, -.4, 0, TAU); ctx.fill(); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(255,255,255,.6)'; ctx.beginPath(); ctx.ellipse(x - 4, y - 3, 4, 2.5, -.4, 0, TAU); ctx.fill();
+    ctx.restore();
+    if (!shown && CK.cook === me.id) ckLabel(ctx, x, y - 20, 'fève', '#fff', '#000', 11);
+  }
+}
+function ckLabel(ctx, x, y, s, bg, fg, size){
+  ctx.font = '900 ' + size + 'px Nunito, sans-serif'; ctx.textAlign = 'center';
+  const w = ctx.measureText(s).width + 12, h = size + 8;
+  ctx.fillStyle = bg; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x - w/2, y - h/2, w, h, 6) : ctx.rect(x - w/2, y - h/2, w, h); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = fg; ctx.textBaseline = 'middle'; ctx.fillText(s, x, y + 1); ctx.textBaseline = 'alphabetic';
+}
+// one piece of cake (or the whole cake), with what sits on it
+function ckCake(ctx, a0, a1, dx, dy, p, t, sel){
+  const cx = CK_CX + dx, cy = CK_CY + dy, whole = a1 - a0 >= TAU - 1e-6;
+  const path = () => { ctx.beginPath(); if (!whole) ctx.moveTo(cx, cy); ctx.arc(cx, cy, CK_R, a0, a1); ctx.closePath(); };
+  // sponge seen at the cut, then the icing
+  ctx.save(); path(); ctx.clip();
+  const g = ctx.createRadialGradient(cx - 40, cy - 50, 20, cx, cy, CK_R);
+  g.addColorStop(0, '#FFE3EC'); g.addColorStop(.75, '#FFC2D4'); g.addColorStop(1, '#F59AB6');
+  ctx.fillStyle = g; ctx.fillRect(cx - CK_R, cy - CK_R, CK_R*2, CK_R*2);
+  // a ring of cream rosettes along the edge
+  ctx.fillStyle = '#FFF8F0'; ctx.strokeStyle = 'rgba(0,0,0,.25)'; ctx.lineWidth = 1.5;
+  for (let a = 0; a < TAU; a += TAU/36){ const x = cx + Math.cos(a)*(CK_R - 12), y = cy + Math.sin(a)*(CK_R - 12); ctx.beginPath(); ctx.arc(x, y, 8, 0, TAU); ctx.fill(); ctx.stroke(); }
+  // chocolate drizzle
+  ctx.strokeStyle = 'rgba(120,60,30,.35)'; ctx.lineWidth = 3;
+  for (let k = 0; k < 5; k++){ ctx.beginPath(); for (let x = -CK_R; x <= CK_R; x += 10) ctx.lineTo(cx + x, cy - 90 + k*45 + Math.sin(x/22 + k)*7); ctx.stroke(); }
+  // toppings on this piece
+  for (const q of CK.top){
+    const a = Math.atan2(q.y, q.x); if (!whole && ckNorm(a - a0) >= ckNorm(a1 - a0)) continue;
+    const x = cx + q.x, y = cy + q.y;
+    if (q.k === 'c'){
+      ctx.strokeStyle = '#2E7D32'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(x + 2, y - 6); ctx.quadraticCurveTo(x + 10, y - 20, x + 16, y - 22); ctx.stroke();
+      ctx.fillStyle = '#D7192A'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(x, y, 11, 0, TAU); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = 'rgba(255,255,255,.75)'; ctx.beginPath(); ctx.arc(x - 4, y - 4, 3.5, 0, TAU); ctx.fill();
+    } else {
+      // a candle: striped stick, little flame
+      ctx.fillStyle = '#fff'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.rect(x - 5, y - 26, 10, 30); ctx.fill(); ctx.stroke();
+      ctx.strokeStyle = '#3B82F6'; ctx.lineWidth = 3; for (let s = 0; s < 3; s++){ ctx.beginPath(); ctx.moveTo(x - 5, y - 20 + s*9); ctx.lineTo(x + 5, y - 24 + s*9); ctx.stroke(); }
+      const fl = 1 + .15*Math.sin(t*12 + x);
+      ctx.fillStyle = '#FFB020'; ctx.strokeStyle = '#000'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.ellipse(x, y - 34, 4.5*fl, 8*fl, 0, 0, TAU); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#FFF3B0'; ctx.beginPath(); ctx.ellipse(x, y - 32, 2, 4, 0, 0, TAU); ctx.fill();
+    }
+  }
+  if (sel){ ctx.fillStyle = 'rgba(255,210,31,.28)'; ctx.fillRect(cx - CK_R, cy - CK_R, CK_R*2, CK_R*2); }
+  ctx.restore();
+  // outline: the owner's colour once taken
+  path();
+  ctx.lineJoin = 'round';
+  if (p){ ctx.strokeStyle = '#000'; ctx.lineWidth = 8; ctx.stroke(); ctx.strokeStyle = p.color; ctx.lineWidth = 5; ctx.stroke(); }
+  else { ctx.strokeStyle = sel ? '#FFD21F' : '#000'; ctx.lineWidth = sel ? 5 : 3; ctx.stroke(); if (sel){ ctx.strokeStyle = '#000'; ctx.lineWidth = 1.5; ctx.stroke(); } }
+}
+
 // ================= before each game: the rules in 2-3 slides, then everyone taps "Prêt" =================
 // The creator's "start" opens this briefing for the whole room; the game really starts once every player is ready
 // (or when the creator decides not to wait). "Rejouer" skips it: everybody already knows the game.
@@ -10378,6 +10824,8 @@ const BRIEF = {
     tip:'Ne rien écraser ! Une coupe bâclée envoie l\'arbre n\'importe où, parfois même en arrière. Viser une ouverture étroite, ou tomber au ras d\'un obstacle avec une coupe propre, rapporte un gros bonus.' },
   agility:{ ctl:[['📱', 'Choisissez un chien. Haie, pneu, triple : un tap quand le cercle est vert. Slalom : tracez le zigzag. Tunnel : doigt sur le chien, glissez. Passerelle : restez appuyé, lâchez sur le jaune. Bascule : un tap sur le vert au milieu. Table : un tap puis plus rien. Sprint final : tapez à toute vitesse.'], ['💻', 'Les mêmes gestes à la souris, ou Espace (à marteler pour le sprint).']],
     tip:'Chaque race a 6 étoiles : Vitesse, Saut ou Énergie. Un Whippet file entre les obstacles, un Jack Russell a plus de marge sur les haies, un Corgi va plus vite au sprint et dans les obstacles longs.' },
+  cake:{ ctl:[['📱', 'Pâtissier : faites glisser les poignées ✂ autour du gâteau, puis « Servir ». Invité : touchez une part, puis confirmez.'], ['💻', 'Pâtissier : 1 à 9 pour choisir un couteau, ← → pour le tourner, Entrée pour servir. Invité : ← → puis Entrée.']],
+    tip:'Le pâtissier aura la dernière part : s\'il coupe mal, c\'est pour lui. Mais il sait où est la fève…' },
   meduse:{ ctl:[['📱', 'Glissez le doigt au-dessus du radeau pour viser, relâchez pour lâcher votre naufragé.'], ['💻', 'Visez à la souris et cliquez, ou ← → puis Espace.']],
     tip:'Couché, un corps tient mieux ; debout, il monte plus haut mais bascule. L\'Argus passe trois fois : soyez au sommet à ce moment-là, ça vaut 5 fois plus.' },
   galop:{ ctl:[['📱', 'Choisissez un cheval. ◀ ▶ pour vous décaler, GALOP pour accélérer (coûte de l\'énergie), RALENTIR pour souffler.'], ['💻', '← → se décaler · ↑ ou Espace galop · ↓ ralentir. Ou cliquez les boutons.']],
@@ -10536,7 +10984,7 @@ function saveGame(ranking, game){
   if (!Array.isArray(ranking) || !ranking.length || lastSaved === ranking) return;
   lastSaved = ranking;
   const h = loadHist();
-  h.unshift({ at:Date.now(), game:['pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber','agility','galop','meduse'].includes(game) ? game : 'tetris', n:ranking.length,
+  h.unshift({ at:Date.now(), game:['pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber','agility','galop','meduse','cake'].includes(game) ? game : 'tetris', n:ranking.length,
     p:ranking.map(r => ({ name:String(r.name).slice(0,14), color:r.color, place:r.place|0, sc:r.sc|0, ln:r.ln|0, sent:r.sent|0, score:r.score|0, sync:r.sync|0, lives:r.lives|0, seats:r.seats|0, catches:r.catches|0, tank:r.tank|0, role:String(r.role || '').slice(0, 8), hits:r.hits|0, pts:r.pts|0, whacks:r.whacks|0, shots:r.shots|0, afloat:r.afloat|0, shapes:r.shapes|0, d:Math.round(r.d||0), t:+r.t||0, me:r.id === me.id })) });
   store.set(HIST_KEY, JSON.stringify(h.slice(0, HIST_MAX)));
 }
@@ -10552,13 +11000,13 @@ function renderBoard(){
     a.games++; if (p.place === 1 && g.n > 1) a.wins++;
     a.pts += Math.max(0, g.n - p.place);                  // 1 point per player finished ahead of
     if (g.game === 'derby' || g.game === 'agility' || g.game === 'galop'){ if (p.t > 0 && (!a.bestT || p.t < a.bestT)) a.bestT = p.t; }
-    else a.best = Math.max(a.best, (g.game === 'pong' || g.game === 'naval') ? p.hits : g.game === 'mole' ? (p.whacks || 0) : g.game === 'curling' ? (p.pts || 0) : g.game === 'chairs' ? (p.seats || 0) : (g.game === 'dodge' || g.game === 'tank') ? (p.hits || 0) : g.game === 'sheep' ? (p.score || 0) : g.game === 'drakkar' ? (p.sync || 0) : (g.game === 'master' || g.game === 'kabaddi' || g.game === 'lumber' || g.game === 'meduse') ? (p.pts || 0) : p.sc);
+    else a.best = Math.max(a.best, (g.game === 'pong' || g.game === 'naval') ? p.hits : g.game === 'mole' ? (p.whacks || 0) : g.game === 'curling' ? (p.pts || 0) : g.game === 'chairs' ? (p.seats || 0) : (g.game === 'dodge' || g.game === 'tank') ? (p.hits || 0) : g.game === 'sheep' ? (p.score || 0) : g.game === 'drakkar' ? (p.sync || 0) : (g.game === 'master' || g.game === 'kabaddi' || g.game === 'lumber' || g.game === 'meduse' || g.game === 'cake') ? (p.pts || 0) : p.sc);
     agg.set(k, a);
   }
   const rows = [...agg.values()].sort((x, y) => y.pts - x.pts || y.wins - x.wins || x.games - y.games);
   const showBest = lbFilter !== 'all';
   const hd = $('lbHead'); hd.textContent = '';
-  for (const t of ['#','Joueur','Parties','Victoires','Points', ...(showBest ? [lbFilter === 'pong' ? 'Arrêts max' : (lbFilter === 'derby' || lbFilter === 'agility' || lbFilter === 'galop') ? 'Meilleur temps' : lbFilter === 'naval' ? 'Touchés max' : lbFilter === 'mole' ? 'Taupes tapées max' : lbFilter === 'curling' ? 'Points max' : lbFilter === 'chairs' ? 'Chaises max' : (lbFilter === 'dodge' || lbFilter === 'tank') ? 'Touches max' : lbFilter === 'sheep' ? 'Record d\'équipe' : lbFilter === 'drakkar' ? 'Synchro max (%)' : (lbFilter === 'master' || lbFilter === 'kabaddi' || lbFilter === 'lumber' || lbFilter === 'meduse') ? 'Points max' : 'Meilleur score'] : [])]){
+  for (const t of ['#','Joueur','Parties','Victoires','Points', ...(showBest ? [lbFilter === 'pong' ? 'Arrêts max' : (lbFilter === 'derby' || lbFilter === 'agility' || lbFilter === 'galop') ? 'Meilleur temps' : lbFilter === 'naval' ? 'Touchés max' : lbFilter === 'mole' ? 'Taupes tapées max' : lbFilter === 'curling' ? 'Points max' : lbFilter === 'chairs' ? 'Chaises max' : (lbFilter === 'dodge' || lbFilter === 'tank') ? 'Touches max' : lbFilter === 'sheep' ? 'Record d\'équipe' : lbFilter === 'drakkar' ? 'Synchro max (%)' : (lbFilter === 'master' || lbFilter === 'kabaddi' || lbFilter === 'lumber' || lbFilter === 'meduse' || lbFilter === 'cake') ? 'Points max' : 'Meilleur score'] : [])]){
     const th = document.createElement('th'); th.textContent = t; hd.append(th);
   }
   const tb = $('lbBody'); tb.textContent = '';
@@ -10620,7 +11068,8 @@ function frame(now){
   if (cur === 'lumber') lumberFrame(dt, now);
   if (cur === 'agility') agilityFrame(dt, now);
   if (cur === 'galop') try { galopFrame(dt, now); } catch(e){ console.error(e); }
-  if (cur === 'meduse') meduseFrame(dt, now);   // one bad frame must not freeze the race
+  if (cur === 'meduse') meduseFrame(dt, now);
+  if (cur === 'cake') cakeFrame(dt, now);   // one bad frame must not freeze the race
   if (cur === 'tetris' && G && phase === 'count'){
     G.count -= dt/1000;
     if (G.count <= 0){ phase = 'play'; setMsg('', ''); countBeep(0); }
@@ -10759,11 +11208,11 @@ $('btnQuit').onclick = () => toMenu('');
 function backToLobby(){
   if (me.host){
     if (H) H.over = true;
-    H = null; if (HC) clearTimeout(HC.timer); HC = null; mcClear(); HMC = null; mmClear(); HMM = null; kbClear(); HKB = null; dbClear(); HDB = null; tkClear(); HTK = null; shClear(); HSH = null; dkClear(); HDK = null; ljClear(); HLJ = null; agClear(); HAG = null; gpClear(); HGP = null; mdClear(); HMD = null;
+    H = null; if (HC) clearTimeout(HC.timer); HC = null; mcClear(); HMC = null; mmClear(); HMM = null; kbClear(); HKB = null; dbClear(); HDB = null; tkClear(); HTK = null; shClear(); HSH = null; dkClear(); HDK = null; ljClear(); HLJ = null; agClear(); HAG = null; gpClear(); HGP = null; mdClear(); HMD = null; ckClear(); HCK = null;
     players = players.filter(p => p.id === 'h' || net.conns.has(p.id));
     sendLobby(true);                                       // everyone goes back
   } else {
-    phase = 'lobby'; $('scrEnd').hidden = true; G = null; PG = null; D = null; NV = null; ML = null; CU = null; MC = null; MM = null; KB = null; DB = null; TK = null; SHV = null; DK = null; if (LJ){ LJ = null; sawStop(); } AG = null; GP = null; MD = null; cur = null;
+    phase = 'lobby'; $('scrEnd').hidden = true; G = null; PG = null; D = null; NV = null; ML = null; CU = null; MC = null; MM = null; KB = null; DB = null; TK = null; SHV = null; DK = null; if (LJ){ LJ = null; sawStop(); } AG = null; GP = null; MD = null; CK = null; cur = null;
     if (HM) moleClearTimers();
     show('scrLobby'); renderLobby();                      // wait there for the creator
   }
