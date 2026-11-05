@@ -9995,7 +9995,7 @@ function startMeduse(m){
   lastCountShown = null;
   players = m.players; cur = 'meduse'; G = null; PG = null; D = null; phase = 'count';
   $('scrEnd').hidden = true; show('scrMeduse');
-  MD = { t:0, ra:0, tra:0, shake:0, dust:[], B:new Map(), aims:[], sc:[], top:0, topOwner:null, dy:-140, cam:1, count:3, ph:'wait', argus:[], ann:{},
+  MD = { t:0, ra:0, tra:0, shake:0, dust:[], pops:[], pend:[], popT:0, B:new Map(), aims:[], sc:[], top:0, topOwner:null, dy:-140, cam:1, count:3, ph:'wait', argus:[], ann:{},
     aimX:0, sent:'', lastSend:0, keys:{}, splash:[], banner:null, over:false, spec:!players.some(p => p.id === me.id), down:false, cd:1.5 };
   const i = players.findIndex(p => p.id === me.id); if (i >= 0) MD.aimX = (i - (players.length - 1)/2)*90;
   $('mdMsg').textContent = ''; mdHead('Méduse'); renderMdPlayers();
@@ -10048,6 +10048,7 @@ function meduseRecv(m){
       if (owner === me.id && MD.ph === 'play'){ sfx('ok'); mdToast('Vous êtes au sommet !'); }
       MD.topOwner = owner;
     }
+    (m.sc || []).forEach((v, i) => { const d = v - (MD.sc[i] || 0); if (d > 0) MD.pend[i] = (MD.pend[i] || 0) + d; });
     const old = MD.sc.join(); MD.sc = m.sc || []; if (old !== MD.sc.join() || true) MD.scDirty = true;
   } else if (m.t === 'md_ev'){
     if (m.k === 'fall'){
@@ -10118,6 +10119,16 @@ function meduseFrame(dtMs, now){
     });
   }
   if (MD.scDirty){ MD.scDirty = false; renderMdPlayers(); }
+  // the points just won rise from the castaway on top, in its player's colour, once a second
+  if (now - MD.popT > 1000){
+    MD.popT = now;
+    const tb = MD.B.get(MD.top);
+    MD.pend.forEach((v, i) => {
+      const n = Math.round(v/10);
+      if (n >= 1 && tb && tb.oi === i){ MD.pops.push({ x:tb.x + (Math.random() - .5)*24, y:tb.y - 72, n, i, t:now, big:mdArgusAt(MD.t) >= 0 }); MD.pend[i] = v - n*10; }
+      else if (!tb || tb.oi !== i) MD.pend[i] = 0;
+    });
+  }
   const ready = MD.cd <= 0 && phase === 'play' && !MD.spec;
   $('mdDrop').disabled = !ready;
   $('mdCdBar').style.width = Math.round((1 - Math.min(1, MD.cd/MD_CD))*100) + '%';
@@ -10216,6 +10227,19 @@ function mdDrawScene(ctx, now){
   ctx.strokeStyle = 'rgba(255,255,255,.75)'; ctx.lineWidth = 2.5; ctx.beginPath();
   for (let x = 0; x <= 600; x += 12) ctx.lineTo(x, MD_BASE + 14*s + Math.sin(x/40 + t*1.6)*(3 + 3*sea));
   ctx.stroke();
+  // points rising from the top
+  const np = performance.now();
+  MD.pops = MD.pops.filter(q => np - q.t < 1300);
+  ctx.textAlign = 'center'; ctx.lineJoin = 'round';
+  for (const q of MD.pops){
+    const k2 = (np - q.t)/1300, p = players[q.i]; if (!p) continue;
+    const [x, y] = W(q.x, q.y), sz = (q.big ? 38 : 26)*(k2 < .15 ? .6 + k2/.15*.4 : 1);
+    ctx.globalAlpha = k2 < .7 ? 1 : 1 - (k2 - .7)/.3;
+    ctx.font = sz + 'px Bangers, Impact, sans-serif'; ctx.lineWidth = 5; ctx.strokeStyle = /^#f/i.test(inkOn(p.color)) ? '#fff' : '#000'; ctx.fillStyle = p.color;
+    const lbl = '+' + q.n, yy = y - 70*k2;
+    ctx.strokeText(lbl, x, yy); ctx.fillText(lbl, x, yy);
+  }
+  ctx.globalAlpha = 1;
   // hard landings: spray and splinters
   const nd = performance.now();
   MD.dust = MD.dust.filter(q => nd - q.t < 700);
