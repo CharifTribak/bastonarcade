@@ -9847,12 +9847,29 @@ function mdWorld(){
   eng.gravity.y = 1; eng.positionIterations = 8; eng.velocityIterations = 6;
   // the raft: one static piece (deck plus the leaning mast), rocked by hand every step
   const deck = M.Bodies.rectangle(0, 9, MD_DECK*2, 18, { chamfer:{ radius:6 } });
-  const mast = M.Bodies.rectangle(-70, -110, 9, 220);
-  M.Body.rotate(mast, -.12, { x:-70, y:0 });
-  const raft = M.Body.create({ parts:[deck, mast], isStatic:true, friction:.9, frictionStatic:1.4 });
-  for (const p of raft.parts){ p.friction = .9; p.frictionStatic = 1.4; }
+  const raft = M.Body.create({ parts:[deck], isStatic:true, friction:.16, frictionStatic:.22 });
+  for (const p of raft.parts){ p.friction = .16; p.frictionStatic = .22; }
+  // a falling body that lands hard shoves what it hits: the struck body is pushed along and spun by the side it was
+  // hit on, so the bodies below tip over instead of just taking the weight
+  M.Events.on(eng, 'collisionStart', ev => {
+    for (const pr of ev.pairs){
+      const a = pr.bodyA.parent, b = pr.bodyB.parent;
+      for (const [f, o] of [[a, b], [b, a]]){
+        if (f.isStatic || f.mdHit) continue;
+        const sp = Math.hypot(f.velocity.x, f.velocity.y);
+        if (sp < 4) continue;
+        f.mdHit = true;
+        if (!o.isStatic){
+          const k = Math.min(.5, .1*sp), off = Math.max(-1, Math.min(1, (f.position.x - o.position.x)/30));
+          M.Body.setVelocity(o, { x:o.velocity.x + f.velocity.x*k - off*sp*.25, y:o.velocity.y + f.velocity.y*k*.5 });
+          M.Body.setAngularVelocity(o, o.angularVelocity - off*sp*.018);
+        }
+        if (sp > 6) HMD.hits.push([Math.round(f.position.x), Math.round(f.bounds.max.y), Math.min(3, Math.round(sp/5))]);
+      }
+    }
+  });
   M.Composite.add(eng.world, raft);
-  HMD.eng = eng; HMD.raft = raft; HMD.rc = { x:raft.position.x, y:raft.position.y }; HMD.ang = 0;
+  HMD.eng = eng; HMD.raft = raft; HMD.hits = []; HMD.rc = { x:raft.position.x, y:raft.position.y }; HMD.ang = 0;
 }
 function mdGo(){
   HMD.ph = 'count';
@@ -9866,12 +9883,12 @@ function meduseInput(id, m){
   A.x = Math.max(-MD_DECK - 20, Math.min(MD_DECK + 20, +m.x || 0));
 }
 // the spot the next body falls from: well above the top of the pile
-function mdDropY(){ let top = 0; for (const o of HMD.bodies.values()) if (o.b.bounds.min.y < top && o.b.position.y < MD_SEAY) top = o.b.bounds.min.y; return Math.min(-140, top - 90); }
+function mdDropY(){ let top = 0; for (const o of HMD.bodies.values()) if (o.b.bounds.min.y < top && o.b.position.y < MD_SEAY) top = o.b.bounds.min.y; return Math.min(-282, top - 170); }
 function medusePush(id){
   if (!HMD || HMD.ph !== 'play') return;
   const A = HMD.aim[id]; if (!A || A.cd > 0 || !mdIn(id)) return;
   const M = Matter, ang = mdSwing(HMD.t, A.ph);
-  const b = M.Bodies.rectangle(A.x, mdDropY(), MD_BW, MD_BH, { chamfer:{ radius:9 }, friction:.75, frictionStatic:1.1, frictionAir:.012, restitution:0, density:.0016 });
+  const b = M.Bodies.rectangle(A.x, mdDropY(), MD_BW, MD_BH, { chamfer:{ radius:9 }, friction:.38, frictionStatic:.55, frictionAir:.004, restitution:.05, density:.0018 });
   M.Body.setAngle(b, ang);
   M.Composite.add(HMD.eng.world, b);
   const o = { id:HMD.nid++, b, o:id, still:0, at:HMD.t };
@@ -9927,7 +9944,7 @@ function meduseHostFrame(dt, now){
     for (const o of HMD.bodies.values()) B.push([o.id, Math.round(o.b.position.x*10), Math.round(o.b.position.y*10), Math.round(o.b.angle*100), players.findIndex(p => p.id === o.o)]);
     const aims = players.map(p => { const A = HMD.aim[p.id]; return [Math.round(A.x), Math.round(mdSwing(HMD.t, A.ph)*100), Math.round(A.cd*10)]; });
     broadcastSnap({ t:'md_s', tt:Math.round(HMD.t*10), ra:Math.round(HMD.ang*1000), dy:Math.round(mdDropY()), b:B, a:aims,
-      top:HMD.top ? HMD.top.id : 0, sc:players.map(p => Math.round((H.stats[p.id] ? H.stats[p.id].pts : 0)*10)) });
+      hit:HMD.hits.splice(0), top:HMD.top ? HMD.top.id : 0, sc:players.map(p => Math.round((H.stats[p.id] ? H.stats[p.id].pts : 0)*10)) });
   }
   if (HMD.t >= MD_T) mdFinish();
 }
@@ -9978,7 +9995,7 @@ function startMeduse(m){
   lastCountShown = null;
   players = m.players; cur = 'meduse'; G = null; PG = null; D = null; phase = 'count';
   $('scrEnd').hidden = true; show('scrMeduse');
-  MD = { t:0, ra:0, tra:0, B:new Map(), aims:[], sc:[], top:0, topOwner:null, dy:-140, cam:1, count:3, ph:'wait', argus:[], ann:{},
+  MD = { t:0, ra:0, tra:0, shake:0, dust:[], B:new Map(), aims:[], sc:[], top:0, topOwner:null, dy:-140, cam:1, count:3, ph:'wait', argus:[], ann:{},
     aimX:0, sent:'', lastSend:0, keys:{}, splash:[], banner:null, over:false, spec:!players.some(p => p.id === me.id), down:false, cd:1.5 };
   const i = players.findIndex(p => p.id === me.id); if (i >= 0) MD.aimX = (i - (players.length - 1)/2)*90;
   $('mdMsg').textContent = ''; mdHead('Méduse'); renderMdPlayers();
@@ -10010,6 +10027,12 @@ function meduseRecv(m){
   } else if (m.t === 'md_go'){ MD.ph = 'play'; phase = 'play'; mdHead('Montez !'); }
   else if (m.t === 'md_s'){
     MD.t = m.tt/10; MD.tra = m.ra/1000; MD.dy = m.dy; MD.top = m.top;
+    // hard landings: a puff of spray and splinters, the picture shakes a little
+    for (const [hx, hy, k] of m.hit || []){
+      MD.shake = Math.max(MD.shake, k*2.5);
+      for (let n = 0; n < 4 + k*3; n++) MD.dust.push({ x:hx, y:hy, vx:(Math.random() - .5)*(60 + k*50), vy:-30 - Math.random()*(40 + k*30), t:performance.now(), w:Math.random() < .4 });
+      if (k >= 2) sfx('thud');
+    }
     const seen = new Set();
     for (const [id, x, y, a, oi] of m.b || []){
       seen.add(id);
@@ -10077,9 +10100,10 @@ function meduseFrame(dtMs, now){
   MD.cd = Math.max(0, MD.cd - dt);
   const k = Math.min(1, dt*14);
   MD.ra += (MD.tra - MD.ra)*k;
+  MD.shake *= Math.max(0, 1 - dt*8);
   for (const o of MD.B.values()){ o.x += (o.tx - o.x)*k; o.y += (o.ty - o.y)*k; o.a += (o.ta - o.a)*k; }
   // the camera backs off as the pile grows
-  const want = Math.min(1, (MD_BASE - 48)/Math.max(140, -MD.dy));
+  const want = Math.min(1, (MD_BASE - 36)/Math.max(282, -MD.dy));
   MD.cam += (want - MD.cam)*Math.min(1, dt*2);
   // clock and the Argus
   const left = Math.max(0, MD_T - MD.t), ai = mdArgusAt(MD.t);
@@ -10100,6 +10124,12 @@ function meduseFrame(dtMs, now){
   mdDraw(mdctx, now);
 }
 function mdDraw(ctx, now){
+  ctx.save();
+  if (MD.shake > .3 && !matchMedia('(prefers-reduced-motion: reduce)').matches) ctx.translate((Math.random() - .5)*MD.shake, (Math.random() - .5)*MD.shake);
+  mdDrawScene(ctx, now);
+  ctx.restore();
+}
+function mdDrawScene(ctx, now){
   const t = now/1000, HZ = 150, s = MD.cam, W = (x, y) => [300 + x*s, MD_BASE + y*s];
   // stormy sky on the left, golden light on the right, as in the painting
   let g = ctx.createLinearGradient(0, 0, 600, 0); g.addColorStop(0, '#39414E'); g.addColorStop(.45, '#7E827E'); g.addColorStop(.8, '#E9C77E'); g.addColorStop(1, '#F7DE9C');
@@ -10186,6 +10216,15 @@ function mdDraw(ctx, now){
   ctx.strokeStyle = 'rgba(255,255,255,.75)'; ctx.lineWidth = 2.5; ctx.beginPath();
   for (let x = 0; x <= 600; x += 12) ctx.lineTo(x, MD_BASE + 14*s + Math.sin(x/40 + t*1.6)*(3 + 3*sea));
   ctx.stroke();
+  // hard landings: spray and splinters
+  const nd = performance.now();
+  MD.dust = MD.dust.filter(q => nd - q.t < 700);
+  for (const q of MD.dust){
+    const k2 = (nd - q.t)/1000, [x, y] = W(q.x + q.vx*k2, q.y + q.vy*k2 + 300*k2*k2);
+    ctx.globalAlpha = 1 - k2/.7;
+    if (q.w){ ctx.fillStyle = '#8A5E36'; ctx.fillRect(x - 3, y - 1, 6, 2.5); } else { ctx.fillStyle = '#F2F5F2'; ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI*2); ctx.fill(); }
+  }
+  ctx.globalAlpha = 1;
   // splashes
   const nw = performance.now();
   MD.splash = MD.splash.filter(q => nw - q.t < 900);
