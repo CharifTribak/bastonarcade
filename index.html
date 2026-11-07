@@ -37,6 +37,7 @@
 }
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
+main#app{display:block;height:100%}
 body{background-color:var(--bg);background-image:radial-gradient(rgba(230,38,43,.2) 1.6px, transparent 1.8px);background-size:9px 9px;
   color:var(--fg);font-family:var(--body);font-size:15px;font-weight:600;
   padding-top:max(12px,env(safe-area-inset-top,0px));padding-bottom:max(12px,env(safe-area-inset-bottom,0px));
@@ -53,7 +54,8 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--blue);outline-o
 input{background:var(--panel);color:var(--fg);border:3px solid var(--line);border-radius:0;padding:10px 12px;font-size:16px;font-weight:700;width:100%;min-width:0}
 input::placeholder{color:#8A7A3A}
 label{font-size:13px;font-weight:900;color:var(--fg)}
-.hint{color:var(--muted);font-size:13px;line-height:1.45;margin:0}
+.hint{color:var(--muted);font-size:16px;line-height:1.45;margin:0}
+#rankNote,#endHint,#lbNote{font-size:14px}
 .hint.err{color:var(--danger);font-weight:800}
 .dot{width:14px;height:14px;border-radius:50%;flex:none;border:2px solid var(--line)}
 
@@ -66,7 +68,7 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 #scrMenu .logosvg{margin:-8px auto -4px;align-self:center}
 #scrMenu .tagline{align-self:center;text-align:center}
 .logosvg.small{width:min(210px,56%);margin:0 0 0 -8px}
-.tagline{margin:-4px 0 0;font-weight:800;font-size:14px;background:var(--blue);color:#fff;border:3px solid var(--line);padding:5px 10px;align-self:flex-start;transform:rotate(1deg)}
+.tagline{margin:-4px 0 0;font-weight:800;font-size:16px;background:var(--blue);color:#fff;border:3px solid var(--line);padding:5px 10px;align-self:flex-start;transform:rotate(1deg)}
 .field{display:flex;flex-direction:column;gap:6px}
 .row{display:flex;gap:10px}
 .row input{text-transform:uppercase;letter-spacing:.3em}
@@ -95,7 +97,7 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .gameart{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-bottom:3px solid var(--line)}
 .featbody{padding:10px 12px 12px;display:flex;flex-direction:column;gap:4px}
 .featbody h2{font-size:32px;color:var(--accent)}
-.featbody p{margin:0;font-size:14px;line-height:1.45}
+.featbody p{margin:0;font-size:16px;line-height:1.45}
 .tiles{display:flex;flex-wrap:wrap;justify-content:center;gap:12px 10px}
 .tiles button{flex:0 0 calc((100% - 20px)/3)}
 .tiles button{padding:0;background:var(--panel);color:var(--fg);box-shadow:3px 3px 0 var(--line);display:flex;flex-direction:column;font-size:15px;min-width:0}
@@ -278,7 +280,9 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 #pToast.on{transform:translate(-50%,0)}
 .keys{color:var(--muted);font-size:13px;text-align:center}
 .ctlhelp,.game .keys,.pong .keys{color:#111!important;font-size:15px!important;font-weight:700;line-height:1.5;background:#fff;border:3px solid var(--line);box-shadow:4px 4px 0 var(--line);padding:9px 12px;margin:6px auto 0!important;max-width:min(100%,640px);text-align:left!important}
-.ctlhelp::before,.game .keys::before,.pong .keys::before{content:"🎮 "}
+.ctlhelp::before,.game .keys::before,.pong .keys::before{content:"";display:inline-block;width:1.1em;height:1.1em;margin-right:.35em;vertical-align:-.2em;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 7h10a5 5 0 0 1 4.9 6l-.8 4a2.6 2.6 0 0 1-4.5 1.1L14.5 16h-5l-2.1 2.1A2.6 2.6 0 0 1 2.9 17l-.8-4A5 5 0 0 1 7 7z'/%3E%3Cpath d='M7 10.5v3M5.5 12h3'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 7h10a5 5 0 0 1 4.9 6l-.8 4a2.6 2.6 0 0 1-4.5 1.1L14.5 16h-5l-2.1 2.1A2.6 2.6 0 0 1 2.9 17l-.8-4A5 5 0 0 1 7 7z'/%3E%3Cpath d='M7 10.5v3M5.5 12h3'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat}
+.ic{width:1.15em;height:1.15em;flex:none;vertical-align:-.22em;margin-right:.4em}
+.choice,.coffee,.idea{display:inline-flex;align-items:center;justify-content:center}
 .abortbar{display:flex;justify-content:flex-end;max-width:1100px;margin:0 auto 8px}
 .abort{padding:4px 12px;font-family:var(--body);font-weight:900;font-size:13px;background:#fff;color:#000;box-shadow:2px 2px 0 #000;border-width:2px}
 .abort::before{content:"← "}
@@ -296,7 +300,7 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .wsub{margin:0;font-weight:900;font-size:14px;background:#fff;border:2px solid #000;padding:3px 10px}
 .panelcv{border:3px solid #000;box-shadow:6px 6px 0 #000}
 .legal{margin:4px 0 0;text-align:center;font-size:13px}
-.seolist{font-size:14px;background:#fff;border:3px solid var(--line);padding:8px 12px}
+.seolist{font-size:16px;background:#fff;border:3px solid var(--line);padding:8px 12px}
 .seolist summary{font-weight:900;cursor:pointer;min-height:28px}
 .seolist ul{padding-left:18px;margin:8px 0}
 .seolist li{margin:0 0 6px}
@@ -645,9 +649,16 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-users" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.7 3.2-6 6.5-6s5.9 2.3 6.5 6"/><circle cx="17" cy="7.5" r="2.8"/><path d="M16.5 13.2c2.8.1 4.6 2.2 5 5.3"/></g></symbol>
+  <symbol id="i-pad" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10a5 5 0 0 1 4.9 6l-.8 4a2.6 2.6 0 0 1-4.5 1.1L14.5 16h-5l-2.1 2.1A2.6 2.6 0 0 1 2.9 17l-.8-4A5 5 0 0 1 7 7z"/><path d="M7 10.5v3M5.5 12h3"/></g><circle cx="16" cy="11" r="1.2" fill="currentColor"/><circle cx="18" cy="13.2" r="1.2" fill="currentColor"/></symbol>
+  <symbol id="i-cup" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M16 11.5h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8 3.5c-.8 1 .8 2 0 3M12 3.5c-.8 1 .8 2 0 3"/></g></symbol>
+  <symbol id="i-bulb" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17.5h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2V17h5.2v-1.2c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></g></symbol>
+</svg>
 
 <div class="abortbar" id="abortBar" hidden><button id="btnAbort" class="abort" aria-label="Arrêter la partie et revenir au salon">Salon</button></div>
 
+<main id="app">
 <!-- MENU -->
 <section id="scrMenu" class="center">
   <div class="card">
@@ -659,8 +670,8 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
       <input id="nameIn" maxlength="14" autocomplete="nickname" placeholder="Votre nom">
     </div>
     <div class="choices" id="menuMain">
-      <button id="btnMulti" class="choice" type="button">👥 Jouer à plusieurs</button>
-      <button id="btnSolo" class="choice" type="button">🎮 Jouer seul</button>
+      <button id="btnMulti" class="choice" type="button"><svg class="ic" aria-hidden="true"><use href="#i-users"/></svg><span>Jouer à plusieurs</span></button>
+      <button id="btnSolo" class="choice" type="button"><svg class="ic" aria-hidden="true"><use href="#i-pad"/></svg><span>Jouer seul</span></button>
     </div>
     <div class="multi" id="menuMulti" hidden>
       <div class="salons mc1" id="salons" hidden>
@@ -684,15 +695,15 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
     <div class="strip" id="gameStrip" aria-label="Les jeux"><div class="striprun" id="gameStripRun"></div></div>
     <div class="gamepop" id="gamePop" hidden><div class="feature"><img id="gamePopArt" class="gameart" alt=""><div class="featbody"><h2 id="gamePopTitle"></h2><p id="gamePopDesc"></p><small>Touchez pour fermer</small></div></div></div>
     <div class="support">
-      <a class="btn coffee" id="btnCoffee" href="https://ko-fi.com/bastonarcade" target="_blank" rel="noopener">☕ Offrir un café au développeur</a>
-      <a class="btn ghost idea" id="btnIdea" href="mailto:contact@bastonarcade.com?subject=Id%C3%A9e%20de%20jeu%20pour%20Baston%20Arcade&body=Nom%20du%20jeu%20%3A%0A%0APrincipe%20en%20quelques%20lignes%20%3A%0A%0ANombre%20de%20joueurs%20%3A%0A%0AComment%20on%20joue%20(boutons%2C%20gestes)%20%3A%0A%0A---%0AEn%20envoyant%20cette%20id%C3%A9e%2C%20j'accepte%20les%20conditions%20des%20propositions%20d'id%C3%A9es%20%3A%20https%3A%2F%2Fbastonarcade.com%2Flegal.html">💡 Proposer une idée de jeu</a>
+      <a class="btn coffee" id="btnCoffee" href="https://ko-fi.com/bastonarcade" target="_blank" rel="noopener"><svg class="ic" aria-hidden="true"><use href="#i-cup"/></svg><span>Offrir un café au développeur</span></a>
+      <a class="btn ghost idea" id="btnIdea" href="mailto:contact@bastonarcade.com?subject=Id%C3%A9e%20de%20jeu%20pour%20Baston%20Arcade&body=Nom%20du%20jeu%20%3A%0A%0APrincipe%20en%20quelques%20lignes%20%3A%0A%0ANombre%20de%20joueurs%20%3A%0A%0AComment%20on%20joue%20(boutons%2C%20gestes)%20%3A%0A%0A---%0AEn%20envoyant%20cette%20id%C3%A9e%2C%20j'accepte%20les%20conditions%20des%20propositions%20d'id%C3%A9es%20%3A%20https%3A%2F%2Fbastonarcade.com%2Flegal.html"><svg class="ic" aria-hidden="true"><use href="#i-bulb"/></svg><span>Proposer une idée de jeu</span></a>
     </div>
     <div class="iconbar">
       <button id="btnBoard" class="ghost" type="button" aria-label="Classement général" title="Classement général">🏆</button>
       <button id="btnSound" class="ghost" type="button" aria-label="Son : activé" title="Son : activé">🔊</button>
       <button id="btnLang" class="ghost" type="button" translate="no" aria-label="English" title="English">EN</button>
     </div>
-    <details class="seolist"><summary>Les 18 jeux en détail</summary><ul><li><a href="jeux/gravats.html"><b>Gravats</b></a> : Empilez les pièces et effacez des lignes : chacune envoie des briques fendues chez les autres. Le dernier en jeu gagne.</li><li><a href="jeux/gardiens.html"><b>Les Gardiens</b></a> : Chacun garde son but, avec 5 vies. Arrêtez les ballons : le dernier gardien debout gagne.</li><li><a href="jeux/derby.html"><b>Derby</b></a> : Tracez les figures au doigt : plus c&#x27;est propre, plus votre cheval avance. Le premier à la ligne gagne.</li><li><a href="jeux/armada.html"><b>Armada</b></a> : Bataille navale sur une seule mer, chacun son tour. Le dernier bateau à flot gagne.</li><li><a href="jeux/tape-taupe.html"><b>Tape-taupe</b></a> : Tapez vite les taupes des autres quand elles sortent, jamais les vôtres. Premier à 20 points.</li><li><a href="jeux/curling.html"><b>Curling</b></a> : Lancez vos pierres vers la cible et frottez la glace pour les guider. Le plus proche du centre marque.</li><li><a href="jeux/chaises-musicales.html"><b>Chaises musicales</b></a> : Quand le disque s&#x27;arrête, touchez vite une chaise libre. Gare aux faux arrêts !</li><li><a href="jeux/code-secret.html"><b>Code secret</b></a> : Trouvez avant les autres le code secret de 4 couleurs, grâce à vos indices. Trois manches.</li><li><a href="jeux/kabaddi.html"><b>Kabaddi</b></a> : Attaquez en retenant votre souffle, touchez des défenseurs et rentrez chez vous à temps.</li><li><a href="jeux/balle-au-prisonnier.html"><b>Balle au prisonnier</b></a> : Ramassez, lancez, esquivez, attrapez. Chaque balle reçue coûte un cœur : le dernier debout gagne.</li><li><a href="jeux/chars.html"><b>Chars</b></a> : Deux par char, l&#x27;un pilote, l&#x27;autre tire, sans se parler. Le dernier char debout gagne.</li><li><a href="jeux/bergers.html"><b>Les bergers</b></a> : Ensemble, rabattez le troupeau dans l&#x27;enclos avant la nuit, et chassez les loups.</li><li><a href="jeux/drakkars.html"><b>Drakkars</b></a> : Tout le salon rame dans le même drakkar : en rythme avec le tambour pour battre les robots.</li><li><a href="jeux/bucherons.html"><b>Bûcherons</b></a> : Choisissez où tombe votre arbre, puis sciez-le proprement. N&#x27;écrasez rien !</li><li><a href="jeux/agility.html"><b>Agility</b></a> : Choisissez un chien et guidez-le sur le parcours : chaque obstacle a son geste. Le meilleur temps gagne.</li><li><a href="jeux/galop.html"><b>Galop</b></a> : Choisissez un cheval, placez-vous et dosez son énergie sur 3000 m. Le premier à la ligne gagne.</li><li><a href="jeux/meduse.html"><b>Méduse</b></a> : Le radeau rétrécit par le bord à chaque tour. Frappez les naufragés du centre pour prendre leur place : le dernier debout gagne.</li></ul><p>Tous les jeux sont gratuits, sans compte, sans application et sans publicité. Créez un salon, vos amis scannent le QR code ou tapent le code, et c'est parti. Seul, vous jouez contre des robots.</p></details>
+    <details class="seolist"><summary>Les 18 jeux en détail</summary><ul><li><a href="jeux/gravats.html"><b>Gravats</b></a> : Empilez les pièces et effacez des lignes : chacune envoie des briques fendues chez les autres. Le dernier en jeu gagne.</li><li><a href="jeux/gardiens.html"><b>Les Gardiens</b></a> : Chacun garde son but, avec 5 vies. Arrêtez les ballons : le dernier gardien debout gagne.</li><li><a href="jeux/derby.html"><b>Derby</b></a> : Tracez les figures au doigt : plus c&#x27;est propre, plus votre cheval avance. Le premier à la ligne gagne.</li><li><a href="jeux/armada.html"><b>Armada</b></a> : Bataille navale sur une seule mer, chacun son tour. Le dernier bateau à flot gagne.</li><li><a href="jeux/tape-taupe.html"><b>Tape-taupe</b></a> : Tapez vite les taupes des autres quand elles sortent, jamais les vôtres. Premier à 20 points.</li><li><a href="jeux/curling.html"><b>Curling</b></a> : Lancez vos pierres vers la cible et frottez la glace pour les guider. Le plus proche du centre marque.</li><li><a href="jeux/chaises-musicales.html"><b>Chaises musicales</b></a> : Quand le disque s&#x27;arrête, touchez vite une chaise libre. Gare aux faux arrêts !</li><li><a href="jeux/code-secret.html"><b>Code secret</b></a> : Trouvez avant les autres le code secret de 4 couleurs, grâce à vos indices. Trois manches.</li><li><a href="jeux/kabaddi.html"><b>Kabaddi</b></a> : Attaquez en retenant votre souffle, touchez des défenseurs et rentrez chez vous à temps.</li><li><a href="jeux/balle-au-prisonnier.html"><b>Balle au prisonnier</b></a> : Ramassez, lancez, esquivez, attrapez. Chaque balle reçue coûte un cœur : le dernier debout gagne.</li><li><a href="jeux/chars.html"><b>Chars</b></a> : Deux par char, l&#x27;un pilote, l&#x27;autre tire, sans se parler. Le dernier char debout gagne.</li><li><a href="jeux/bergers.html"><b>Les bergers</b></a> : Ensemble, rabattez le troupeau dans l&#x27;enclos avant la nuit, et chassez les loups.</li><li><a href="jeux/drakkars.html"><b>Drakkars</b></a> : Tout le salon rame dans le même drakkar : en rythme avec le tambour pour battre les robots.</li><li><a href="jeux/bucherons.html"><b>Bûcherons</b></a> : Choisissez où tombe votre arbre, puis sciez-le proprement. N&#x27;écrasez rien !</li><li><a href="jeux/agility.html"><b>Agility</b></a> : Choisissez un chien et guidez-le sur le parcours : chaque obstacle a son geste. Le meilleur temps gagne.</li><li><a href="jeux/galop.html"><b>Galop</b></a> : Choisissez un cheval, placez-vous et dosez son énergie sur 3000 m. Le premier à la ligne gagne.</li><li><a href="jeux/meduse.html"><b>Méduse</b></a> : Lâchez vos naufragés sur le radeau qui tangue. Le plus haut, une fois posé, marque des points, et cinq fois plus quand passe l'Argus.</li><li><a href="jeux/part-du-gateau.html"><b>La Part du gâteau</b></a> : Le pâtissier coupe, les autres choisissent, il prend la dernière part. Cerises, bougies et une fève cachée.</li></ul><p>Tous les jeux sont gratuits, sans compte, sans application et sans publicité. Créez un salon, vos amis scannent le QR code ou tapent le code, et c'est parti. Seul, vous jouez contre des robots.</p></details>
     <p class="legal"><a href="legal.html">Mentions légales et confidentialité</a></p>
   </div>
 </section>
@@ -1201,6 +1212,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
   </div>
 </div>
 
+</main>
 <script src="lib/peerjs.min.js"></script>
 <script src="lib/qrcode.js"></script>
 <script src="lib/en.js"></script>
@@ -2225,7 +2237,7 @@ function showEnd(ranking, game){
     const d = document.createElement('span'); d.className = 'dot'; d.style.background = r.color;
     const s = document.createElement('span'); s.textContent = r.name + (r.id === me.id ? ' (vous)' : '') + (r.left ? ' · parti' : '');
     w.append(d, s); nm.append(w);
-    if (cake) tr.append(td(r.place), nm, td(r.pts|0), td(r.cher|0), td(r.feve ? '🫘 ' + r.feve : '–'), td(r.cook|0));
+    if (cake) tr.append(td(r.place), nm, td(r.pts|0), td(r.cher|0), td(r.feve|0), td(r.cook|0));
     else if (medu) tr.append(td(r.place), nm, td(r.pts|0), td((r.top|0) + ' s'), td(r.drops|0), td(r.lost|0));
     else if (galop){ tr.append(td(r.place), nm, td(r.horse || ''), td(r.t ? fmtSec(r.t) : '–'), td(r.gap == null ? '–' : r.gap > 0 ? '+' + r.gap.toLocaleString('fr-FR', { minimumFractionDigits:2, maximumFractionDigits:2 }) : '')); [...tr.children].slice(-2).forEach(c => c.style.whiteSpace = 'nowrap'); }
     else if (agil) tr.append(td(r.place), nm, td(r.done ? fmtSec(Math.round(r.time*1000)) : '–'), td(r.done ? r.faults|0 : '–'), td(r.done ? fmtSec(Math.round(r.total*1000)) : 'abandon'));
