@@ -143,7 +143,8 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .brtrack{display:flex;transition:transform .28s ease}
 .brslide{flex:0 0 100%;display:flex;flex-direction:column;gap:8px;padding:2px}
 .brslide h3{margin:0;font-size:18px;background:var(--blue);color:#fff;align-self:flex-start;padding:3px 10px;border:3px solid var(--line);transform:rotate(-1deg)}
-.brslide p{margin:0;font-size:15px;line-height:1.45}
+.brslide p{margin:0;font-size:16px;line-height:1.45}
+.brstory{font-style:italic}
 .brart{width:100%;aspect-ratio:16/9;object-fit:cover;border:3px solid var(--line)}
 .brctl{display:flex;gap:10px;align-items:flex-start;background:#fff;border:3px solid var(--line);padding:8px 10px;box-shadow:3px 3px 0 var(--line)}
 .bric{font-size:30px;line-height:1}
@@ -1355,6 +1356,47 @@ const GAME_SHORT = {
   galop:'Choisissez un cheval, placez-vous et dosez son énergie sur 3000 m. Le premier à la ligne gagne.',
   meduse:'Empilez vos naufragés sur le radeau de Géricault : le plus haut fait signe à l\'Argus et marque des points.',
   cake:'Je coupe, tu choisis : à tour de rôle, partagez le gâteau. Gare aux bougies, et la fève est cachée…'
+};
+// the game intro: a little story under the picture, then the idea of the game in one sentence
+const GAME_STORY = {
+  tetris:'Le chantier d\'en face déverse ses gravats dans votre cour. Vous empilez, vous déblayez, et vous renvoyez les débris chez les voisins.',
+  pong:'Tournoi de gardiens de but sur un terrain qui a autant de côtés que de joueurs. Les ballons arrivent de partout.',
+  derby:'Jour de derby à l\'hippodrome : les chevaux ne galopent que si leur jockey dessine juste.',
+  naval:'Une seule mer, plusieurs flottes et du brouillard partout. Chaque capitaine tire à l\'aveugle en espérant que ce sont les autres qui coulent.',
+  mole:'Le pré est truffé de taupes de toutes les couleurs, chacune à un jardinier différent. Chacun protège les siennes en tapant celles des voisins.',
+  curling:'Soirée curling à la patinoire : pierres de granit, balais, et beaucoup de mauvaise foi sur qui est le plus près.',
+  chairs:'La fête bat son plein, la musique tourne, et il manque toujours une chaise.',
+  master:'Un coffre, un code de quatre couleurs, et tous les cambrioleurs du salon devant la même serrure.',
+  kabaddi:'Sur le terrain de terre battue, l\'attaquant retient son souffle et plonge chez l\'adversaire. Reviendra-t-il ?',
+  dodge:'Gymnase surchauffé, sac de ballons renversé au milieu, et plus d\'équipes : chacun pour soi.',
+  tank:'Deux soldats dans un char, un seul cerveau, en théorie. Et interdiction de se parler.',
+  sheep:'Le soleil décline sur les collines, le troupeau s\'éparpille et les loups rôdent à la lisière du bois.',
+  drakkar:'Les Vikings mettent le cap sur l\'Angleterre, les robots aussi. Le tambour donne le rythme, à vous de suivre.',
+  lumber:'Concours de bûcheronnage en plein lotissement : des arbres à abattre entre la maison, la voiture et le cabanon.',
+  agility:'Concours canin du dimanche : les maîtres s\'égosillent, les chiens s\'élancent, le chrono tourne.',
+  galop:'Grand prix de 3000 m : les partants piaffent dans les stalles. Vingt chevaux au paddock, un seul sera le vôtre.',
+  meduse:'1816 : le radeau de la Méduse dérive depuis des jours. À l\'horizon, une voile, l\'Argus. Il faut grimper le plus haut possible pour être vu.',
+  cake:'Goûter d\'anniversaire : un gâteau, des convives affamés, et un pâtissier qui sait où il a caché la fève.'
+};
+const GAME_IDEA = {
+  tetris:'Compléter des lignes pour envoyer des briques fendues chez les autres, et faire éclater celles qu\'on vous envoie pour les leur retourner. Le dernier qui n\'est pas enseveli gagne.',
+  pong:'Protéger son but, renvoyer les ballons vers les buts des autres et garder ses 5 vies plus longtemps que tout le monde.',
+  derby:'Retracer chaque figure vite et proprement, en restant au centre de la bande : un trait précis fait avancer plus loin qu\'un gribouillis rapide.',
+  naval:'Déduire, grâce aux chiffres façon démineur, où se cachent les bateaux adverses, et couler les autres flottes avant que la vôtre ne sombre.',
+  mole:'Repérer en un éclair à qui appartient la taupe qui sort : taper celles des autres, laisser filer les vôtres, qui vous rapportent un point.',
+  curling:'Doser le lancer et l\'effet, balayer pour allonger la glissade, et sortir les pierres adverses pour être le plus près du centre.',
+  chairs:'Garder l\'œil sur le disque : dès qu\'il s\'arrête vraiment, foncer sur une chaise libre sans se faire piéger par les faux arrêts.',
+  master:'Faire des essais qui éliminent un maximum de possibilités et déduire le code avant les autres : le premier qui trouve marque le plus et lance le compte à rebours.',
+  kabaddi:'En attaque, toucher un maximum de défenseurs et rentrer avant d\'être à bout de souffle ; en défense, s\'accrocher à plusieurs pour faire échouer le raid.',
+  dodge:'Ramasser, viser, esquiver, et attraper au bon moment pour renvoyer la punition au lanceur. Le dernier avec des cœurs gagne.',
+  tank:'Accorder pilote et tireur sans un mot, se cacher dans les forêts, tirer à l\'abri des obstacles : le dernier char debout gagne.',
+  sheep:'Encercler le troupeau ensemble, pousser les moutons vers l\'enclos sans les affoler, et chasser les loups à deux avant la nuit.',
+  drakkar:'Ramer pile sur le tambour en alternant gauche et droite, et se caler sur l\'équipage : plus vous êtes synchro, plus le drakkar file.',
+  lumber:'Choisir où faire tomber l\'arbre, puis tailler l\'entaille et le trait d\'abattage bien droits pour qu\'il tombe exactement là, sans rien écraser.',
+  agility:'Faire le bon geste au bon moment sur chaque obstacle pour éviter les 5 s de pénalité, et finir par un sprint endiablé.',
+  galop:'Gérer astucieusement l\'aspiration et les accélérations pour se placer ou gagner la course, en prenant soin de ne pas épuiser son cheval.',
+  meduse:'Lâcher ses naufragés au bon moment pour bâtir le plus haut, tenir le sommet le plus longtemps, surtout quand passe l\'Argus, et faire tomber les autres de la pile.',
+  cake:'Couper des parts qui paraissent égales pour ne pas se faire avoir avec la dernière, et, quand vient votre tour, repérer la part qui vaut vraiment le plus.'
 };
 const GAME_DESC = {
   tetris:'Empilez des pièces de 2, 3 et 5 briques. Chaque ligne effacée envoie des briques fendues à vos adversaires. Effacez une ligne collée à une brique fendue : elle éclate et repart chez son expéditeur.',
@@ -10864,13 +10906,16 @@ function briefCancel(){ if (HB){ HB = null; broadcast({ t:'brief_off' }); } }
 // ---- everyone ----
 function openBrief(game, ready){
   const B = BRIEF[game]; if (!B){ closeBrief(); return; }
-  BR = { game, i:0, ready:new Set(ready || []), n:B.tip ? 3 : 2 };
+  BR = { game, i:0, ready:new Set(ready || []), n:B.tip ? 4 : 3 };
   $('brTitle').textContent = GAME_NAMES[game] || '';
   const tr0 = $('brTrack'); tr0.textContent = '';
   const slide = (title, body) => { const s = document.createElement('div'); s.className = 'brslide'; const h = document.createElement('h3'); h.textContent = title; s.append(h, ...body); tr0.append(s); };
   const im = document.createElement('img'); im.className = 'brart'; im.alt = ''; im.src = gameImg(game);
-  const p1 = document.createElement('p'); p1.textContent = GAME_SHORT[game] || GAME_DESC[game] || '';
-  slide('Le principe', [im, p1]);
+  const p1 = document.createElement('p'); p1.className = 'brstory'; p1.textContent = GAME_STORY[game] || GAME_SHORT[game] || '';
+  slide('L\'histoire', [im, p1]);
+  const big0 = document.createElement('div'); big0.className = 'brbig'; big0.textContent = '🎯';
+  const p2 = document.createElement('p'); p2.className = 'brtip'; p2.textContent = GAME_IDEA[game] || GAME_SHORT[game] || '';
+  slide('Le principe', [big0, p2]);
   const rows = B.ctl.map(([ic, t]) => { const r = document.createElement('div'); r.className = 'brctl'; const i = document.createElement('span'); i.className = 'bric'; i.textContent = ic; const l = document.createElement('div'); const k = document.createElement('b'); k.textContent = ic === '📱' ? 'Téléphone' : 'Ordinateur'; const x = document.createElement('p'); x.textContent = t; l.append(k, x); r.append(i, l); return r; });
   slide('Les commandes', rows);
   if (B.tip){ const p = document.createElement('p'); p.className = 'brtip'; p.textContent = B.tip; const big = document.createElement('div'); big.className = 'brbig'; big.textContent = '💡'; slide('L\'astuce', [big, p]); }
