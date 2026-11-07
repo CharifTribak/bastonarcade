@@ -233,7 +233,8 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .tiles.recent button{flex:0 0 calc((100% - 30px)/4);font-size:12px}
 .gsbtns{display:grid;grid-template-columns:1fr 1.4fr;gap:10px;margin-top:8px}
 #gsGuest{grid-template-columns:1fr 1.4fr}
-#gsVote.on{background:#3DDC97;color:#000}
+#gsVote.on,#brReady.vote.on{background:#3DDC97;color:#000}
+#brReady.vote{background:#fff;color:#000}
 #scrLobby #gamePick button[aria-pressed="true"]{background:var(--panel);color:var(--fg)}
 #gamePick button{position:relative}
 #scrLobby #gamePick{gap:10px 8px}
@@ -1951,7 +1952,7 @@ function clientRecv(m){
     case 'ck_round': case 'ck_feve': case 'ck_cuts': case 'ck_served': case 'ck_pick': case 'ck_took': case 'ck_res': case 'ck_left': cakeRecv(m); break;
     case 'gp_pick': case 'gp_race': case 'gp_go': case 'gp_s': case 'gp_fin': galopRecv(m); break;
     case 'brief': if (phase === 'lobby') openBrief(m.game, m.ready); break;
-    case 'votes': VOTES = m.v && typeof m.v === 'object' ? m.v : {}; renderVotes(); if (!$('gameSheet').hidden) openGameSheet($('gameSheet').dataset.g); break;
+    case 'votes': VOTES = m.v && typeof m.v === 'object' ? m.v : {}; renderVotes(); if (BR && BR.mode === 'pick') briefStatus(); break;
     case 'peek': if (!me.host){ PEEK = GAME_NAMES[m.g] ? m.g : null; renderVotes(); } break;
     case 'brief_st': if (BR){ BR.ready = new Set(m.ready || []); briefStatus(); } break;
     case 'brief_off': closeBrief(); break;
@@ -2012,7 +2013,7 @@ function renderLobby(){
   $('lobbyHint').textContent = me.host
     ? (players.length < 2 ? 'Seul, vous jouerez contre un robot de niveau moyen. Ou attendez les autres.' : 'Lancez quand tout le monde est là.')
     : 'Votez pour les jeux qui vous tentent : ' + (host ? host.name : 'le créateur') + ' les voit et lance la partie.';
-  if (!$('gameSheet').hidden) openGameSheet($('gameSheet').dataset.g);
+  if (BR && BR.mode === 'pick') briefStatus();
   if (BR) briefStatus();
 }
 
@@ -10904,9 +10905,13 @@ function briefCheck(){
 }
 function briefCancel(){ if (HB){ HB = null; broadcast({ t:'brief_off' }); } }
 // ---- everyone ----
-function openBrief(game, ready){
+function openBrief(game, ready, mode){
   const B = BRIEF[game]; if (!B){ closeBrief(); return; }
-  BR = { game, i:0, ready:new Set(ready || []), n:B.tip ? 4 : 3 };
+  mode = mode || 'ready';
+  if (BR && BR.game === game && !$('briefPop').hidden){
+    BR.mode = mode; BR.ready = new Set(ready || []); briefStatus(); return;
+  }
+  BR = { game, i:0, ready:new Set(ready || []), n:B.tip ? 4 : 3, mode };
   $('brTitle').textContent = GAME_NAMES[game] || '';
   const tr0 = $('brTrack'); tr0.textContent = '';
   const slide = (title, body) => { const s = document.createElement('div'); s.className = 'brslide'; const h = document.createElement('h3'); h.textContent = title; s.append(h, ...body); tr0.append(s); };
@@ -10922,7 +10927,7 @@ function openBrief(game, ready){
   const dots = $('brDots'); dots.textContent = '';
   for (let k = 0; k < BR.n; k++){ const d = document.createElement('button'); d.type = 'button'; d.setAttribute('aria-label', String(k + 1)); d.onclick = () => briefGo(k); dots.append(d); }
   briefGo(0); briefStatus();
-  $('brClose').hidden = !me.host; $('briefPop').hidden = false; closeGameSheet();
+  $('briefPop').hidden = false; $('gameSheet').hidden = true;
 }
 function briefGo(k){
   if (!BR) return;
@@ -10933,6 +10938,21 @@ function briefGo(k){
 }
 function briefStatus(){
   if (!BR) return;
+  const pick = BR.mode === 'pick', btn = $('brReady');
+  $('brClose').hidden = !pick && !me.host;
+  $('brClose').setAttribute('aria-label', pick ? 'Retour à la liste' : 'Annuler');
+  btn.classList.toggle('vote', pick && !me.host);
+  if (pick){
+    const w = $('brWait'); w.textContent = ''; $('brForce').hidden = true; btn.disabled = false;
+    const voters = players.filter(p => VOTES[p.id] === BR.game), host = players.find(p => p.id === 'h');
+    if (me.host) btn.textContent = '▶ Lancer ce jeu';
+    else { const mineV = VOTES[me.id] === BR.game; btn.classList.toggle('on', mineV); btn.textContent = mineV ? '✔ Votre envie (retirer)' : '👍 J\'aimerais y jouer'; }
+    const t = document.createElement('span');
+    t.textContent = voters.length ? '👍 ' + voters.map(p => p.name).join(', ') + (voters.length > 1 ? ' aimeraient y jouer' : ' aimerait y jouer') : me.host ? '' : 'Seul ' + (host ? host.name : 'le créateur du salon') + ' lance la partie.';
+    w.append(t);
+    return;
+  }
+  btn.classList.remove('on');
   const mine = BR.ready.has(me.id);
   $('brReady').disabled = mine; $('brReady').textContent = mine ? '✔ Vous êtes prêt' : '✔ Prêt !';
   const waiting = players.filter(p => !p.bot && !BR.ready.has(p.id));
@@ -10943,16 +10963,30 @@ function briefStatus(){
   } else if (!mine){ const t = document.createElement('span'); t.textContent = BR.ready.size ? BR.ready.size + ' joueur' + (BR.ready.size > 1 ? 's' : '') + ' prêt' + (BR.ready.size > 1 ? 's' : '') + ' sur ' + players.length : 'Lisez les règles, puis touchez « Prêt ».'; w.append(t); }
   $('brForce').hidden = !(me.host && mine && waiting.length);
 }
-function closeBrief(){ BR = null; $('briefPop').hidden = true; }
+function closeBrief(){ BR = null; const bp = $('briefPop'); bp.hidden = true; if (bp.dataset.peek){ bp.dataset.peek = ''; if (me.host && net && !net.solo && phase === 'lobby') broadcast({ t:'peek', g:null }); } }
 $('brPrev').onclick = () => briefGo(BR ? BR.i - 1 : 0);
 $('brNext').onclick = () => briefGo(BR ? BR.i + 1 : 0);
 $('brReady').onclick = () => {
   if (!BR) return;
+  if (BR.mode === 'pick'){
+    const g = BR.game;
+    if (me.host){
+      if (phase !== 'lobby') return;
+      pickGame(g); hostStart(); BR.mode = 'ready'; BR.ready = new Set(); sfx('ok');
+      // alone, launching is being ready
+      if (players.every(p => p.bot || p.id === 'h')){ BR.ready.add('h'); briefStatus(); briefReady('h'); return; }
+      briefStatus(); return;
+    }
+    const v = VOTES[me.id] === g ? null : g;
+    toHost({ t:'vote', g:v }); if (v) VOTES[me.id] = v; else delete VOTES[me.id];
+    briefStatus(); renderVotes(); if (v) sfx('ok');
+    return;
+  }
   BR.ready.add(me.id); briefStatus(); sfx('ok');
   if (me.host) briefReady('h'); else toHost({ t:'ready' });
 };
 $('brForce').onclick = () => { if (!me.host || !HB) return; HB = null; hostLaunch(); };
-$('brClose').onclick = () => { if (me.host) briefCancel(); else closeBrief(); };
+$('brClose').onclick = () => { if (BR && BR.mode === 'pick') return closeGameSheet(); if (me.host) briefCancel(); else closeBrief(); };
 // swipe between slides
 (() => {
   let x0 = null;
@@ -11177,6 +11211,12 @@ $('codeIn').addEventListener('keydown', e => { if (e.key === 'Enter') $('btnJoin
 const gameImg = g => 'img/' + ({ tetris:'gravats', pong:'gardiens' }[g] || g) + '.webp';
 function openGameSheet(g){
   if (!GAME_NAMES[g]) return;
+  if (BRIEF[g]){
+    if (BR && BR.mode === 'ready') return;            // a game has been launched: stay on it
+    openBrief(g, [], 'pick');
+    if (me.host && $('briefPop').dataset.peek !== g){ $('briefPop').dataset.peek = g; if (net && !net.solo && phase === 'lobby') broadcast({ t:'peek', g }); }
+    return;
+  }
   const sh = $('gameSheet'); sh.dataset.g = g;
   const art = $('gsArt'), src = gameImg(g); if (art.dataset.src !== src){ art.dataset.src = src; art.src = src; }
   $('gsTitle').textContent = GAME_NAMES[g]; $('gsDesc').textContent = GAME_DESC[g];
@@ -11189,7 +11229,9 @@ function openGameSheet(g){
   if (me.host && sh.dataset.peek !== g){ sh.dataset.peek = g; if (net && !net.solo && phase === 'lobby') broadcast({ t:'peek', g }); }   // the others see which game the creator is looking at
   sh.hidden = false;
 }
-const closeGameSheet = () => { const sh = $('gameSheet'); if (sh.hidden) return; sh.hidden = true; sh.dataset.peek = ''; if (me.host && net && !net.solo && phase === 'lobby') broadcast({ t:'peek', g:null }); };
+const closeGameSheet = () => {
+  if (BR && BR.mode === 'pick'){ closeBrief(); const bp = $('briefPop'); if (bp.dataset.peek){ bp.dataset.peek = ''; if (me.host && net && !net.solo && phase === 'lobby') broadcast({ t:'peek', g:null }); } }
+  const sh = $('gameSheet'); if (sh.hidden) return; sh.hidden = true; sh.dataset.peek = ''; if (me.host && net && !net.solo && phase === 'lobby') broadcast({ t:'peek', g:null }); };
 const pickGame = g => { if (!me.host || phase !== 'lobby' || !GAME_NAMES[g]) return; if (g !== gameKind){ gameKind = g; sendLobby(false); } };
 $('gameSheet').addEventListener('click', e => { if (!e.target.closest('#gameSheetCard') || e.target.closest('#gsClose')) closeGameSheet(); });
 $('gsPick').onclick = closeGameSheet;
@@ -11222,7 +11264,7 @@ function renderVotes(){
   if (!vs.hidden){ const l = document.createElement('span'); l.textContent = 'Envies :'; vs.append(l);
     for (const [g, v] of entries){ const b = document.createElement('button'); b.type = 'button'; b.className = v.length === top ? 'top' : ''; b.textContent = (GAME_NAMES[g] || g) + ' 👍' + v.length; b.onclick = () => openGameSheet(g); vs.append(b); } }
 }
-addEventListener('keydown', e => { if (e.key === 'Escape' && !$('gameSheet').hidden) closeGameSheet(); });
+addEventListener('keydown', e => { if (e.key === 'Escape' && (!$('gameSheet').hidden || (BR && BR.mode === 'pick'))) closeGameSheet(); });
 for (const b of $('gamePick').querySelectorAll('button')) b.onclick = () => openGameSheet(b.dataset.g);
 function noteRecent(){}
 $('btnLeaveLobby').onclick = () => toMenu('');
