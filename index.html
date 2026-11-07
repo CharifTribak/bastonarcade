@@ -9718,10 +9718,12 @@ async function stGet(path, q){
   for (const [k, v] of Object.entries(q || {})) if (k !== '_retry') u.searchParams.set(k, v);
   const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 15000);
   let r;
-  try { r = await fetch(u, { headers:{ Authorization:'Bearer ' + stKey() }, signal:ctl.signal, cache:'no-store' }); }
+  try { r = await fetch(u, { headers:{ Authorization:'Bearer ' + stKey(), Accept:'application/json' }, signal:ctl.signal, cache:'no-store' }); }
   catch(e){ throw new Error(e.name === 'AbortError' ? 'délai dépassé (15 s) sur ' + path : 'appel bloqué sur ' + path + ' (' + (e.message || e.name) + ')'); }
   finally { clearTimeout(to); }
   if (r.status === 401 || r.status === 403) throw new Error('clé');
+  // GoatCounter answers 404 when the key belongs to a user of another GoatCounter site
+  if (r.status === 404 && path === '/stats/total') throw new Error('site');
   if (r.status === 429 && (q && q._retry || 0) < 3){ await stSleep(1500); return stGet(path, { ...q, _retry:((q && q._retry) || 0) + 1 }); }
   if (r.status === 202){ await stSleep(1500); return stGet(path, q); }               // GoatCounter may still be computing
   if (!r.ok){ let t = ''; try { t = (await r.text()).slice(0, 140); } catch(_){} throw new Error('HTTP ' + r.status + ' sur ' + path + (t ? ' : ' + t : '')); }
@@ -9756,6 +9758,7 @@ async function stLoad(){
     $('stMsg').textContent = 'Mis à jour à ' + new Date().toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' }) + ' · ' + ST.days + ' derniers jours';
   } catch(e){
     $('stMsg').textContent = e.message === 'clé' ? 'Clé refusée par GoatCounter : vérifiez-la ou ses permissions.'
+      : e.message === 'site' ? 'Cette clé appartient à un autre site GoatCounter. Créez une clé depuis ' + stApi().replace('/api/v0', '') + ' (Settings, API), avec le droit de lire les statistiques, puis touchez « Oublier les clés » et collez-la.'
       : 'Erreur : ' + e.message + ' (copiez ce message pour le signaler)';
   } finally { ST.busy = false; }
 }
