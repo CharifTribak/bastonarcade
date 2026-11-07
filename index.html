@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Baston Arcade : 17 jeux multijoueurs gratuits, sans compte ni appli</title>
-<meta name="description" content="Dix-sept jeux multijoueurs dans le navigateur : Gravats, Les Gardiens, Derby, Armada, Tape-taupe, Curling, Chaises musicales, Code secret, Kabaddi, Balle au prisonnier, Chars, Les bergers, Drakkars, Bûcherons, Agility, Galop et Méduse. Un salon, un code, de 1 à 5 joueurs.">
+<title>Baston Arcade : 18 jeux multijoueurs gratuits, sans compte ni appli</title>
+<meta name="description" content="Dix-huit jeux multijoueurs dans le navigateur : Gravats, Les Gardiens, Derby, Armada, Tape-taupe, Curling, Chaises musicales, Code secret, Kabaddi, Balle au prisonnier, Chars, Les bergers, Drakkars, Bûcherons, Agility, Galop, Méduse et Blob. Un salon, un code, de 1 à 5 joueurs.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Baston Arcade">
-<meta property="og:description" content="Dix-sept jeux multijoueurs dans le navigateur. Créez un salon, partagez le code, jouez.">
+<meta property="og:description" content="Dix-huit jeux multijoueurs dans le navigateur. Créez un salon, partagez le code, jouez.">
 <meta property="og:image" content="https://bastonarcade.com/img/share.jpg?v=2">
 <meta property="og:url" content="https://bastonarcade.com/">
 <link rel="canonical" href="https://bastonarcade.com/">
@@ -15,7 +15,7 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#FFD93B">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "Baston Arcade", "url": "https://bastonarcade.com/", "inLanguage": "fr", "description": "Dix-sept jeux multijoueurs gratuits dans le navigateur, de 1 à 5 joueurs sur téléphone ou ordinateur, sans compte, sans application et sans publicité."}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "Baston Arcade", "url": "https://bastonarcade.com/", "inLanguage": "fr", "description": "Dix-huit jeux multijoueurs gratuits dans le navigateur, de 1 à 5 joueurs sur téléphone ou ordinateur, sans compte, sans application et sans publicité."}</script>
 <link rel="icon" type="image/png" sizes="64x64" href="img/icon-64.png">
 <link rel="icon" type="image/png" sizes="192x192" href="img/icon-192.png">
 <link rel="apple-touch-icon" href="img/icon-180.png">
@@ -448,6 +448,12 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 
 /* ---- méduse ---- */
 #mdWrap,.mdhead,.mdctl{width:min(100%,64vh,600px)}
+#blWrap,.blhead,.blctl{width:min(100%,56vh,600px)}
+#blCv{display:block;width:100%;height:auto;aspect-ratio:1;touch-action:none;border:3px solid #000;box-shadow:6px 6px 0 #000;background:#1C1C1E}
+.blctl{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;font-weight:900}
+.blbar i{background:#E8C21F}
+.blbar i.low{background:var(--accent)}
+#blPlayers li.me{background:#FFF3B0}
 #mdCv{display:block;width:100%;height:auto;aspect-ratio:600/420;touch-action:none;border:3px solid #000;box-shadow:6px 6px 0 #000}
 .mdctl{display:grid;grid-template-columns:1fr 1.4fr;gap:10px;align-items:center}
 .mdctl button{font-size:clamp(16px,4.4vw,22px);min-height:64px;padding:8px 4px;touch-action:none;user-select:none;-webkit-user-select:none}
@@ -656,7 +662,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
 <section id="scrMenu" class="center">
   <div class="card">
     <h1 class="logosvg" data-appname><svg viewBox="0 0 520 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Baston Arcade"><polygon points="260,8 292,62 352,22 356,86 428,58 404,118 494,120 438,166 508,214 428,226 456,292 384,270 372,322 318,276 262,318 222,270 156,306 152,248 76,262 104,206 18,184 92,148 36,92 116,94 102,30 172,62 204,8 228,58" fill="#000" transform="translate(7,7)"/><polygon points="260,8 292,62 352,22 356,86 428,58 404,118 494,120 438,166 508,214 428,226 456,292 384,270 372,322 318,276 262,318 222,270 156,306 152,248 76,262 104,206 18,184 92,148 36,92 116,94 102,30 172,62 204,8 228,58" fill="#E6262B" stroke="#000" stroke-width="5" stroke-linejoin="round"/><g transform="rotate(-6 260 168)"><text x="264" y="196" text-anchor="middle" font-family="Bangers, Impact, sans-serif" font-size="112" letter-spacing="3" fill="#000">BASTON !</text><text x="258" y="190" text-anchor="middle" font-family="Bangers, Impact, sans-serif" font-size="112" letter-spacing="3" fill="#fff" stroke="#000" stroke-width="6" paint-order="stroke" stroke-linejoin="round">BASTON !</text><text x="383" y="252" text-anchor="end" font-family="Bangers, Impact, sans-serif" font-size="52" letter-spacing="6" fill="#000">ARCADE</text><text x="379" y="248" text-anchor="end" font-family="Bangers, Impact, sans-serif" font-size="52" letter-spacing="6" fill="#FFD93B" stroke="#000" stroke-width="5" paint-order="stroke" stroke-linejoin="round">ARCADE</text></g><path d="M60 46 l26 14 M44 76 l30 6 M462 260 l-26 -12 M476 232 l-30 -4" stroke="#000" stroke-width="5" stroke-linecap="round"/></svg></h1>
-    <p class="tagline">Dix-sept jeux, de 1 à 5 joueurs</p>
+    <p class="tagline">Dix-huit jeux, de 1 à 5 joueurs</p>
     <div class="hello" id="helloBox" hidden><span>Salut</span> <b id="helloName"></b><button id="btnName" class="ghost" type="button" aria-label="Changer de nom">✎</button></div>
     <div class="field" id="nameField">
       <label for="nameIn">Votre nom</label>
@@ -696,7 +702,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
       <button id="btnSound" class="ghost" type="button" aria-label="Son : activé" title="Son : activé">🔊</button>
       <button id="btnLang" class="ghost" type="button" translate="no" aria-label="English" title="English">EN</button>
     </div>
-    <details class="seolist"><summary>Les 17 jeux en détail</summary><ul><li><a href="jeux/gravats.html"><b>Gravats</b></a> : Empilez les pièces et effacez des lignes : chacune envoie des briques fendues chez les autres. Le dernier en jeu gagne.</li><li><a href="jeux/gardiens.html"><b>Les Gardiens</b></a> : Chacun garde son but, avec 5 vies. Arrêtez les ballons : le dernier gardien debout gagne.</li><li><a href="jeux/derby.html"><b>Derby</b></a> : Tracez les figures au doigt : plus c&#x27;est propre, plus votre cheval avance. Le premier à la ligne gagne.</li><li><a href="jeux/armada.html"><b>Armada</b></a> : Bataille navale sur une seule mer, chacun son tour. Le dernier bateau à flot gagne.</li><li><a href="jeux/tape-taupe.html"><b>Tape-taupe</b></a> : Tapez vite les taupes des autres quand elles sortent, jamais les vôtres. Premier à 20 points.</li><li><a href="jeux/curling.html"><b>Curling</b></a> : Lancez vos pierres vers la cible et frottez la glace pour les guider. Le plus proche du centre marque.</li><li><a href="jeux/chaises-musicales.html"><b>Chaises musicales</b></a> : Quand le disque s&#x27;arrête, touchez vite une chaise libre. Gare aux faux arrêts !</li><li><a href="jeux/code-secret.html"><b>Code secret</b></a> : Trouvez avant les autres le code secret de 4 couleurs, grâce à vos indices. Trois manches.</li><li><a href="jeux/kabaddi.html"><b>Kabaddi</b></a> : Attaquez en retenant votre souffle, touchez des défenseurs et rentrez chez vous à temps.</li><li><a href="jeux/balle-au-prisonnier.html"><b>Balle au prisonnier</b></a> : Ramassez, lancez, esquivez, attrapez. Chaque balle reçue coûte un cœur : le dernier debout gagne.</li><li><a href="jeux/chars.html"><b>Chars</b></a> : Deux par char, l&#x27;un pilote, l&#x27;autre tire, sans se parler. Le dernier char debout gagne.</li><li><a href="jeux/bergers.html"><b>Les bergers</b></a> : Ensemble, rabattez le troupeau dans l&#x27;enclos avant la nuit, et chassez les loups.</li><li><a href="jeux/drakkars.html"><b>Drakkars</b></a> : Tout le salon rame dans le même drakkar : en rythme avec le tambour pour battre les robots.</li><li><a href="jeux/bucherons.html"><b>Bûcherons</b></a> : Choisissez où tombe votre arbre, puis sciez-le proprement. N&#x27;écrasez rien !</li><li><a href="jeux/agility.html"><b>Agility</b></a> : Choisissez un chien et guidez-le sur le parcours : chaque obstacle a son geste. Le meilleur temps gagne.</li><li><a href="jeux/galop.html"><b>Galop</b></a> : Choisissez un cheval, placez-vous et dosez son énergie sur 3000 m. Le premier à la ligne gagne.</li><li><a href="jeux/meduse.html"><b>Méduse</b></a> : Lâchez vos naufragés sur le radeau qui tangue. Le plus haut, une fois posé, marque des points, et cinq fois plus quand passe l'Argus.</li></ul><p>Tous les jeux sont gratuits, sans compte, sans application et sans publicité. Créez un salon, vos amis scannent le QR code ou tapent le code, et c'est parti. Seul, vous jouez contre des robots.</p></details>
+    <details class="seolist"><summary>Les 18 jeux en détail</summary><ul><li><a href="jeux/gravats.html"><b>Gravats</b></a> : Empilez les pièces et effacez des lignes : chacune envoie des briques fendues chez les autres. Le dernier en jeu gagne.</li><li><a href="jeux/gardiens.html"><b>Les Gardiens</b></a> : Chacun garde son but, avec 5 vies. Arrêtez les ballons : le dernier gardien debout gagne.</li><li><a href="jeux/derby.html"><b>Derby</b></a> : Tracez les figures au doigt : plus c&#x27;est propre, plus votre cheval avance. Le premier à la ligne gagne.</li><li><a href="jeux/armada.html"><b>Armada</b></a> : Bataille navale sur une seule mer, chacun son tour. Le dernier bateau à flot gagne.</li><li><a href="jeux/tape-taupe.html"><b>Tape-taupe</b></a> : Tapez vite les taupes des autres quand elles sortent, jamais les vôtres. Premier à 20 points.</li><li><a href="jeux/curling.html"><b>Curling</b></a> : Lancez vos pierres vers la cible et frottez la glace pour les guider. Le plus proche du centre marque.</li><li><a href="jeux/chaises-musicales.html"><b>Chaises musicales</b></a> : Quand le disque s&#x27;arrête, touchez vite une chaise libre. Gare aux faux arrêts !</li><li><a href="jeux/code-secret.html"><b>Code secret</b></a> : Trouvez avant les autres le code secret de 4 couleurs, grâce à vos indices. Trois manches.</li><li><a href="jeux/kabaddi.html"><b>Kabaddi</b></a> : Attaquez en retenant votre souffle, touchez des défenseurs et rentrez chez vous à temps.</li><li><a href="jeux/balle-au-prisonnier.html"><b>Balle au prisonnier</b></a> : Ramassez, lancez, esquivez, attrapez. Chaque balle reçue coûte un cœur : le dernier debout gagne.</li><li><a href="jeux/chars.html"><b>Chars</b></a> : Deux par char, l&#x27;un pilote, l&#x27;autre tire, sans se parler. Le dernier char debout gagne.</li><li><a href="jeux/bergers.html"><b>Les bergers</b></a> : Ensemble, rabattez le troupeau dans l&#x27;enclos avant la nuit, et chassez les loups.</li><li><a href="jeux/drakkars.html"><b>Drakkars</b></a> : Tout le salon rame dans le même drakkar : en rythme avec le tambour pour battre les robots.</li><li><a href="jeux/bucherons.html"><b>Bûcherons</b></a> : Choisissez où tombe votre arbre, puis sciez-le proprement. N&#x27;écrasez rien !</li><li><a href="jeux/agility.html"><b>Agility</b></a> : Choisissez un chien et guidez-le sur le parcours : chaque obstacle a son geste. Le meilleur temps gagne.</li><li><a href="jeux/galop.html"><b>Galop</b></a> : Choisissez un cheval, placez-vous et dosez son énergie sur 3000 m. Le premier à la ligne gagne.</li><li><a href="jeux/meduse.html"><b>Méduse</b></a> : Lâchez vos naufragés sur le radeau qui tangue. Le plus haut, une fois posé, marque des points, et cinq fois plus quand passe l'Argus.</li><li><a href="jeux/blob.html"><b>Blob</b></a> : Tracez où votre blob doit pousser dans la boîte de Petri, prenez les flocons d'avoine et envahissez les autres. Le plus grand gagne.</li></ul><p>Tous les jeux sont gratuits, sans compte, sans application et sans publicité. Créez un salon, vos amis scannent le QR code ou tapent le code, et c'est parti. Seul, vous jouez contre des robots.</p></details>
     <p class="legal"><a href="legal.html">Mentions légales et confidentialité</a></p>
   </div>
 </section>
@@ -779,6 +785,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
       <button data-g="agility" aria-pressed="false"><img src="img/agility.webp" alt=""><span>Agility</span></button>
       <button data-g="galop" aria-pressed="false"><img src="img/galop.webp" alt=""><span>Galop</span></button>
       <button data-g="meduse" aria-pressed="false"><img src="img/meduse.webp" alt=""><span>Méduse</span></button>
+      <button data-g="blob" aria-pressed="false"><img src="img/blob.webp" alt=""><span>Blob</span></button>
     </div>
     </div>
     <div class="lobbyfoot">
@@ -1105,6 +1112,20 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
   </div>
 </section>
 
+<!-- BLOB -->
+<section id="scrBlob" hidden>
+  <div class="naval">
+    <div class="nvhead blhead"><div class="nvturn" id="blHead">Blob</div><div class="dkchips"><span class="cuend" id="blPct">0 %</span><span class="cuend" id="blTime">⏱ 4:00</span></div></div>
+    <div class="nvwrap" id="blWrap">
+      <canvas id="blCv" width="600" height="600" aria-label="La boîte de Petri : tracez où votre blob doit pousser, touchez-le pour le renforcer"></canvas>
+      <div class="toast pm" id="blToast" aria-live="polite"></div>
+    </div>
+    <div class="blctl"><span class="bllab">Énergie</span><div class="mdst blbar" title="Énergie"><i id="blE"></i></div><span class="cuend" id="blRf">Renforts 0/3</span></div>
+    <ul class="nvplayers" id="blPlayers"></ul>
+    <p class="hint ctlhelp" id="blHelp"></p>
+  </div>
+</section>
+
 <!-- GALOP -->
 <section id="scrGalop" hidden>
   <div class="naval">
@@ -1172,6 +1193,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
       <button data-f="drakkar" aria-pressed="false">Drakkars</button>
       <button data-f="lumber" aria-pressed="false">Bûcherons</button>
       <button data-f="meduse" aria-pressed="false">Méduse</button>
+      <button data-f="blob" aria-pressed="false">Blob</button>
       <button data-f="agility" aria-pressed="false">Agility</button>
       <button data-f="galop" aria-pressed="false">Galop</button>
     </div>
@@ -1311,7 +1333,7 @@ let D = null;                   // derby state
 let NV = null, HN = null;       // armada: my view / host's full map
 let BOT = null;                  // host-side robot when someone plays alone
 let ML = null, HM = null;       // tape-taupe: my view / host referee
-const GAME_NAMES = { tetris:'Gravats', pong:'Les Gardiens', derby:'Derby', naval:'Armada', mole:'Tape-taupe', curling:'Curling', chairs:'Chaises musicales', master:'Code secret', kabaddi:'Kabaddi', dodge:'Balle au prisonnier', tank:'Chars', sheep:'Les bergers', drakkar:'Drakkars', lumber:'Bûcherons', agility:'Agility', galop:'Galop', meduse:'Méduse' };
+const GAME_NAMES = { tetris:'Gravats', pong:'Les Gardiens', derby:'Derby', naval:'Armada', mole:'Tape-taupe', curling:'Curling', chairs:'Chaises musicales', master:'Code secret', kabaddi:'Kabaddi', dodge:'Balle au prisonnier', tank:'Chars', sheep:'Les bergers', drakkar:'Drakkars', lumber:'Bûcherons', agility:'Agility', galop:'Galop', meduse:'Méduse', blob:'Blob' };
 // the gist in two lines, for the rules slides before a game (the full text stays on the game card)
 const GAME_SHORT = {
   tetris:'Empilez les pièces et effacez des lignes : chacune envoie des briques fendues chez les autres. Le dernier en jeu gagne.',
@@ -1330,7 +1352,8 @@ const GAME_SHORT = {
   lumber:'Choisissez où tombe votre arbre, puis sciez-le proprement. N\'écrasez rien !',
   agility:'Choisissez un chien et guidez-le sur le parcours : chaque obstacle a son geste. Le meilleur temps gagne.',
   galop:'Choisissez un cheval, placez-vous et dosez son énergie sur 3000 m. Le premier à la ligne gagne.',
-  meduse:'Empilez vos naufragés sur le radeau de Géricault : le plus haut fait signe à l\'Argus et marque des points.'
+  meduse:'Empilez vos naufragés sur le radeau de Géricault : le plus haut fait signe à l\'Argus et marque des points.',
+  blob:'Votre blob pousse là où vous tracez : prenez les flocons d\'avoine, envahissez les autres, couvrez la plus grande part de la boîte.'
 };
 // the game intro: a little story under the picture, then the idea of the game in one sentence
 const GAME_STORY = {
@@ -1350,7 +1373,8 @@ const GAME_STORY = {
   lumber:'Concours de bûcheronnage en plein lotissement : des arbres à abattre entre la maison, la voiture et le cabanon.',
   agility:'Concours canin du dimanche : les maîtres s\'égosillent, les chiens s\'élancent, le chrono tourne.',
   galop:'Grand prix de 3000 m : les partants piaffent dans les stalles. Vingt chevaux au paddock, un seul sera le vôtre.',
-  meduse:'1816 : le radeau de la Méduse dérive depuis des jours. À l\'horizon, une voile, l\'Argus. Il faut grimper le plus haut possible pour être vu.'
+  meduse:'1816 : le radeau de la Méduse dérive depuis des jours. À l\'horizon, une voile, l\'Argus. Il faut grimper le plus haut possible pour être vu.',
+  blob:'Au labo, quelqu\'un a réveillé plusieurs blobs dans la même boîte de Petri. Les flocons d\'avoine sont comptés.'
 };
 const GAME_IDEA = {
   tetris:'Compléter des lignes pour envoyer des briques fendues chez les autres, et faire éclater celles qu\'on vous envoie pour les leur retourner. Le dernier qui n\'est pas enseveli gagne.',
@@ -1369,7 +1393,8 @@ const GAME_IDEA = {
   lumber:'Choisir où faire tomber l\'arbre, puis tailler l\'entaille et le trait d\'abattage bien droits pour qu\'il tombe exactement là, sans rien écraser.',
   agility:'Faire le bon geste au bon moment sur chaque obstacle pour éviter les 5 s de pénalité, et finir par un sprint endiablé.',
   galop:'Gérer astucieusement l\'aspiration et les accélérations pour se placer ou gagner la course, en prenant soin de ne pas épuiser son cheval.',
-  meduse:'Lâcher ses naufragés au bon moment pour bâtir le plus haut, tenir le sommet le plus longtemps, surtout quand passe l\'Argus, et faire tomber les autres de la pile.'
+  meduse:'Lâcher ses naufragés au bon moment pour bâtir le plus haut, tenir le sommet le plus longtemps, surtout quand passe l\'Argus, et faire tomber les autres de la pile.',
+  blob:'Tracer les bons chemins vers les flocons, couper les autres de leur nourriture et renforcer ce qu\'on tient, sans grandir plus vite que son énergie.'
 };
 const GAME_DESC = {
   tetris:'Empilez des pièces de 2, 3 et 5 briques. Chaque ligne effacée envoie des briques fendues à vos adversaires. Effacez une ligne collée à une brique fendue : elle éclate et repart chez son expéditeur.',
@@ -1389,14 +1414,15 @@ const GAME_DESC = {
   agility:'Concours d\'agility : chacun choisit son chien (Border collie, Whippet, Caniche…) et le guide sur le même parcours, en même temps. Entre les obstacles, le chien court seul. Haies, pneu et triple : touchez au bon moment. Slalom : tracez le zigzag. Tunnel : suivez-le du doigt. Passerelle : maintenez, relâchez sur le jaune. Bascule : stop au milieu. Table : « Couché ! » puis ne touchez plus. Sprint final : tapez le plus vite possible. Chaque faute coûte 5 s, le meilleur temps gagne.',
   galop:'Course de galop de 3000 m, chacun sur son cheval, vue du dessus. Choisissez votre monture parmi 20, nouvelles à chaque partie (accélération, vitesse, maniabilité, et une forme du jour cachée), des robots complètent jusqu\'à 8 partants. Le cheval suit la piste tout seul : vous vous décalez à gauche ou à droite et vous demandez du galop, qui coûte de l\'énergie. Collé derrière un autre, vous récupérez plus vite et profitez de ses accélérations.',
   meduse:'Le radeau de la Méduse, en version bande dessinée : la pyramide de corps du tableau, c\'est vous qui la construisez. Pendant deux minutes, chacun lâche ses naufragés sur le radeau quand il veut, un toutes les trois secondes. Le corps suspendu se balance de debout à couché : à vous de choisir le moment. Les corps glissent, le radeau tangue, certains tombent à l\'eau et disparaissent. Votre naufragé le plus haut, une fois posé, marque des points tant qu\'il reste au sommet ; trois fois, l\'Argus passe à l\'horizon et le sommet vaut alors cinq fois plus. Lâcher un corps sur la tête du leader pour le déloger fait partie du jeu. Des robots complètent seul ou à deux.',
-  derby:'Course de chevaux : tout le monde reçoit la même série de figures à tracer. Chaque figure réussie fait avancer votre cheval, plus loin si elle est complexe et bien tracée. Le premier à la ligne gagne.'
+  derby:'Course de chevaux : tout le monde reçoit la même série de figures à tracer. Chaque figure réussie fait avancer votre cheval, plus loin si elle est complexe et bien tracée. Le premier à la ligne gagne.',
+  blob:'Le blob, ce drôle d\'organisme qui se réveille dans une boîte de Petri : chaque joueur en a un, dans la même boîte. Tracez du doigt un chemin depuis votre blob, il pousse le long du tracé en dépensant son énergie. Tracez jusque dans un autre blob et vous l\'envahissez, plus cher, d\'autant plus qu\'il a d\'énergie. Les gros flocons d\'avoine nourrissent tant que vous les couvrez, les miettes se mangent d\'un coup. Chaque morceau de blob coûte un peu d\'entretien, et toute partie coupée de vos flocons dépérit. Touchez votre blob pour y poser un renfort qui durcit avec le temps. Au bout de 4 minutes, le plus grand blob gagne. Des robots complètent seul ou à deux.'
 };
 
 const cleanName = s => String(s || '').replace(/[\u0000-\u001f<>]/g,'').trim().slice(0,14) || (LANG === 'en' ? 'Player' : 'Joueur');
 // names shown to everyone in the public list: anything that looks like a link or an address is replaced
 const publicName = s => { const n = cleanName(s); return /https?|www|\.\s*[a-z]{2,}|@|\/\/|discord|t\.me|bit\.ly/i.test(n) ? (LANG === 'en' ? 'Player' : 'Joueur') : n; };
 const genCode = () => { const a='ABCDEFGHJKMNPQRSTUVWXYZ23456789'; let s=''; for(let i=0;i<4;i++) s+=a[Math.floor(Math.random()*a.length)]; return s; };
-const show = id => { for (const s of ['scrMenu','scrStats','scrLobby','scrGame','scrPong','scrDerby','scrNaval','scrMole','scrCurl','scrChairs','scrMaster','scrKabaddi','scrDodge','scrTank','scrSheep','scrDrakkar','scrLumber','scrAgility','scrGalop','scrMeduse']) $(s).hidden = s !== id; if (id === 'scrKabaddi') try { window.scrollTo(0, 0); } catch(_){} document.documentElement.classList.toggle('joyon', ['scrKabaddi','scrDodge','scrTank','scrSheep'].includes(id)); };
+const show = id => { for (const s of ['scrMenu','scrStats','scrLobby','scrGame','scrPong','scrDerby','scrNaval','scrMole','scrCurl','scrChairs','scrMaster','scrKabaddi','scrDodge','scrTank','scrSheep','scrDrakkar','scrLumber','scrAgility','scrGalop','scrMeduse','scrBlob']) $(s).hidden = s !== id; if (id === 'scrKabaddi') try { window.scrollTo(0, 0); } catch(_){} document.documentElement.classList.toggle('joyon', ['scrKabaddi','scrDodge','scrTank','scrSheep'].includes(id)); };
 const store = { get(k){ try { return localStorage.getItem(k); } catch(_) { return null; } }, set(k,v){ try { localStorage.setItem(k,v); } catch(_){} } };
 
 $('nameIn').value = store.get('tm-name') || ((LANG === 'en' ? 'Player' : 'Joueur') + Math.floor(Math.random()*90+10));
@@ -1470,7 +1496,7 @@ function teardown(){
   if (HN && HN.timer) clearTimeout(HN.timer);
   if (HM) moleClearTimers();
   if (HC) clearTimeout(HC.timer);
-  HC = null; CU = null; mcClear(); HMC = null; MC = null; mmClear(); HMM = null; MM = null; kbClear(); HKB = null; KB = null; dbClear(); HDB = null; DB = null; tkClear(); HTK = null; TK = null; shClear(); HSH = null; SHV = null; dkClear(); HDK = null; ljClear(); HLJ = null; LJ = null; sawStop(); agClear(); HAG = null; AG = null; gpClear(); HGP = null; GP = null; DK = null; mdClear(); HMD = null; MD = null;
+  HC = null; CU = null; mcClear(); HMC = null; MC = null; mmClear(); HMM = null; MM = null; kbClear(); HKB = null; KB = null; dbClear(); HDB = null; DB = null; tkClear(); HTK = null; TK = null; shClear(); HSH = null; SHV = null; dkClear(); HDK = null; ljClear(); HLJ = null; LJ = null; sawStop(); agClear(); HAG = null; AG = null; gpClear(); HGP = null; GP = null; DK = null; mdClear(); HMD = null; MD = null; blClear(); HBL = null; BL = null;
   CHAT.length = 0; renderChat();
   net = null; H = null; G = null; PG = null; D = null; NV = null; HN = null; cur = null; me.host = false; me.id = null; players = []; opps.clear();
 }
@@ -1698,7 +1724,7 @@ function hostDrop(conn){
   net.conns.delete(id);
   if (phase === 'lobby'){ const p = players.find(x => x.id === id); players = players.filter(p => p.id !== id); if (VOTES[id]){ delete VOTES[id]; broadcast({ t:'votes', v:VOTES }); } sendLobby(false); briefCheck(); if (BR) briefStatus(); if (p) chatSys(p.name + ' a quitté le salon'); return; }
   if (H && H.alive.has(id)){
-    if (H.game === 'pong') pongDrop(id); else if (H.game === 'curling') curlDrop(id); else if (H.game === 'chairs') chairsDrop(id); else if (H.game === 'master') masterDrop(id); else if (H.game === 'kabaddi') kabaddiDrop(id); else if (H.game === 'dodge') dodgeDrop(id); else if (H.game === 'tank') tankDrop(id); else if (H.game === 'sheep') sheepDrop(id); else if (H.game === 'drakkar') drakkarDrop(id); else if (H.game === 'lumber') lumberDrop(id); else if (H.game === 'agility') agilityDrop(id); else if (H.game === 'galop') galopDrop(id); else if (H.game === 'meduse') meduseDrop(id); else if (H.game === 'derby') derbyDrop(id); else if (H.game === 'naval') navalDrop(id); else if (H.game === 'mole') moleDrop(id); else hostHandle(id, { t:'dead', left:true });
+    if (H.game === 'pong') pongDrop(id); else if (H.game === 'curling') curlDrop(id); else if (H.game === 'chairs') chairsDrop(id); else if (H.game === 'master') masterDrop(id); else if (H.game === 'kabaddi') kabaddiDrop(id); else if (H.game === 'dodge') dodgeDrop(id); else if (H.game === 'tank') tankDrop(id); else if (H.game === 'sheep') sheepDrop(id); else if (H.game === 'drakkar') drakkarDrop(id); else if (H.game === 'lumber') lumberDrop(id); else if (H.game === 'agility') agilityDrop(id); else if (H.game === 'galop') galopDrop(id); else if (H.game === 'meduse') meduseDrop(id); else if (H.game === 'blob') blobDrop(id); else if (H.game === 'derby') derbyDrop(id); else if (H.game === 'naval') navalDrop(id); else if (H.game === 'mole') moleDrop(id); else hostHandle(id, { t:'dead', left:true });
   }
 }
 
@@ -1761,6 +1787,7 @@ function hostLaunch(){
   if (gameKind === 'agility') return agilityHostStart();
   if (gameKind === 'galop') return galopHostStart();
   if (gameKind === 'meduse') return meduseHostStart();
+  if (gameKind === 'blob') return blobHostStart();
   unannounce();                                   // a started game leaves the public list at once
   broadcast({ t:'start', players, game:gameKind, seed:Math.floor(Math.random() * 2**31) });
 }
@@ -1813,6 +1840,10 @@ function hostHandle(id, m){
     meduseInput(id, m);
   } else if (m.t === 'md_push'){
     medusePush(id);
+  } else if (m.t === 'bl_path'){
+    blobPath(id, m);
+  } else if (m.t === 'bl_rf'){
+    blobRf(id, m);
   } else if (m.t === 'ag_pick'){
     agilityPick(id, m.b);
   } else if (m.t === 'ag_p'){
@@ -1885,9 +1916,9 @@ function clientRecv(m){
       players = (Array.isArray(m.players) ? m.players : []).slice(0, MAXP).filter(p => p && typeof p.id === 'string').map(p => ({ ...p, id:p.id.slice(0, 12), name:cleanName(p.name), color:PALETTE.includes(p.color) ? p.color : '#888' }));
       if (m.you) me.id = m.you;
       if (net && !net.solo && !me.host) try { sessionStorage.setItem('ba-room', net.code); } catch(_){}   // after an accidental reload, come straight back
-      if (['tetris','pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber','agility','galop','meduse'].includes(m.game)) gameKind = m.game;
+      if (['tetris','pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber','agility','galop','meduse','blob'].includes(m.game)) gameKind = m.game;
       if (phase === 'menu' || phase === 'lobby' || m.back){
-        phase = 'lobby'; $('scrEnd').hidden = true; G = null; PG = null; D = null; NV = null; ML = null; CU = null; MC = null; MM = null; KB = null; DB = null; TK = null; SHV = null; DK = null; if (LJ){ LJ = null; sawStop(); } AG = null; GP = null; MD = null; cur = null; show('scrLobby'); renderLobby();
+        phase = 'lobby'; $('scrEnd').hidden = true; G = null; PG = null; D = null; NV = null; ML = null; CU = null; MC = null; MM = null; KB = null; DB = null; TK = null; SHV = null; DK = null; if (LJ){ LJ = null; sawStop(); } AG = null; GP = null; MD = null; BL = null; cur = null; show('scrLobby'); renderLobby();
       }
       break;
     case 'nv_start': startNaval(m); break;
@@ -1915,13 +1946,14 @@ function clientRecv(m){
     case 'lj_round': case 'lj_res': case 'lj_sum': case 'lj_left': lumberRecv(m); break;
     case 'ag_p': case 'ag_done': case 'ag_left': case 'ag_pick': case 'ag_go': agilityRecv(m); break;
     case 'md_round': case 'md_go': case 'md_s': case 'md_ev': case 'md_res': meduseRecv(m); break;
+    case 'bl_round': case 'bl_go': case 'bl_s': case 'bl_ev': case 'bl_res': blobRecv(m); break;
     case 'gp_pick': case 'gp_race': case 'gp_go': case 'gp_s': case 'gp_fin': galopRecv(m); break;
     case 'brief': if (phase === 'lobby') openBrief(m.game, m.ready); break;
     case 'votes': VOTES = m.v && typeof m.v === 'object' ? m.v : {}; renderVotes(); if (BR && BR.mode === 'pick') briefStatus(); break;
     case 'peek': if (!me.host){ PEEK = GAME_NAMES[m.g] ? m.g : null; renderVotes(); } break;
     case 'brief_st': if (BR){ BR.ready = new Set(m.ready || []); briefStatus(); } break;
     case 'brief_off': closeBrief(); break;
-    case 'start': closeGameSheet(); closeBrief(); PEEK = null; VOTES = {}; $('colPick').hidden = true; if (m.game === 'galop') startGalop(m); else if (m.game === 'meduse') startMeduse(m); else if (m.game === 'agility') startAgility(m); else if (m.game === 'lumber') startLumber(m); else if (m.game === 'drakkar') startDrakkar(m); else if (m.game === 'sheep') startSheep(m); else if (m.game === 'tank') startTank(m); else if (m.game === 'dodge') startDodge(m); else if (m.game === 'kabaddi') startKabaddi(m); else if (m.game === 'master') startMaster(m); else if (m.game === 'chairs') startChairs(m); else if (m.game === 'curling') startCurling(m); else if (m.game === 'pong') startPong(m.players); else if (m.game === 'derby') startDerby(m.players, m.seed|0); else startGame(m.players); break;
+    case 'start': closeGameSheet(); closeBrief(); PEEK = null; VOTES = {}; $('colPick').hidden = true; if (m.game === 'galop') startGalop(m); else if (m.game === 'meduse') startMeduse(m); else if (m.game === 'blob') startBlob(m); else if (m.game === 'agility') startAgility(m); else if (m.game === 'lumber') startLumber(m); else if (m.game === 'drakkar') startDrakkar(m); else if (m.game === 'sheep') startSheep(m); else if (m.game === 'tank') startTank(m); else if (m.game === 'dodge') startDodge(m); else if (m.game === 'kabaddi') startKabaddi(m); else if (m.game === 'master') startMaster(m); else if (m.game === 'chairs') startChairs(m); else if (m.game === 'curling') startCurling(m); else if (m.game === 'pong') startPong(m.players); else if (m.game === 'derby') startDerby(m.players, m.seed|0); else startGame(m.players); break;
     case 'dr': derbyRemote(m); break;
     case 'ps': pongState(m); break;
     case 'pg': pongGoalFx(m.side|0); break;
@@ -2216,7 +2248,7 @@ function showEnd(ranking, game){
   phase = 'end';
   if (G) G.p = null;
   if (PG) PG.ph = 'over';
-  const pong = game === 'pong', derby = game === 'derby', naval = game === 'naval', mole = game === 'mole', curl = game === 'curling', chairs = game === 'chairs', master = game === 'master', kab = game === 'kabaddi', dodge = game === 'dodge', tank = game === 'tank', coop = game === 'sheep', viking = game === 'drakkar', lumber = game === 'lumber', agil = game === 'agility', galop = game === 'galop', medu = game === 'meduse';
+  const pong = game === 'pong', derby = game === 'derby', naval = game === 'naval', mole = game === 'mole', curl = game === 'curling', chairs = game === 'chairs', master = game === 'master', kab = game === 'kabaddi', dodge = game === 'dodge', tank = game === 'tank', coop = game === 'sheep', viking = game === 'drakkar', lumber = game === 'lumber', agil = game === 'agility', galop = game === 'galop', medu = game === 'meduse', blob = game === 'blob';
   if (ML) ML.over = true;
   if (NV) NV.over = true;
   if (D) D.over = true;
@@ -2233,10 +2265,10 @@ function showEnd(ranking, game){
   if (GP) GP.over = true;
   if (MD){ MD.over = true; MD.ph = 'end'; }
   const hd = $('rankHead'); hd.textContent = '';
-  for (const h of ['#','Joueur', ...(medu ? ['Points','Au sommet','Lâchés','À l\'eau'] : galop ? ['Cheval','Temps','Écart'] : agil ? ['Temps','Fautes','Total'] : lumber ? ['Points','Précision','Manches'] : viking ? ['Rôle','Coups','Synchro'] : coop ? ['Manches','Moutons','Ouaf'] : tank ? ['Char','Rôle','Touches'] : dodge ? ['Vies','Touches','Arrêts'] : kab ? ['Points','Raids réussis','Plaquages'] : master ? ['Points','Trouvés','Essais'] : chairs ? ['Vies','Chaises','Réflexe'] : curl ? ['Points','Maison','Meilleure'] : pong ? ['Vies','Arrêts'] : derby ? ['Figures','Distance','Temps'] : naval ? ['Tirs','Touchés','À flot'] : mole ? ['Points','Tapées','Échappées'] : ['Lignes','Briques','Score'])]){
+  for (const h of ['#','Joueur', ...(blob ? ['Surface','Flocons','Volé','Miettes'] : medu ? ['Points','Au sommet','Lâchés','À l\'eau'] : galop ? ['Cheval','Temps','Écart'] : agil ? ['Temps','Fautes','Total'] : lumber ? ['Points','Précision','Manches'] : viking ? ['Rôle','Coups','Synchro'] : coop ? ['Manches','Moutons','Ouaf'] : tank ? ['Char','Rôle','Touches'] : dodge ? ['Vies','Touches','Arrêts'] : kab ? ['Points','Raids réussis','Plaquages'] : master ? ['Points','Trouvés','Essais'] : chairs ? ['Vies','Chaises','Réflexe'] : curl ? ['Points','Maison','Meilleure'] : pong ? ['Vies','Arrêts'] : derby ? ['Figures','Distance','Temps'] : naval ? ['Tirs','Touchés','À flot'] : mole ? ['Points','Tapées','Échappées'] : ['Lignes','Briques','Score'])]){
     const th = document.createElement('th'); th.textContent = h; hd.append(th);
   }
-  $('rankNote').textContent = medu ? '« Points » : 1 par seconde au sommet, 5 pendant le passage de l\'Argus. « Au sommet » : temps passé tout en haut. « Lâchés » : naufragés lâchés. « À l\'eau » : naufragés tombés à la mer.' : galop ? '« Écart » : retard sur le vainqueur à l\'arrivée, en secondes. Les chevaux des robots sont classés avec les autres.' : agil ? '« Total » : temps du parcours plus 5 s par faute. Un chien qui n\'a pas fini est classé après les autres.' : lumber ? '« Précision » : moyenne de vos coupes. « Manches » : manches finies sans rien écraser. Un joueur qui écrase quelque chose est éliminé.' : viking ? 'Course en équipe. « Synchro » : coups de rame donnés en rythme avec le tambour.' : coop ? 'Partie en équipe : tout le monde partage le score. « Moutons » : moutons rentrés au total, « Ouaf » : aboiements.' : tank ? 'Les deux membres d\'un équipage partagent la même place. « Touches » : obus du canonnier qui ont fait mouche.' : dodge ? '« Touches » : balles qui ont atteint un adversaire. « Arrêts » : balles attrapées.' : kab ? '« Raids réussis » : raids rentrés avec au moins un défenseur touché. « Plaquages » : attaquants retenus jusqu\'au bout du souffle.' : master ? '« Trouvés » : codes trouvés. « Essais » : total des essais sur la partie.' : chairs ? '« Chaises » : chaises gagnées. « Réflexe » : votre plus rapide, de l\'arrêt du disque à la chaise.' : curl ? '« Maison » : pierres dans la maison en fin de manche. « Meilleure » : pierre la plus proche du centre.' : mole ? '« Tapées » : taupes adverses tapées. « Échappées » : vos taupes que personne n\'a eues.' : naval ? '« À flot » : cases de bateau encore intactes à la fin.' : pong ? '« Arrêts » : ballons repoussés par le gardien.' : derby ? '« Temps » : durée pour franchir la ligne, pour ceux qui l\'ont franchie.' : '« Briques » : nombre de briques envoyées aux adversaires.';
+  $('rankNote').textContent = blob ? '« Surface » : part de la boîte couverte à la fin. « Flocons » : gros flocons tenus. « Volé » : morceaux pris aux autres blobs. « Miettes » : miettes mangées.' : medu ? '« Points » : 1 par seconde au sommet, 5 pendant le passage de l\'Argus. « Au sommet » : temps passé tout en haut. « Lâchés » : naufragés lâchés. « À l\'eau » : naufragés tombés à la mer.' : galop ? '« Écart » : retard sur le vainqueur à l\'arrivée, en secondes. Les chevaux des robots sont classés avec les autres.' : agil ? '« Total » : temps du parcours plus 5 s par faute. Un chien qui n\'a pas fini est classé après les autres.' : lumber ? '« Précision » : moyenne de vos coupes. « Manches » : manches finies sans rien écraser. Un joueur qui écrase quelque chose est éliminé.' : viking ? 'Course en équipe. « Synchro » : coups de rame donnés en rythme avec le tambour.' : coop ? 'Partie en équipe : tout le monde partage le score. « Moutons » : moutons rentrés au total, « Ouaf » : aboiements.' : tank ? 'Les deux membres d\'un équipage partagent la même place. « Touches » : obus du canonnier qui ont fait mouche.' : dodge ? '« Touches » : balles qui ont atteint un adversaire. « Arrêts » : balles attrapées.' : kab ? '« Raids réussis » : raids rentrés avec au moins un défenseur touché. « Plaquages » : attaquants retenus jusqu\'au bout du souffle.' : master ? '« Trouvés » : codes trouvés. « Essais » : total des essais sur la partie.' : chairs ? '« Chaises » : chaises gagnées. « Réflexe » : votre plus rapide, de l\'arrêt du disque à la chaise.' : curl ? '« Maison » : pierres dans la maison en fin de manche. « Meilleure » : pierre la plus proche du centre.' : mole ? '« Tapées » : taupes adverses tapées. « Échappées » : vos taupes que personne n\'a eues.' : naval ? '« À flot » : cases de bateau encore intactes à la fin.' : pong ? '« Arrêts » : ballons repoussés par le gardien.' : derby ? '« Temps » : durée pour franchir la ligne, pour ceux qui l\'ont franchie.' : '« Briques » : nombre de briques envoyées aux adversaires.';
   const tb = $('rankBody'); tb.textContent = '';
   (ranking || []).forEach(r => {
     const tr = document.createElement('tr'); if (r.place === 1) tr.className = 'win';
@@ -2245,7 +2277,8 @@ function showEnd(ranking, game){
     const d = document.createElement('span'); d.className = 'dot'; d.style.background = r.color;
     const s = document.createElement('span'); s.textContent = r.name + (r.id === me.id ? ' (vous)' : '') + (r.left ? ' · parti' : '');
     w.append(d, s); nm.append(w);
-    if (medu) tr.append(td(r.place), nm, td(r.pts|0), td((r.top|0) + ' s'), td(r.drops|0), td(r.lost|0));
+    if (blob) tr.append(td(r.place), nm, td((r.pct|0) + ' %'), td(r.farms|0), td(r.stolen|0), td(r.crumbs|0));
+    else if (medu) tr.append(td(r.place), nm, td(r.pts|0), td((r.top|0) + ' s'), td(r.drops|0), td(r.lost|0));
     else if (galop){ tr.append(td(r.place), nm, td(r.horse || ''), td(r.t ? fmtSec(r.t) : '–'), td(r.gap == null ? '–' : r.gap > 0 ? '+' + r.gap.toLocaleString('fr-FR', { minimumFractionDigits:2, maximumFractionDigits:2 }) : '')); [...tr.children].slice(-2).forEach(c => c.style.whiteSpace = 'nowrap'); }
     else if (agil) tr.append(td(r.place), nm, td(r.done ? fmtSec(Math.round(r.time*1000)) : '–'), td(r.done ? r.faults|0 : '–'), td(r.done ? fmtSec(Math.round(r.total*1000)) : 'abandon'));
     else if (lumber) tr.append(td(r.place), nm, td(r.pts|0), td((r.sync|0) + ' %'), td((r.rounds|0) + '/' + LJ_ROUNDS + (r.out ? ' ✗' : '')));
@@ -2273,7 +2306,7 @@ function showEnd(ranking, game){
   $('winPanel').style.background = viking ? (iWon ? '#3DDC97' : '#8A84B0') : coop ? '#3DDC97' : win ? win.color : '#FFD93B';
   $('winName').textContent = viking ? (iWon ? 'L\'Angleterre est à vous !' : 'Les autres Vikings arrivent avant vous') : coop ? 'Score d\'équipe : ' + ((win && win.score) | 0) : win ? (iWon ? 'Vous gagnez !' : (galop && win.bot && win.horse ? win.horse : win.name) + ' gagne !') : '';
   $('myPlace').textContent = viking ? 'Drakkars' + (iWon && win.t ? ' · ' + fmtSec(win.t) : '') : coop ? 'Les bergers · ' + ((win && win.rounds) | 0) + '/' + SH_ROUNDS + ' manches réussies' : (GAME_NAMES[game] || 'Gravats') + (mine ? ' · vous finissez ' + (mine.place === 1 ? '1er' : mine.place + 'e') + ' sur ' + ranking.length : '');
-  (medu ? (t => { const el = $('mdMsg'); if (el) el.textContent = t || ''; }) : galop ? (t => { const el = $('gpMsg'); if (el) el.textContent = t || ''; }) : agil ? agMsg : lumber ? ljMsg : viking ? drakkarMsg : coop ? sheepMsg : tank ? tankMsg : dodge ? dodgeMsg : kab ? kabaddiMsg : master ? masterMsg : chairs ? chairsMsg : curl ? curlMsg : pong ? pongMsg : derby ? derbyMsg : naval ? navalMsg : mole ? moleMsg : setMsg)('', '');
+  (blob ? blToast : medu ? (t => { const el = $('mdMsg'); if (el) el.textContent = t || ''; }) : galop ? (t => { const el = $('gpMsg'); if (el) el.textContent = t || ''; }) : agil ? agMsg : lumber ? ljMsg : viking ? drakkarMsg : coop ? sheepMsg : tank ? tankMsg : dodge ? dodgeMsg : kab ? kabaddiMsg : master ? masterMsg : chairs ? chairsMsg : curl ? curlMsg : pong ? pongMsg : derby ? derbyMsg : naval ? navalMsg : mole ? moleMsg : setMsg)('', '');
   $('btnAgain').hidden = false; $('btnReplay').hidden = !me.host; $('btnAgain').classList.toggle('ghost', me.host);
   $('endHint').textContent = me.host ? '' : 'Le créateur choisit la suite : rejouer ou revenir au salon.';
   $('btnAgain').style.gridColumn = me.host ? '' : '1 / -1';
@@ -2480,7 +2513,7 @@ function release(a){
 const KEYMAP = { arrowleft:'left', arrowright:'right', arrowdown:'down', arrowup:'rotr', x:'rotr', z:'rotl', w:'rotl', control:'rotl', ' ':'drop', c:'hold', shift:'hold' };
 addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT') return;
-  if (cur === 'curl' || cur === 'chairs' || cur === 'master' || cur === 'kabaddi' || cur === 'dodge' || cur === 'tank' || cur === 'sheep' || cur === 'drakkar' || cur === 'lumber' || cur === 'agility' || cur === 'galop' || cur === 'meduse') return;
+  if (cur === 'curl' || cur === 'chairs' || cur === 'master' || cur === 'kabaddi' || cur === 'dodge' || cur === 'tank' || cur === 'sheep' || cur === 'drakkar' || cur === 'lumber' || cur === 'agility' || cur === 'galop' || cur === 'meduse' || cur === 'blob') return;
   if (cur === 'pong'){ const k = PKEYS[e.key.toLowerCase()]; if (k){ e.preventDefault(); pin[k] = true; } return; }
   const a = KEYMAP[e.key.toLowerCase()]; if (!a) return;
   e.preventDefault();
@@ -9482,7 +9515,7 @@ function drawGalop(now){
 const BOOM_COLORS = [['#FFD93B','#E6262B'], ['#FFFFFF','#1E5BFF'], ['#E6262B','#FFFFFF'], ['#1E5BFF','#FFD93B']];
 function gameWrap(){
   return cur === 'tetris' ? document.querySelector('#play .well') : cur === 'pong' ? $('pwrap') : cur === 'derby' ? $('padwrap')
-    : cur === 'naval' ? document.querySelector('#scrNaval .nvwrap') : cur === 'mole' ? $('mlWrap') : cur === 'curl' ? $('cuWrap') : cur === 'chairs' ? $('mcWrap') : cur === 'master' ? $('mmWrap') : cur === 'kabaddi' ? $('kbWrap') : cur === 'dodge' ? $('dbWrap') : cur === 'tank' ? $('tkWrap') : cur === 'sheep' ? $('shWrap') : cur === 'drakkar' ? $('dkWrap') : cur === 'lumber' ? $('ljWrap') : cur === 'agility' ? $('agWrap') : cur === 'galop' ? $('gpWrap') : cur === 'meduse' ? $('mdWrap') : null;
+    : cur === 'naval' ? document.querySelector('#scrNaval .nvwrap') : cur === 'mole' ? $('mlWrap') : cur === 'curl' ? $('cuWrap') : cur === 'chairs' ? $('mcWrap') : cur === 'master' ? $('mmWrap') : cur === 'kabaddi' ? $('kbWrap') : cur === 'dodge' ? $('dbWrap') : cur === 'tank' ? $('tkWrap') : cur === 'sheep' ? $('shWrap') : cur === 'drakkar' ? $('dkWrap') : cur === 'lumber' ? $('ljWrap') : cur === 'agility' ? $('agWrap') : cur === 'galop' ? $('gpWrap') : cur === 'meduse' ? $('mdWrap') : cur === 'blob' ? $('blWrap') : null;
 }
 // x, y: position in the wrap (0..1); size in px; pal: one of BOOM_COLORS
 function boom(text, o = {}){
@@ -9677,7 +9710,7 @@ async function resultCard(){
   // footer: where to play
   c.fillStyle = '#000'; c.fillRect(0, H - 120, W, 120);
   c.fillStyle = '#FFD93B'; c.textAlign = 'center'; c.font = '58px Bangers, Impact, sans-serif'; c.fillText('Viens jouer : bastonarcade.com', W/2, H - 64);
-  c.fillStyle = '#fff'; c.font = '700 26px Nunito, sans-serif'; c.fillText('17 jeux à plusieurs, gratuits, sans compte, sans pub', W/2, H - 22);
+  c.fillStyle = '#fff'; c.font = '700 26px Nunito, sans-serif'; c.fillText('18 jeux à plusieurs, gratuits, sans compte, sans pub', W/2, H - 22);
   return cv;
 }
 $('btnShare').onclick = async () => {
@@ -10400,6 +10433,432 @@ function mdMast(ctx, mb, t){
   ctx.fillStyle = '#5A4A33'; ctx.beginPath(); ctx.ellipse(top[0] - 40 - w*.4, top[1] + 74, 7, 11, .4, 0, Math.PI*2); ctx.fill();
 }
 
+// ================= BLOB : slime moulds fighting over a Petri dish =================
+// Each player is a slime mould (Physarum polycephalum) in the same dish. Draw a path with a finger and your blob grows
+// along it, spending energy; draw it into another blob and you push into it, which costs more and is resisted by its
+// energy. Big oat flakes feed whoever covers them, for as long as they do; crumbs are eaten in one go. Every bit of
+// blob costs a little upkeep, and any part cut off from all of its flakes starves and withers away. A tap inside your
+// own blob grows a reinforcement that hardens over time. After four minutes the largest blob wins.
+const BL_N = 96, BL_T = 240, BL_TICK = .1, BL_CX = 306, BL_CY = 309, BL_R = 218;
+let BL_GROW = 7, BL_BITE = 2, BL_COST = .25, BL_ATK = 2.2, BL_BASE = 2, BL_FARM = 3, BL_UPKEEP = .002, BL_CRUMB = 6;
+const BL_RF_COST = 8, BL_RF_MAX = 3, BL_RF_R = 4.5, BL_E0 = 50;
+let HBL = null, BL = null;
+function blLater(fn, ms){ const g = HBL; const t = setTimeout(() => { if (HBL === g && H && !H.over) fn(); }, ms); HBL.timers.push(t); }
+function blClear(){ if (HBL) HBL.timers.forEach(t => clearTimeout(t)); }
+const blIn = id => !!(H && H.stats[id] && !H.stats[id].left);
+// the dish: cells inside the circle
+const BL_IN = (() => { const a = new Uint8Array(BL_N*BL_N), c = (BL_N - 1)/2, r = BL_N/2 - .6; for (let y = 0; y < BL_N; y++) for (let x = 0; x < BL_N; x++) a[y*BL_N + x] = Math.hypot(x - c, y - c) <= r ? 1 : 0; return a; })();
+const BL_CELL = BL_R*2/BL_N;
+
+// ---- host ----
+function blobHostStart(){
+  const want = players.filter(p => !p.bot).length <= 2 ? 3 : 0;
+  for (const id of ['ai', 'ai2']){
+    if (players.length >= want) break;
+    if (players.some(p => p.id === id)) continue;
+    players.push({ id, name:id === 'ai' ? 'Robot' : 'Robot 2', color:pickColor(), bot:true });
+    H.alive.add(id);
+  }
+  H.n = players.length;
+  for (const p of players) H.stats[p.id] = { pts:0, area:0, farms:0, stolen:0, crumbs:0, best:0, left:false, out:false };
+  const n = players.length, g = new Uint8Array(BL_N*BL_N), c = (BL_N - 1)/2;
+  HBL = { timers:[], ph:'wait', t:0, acc:0, g, E:{}, path:{}, rf:[], rid:1, farms:[], crumbs:new Set(), lastSend:0, bot:{}, idx:{}, dirty:true };
+  players.forEach((p, i) => { HBL.idx[p.id] = i + 1; HBL.E[p.id] = BL_E0; HBL.path[p.id] = []; });
+  const free = (x, y, d) => HBL.farms.every(f => Math.hypot(f.x - x, f.y - y) > d);
+  // each blob starts on its own flake, spread around the dish
+  const rot = Math.random()*Math.PI*2;
+  players.forEach((p, i) => {
+    const a = rot + i*Math.PI*2/n, x = Math.round(c + Math.cos(a)*BL_N*.31), y = Math.round(c + Math.sin(a)*BL_N*.31);
+    HBL.farms.push({ x, y, home:i + 1 });
+    for (let dy = -4; dy <= 4; dy++) for (let dx = -4; dx <= 4; dx++) if (dx*dx + dy*dy <= 17){ const k = (y + dy)*BL_N + x + dx; if (BL_IN[k]) g[k] = i + 1; }
+  });
+  // more big flakes between them and in the middle, crumbs everywhere
+  for (let tries = 0, made = 0; tries < 900 && made < n + 4; tries++){
+    const a = Math.random()*Math.PI*2, r = Math.sqrt(Math.random())*BL_N*.44, x = Math.round(c + Math.cos(a)*r), y = Math.round(c + Math.sin(a)*r);
+    if (BL_IN[y*BL_N + x] && !g[y*BL_N + x] && free(x, y, 15)){ HBL.farms.push({ x, y }); made++; }
+  }
+  for (let k = 0; k < 70; k++){
+    const x = Math.floor(Math.random()*BL_N), y = Math.floor(Math.random()*BL_N), i = y*BL_N + x;
+    if (BL_IN[i] && !g[i] && free(x, y, 4)) HBL.crumbs.add(i);
+  }
+  broadcast({ t:'start', players, game:'blob' });
+  blLater(blGo, 1500);
+}
+function blGo(){
+  HBL.ph = 'count';
+  broadcast({ t:'bl_round', farms:HBL.farms.map(f => [f.x, f.y]), crumbs:[...HBL.crumbs], T:BL_T });
+  blLater(() => { HBL.ph = 'play'; broadcast({ t:'bl_go' }); }, 3200);
+}
+const blOwner = id => HBL.idx[id];
+const blPid = k => players[k - 1] ? players[k - 1].id : null;
+// a path drawn by a player: a list of points, in cells
+function blobPath(id, m){
+  if (!HBL || HBL.ph !== 'play' || !blIn(id) || H.stats[id].out) return;
+  const pts = Array.isArray(m.p) ? m.p.slice(0, 40) : [];
+  const ok = pts.filter(q => Array.isArray(q) && isFinite(q[0]) && isFinite(q[1])).map(q => [Math.max(0, Math.min(BL_N - 1, +q[0])), Math.max(0, Math.min(BL_N - 1, +q[1]))]);
+  if (ok.length) HBL.path[id] = ok;
+}
+// a reinforcement: on my own blob, hardens over time
+function blobRf(id, m){
+  if (!HBL || HBL.ph !== 'play' || !blIn(id) || H.stats[id].out) return;
+  const x = Math.round(+m.x), y = Math.round(+m.y), k = y*BL_N + x, o = blOwner(id);
+  if (!(x >= 0 && y >= 0 && x < BL_N && y < BL_N) || HBL.g[k] !== o || HBL.E[id] < BL_RF_COST) return;
+  const mine = HBL.rf.filter(r => r.o === o);
+  if (mine.length >= BL_RF_MAX){ const old = mine.sort((a, b) => a.t0 - b.t0)[0]; HBL.rf = HBL.rf.filter(r => r !== old); }
+  HBL.E[id] -= BL_RF_COST;
+  HBL.rf.push({ id:HBL.rid++, o, x, y, t0:HBL.t });
+  broadcast({ t:'bl_ev', k:'rf', a:id });
+}
+// how hard a cell is to take: reinforcements nearby, growing from 0.3 to 1.6 over 25 s
+function blHard(k){
+  const x = k % BL_N, y = (k - x)/BL_N, o = HBL.g[k];
+  let h = 0;
+  for (const r of HBL.rf) if (r.o === o){ const d = Math.hypot(r.x - x, r.y - y); if (d <= BL_RF_R) h = Math.max(h, (.3 + Math.min(1.3, (HBL.t - r.t0)/25*1.3))*(1 - d/(BL_RF_R*1.6))); }
+  return h;
+}
+const BL_NB = [1, -1, BL_N, -BL_N];
+function blCreep(id){
+  const o = blOwner(id), g = HBL.g;
+  if (HBL.E[id] < 25) return;
+  for (let tries = 0; tries < 40; tries++){
+    const k = Math.floor(Math.random()*g.length);
+    if (!BL_IN[k] || g[k]) continue;
+    const x = k % BL_N;
+    if ((x > 0 && g[k - 1] === o) || (x < BL_N - 1 && g[k + 1] === o) || g[k - BL_N] === o || g[k + BL_N] === o){
+      g[k] = o; HBL.E[id] -= BL_COST;
+      if (HBL.crumbs.has(k)){ HBL.crumbs.delete(k); HBL.E[id] = Math.min(100, HBL.E[id] + BL_CRUMB); H.stats[id].crumbs++; broadcast({ t:'bl_ev', k:'eat', a:id, c:k }); }
+      return;
+    }
+  }
+}
+function blGrow(id){
+  const P = HBL.path[id]; if (!P.length) return blCreep(id);
+  const o = blOwner(id), g = HBL.g;
+  let [tx, ty] = P[0];
+  // candidate cells: next to my blob, not mine, inside the dish; the closest to where I am heading
+  const cand = [];
+  let best = 1e9;
+  for (let k = 0; k < g.length; k++){
+    if (!BL_IN[k] || g[k] === o) continue;
+    const x = k % BL_N; let adj = false;
+    if (x > 0 && g[k - 1] === o) adj = true; else if (x < BL_N - 1 && g[k + 1] === o) adj = true; else if (g[k - BL_N] === o || g[k + BL_N] === o) adj = true;
+    if (!adj) continue;
+    const y = (k - x)/BL_N, d = Math.hypot(x - tx, y - ty) + Math.random()*1.2;
+    cand.push([d, k]); if (d < best) best = d;
+  }
+  if (!cand.length) return;
+  // reached this point of the path: next one
+  if (best < 1.8){ P.shift(); if (!P.length) return; [tx, ty] = P[0]; }
+  cand.sort((a, b) => a[0] - b[0]);
+  let grown = 0, bites = 0;
+  for (const [d, k] of cand){
+    if (grown >= BL_GROW || d > best + 5) break;
+    const v = g[k];
+    if (v){
+      // someone else's blob: a push, which their energy and their reinforcements resist
+      if (bites >= BL_BITE) continue;
+      const def = blPid(v > 5 ? v - 5 : v), dE = def ? HBL.E[def] : 0;
+      const cost = BL_ATK*(1 + blHard(k)*1.6)*(.6 + .8*Math.min(1, dE/100));
+      if (HBL.E[id] < cost) { HBL.path[id] = []; break; }
+      HBL.E[id] -= cost; if (def) HBL.E[def] = Math.max(0, HBL.E[def] - .4);
+      g[k] = o; bites++; grown++; H.stats[id].stolen++;
+      HBL.rf = HBL.rf.filter(r => !(r.x + r.y*BL_N === k));
+    } else {
+      if (HBL.E[id] < BL_COST){ break; }
+      HBL.E[id] -= BL_COST; g[k] = o; grown++;
+    }
+    if (HBL.crumbs.has(k)){ HBL.crumbs.delete(k); HBL.E[id] = Math.min(100, HBL.E[id] + BL_CRUMB); H.stats[id].crumbs++; broadcast({ t:'bl_ev', k:'eat', a:id, c:k }); }
+  }
+}
+// the parts of a blob that no flake of its own feeds wither from their edges
+function blStarve(){
+  const g = HBL.g, fed = new Uint8Array(g.length), q = [];
+  for (const f of HBL.farms){ const k = f.y*BL_N + f.x; if (g[k]){ fed[k] = 1; q.push(k); } }
+  while (q.length){
+    const k = q.pop(), o = g[k], x = k % BL_N;
+    for (const d of BL_NB){
+      const j = k + d; if (j < 0 || j >= g.length || (d === 1 && x === BL_N - 1) || (d === -1 && x === 0)) continue;
+      if (!fed[j] && g[j] === o){ fed[j] = 1; q.push(j); }
+    }
+  }
+  HBL.fed = fed;
+  for (let k = 0; k < g.length; k++){
+    if (!g[k] || fed[k]) continue;
+    // starving: only the edge cells die, a few at a time
+    const x = k % BL_N;
+    const edge = (x === 0 || g[k - 1] !== g[k]) || (x === BL_N - 1 || g[k + 1] !== g[k]) || g[k - BL_N] !== g[k] || g[k + BL_N] !== g[k];
+    if (edge && Math.random() < .09) g[k] = 0;
+  }
+}
+function blStep(){
+  const t = HBL.t += BL_TICK, g = HBL.g;
+  // areas and farms
+  const area = {}, farms = {};
+  for (let k = 0; k < g.length; k++) if (g[k]) area[g[k]] = (area[g[k]] || 0) + 1;
+  for (const f of HBL.farms){ const v = g[f.y*BL_N + f.x]; if (v) farms[v] = (farms[v] || 0) + 1; }
+  for (const p of players){
+    const o = blOwner(p.id), s = H.stats[p.id];
+    s.area = area[o] || 0; s.farms = farms[o] || 0; s.best = Math.max(s.best, s.area);
+    if (!s.out && s.area === 0 && t > 1){ s.out = true; HBL.path[p.id] = []; broadcast({ t:'bl_ev', k:'out', a:p.id }); }
+    if (s.out) continue;
+    // income, then upkeep for every bit of blob
+    HBL.E[p.id] = Math.max(0, Math.min(100, HBL.E[p.id] + (BL_BASE + BL_FARM*s.farms - BL_UPKEEP*s.area)*BL_TICK*10/10));
+  }
+  for (const p of players) if (!H.stats[p.id].out && blIn(p.id)) blGrow(p.id);
+  if (Math.round(t*10) % 3 === 0) blStarve();
+  HBL.rf = HBL.rf.filter(r => g[r.y*BL_N + r.x] === r.o);
+}
+// the grid, run-length coded: cell value as a letter (a = empty, b.. = players), then the run length
+function blCode(){
+  const g = HBL.g, fed = HBL.fed; let s = '', prev = -1, n = 0;
+  for (let k = 0; k <= g.length; k++){
+    const v = k < g.length ? (g[k] ? g[k] + (fed && !fed[k] ? 5 : 0) : 0) : -2;
+    if (v === prev) { n++; continue; }
+    if (prev >= 0) s += String.fromCharCode(97 + prev) + (n > 1 ? n : '');
+    prev = v; n = 1;
+  }
+  return s;
+}
+function blobHostFrame(dt, now){
+  if (!HBL || !H || H.over || HBL.ph !== 'play') return;
+  blBots(dt);
+  HBL.acc += dt;
+  while (HBL.acc >= BL_TICK){ HBL.acc -= BL_TICK; blStep(); }
+  if (now - HBL.lastSend > 160){
+    HBL.lastSend = now;
+    broadcastSnap({ t:'bl_s', tt:Math.round(HBL.t*10), g:blCode(),
+      e:players.map(p => Math.round(HBL.E[p.id])), a:players.map(p => H.stats[p.id] ? H.stats[p.id].area : 0),
+      rf:HBL.rf.map(r => [r.x, r.y, r.o, Math.round((HBL.t - r.t0)*10)]),
+      pa:players.map(p => (HBL.path[p.id] || []).slice(0, 12).map(q => [Math.round(q[0]), Math.round(q[1])])) });
+  }
+  if (HBL.t >= BL_T || players.filter(p => !H.stats[p.id].out && blIn(p.id)).length <= 1 && HBL.t > 5) blFinish();
+}
+function blRanking(){
+  const ids = Object.keys(H.stats).sort((a, b) => { const A = H.stats[a], B = H.stats[b]; if (A.left !== B.left) return A.left ? 1 : -1; return B.area - A.area || B.best - A.best; });
+  const tot = BL_IN.reduce((a, b) => a + b, 0);
+  return ids.map((pid, i) => { const p = players.find(x => x.id === pid) || { name:'?', color:'#888' }, st = H.stats[pid];
+    return { id:pid, name:p.name, color:p.color, place:i + 1, ...st, pct:Math.round(st.area/tot*100), pts:Math.round(st.area/tot*100) }; });
+}
+function blFinish(){
+  if (!H || H.over) return;
+  H.over = true; blClear(); HBL.ph = 'end';
+  const ranking = blRanking();
+  broadcast({ t:'bl_res', win:ranking[0] ? ranking[0].id : null });
+  setTimeout(() => broadcast({ t:'end', ranking, game:'blob' }), 3000);
+}
+function blobDrop(id){
+  if (!H || H.over || !H.stats[id]) return;
+  H.stats[id].left = true; if (HBL) HBL.path[id] = [];
+  broadcast({ t:'bl_ev', k:'left', a:id });
+  if (!players.some(p => !p.bot && blIn(p.id))) return blFinish();
+}
+// robots: every few seconds, head for the closest flake they do not hold (crumbs early on); push into a neighbour
+// when one is in reach; sometimes reinforce a held flake next to an enemy
+function blBots(dt){
+  const g = HBL.g;
+  for (const p of players){
+    if (!p.bot || H.stats[p.id].out) continue;
+    const B = HBL.bot[p.id] || (HBL.bot[p.id] = { t:1 + Math.random()*2 }), o = blOwner(p.id);
+    B.t -= dt; if (B.t > 0) continue;
+    B.t = (HBL.path[p.id].length ? 2.5 : .8) + Math.random()*2;
+    // my cells, sampled
+    const mine = []; for (let k = 0; k < g.length; k += 3) if (g[k] === o) mine.push(k);
+    if (!mine.length) continue;
+    const cx = mine.reduce((a, k) => a + k % BL_N, 0)/mine.length, cy = mine.reduce((a, k) => a + Math.floor(k/BL_N), 0)/mine.length;
+    const targets = HBL.farms.filter(f => g[f.y*BL_N + f.x] !== o).map(f => [f.x, f.y, Math.hypot(f.x - cx, f.y - cy) + (g[f.y*BL_N + f.x] ? 8 : 0)]);
+    if (HBL.t < 40) for (const k of HBL.crumbs){ const x = k % BL_N, y = Math.floor(k/BL_N), d = Math.hypot(x - cx, y - cy); if (d < 14) targets.push([x, y, d + 4]); }
+    // some empty gel towards the middle of the dish, or away from my centre
+    for (let s = 0; s < 6; s++){ const a = Math.random()*Math.PI*2, r = 8 + Math.random()*14, x = Math.round(cx + Math.cos(a)*r), y = Math.round(cy + Math.sin(a)*r), k = y*BL_N + x; if (x > 0 && y > 0 && x < BL_N && y < BL_N && BL_IN[k] && !g[k]) targets.push([x, y, r + 6]); }
+    targets.sort((a, b) => a[2] - b[2]);
+    const tg = targets[Math.floor(Math.random()*Math.min(2, targets.length))];
+    if (tg && HBL.E[p.id] > 6) HBL.path[p.id] = [[tg[0] + (Math.random() - .5)*2, tg[1] + (Math.random() - .5)*2]];
+    if (HBL.E[p.id] > 40 && Math.random() < .25){
+      const f = HBL.farms.find(f => g[f.y*BL_N + f.x] === o && !HBL.rf.some(r => r.o === o && Math.hypot(r.x - f.x, r.y - f.y) < 3));
+      if (f) blobRf(p.id, { x:f.x, y:f.y });
+    }
+  }
+}
+
+// ---- my view ----
+const blcv = $('blCv'), blctx = blcv.getContext('2d');
+const blBg = new Image(); blBg.src = 'img/blob-bg.webp';
+function startBlob(m){
+  lastCountShown = null;
+  players = m.players; cur = 'blob'; G = null; PG = null; D = null; phase = 'count';
+  $('scrEnd').hidden = true; show('scrBlob');
+  BL = { t:0, g:new Uint8Array(BL_N*BL_N), farms:[], crumbs:new Set(), rf:[], e:[], a:[], pa:[], count:3, ph:'wait', over:false, banner:null,
+    spec:!players.some(p => p.id === me.id), draw:null, img:null, dirty:true, fx:[], tot:BL_IN.reduce((a, b) => a + b, 0) };
+  blHead('Blob'); renderBlPlayers();
+  $('blTime').textContent = '⏱ 4:00'; $('blRf').textContent = 'Renforts 0/' + BL_RF_MAX;
+  $('blHelp').textContent = 'Glissez le doigt depuis votre blob pour tracer où il doit pousser ; tracez jusque dans un autre blob pour l\'attaquer. Touchez votre blob pour y poser un renfort qui durcit avec le temps. Les gros flocons nourrissent tant que vous les couvrez ; une partie coupée de vos flocons dépérit. Le plus grand blob au bout de 4 minutes gagne.';
+  blVeins();
+}
+function blHead(t){ $('blHead').textContent = t; }
+let blToastT = null;
+function blToast(t){ const el = $('blToast'); el.textContent = t; el.classList.add('on'); clearTimeout(blToastT); blToastT = setTimeout(() => el.classList.remove('on'), 2200); }
+const blName = id => { const p = players.find(x => x.id === id); return p ? p.name : '?'; };
+function renderBlPlayers(){
+  const ul = $('blPlayers'); ul.textContent = '';
+  const order = players.map((p, i) => [p, i]).sort((a, b) => (BL.a[b[1]] || 0) - (BL.a[a[1]] || 0));
+  for (const [p, i] of order){
+    const li = document.createElement('li');
+    if (p.left || p.out) li.classList.add('dead');
+    if (p.id === me.id) li.classList.add('me');
+    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color;
+    const t = document.createElement('span'); t.textContent = p.name + ' · ' + Math.round((BL.a[i] || 0)/BL.tot*100) + ' %';
+    li.append(d, t); ul.append(li);
+  }
+}
+function blDecode(s){
+  const g = BL.g; let k = 0;
+  for (const m of s.matchAll(/([a-k])(\d*)/g)){ const v = m[1].charCodeAt(0) - 97, n = m[2] ? +m[2] : 1; g.fill(v, k, k + n); k += n; }
+}
+function blobRecv(m){
+  if (!BL) return;
+  if (m.t === 'bl_round'){
+    BL.farms = m.farms; BL.crumbs = new Set(m.crumbs); BL.ph = 'count'; phase = 'count'; BL.count = 3; lastCountShown = null;
+    blHead('Les blobs se réveillent…');
+  } else if (m.t === 'bl_go'){ BL.ph = 'play'; phase = 'play'; blHead('Poussez !'); }
+  else if (m.t === 'bl_s'){
+    BL.t = m.tt/10; blDecode(m.g); BL.e = m.e; BL.a = m.a; BL.rf = m.rf; BL.pa = m.pa; BL.dirty = true;
+    renderBlPlayers();
+  } else if (m.t === 'bl_ev'){
+    if (m.k === 'eat'){ BL.crumbs.delete(m.c); if (m.a === me.id) sfx('tap'); }
+    else if (m.k === 'rf'){ if (m.a === me.id) sfx('ok'); }
+    else if (m.k === 'out'){ const p = players.find(x => x.id === m.a); if (p) p.out = true; blToast(m.a === me.id ? 'Votre blob a disparu…' : blName(m.a) + ' a disparu de la boîte'); renderBlPlayers(); }
+    else if (m.k === 'left'){ const p = players.find(x => x.id === m.a); if (p) p.left = true; renderBlPlayers(); }
+  } else if (m.t === 'bl_res'){
+    BL.ph = 'res'; phase = 'res';
+    const w = m.win;
+    BL.banner = w === me.id ? { big:'VOTRE BLOB A GAGNÉ !', col:'#3DDC97' } : { big:(w ? blName(w).toUpperCase() : 'PERSONNE') + ' COUVRE LA BOÎTE', col:'#FFD93B' };
+    sfx(w === me.id ? 'win' : 'lose'); blHead('Fin de la culture');
+  }
+}
+// ---- input: a drag draws the path, a tap on my own blob places a reinforcement ----
+const blCellAt = e => { const r = blcv.getBoundingClientRect(), x = (e.clientX - r.left)/r.width*600, y = (e.clientY - r.top)/r.height*600; return [(x - BL_CX + BL_R)/BL_CELL, (y - BL_CY + BL_R)/BL_CELL]; };
+blcv.addEventListener('pointerdown', e => {
+  if (!BL || BL.spec || phase !== 'play') return;
+  e.preventDefault(); try { blcv.setPointerCapture(e.pointerId); } catch(_){}
+  BL.draw = { pts:[blCellAt(e)], moved:0 };
+});
+blcv.addEventListener('pointermove', e => {
+  if (!BL || !BL.draw) return;
+  const c = blCellAt(e), l = BL.draw.pts[BL.draw.pts.length - 1], d = Math.hypot(c[0] - l[0], c[1] - l[1]);
+  if (d >= 2.5){ BL.draw.pts.push(c); BL.draw.moved += d; }
+});
+const blUp = e => {
+  if (!BL || !BL.draw) return;
+  const D = BL.draw; BL.draw = null;
+  const [x, y] = D.pts[0], k = Math.round(y)*BL_N + Math.round(x), mi = players.findIndex(p => p.id === me.id) + 1;
+  if (D.moved < 3){
+    // a tap: on my blob, a reinforcement; elsewhere, grow straight there
+    if (BL.g[k] === mi || BL.g[k] === mi + 5){ toHost({ t:'bl_rf', x:Math.round(x), y:Math.round(y) }); return; }
+    toHost({ t:'bl_path', p:[[Math.round(x*10)/10, Math.round(y*10)/10]] }); BL.myPath = [[x, y]]; return;
+  }
+  // a path drawn from my blob: drop its start while it is still on my blob
+  let pts = D.pts; while (pts.length > 1){ const q = pts[0], j = Math.round(q[1])*BL_N + Math.round(q[0]); if (BL.g[j] === mi) pts = pts.slice(1); else break; }
+  pts = pts.slice(0, 40).map(q => [Math.round(q[0]*10)/10, Math.round(q[1]*10)/10]);
+  toHost({ t:'bl_path', p:pts }); BL.myPath = pts;
+};
+blcv.addEventListener('pointerup', blUp); blcv.addEventListener('pointercancel', () => { if (BL) BL.draw = null; });
+
+// ---- loop and drawing ----
+function blobFrame(dtMs, now){
+  if (!BL) return;
+  const dt = Math.min(.05, dtMs/1000);
+  if (phase === 'count'){ BL.count -= dt; countBeep(BL.count > 0 ? Math.ceil(BL.count) : 0); }
+  if (me.host) blobHostFrame(dt, now);
+  const left = Math.max(0, BL_T - BL.t), i = players.findIndex(p => p.id === me.id);
+  $('blTime').textContent = '⏱ ' + Math.floor(left/60) + ':' + String(Math.floor(left%60)).padStart(2, '0');
+  if (i >= 0){
+    const e = BL.e[i] || 0; $('blE').style.width = e + '%'; $('blE').classList.toggle('low', e < 15);
+    $('blRf').textContent = 'Renforts ' + BL.rf.filter(r => r[2] === i + 1).length + '/' + BL_RF_MAX;
+    $('blPct').textContent = Math.round((BL.a[i] || 0)/BL.tot*100) + ' % de la boîte';
+  }
+  blDraw(blctx, now);
+}
+// a vein texture laid over the blobs: branching lines all over the dish
+let BL_VEINS = null;
+function blVeins(){
+  if (BL_VEINS) return;
+  const c = document.createElement('canvas'); c.width = c.height = 600; const x = c.getContext('2d');
+  x.lineCap = 'round';
+  const branch = (px, py, a, w, n) => {
+    if (w < .6 || n > 9) return;
+    let qx = px, qy = py;
+    x.beginPath(); x.moveTo(px, py);
+    for (let s = 0; s < 6; s++){ a += (Math.random() - .5)*.6; qx += Math.cos(a)*7; qy += Math.sin(a)*7; x.lineTo(qx, qy); }
+    x.lineWidth = w; x.stroke();
+    branch(qx, qy, a + .45 + Math.random()*.3, w*.72, n + 1);
+    branch(qx, qy, a - .45 - Math.random()*.3, w*.72, n + 1);
+  };
+  x.strokeStyle = 'rgba(70,40,0,.42)';
+  for (let k = 0; k < 46; k++){ const a = Math.random()*Math.PI*2, r = Math.random()*BL_R; branch(BL_CX + Math.cos(a)*r, BL_CY + Math.sin(a)*r, Math.random()*Math.PI*2, 3.4, 0); }
+  BL_VEINS = c;
+}
+const blRGB = hex => { const h = hex.replace('#', ''); return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)]; };
+function blDraw(ctx, now){
+  const t = now/1000;
+  ctx.fillStyle = '#1C1C1E'; ctx.fillRect(0, 0, 600, 600);
+  if (blBg.complete && blBg.naturalWidth) ctx.drawImage(blBg, 0, 0, 600, 600);
+  // the blobs: one small picture of the grid, scaled up softly, veins on top
+  if (BL.dirty || !BL.img){
+    BL.dirty = false;
+    const c = BL.img || (BL.img = document.createElement('canvas')); c.width = c.height = BL_N;
+    const x = c.getContext('2d'), im = x.createImageData(BL_N, BL_N), cols = players.map(p => blRGB(p.color || '#FFD21F'));
+    for (let k = 0; k < BL.g.length; k++){
+      const v = BL.g[k]; if (!v) continue;
+      const dying = v > 5, col = cols[(dying ? v - 5 : v) - 1] || [255, 210, 31];
+      im.data[k*4] = col[0]; im.data[k*4 + 1] = col[1]; im.data[k*4 + 2] = col[2]; im.data[k*4 + 3] = dying ? 110 : 235;
+    }
+    x.putImageData(im, 0, 0);
+    const L = BL.layer || (BL.layer = document.createElement('canvas')); L.width = L.height = 600;
+    const l = L.getContext('2d');
+    l.clearRect(0, 0, 600, 600); l.imageSmoothingEnabled = true;
+    l.filter = 'blur(1.6px)'; l.drawImage(c, BL_CX - BL_R, BL_CY - BL_R, BL_R*2, BL_R*2); l.filter = 'none';
+    l.globalCompositeOperation = 'source-atop'; if (BL_VEINS) l.drawImage(BL_VEINS, 0, 0);
+    // a lighter sheen near the top left of every blob
+    const sh = l.createLinearGradient(0, 0, 600, 600); sh.addColorStop(0, 'rgba(255,255,255,.22)'); sh.addColorStop(1, 'rgba(0,0,0,.12)');
+    l.fillStyle = sh; l.fillRect(0, 0, 600, 600); l.globalCompositeOperation = 'source-over';
+  }
+  ctx.save(); ctx.globalAlpha = .9; ctx.drawImage(BL.layer, 0, 0); ctx.restore();
+  const P = (x, y) => [BL_CX - BL_R + (x + .5)*BL_CELL, BL_CY - BL_R + (y + .5)*BL_CELL];
+  // oat flakes and crumbs
+  for (const [fx, fy] of BL.farms){
+    const [x, y] = P(fx, fy);
+    ctx.save(); ctx.translate(x, y); ctx.rotate((fx*7 + fy*3) % 6);
+    ctx.fillStyle = '#E8C98A'; ctx.strokeStyle = 'rgba(90,60,20,.8)'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.ellipse(0, 0, 12, 8, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.strokeStyle = 'rgba(150,110,50,.6)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(-8, -2); ctx.quadraticCurveTo(0, -5, 8, -1); ctx.moveTo(-7, 3); ctx.quadraticCurveTo(0, 0, 7, 3); ctx.stroke();
+    ctx.restore();
+    const v = BL.g[fy*BL_N + fx], o = v > 5 ? v - 5 : v;
+    if (o && players[o - 1]){ ctx.strokeStyle = players[o - 1].color; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(x, y, 15 + Math.sin(t*3)*1.5, 0, Math.PI*2); ctx.stroke(); }
+  }
+  ctx.fillStyle = '#D9B877';
+  for (const k of BL.crumbs){ const [x, y] = P(k % BL_N, Math.floor(k/BL_N)); ctx.beginPath(); ctx.arc(x, y, 2.6, 0, Math.PI*2); ctx.fill(); }
+  // reinforcements: a knot that thickens
+  for (const [rx, ry, o, age] of BL.rf){
+    const [x, y] = P(rx, ry), k = Math.min(1, age/250), p = players[o - 1]; if (!p) continue;
+    ctx.strokeStyle = 'rgba(60,35,0,.7)'; ctx.lineWidth = 2 + k*4; ctx.beginPath(); ctx.arc(x, y, BL_RF_R*BL_CELL*.75, 0, Math.PI*2); ctx.stroke();
+    ctx.fillStyle = p.color; ctx.strokeStyle = '#000'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(x, y, 4 + k*3, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+  }
+  // my path (the one being drawn, then the one the host follows)
+  const mi = players.findIndex(p => p.id === me.id);
+  const line = (pts, col, w) => { if (!pts || !pts.length) return; ctx.strokeStyle = col; ctx.lineWidth = w; ctx.setLineDash([6, 6]); ctx.beginPath(); pts.forEach((q, j) => { const [x, y] = P(q[0], q[1]); if (j) ctx.lineTo(x, y); else ctx.moveTo(x, y); }); ctx.stroke(); ctx.setLineDash([]); const q = pts[pts.length - 1], [ex, ey] = P(q[0], q[1]); ctx.fillStyle = col; ctx.beginPath(); ctx.arc(ex, ey, 4, 0, Math.PI*2); ctx.fill(); };
+  if (BL.draw) line(BL.draw.pts, '#fff', 3);
+  else if (mi >= 0) line(BL.pa[mi], 'rgba(255,255,255,.75)', 2.5);
+  // names on the blobs
+  ctx.font = '900 12px Nunito, sans-serif'; ctx.textAlign = 'center';
+  const sums = players.map(() => [0, 0, 0]);
+  for (let k = 0; k < BL.g.length; k += 2){ const v = BL.g[k]; if (v && v <= 5){ const s = sums[v - 1]; s[0] += k % BL_N; s[1] += Math.floor(k/BL_N); s[2]++; } }
+  players.forEach((p, i) => { const s = sums[i]; if (s[2] < 6) return; const [x, y] = P(s[0]/s[2], s[1]/s[2]); const lb = p.id === me.id ? 'VOUS' : p.name.slice(0, 10); ctx.lineWidth = 3.5; ctx.strokeStyle = 'rgba(0,0,0,.75)'; ctx.fillStyle = '#fff'; ctx.strokeText(lb, x, y); ctx.fillText(lb, x, y); });
+  if (BL.banner){
+    ctx.fillStyle = 'rgba(0,0,0,.6)'; ctx.fillRect(0, 250, 600, 90);
+    ctx.font = '34px Bangers, Impact, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 6; ctx.strokeStyle = '#000'; ctx.fillStyle = BL.banner.col;
+    ctx.strokeText(BL.banner.big, 300, 308); ctx.fillText(BL.banner.big, 300, 308);
+  }
+}
+
 // ================= before each game: the rules in 2-3 slides, then everyone taps "Prêt" =================
 // The creator's "start" opens this briefing for the whole room; the game really starts once every player is ready
 // (or when the creator decides not to wait). "Rejouer" skips it: everybody already knows the game.
@@ -10434,6 +10893,8 @@ const BRIEF = {
     tip:'Ne rien écraser ! Une coupe bâclée envoie l\'arbre n\'importe où, parfois même en arrière. Viser une ouverture étroite, ou tomber au ras d\'un obstacle avec une coupe propre, rapporte un gros bonus.' },
   agility:{ ctl:[['📱', 'Choisissez un chien. Haie, pneu, triple : un tap quand le cercle est vert. Slalom : tracez le zigzag. Tunnel : doigt sur le chien, glissez. Passerelle : restez appuyé, lâchez sur le jaune. Bascule : un tap sur le vert au milieu. Table : un tap puis plus rien. Sprint final : tapez à toute vitesse.'], ['💻', 'Les mêmes gestes à la souris, ou Espace (à marteler pour le sprint).']],
     tip:'Chaque race a 6 étoiles : Vitesse, Saut ou Énergie. Un Whippet file entre les obstacles, un Jack Russell a plus de marge sur les haies, un Corgi va plus vite au sprint et dans les obstacles longs.' },
+  blob:{ ctl:[['📱', 'Glissez le doigt depuis votre blob pour tracer où il doit pousser, jusque dans un autre blob pour l\'attaquer. Touchez votre blob pour poser un renfort.'], ['💻', 'Pareil à la souris : glissez pour tracer, cliquez sur votre blob pour renforcer.']],
+    tip:'Un blob trop grand coûte cher à entretenir. Coupez un adversaire en deux : la moitié privée de flocons dépérit toute seule.' },
   meduse:{ ctl:[['📱', 'Glissez le doigt au-dessus du radeau pour viser, relâchez pour lâcher votre naufragé.'], ['💻', 'Visez à la souris et cliquez, ou ← → puis Espace.']],
     tip:'Couché, un corps tient mieux ; debout, il monte plus haut mais bascule. L\'Argus passe trois fois : soyez au sommet à ce moment-là, ça vaut 5 fois plus.' },
   galop:{ ctl:[['📱', 'Choisissez un cheval. ◀ ▶ pour vous décaler, GALOP pour accélérer (coûte de l\'énergie), RALENTIR pour souffler.'], ['💻', '← → se décaler · ↑ ou Espace galop · ↓ ralentir. Ou cliquez les boutons.']],
@@ -10628,7 +11089,7 @@ function saveGame(ranking, game){
   if (!Array.isArray(ranking) || !ranking.length || lastSaved === ranking) return;
   lastSaved = ranking;
   const h = loadHist();
-  h.unshift({ at:Date.now(), game:['pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber','agility','galop','meduse'].includes(game) ? game : 'tetris', n:ranking.length,
+  h.unshift({ at:Date.now(), game:['pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber','agility','galop','meduse','blob'].includes(game) ? game : 'tetris', n:ranking.length,
     p:ranking.map(r => ({ name:String(r.name).slice(0,14), color:r.color, place:r.place|0, sc:r.sc|0, ln:r.ln|0, sent:r.sent|0, score:r.score|0, sync:r.sync|0, lives:r.lives|0, seats:r.seats|0, catches:r.catches|0, tank:r.tank|0, role:String(r.role || '').slice(0, 8), hits:r.hits|0, pts:r.pts|0, whacks:r.whacks|0, shots:r.shots|0, afloat:r.afloat|0, shapes:r.shapes|0, d:Math.round(r.d||0), t:+r.t||0, me:r.id === me.id })) });
   store.set(HIST_KEY, JSON.stringify(h.slice(0, HIST_MAX)));
 }
@@ -10644,13 +11105,13 @@ function renderBoard(){
     a.games++; if (p.place === 1 && g.n > 1) a.wins++;
     a.pts += Math.max(0, g.n - p.place);                  // 1 point per player finished ahead of
     if (g.game === 'derby' || g.game === 'agility' || g.game === 'galop'){ if (p.t > 0 && (!a.bestT || p.t < a.bestT)) a.bestT = p.t; }
-    else a.best = Math.max(a.best, (g.game === 'pong' || g.game === 'naval') ? p.hits : g.game === 'mole' ? (p.whacks || 0) : g.game === 'curling' ? (p.pts || 0) : g.game === 'chairs' ? (p.seats || 0) : (g.game === 'dodge' || g.game === 'tank') ? (p.hits || 0) : g.game === 'sheep' ? (p.score || 0) : g.game === 'drakkar' ? (p.sync || 0) : (g.game === 'master' || g.game === 'kabaddi' || g.game === 'lumber' || g.game === 'meduse') ? (p.pts || 0) : p.sc);
+    else a.best = Math.max(a.best, (g.game === 'pong' || g.game === 'naval') ? p.hits : g.game === 'mole' ? (p.whacks || 0) : g.game === 'curling' ? (p.pts || 0) : g.game === 'chairs' ? (p.seats || 0) : (g.game === 'dodge' || g.game === 'tank') ? (p.hits || 0) : g.game === 'sheep' ? (p.score || 0) : g.game === 'drakkar' ? (p.sync || 0) : (g.game === 'master' || g.game === 'kabaddi' || g.game === 'lumber' || g.game === 'meduse' || g.game === 'blob') ? (p.pts || 0) : p.sc);
     agg.set(k, a);
   }
   const rows = [...agg.values()].sort((x, y) => y.pts - x.pts || y.wins - x.wins || x.games - y.games);
   const showBest = lbFilter !== 'all';
   const hd = $('lbHead'); hd.textContent = '';
-  for (const t of ['#','Joueur','Parties','Victoires','Points', ...(showBest ? [lbFilter === 'pong' ? 'Arrêts max' : (lbFilter === 'derby' || lbFilter === 'agility' || lbFilter === 'galop') ? 'Meilleur temps' : lbFilter === 'naval' ? 'Touchés max' : lbFilter === 'mole' ? 'Taupes tapées max' : lbFilter === 'curling' ? 'Points max' : lbFilter === 'chairs' ? 'Chaises max' : (lbFilter === 'dodge' || lbFilter === 'tank') ? 'Touches max' : lbFilter === 'sheep' ? 'Record d\'équipe' : lbFilter === 'drakkar' ? 'Synchro max (%)' : (lbFilter === 'master' || lbFilter === 'kabaddi' || lbFilter === 'lumber' || lbFilter === 'meduse') ? 'Points max' : 'Meilleur score'] : [])]){
+  for (const t of ['#','Joueur','Parties','Victoires','Points', ...(showBest ? [lbFilter === 'pong' ? 'Arrêts max' : (lbFilter === 'derby' || lbFilter === 'agility' || lbFilter === 'galop') ? 'Meilleur temps' : lbFilter === 'naval' ? 'Touchés max' : lbFilter === 'mole' ? 'Taupes tapées max' : lbFilter === 'curling' ? 'Points max' : lbFilter === 'chairs' ? 'Chaises max' : (lbFilter === 'dodge' || lbFilter === 'tank') ? 'Touches max' : lbFilter === 'sheep' ? 'Record d\'équipe' : lbFilter === 'drakkar' ? 'Synchro max (%)' : (lbFilter === 'master' || lbFilter === 'kabaddi' || lbFilter === 'lumber' || lbFilter === 'meduse' || lbFilter === 'blob') ? 'Points max' : 'Meilleur score'] : [])]){
     const th = document.createElement('th'); th.textContent = t; hd.append(th);
   }
   const tb = $('lbBody'); tb.textContent = '';
@@ -10712,7 +11173,8 @@ function frame(now){
   if (cur === 'lumber') lumberFrame(dt, now);
   if (cur === 'agility') agilityFrame(dt, now);
   if (cur === 'galop') try { galopFrame(dt, now); } catch(e){ console.error(e); }
-  if (cur === 'meduse') meduseFrame(dt, now);   // one bad frame must not freeze the race
+  if (cur === 'meduse') meduseFrame(dt, now);
+  if (cur === 'blob') blobFrame(dt, now);   // one bad frame must not freeze the race
   if (cur === 'tetris' && G && phase === 'count'){
     G.count -= dt/1000;
     if (G.count <= 0){ phase = 'play'; setMsg('', ''); countBeep(0); }
@@ -10859,11 +11321,11 @@ $('btnQuit').onclick = () => toMenu('');
 function backToLobby(){
   if (me.host){
     if (H) H.over = true;
-    H = null; if (HC) clearTimeout(HC.timer); HC = null; mcClear(); HMC = null; mmClear(); HMM = null; kbClear(); HKB = null; dbClear(); HDB = null; tkClear(); HTK = null; shClear(); HSH = null; dkClear(); HDK = null; ljClear(); HLJ = null; agClear(); HAG = null; gpClear(); HGP = null; mdClear(); HMD = null;
+    H = null; if (HC) clearTimeout(HC.timer); HC = null; mcClear(); HMC = null; mmClear(); HMM = null; kbClear(); HKB = null; dbClear(); HDB = null; tkClear(); HTK = null; shClear(); HSH = null; dkClear(); HDK = null; ljClear(); HLJ = null; agClear(); HAG = null; gpClear(); HGP = null; mdClear(); HMD = null; blClear(); HBL = null;
     players = players.filter(p => p.id === 'h' || net.conns.has(p.id));
     sendLobby(true);                                       // everyone goes back
   } else {
-    phase = 'lobby'; $('scrEnd').hidden = true; G = null; PG = null; D = null; NV = null; ML = null; CU = null; MC = null; MM = null; KB = null; DB = null; TK = null; SHV = null; DK = null; if (LJ){ LJ = null; sawStop(); } AG = null; GP = null; MD = null; cur = null;
+    phase = 'lobby'; $('scrEnd').hidden = true; G = null; PG = null; D = null; NV = null; ML = null; CU = null; MC = null; MM = null; KB = null; DB = null; TK = null; SHV = null; DK = null; if (LJ){ LJ = null; sawStop(); } AG = null; GP = null; MD = null; BL = null; cur = null;
     if (HM) moleClearTimers();
     show('scrLobby'); renderLobby();                      // wait there for the creator
   }
