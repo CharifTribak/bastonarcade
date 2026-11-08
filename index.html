@@ -455,7 +455,7 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .rccar canvas{width:64px;height:auto}
 .rccar span{font-weight:700;font-size:11px}
 .rccar[aria-pressed=true],.rcbon[aria-pressed=true]{background:#FFD21F;transform:translate(3px,3px);box-shadow:none}
-.rcbonus{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;width:100%}
+.rcbonus{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;width:100%}
 .rcbon{display:flex;flex-direction:column;gap:2px;background:#fff;color:#000;font-size:13px;padding:8px 4px}
 .rcbon span{font-size:11px;font-weight:700}
 .rcready{font-size:20px;min-height:56px;width:min(100%,420px);background:#3DDC97;color:#000}
@@ -1474,7 +1474,7 @@ const GAME_DESC = {
   meduse:'Le radeau de la Méduse, en version bande dessinée : la pyramide de corps du tableau, c\'est vous qui la construisez. Pendant deux minutes, chacun lâche ses naufragés sur le radeau quand il veut, un toutes les trois secondes. Le corps suspendu se balance de debout à couché : à vous de choisir le moment. Les corps glissent, le radeau tangue, certains tombent à l\'eau et disparaissent. Votre naufragé le plus haut, une fois posé, marque des points tant qu\'il reste au sommet ; trois fois, l\'Argus passe à l\'horizon et le sommet vaut alors cinq fois plus. Lâcher un corps sur la tête du leader pour le déloger fait partie du jeu. Des robots complètent seul ou à deux.',
   derby:'Course de chevaux : tout le monde reçoit la même série de figures à tracer. Chaque figure réussie fait avancer votre cheval, plus loin si elle est complexe et bien tracée. Le premier à la ligne gagne.',
   blob:'Le blob, ce drôle d\'organisme qui se réveille dans une boîte de Petri : chaque joueur en a un, dans la même boîte. Tracez du doigt un chemin depuis votre blob, il pousse le long du tracé en dépensant son énergie. Tracez jusque dans un autre blob et vous l\'envahissez, plus cher, d\'autant plus qu\'il a d\'énergie. Votre énergie revient doucement, d\'autant moins que votre blob est grand, et plus du tout passé la moitié de la boîte : il faut alors tenir des gros flocons d\'avoine, qui l\'accélèrent tant que vous les couvrez. Le laborantin en ajoute de temps en temps, n\'importe où. Les miettes se mangent d\'un coup. Tout morceau coupé de la partie qui porte le visage de votre blob dépérit. Touchez votre blob pour y poser un renfort qui durcit avec le temps. Au bout de 3 minutes, le plus grand blob gagne. Des robots complètent seul ou à deux.',
-  racer:'Une course de voitures vue du dessus, entre Mario Kart et course auto. Choisissez l\'une des 5 voitures, toutes armées d\'un pare-chocs de combat à l\'avant, et ajoutez un bonus : turbo, aérodynamisme ou pneus qui collent. Pilotez avec un volant à glisser qui revient au centre : trop vite dans un virage, les pneus crissent et la voiture glisse vers l\'extérieur. Accélérer brûle l\'essence, qui revient doucement, bien plus vite dans les deux stands à côté de la piste. Frapper vers l\'avant prend une courte charge visible : celui qui ne l\'esquive pas perd 20 % de sa vitesse et 15 % de son essence, puis clignote 3 s, le temps que les autres lui passent à travers. Deux tours sur l\'un des 5 circuits, à 5 voitures, des robots complètent.'
+  racer:'Une course de voitures vue du dessus, entre Mario Kart et course auto. Choisissez l\'une des 5 voitures, toutes armées d\'un pare-chocs de combat à l\'avant, et ajoutez un bonus : turbo, aérodynamisme, pneus qui collent ou super coup de latte. Pilotez avec un volant à glisser qui revient au centre : trop vite dans un virage, les pneus crissent et la voiture glisse vers l\'extérieur. Accélérer brûle l\'essence, qui revient doucement, bien plus vite dans les deux stands à côté de la piste. Frapper vers l\'avant prend une courte charge visible : celui qui ne l\'esquive pas perd 20 % de sa vitesse et 15 % de son essence, puis clignote 3 s, le temps que les autres lui passent à travers. Deux tours sur l\'un des 5 circuits, à 5 voitures, des robots complètent.'
 };
 
 const cleanName = s => String(s || '').replace(/[\u0000-\u001f<>]/g,'').trim().slice(0,14) || (LANG === 'en' ? 'Player' : 'Joueur');
@@ -11091,7 +11091,7 @@ const RC_CARS = [
 ];
 const RC_SIDES = { f:'à l\'avant', b:'à l\'arrière', l:'à gauche', r:'à droite' };
 const RC_ARROW = { f:'⬆', b:'⬇', l:'⬅', r:'➡' };
-const RC_BONUS = { turbo:{ ic:'🚀', n:'Turbo nitro', d:'Accélération +12 %' }, aero:{ ic:'✈️', n:'Aéro chasseur', d:'Vitesse de pointe +5 %' }, gum:{ ic:'🍬', n:'Pneus chewing-gum', d:'Adhérence +12 %' } };
+const RC_BONUS = { turbo:{ ic:'🚀', n:'Turbo nitro', d:'Accélération +12 %' }, aero:{ ic:'✈️', n:'Aéro chasseur', d:'Vitesse de pointe +5 %' }, gum:{ ic:'🍬', n:'Pneus chewing-gum', d:'Adhérence +12 %' }, latte:{ ic:'🦵', n:'Super coup de latte', d:'Vos frappes : −10 % de vitesse en plus' } };
 const RC_LAPS = 2, RC_CRUISE = 290, RC_VMAX = 400, RC_ACC = 150, RC_BOOST_ACC = 210, RC_BRAKE = 420, RC_GRIP = 560, RC_TURN = 1.9;
 const RC_FUEL_BURN = 13, RC_FUEL_REGEN = 2.2, RC_FUEL_PIT = 32, RC_PIT_V = 230, RC_OFF_V = 150, RC_PIT_W = 95, RC_R = 16;
 const RC_WIND = .4, RC_CD = 3, RC_GHOST = 3, RC_PICK_T = 25, RC_TMAX = 240;
@@ -11117,7 +11117,7 @@ function racerHostStart(){
   H.n = players.length;
   for (const p of players) H.stats[p.id] = { pts:0, time:0, lap:0, best:0, hits:0, hit:0, pits:0, done:false, left:false };
   HRC = { timers:[], ph:'pick', t:0, ti:Math.floor(Math.random()*RC_TRACKS.length), pick:{}, cars:{}, lastSend:0, bot:{}, order:[], first:0 };
-  for (const p of players) HRC.pick[p.id] = p.bot ? { car:Math.floor(Math.random()*5), bonus:['turbo', 'aero', 'gum'][Math.floor(Math.random()*3)], ready:true } : { car:players.indexOf(p) % 5, bonus:'turbo', ready:false };
+  for (const p of players) HRC.pick[p.id] = p.bot ? { car:Math.floor(Math.random()*5), bonus:['turbo', 'aero', 'gum', 'latte'][Math.floor(Math.random()*4)], ready:true } : { car:players.indexOf(p) % 5, bonus:'turbo', ready:false };
   broadcast({ t:'start', players, game:'racer' });
   rcLater(() => broadcast({ t:'rc_pick', ti:HRC.ti, left:RC_PICK_T, pick:HRC.pick }), 300);
   rcLater(rcGrid, RC_PICK_T*1000 + 600);
@@ -11219,9 +11219,10 @@ function rcStrike(id, c){
     if (p.id === id) continue;
     const o = HRC.cars[p.id]; if (!o || o.done) continue;
     if (o.ghost > 0 || !rcInReach(c, o)) continue;
-    o.ghost = RC_GHOST; o.v *= Z.v; o.fuel = Math.max(0, o.fuel - Z.fu); o.slip += Z.push;
+    const big = c.bonus === 'latte';
+    o.ghost = RC_GHOST; o.v *= Z.v - (big ? .1 : 0); o.fuel = Math.max(0, o.fuel - Z.fu); o.slip += Z.push;
     H.stats[id].hits++; H.stats[p.id].hit++; any = true;
-    broadcast({ t:'rc_ev', k:'hit', a:id, b:p.id, x:Math.round(o.x), y:Math.round(o.y) });
+    broadcast({ t:'rc_ev', k:'hit', a:id, b:p.id, x:Math.round(o.x), y:Math.round(o.y), s:big ? 1 : 0 });
   }
   if (!any) broadcast({ t:'rc_ev', k:'miss', a:id });
 }
@@ -11275,33 +11276,57 @@ function racerDrop(id){
   if (!players.some(p => !p.bot && rcIn(p.id))) return rcFinish();
   if (HRC && HRC.ph === 'pick' && players.every(p => !rcIn(p.id) || HRC.pick[p.id].ready)) rcLater(rcGrid, 500);
 }
-// robots: aim at a point further down the track (on their lane), slow down before tight corners, use the pedal on
-// straights while fuel lasts, go through a pit lane when fuel runs low, strike whoever sits in their zone
+// robots: plan the speed from the bends ahead (brake early enough, pedal when the next stretch allows it), keep to the
+// inside of the coming bend, pull out to pass the car in front, refuel in a pit lane when the tank runs low, and strike
+// whoever stays in their zone for a reaction time
+function rcBend(T, k){ const N = T.N, a = T.tan[(k - 2 + N) % N], b = T.tan[(k + 2) % N]; let d = Math.atan2(b[1], b[0]) - Math.atan2(a[1], a[0]); while (d > Math.PI) d -= 2*Math.PI; while (d < -Math.PI) d += 2*Math.PI; return d/(4*RC_STEP); }
 function rcBots(dt){
   const T = HRC.T, N = T.N;
   for (const p of players){
     if (!p.bot) continue;
     const c = HRC.cars[p.id]; if (!c || c.done) continue;
-    const B = HRC.bot[p.id] || (HRC.bot[p.id] = { lane:(Math.random() - .5)*70, t:0, skill:.85 + Math.random()*.15 });
-    B.t -= dt; if (B.t <= 0){ B.t = 2 + Math.random()*3; B.lane = (Math.random() - .5)*80; }
-    // pit lane wanted?
-    let lane = B.lane;
-    const pitNear = T.pits.find(q => { const d = (q.a - c.idx + N) % N; return d < 45 || ((c.idx - q.a + N) % N) < 32; });
-    if (c.fuel < 35 && pitNear) lane = pitNear.side*(RC_W/2 + RC_PIT_W/2);
-    const look = Math.round((140 + c.v*.45)/RC_STEP), k = (c.idx + look) % N, q = T.pts[k], tg = T.tan[k];
-    const tx = q[0] - tg[1]*lane, ty = q[1] + tg[0]*lane;
-    let d = Math.atan2(ty - c.y, tx - c.x) - c.h; while (d > Math.PI) d -= 2*Math.PI; while (d < -Math.PI) d += 2*Math.PI;
-    c.steer = Math.max(-1, Math.min(1, d*2.6));
-    // how much the track turns in the next stretch
-    const a0 = Math.atan2(T.tan[c.idx][1], T.tan[c.idx][0]), k2 = (c.idx + Math.round((200 + c.v*.9)/RC_STEP)) % N, a1 = Math.atan2(T.tan[k2][1], T.tan[k2][0]);
-    let turn = Math.abs(a1 - a0); if (turn > Math.PI) turn = 2*Math.PI - turn;
-    const safe = Math.sqrt(RC_GRIP*B.skill*(120 + 900/(turn + .3))) ;
-    c.brake = c.v > safe*1.05 && c.v > 140;
-    c.gas = !c.brake && turn < .5 && c.fuel > 20 && !(pitNear && c.fuel < 35);
-    // strike if someone is in the zone (with some hesitation)
-    if (c.cd <= 0 && Math.random() < .025){
-      if (players.some(o => o.id !== p.id && HRC.cars[o.id] && !(HRC.cars[o.id].ghost > 0) && rcInReach(c, HRC.cars[o.id]))) racerHit(p.id);
+    const B = HRC.bot[p.id] || (HRC.bot[p.id] = { skill:.86 + Math.random()*.12, lane:0, seen:0, react:.18 + Math.random()*.25, pitGo:false });
+    const grip = RC_GRIP*(c.bonus === 'gum' ? 1.12 : 1)*B.skill;
+    // the slowest speed the bends ahead allow, and the speed I may carry now to get there with the brake
+    const reachD = c.v*c.v/(2*RC_BRAKE*.75) + 120;
+    let vNow = 1e9, bendSum = 0;
+    for (let s = 1, dist = 0; dist < reachD + 200; s++, dist += RC_STEP){
+      const kap = Math.abs(rcBend(T, (c.idx + s) % N)) + 1e-5;
+      if (dist < 260) bendSum += rcBend(T, (c.idx + s) % N)*(1 - dist/260);
+      const vb = Math.min(Math.sqrt(grip/kap), RC_TURN*.92/kap);
+      vNow = Math.min(vNow, Math.sqrt(vb*vb + 2*RC_BRAKE*.75*Math.max(0, dist - 40)));
     }
+    // fuel: decide once, near a pit lane, whether to go in
+    const pitNear = T.pits.find(q => { const d = (q.a - c.idx + N) % N; return d < 40 || ((c.idx - q.a + N) % N) < 32; });
+    if (!pitNear) B.pitGo = false; else if (((pitNear.a - c.idx + N) % N) < 40 && ((pitNear.a - c.idx + N) % N) > 2) B.pitGo = c.fuel < 45;
+    // lane: the inside of the coming bend, then out to pass whoever is just ahead
+    let lane = Math.max(-1, Math.min(1, bendSum*60))*52;
+    const fx = Math.cos(c.h), fy = Math.sin(c.h), at = rcTrack(c);
+    let block = null, target = null;
+    for (const o of players){
+      if (o.id === p.id) continue; const q = HRC.cars[o.id]; if (!q || q.done) continue;
+      const dx = q.x - c.x, dy = q.y - c.y, fwd = dx*fx + dy*fy, side = -dx*fy + dy*fx;
+      if (fwd > 0 && fwd < 130 && Math.abs(side) < 36 && !(q.ghost > 0) && (!block || fwd < block.fwd)) block = { fwd, q };
+      if (!(q.ghost > 0) && fwd > 20 && fwd < 170 && Math.abs(side) < 60) target = q;
+    }
+    if (block){ const ol = rcTrack(block.q).lat; lane = ol > at.lat ? Math.max(-62, ol - 46) : Math.min(62, ol + 46); }
+    // a loaded strike and someone just ahead: go for them
+    if (target && c.cd <= 0 && !B.pitGo){ const tl = rcTrack(target).lat; lane = lane*.4 + Math.max(-62, Math.min(62, tl))*.6; }
+    B.lane += (lane - B.lane)*Math.min(1, dt*4);
+    const look = Math.round((90 + c.v*.35)/RC_STEP), k = (c.idx + look) % N, q = T.pts[k], tg = T.tan[k];
+    // the pit lane: aim into it only where the aim point is past its entry ramp and before its exit ramp
+    let aim = B.lane;
+    if (B.pitGo && pitNear){ const into = (k - pitNear.a + N) % N; if (into >= 3 && into <= 27) aim = B.lane = pitNear.side*(RC_W/2 + RC_PIT_W/2 - 4); }
+    const tx = q[0] - tg[1]*aim, ty = q[1] + tg[0]*aim;
+    let d = Math.atan2(ty - c.y, tx - c.x) - c.h; while (d > Math.PI) d -= 2*Math.PI; while (d < -Math.PI) d += 2*Math.PI;
+    c.steer = Math.max(-1, Math.min(1, d*3 - c.slip*.004));
+    const vmax = RC_VMAX*(c.bonus === 'aero' ? 1.05 : 1);
+    c.brake = c.v > vNow + 6 && c.v > 140;
+    c.gas = !c.brake && c.fuel > 8 && vNow > Math.min(vmax, c.v + 40) && !(B.pitGo && c.fuel < 30) && !c.pit && !c.off;
+    // strike once someone has stayed in the zone for my reaction time
+    const inZ = c.cd <= 0 && players.some(o => o.id !== p.id && HRC.cars[o.id] && !HRC.cars[o.id].done && !(HRC.cars[o.id].ghost > 0) && rcInReach(c, HRC.cars[o.id]));
+    B.seen = inZ ? B.seen + dt : 0;
+    if (B.seen > B.react){ B.seen = 0; B.react = .18 + Math.random()*.25; racerHit(p.id); }
   }
 }
 
@@ -11375,9 +11400,12 @@ function racerRecv(m){
     const ai = players.findIndex(p => p.id === m.a);
     if (m.k === 'wind'){ const o = RC.cars[ai]; if (o) o.windAt = performance.now(); if (m.a === me.id) sfx('tap'); }
     else if (m.k === 'hit'){
-      RC.fx.push({ x:m.x, y:m.y, t:performance.now() });
-      if (m.b === me.id){ RC.shake = 10; sfx('thud'); rcToast(rcName(m.a) + ' vous a percuté ! −20 % de vitesse, −15 % d\'essence'); }
-      else if (m.a === me.id){ sfx('ok'); boom('BAM !', { size:26, x:.5, y:.35, pal:BOOM_COLORS[0], ms:600 }); }
+      const L = RC.looks[ai] ? RC_CARS[RC.looks[ai][0]].look : 'coupe', X = RC_HITFX[L] || RC_HITFX.coupe, mc = RC.cars[rcMe()];
+      RC.fx.push({ x:m.x, y:m.y, t:performance.now(), look:L, big:!!m.s, seed:Math.random()*6 });
+      // heard by the two cars involved and by anyone close enough to see it
+      if (SND.on && (m.a === me.id || m.b === me.id || (mc && Math.hypot(mc.x - m.x, mc.y - m.y) < 450))) try { X.s(); } catch(_){}
+      if (m.b === me.id){ RC.shake = m.s ? 16 : 10; sfx('thud'); rcToast(rcName(m.a) + ' vous a percuté ! −' + (m.s ? 30 : 20) + ' % de vitesse, −15 % d\'essence'); }
+      else if (m.a === me.id){ boom(X.w, { size:m.s ? 32 : 26, x:.5, y:.35, pal:BOOM_COLORS[0], ms:600 }); }
     } else if (m.k === 'miss'){ if (m.a === me.id) rcToast('Raté !'); }
     else if (m.k === 'lap'){ if (m.a === me.id){ rcToast('Dernier tour !'); sfx('myturn'); } }
     else if (m.k === 'fin'){ if (m.a === me.id){ boom('ARRIVÉE ! ' + m.place + (m.place === 1 ? 'er' : 'e'), { size:30, x:.5, y:.3, pal:BOOM_COLORS[1], ms:1400 }); sfx(m.place === 1 ? 'win' : 'ok'); } else if (m.place === 1) rcToast(rcName(m.a) + ' franchit la ligne en tête !'); }
@@ -11413,38 +11441,73 @@ addEventListener('keydown', e => {
 });
 addEventListener('keyup', e => { if (cur !== 'racer' || !RC) return; RC.keys[e.key.toLowerCase()] = false; });
 
-// ---- engine sound: two detuned oscillators through a low-pass filter; pitch follows speed, the pedal opens it up ----
+// ---- engine sound: two detuned oscillators through a low-pass filter; pitch follows speed, the pedal opens it up.
+// My car is heard fully; the two nearest cars on screen softer, panned to their side. Each voice dies when not fed.
 const RC_ENGINE = { formula:{ w:'sawtooth', f:70, d:1.5 }, beetle:{ w:'square', f:38, d:1.02 }, pickup:{ w:'sawtooth', f:34, d:.5 }, coupe:{ w:'sawtooth', f:52, d:1.01 }, van:{ w:'triangle', f:30, d:.5 } };
-function rcEngine(look, v, gas, on){
-  const c = on && SND.on ? sndCtx() : null;
-  if (!c){ rcEngineStop(); return; }
-  let E = RC.eng;
+const RCV = {};
+function rcVoiceKill(key){
+  const E = RCV[key]; if (!E) return;
+  try { E.g.gain.setTargetAtTime(0, E.c.currentTime, .05); E.o1.stop(E.c.currentTime + .3); E.o2.stop(E.c.currentTime + .3); } catch(_){}
+  delete RCV[key];
+}
+function rcVoice(key, look, v, gas, vol, pan){
+  const c = SND.on ? sndCtx() : null;
+  if (!c){ rcVoiceKill(key); return; }
+  let E = RCV[key];
   if (!E || E.look !== look){
-    rcEngineStop();
+    rcVoiceKill(key);
     const V = RC_ENGINE[look] || RC_ENGINE.coupe, o1 = c.createOscillator(), o2 = c.createOscillator(), f = c.createBiquadFilter(), g = c.createGain();
     o1.type = V.w; o2.type = 'square'; f.type = 'lowpass'; f.Q.value = 4; g.gain.value = 0;
-    o1.connect(f); o2.connect(f); f.connect(g).connect(c.destination); o1.start(); o2.start();
-    E = RC.eng = { look, o1, o2, f, g, V, c, at:performance.now() };
-    rcEngine.watch = rcEngine.watch || setInterval(() => { if (RC && RC.eng && performance.now() - RC.eng.at > 400) rcEngineStop(); if (!RC && rcEngine.last) { try { rcEngine.last.g.gain.value = 0; rcEngine.last.o1.stop(); rcEngine.last.o2.stop(); } catch(_){} rcEngine.last = null; } }, 500);
-    rcEngine.last = E;
+    o1.connect(f); o2.connect(f); f.connect(g);
+    const P = c.createStereoPanner ? c.createStereoPanner() : null;
+    if (P){ g.connect(P).connect(c.destination); } else g.connect(c.destination);
+    o1.start(); o2.start();
+    E = RCV[key] = { look, o1, o2, f, g, P, V, c, at:0 };
   }
-  E.at = performance.now();
-  const k = Math.max(0, Math.min(1.2, v/RC_VMAX)), t = c.currentTime, fr = E.V.f*(.7 + k*1.6)*(gas ? 1.08 : 1);
+  const now = performance.now(); E.at = now;
+  // standing still, the engine idles with a slight lope
+  const k = Math.max(0, Math.min(1.2, v/RC_VMAX)), t = c.currentTime, lope = v < 30 ? 1 + .05*Math.sin(now/90) : 1, fr = E.V.f*(.7 + k*1.6)*(gas ? 1.08 : 1)*lope;
   E.o1.frequency.setTargetAtTime(fr, t, .06); E.o2.frequency.setTargetAtTime(fr*E.V.d + (gas ? 3 : 0), t, .06);
   E.f.frequency.setTargetAtTime(gas ? 1800 + k*1400 : 500 + k*500, t, .08);
-  E.g.gain.setTargetAtTime(gas ? .07 : .035, t, .08);
+  E.g.gain.setTargetAtTime((gas ? .07 : .035)*vol, t, .08);
+  if (E.P) E.P.pan.setTargetAtTime(Math.max(-1, Math.min(1, pan || 0)), t, .08);
 }
-function rcEngineStop(){
-  const E = RC && RC.eng; if (!E) return;
-  try { E.g.gain.setTargetAtTime(0, E.c.currentTime, .05); E.o1.stop(E.c.currentTime + .3); E.o2.stop(E.c.currentTime + .3); } catch(_){}
-  RC.eng = null; rcEngine.last = null;
+function rcEngineStop(){ for (const k of Object.keys(RCV)) rcVoiceKill(k); }
+setInterval(() => { const n = performance.now(); for (const k of Object.keys(RCV)) if (n - RCV[k].at > 300) rcVoiceKill(k); }, 250);
+// all the engines of a frame: mine, then the two nearest others within sight
+function rcEngines(i){
+  const on = (RC.ph === 'play' || RC.ph === 'count'), mc = RC.cars[i], fed = {};
+  if (on && mc && RC.looks[i] && !(mc.f & 64)){ rcVoice('me', RC_CARS[RC.looks[i][0]].look, mc.v, !!(mc.f & 1), 1, 0); fed.me = 1; }
+  const ref = mc || RC.cars.find(Boolean);
+  if (on && ref){
+    const near = [];
+    RC.cars.forEach((o, j) => { if (!o || j === i || !RC.looks[j] || (o.f & 64)) return; const d = Math.hypot(o.x - ref.x, o.y - ref.y); if (d < 380) near.push([d, j, o]); });
+    near.sort((a, b) => a[0] - b[0]);
+    for (const [d, j, o] of near.slice(0, 2)){
+      // which side of my screen it is on: across my heading
+      const side = (-(o.x - ref.x)*Math.sin(ref.h) + (o.y - ref.y)*Math.cos(ref.h))/200;
+      rcVoice('o' + j, RC_CARS[RC.looks[j][0]].look, o.v, !!(o.f & 1), .55*(1 - d/380), side); fed['o' + j] = 1;
+    }
+  }
+  for (const k of Object.keys(RCV)) if (k !== 'pick' && !fed[k]) rcVoiceKill(k);
 }
+// ---- what a strike looks and sounds like, by the car that throws it ----
+const RC_HITFX = {
+  formula:{ w:'ZAP !',   s:() => { tone(1800, .18, 'square', .07, 300); tone(2600, .12, 'sawtooth', .05, 700, .03); } },
+  beetle: { w:'POUET !', s:() => { tone(440, .12, 'square', .08); tone(554, .2, 'square', .08, null, .12); } },
+  pickup: { w:'BOUM !',  s:() => { noise(.35, .25, 900, 120); tone(70, .3, 'sine', .2, 40); } },
+  coupe:  { w:'BAM !',   s:() => { tone(900, .1, 'triangle', .1, 1500); noise(.15, .15, 4000, 1500); } },
+  van:    { w:'PAF !',   s:() => { tone(55, .4, 'sawtooth', .14, 30); noise(.4, .2, 600, 100); } }
+};
 // ---- loop ----
 function racerFrame(dtMs, now){
   if (!RC) return;
   const dt = Math.min(.05, dtMs/1000);
   if (RC.ph === 'pick'){
-    const left = Math.max(0, (RC.until - now)/1000); $('rcPickTime').textContent = '⏱ ' + Math.ceil(left); return;
+    const left = Math.max(0, (RC.until - now)/1000); $('rcPickTime').textContent = '⏱ ' + Math.ceil(left);
+    // the chosen car idles while you choose
+    const P = RC.pick[me.id]; if (P && !RC.spec) rcVoice('pick', RC_CARS[P.car].look, 0, false, .9, 0);
+    return;
   }
   if (phase === 'count'){ RC.count -= dt; countBeep(RC.count > 0 ? Math.min(3, Math.ceil(RC.count)) : 0); }
   // keys steer too; the slider springs back when let go
@@ -11470,7 +11533,7 @@ function racerFrame(dtMs, now){
     $('rcSpd').textContent = Math.round(mc.v*.6) + ' km/h';
     $('rcHit').disabled = mc.cd > 0 || RC.ph !== 'play'; $('rcHit').textContent = mc.cd > 0 ? '💥 ' + Math.ceil(mc.cd) : '💥 FRAPPER';
   }
-  if (mc && RC.looks[i]) rcEngine(RC_CARS[RC.looks[i][0]].look, mc.v, !!(mc.f & 1), (RC.ph === 'play' || RC.ph === 'count') && !(mc.f & 64));
+  rcVoiceKill('pick'); rcEngines(i);
   if (RC.T) rcDraw(rcctx, now, dt);
 }
 // race order: laps, then distance along the track
@@ -11492,17 +11555,14 @@ function rcDraw(ctx, now, dt){
   const gx = Math.floor(me0.x/160)*160, gy = Math.floor(me0.y/160)*160;
   for (let a = -6; a <= 6; a++) for (let b = -6; b <= 6; b++) if ((a + b + Math.floor(me0.x/160) + Math.floor(me0.y/160)) % 2 === 0) ctx.fillRect(gx + a*160, gy + b*160, 160, 160);
   // the track: kerbs, asphalt with white edges, a dashed middle line
-  if (!RC.path){ const p = new Path2D(); T.pts.forEach((q, k) => k ? p.lineTo(q[0], q[1]) : p.moveTo(q[0], q[1])); p.closePath(); RC.path = p; RC.pitPaths = T.pits.map(pt => rcPitPath(T, pt)); }
+  if (!RC.path){ const p = new Path2D(); T.pts.forEach((q, k) => k ? p.lineTo(q[0], q[1]) : p.moveTo(q[0], q[1])); p.closePath(); RC.path = p; RC.pitPaths = T.pits.map(pt => rcPitPath(T, pt)); RC.cans = T.pits.map((pt, k) => rcCans(T, pt, RC.pitPaths[k])); }
   ctx.lineJoin = 'round'; ctx.lineCap = 'round';
   ctx.strokeStyle = '#fff'; ctx.lineWidth = RC_W + 18; ctx.stroke(RC.path);
   ctx.strokeStyle = '#D7262B'; ctx.setLineDash([40, 40]); ctx.stroke(RC.path); ctx.setLineDash([]);
   // pit lanes, beside the track, with jerrycans painted on them
   for (const [k, pt] of T.pits.entries()){
     ctx.fillStyle = '#9AA0A6'; ctx.strokeStyle = '#fff'; ctx.lineWidth = 4; ctx.fill(RC.pitPaths[k]); ctx.stroke(RC.pitPaths[k]);
-    for (let s = 3; s < 32; s += 7){
-      const kk = (pt.a + s) % T.N, q = T.pts[kk], tg = T.tan[kk], off = pt.side*(RC_W/2 + RC_PIT_W/2 + 4);
-      ctx.save(); ctx.translate(q[0] - tg[1]*off, q[1] + tg[0]*off); ctx.rotate(Math.atan2(tg[1], tg[0]) + Math.PI/2); rcCan(ctx); ctx.restore();
-    }
+    for (const cn of RC.cans[k]){ ctx.save(); ctx.translate(cn[0], cn[1]); ctx.rotate(cn[2]); rcCan(ctx); ctx.restore(); }
   }
   ctx.strokeStyle = '#fff'; ctx.lineWidth = RC_W; ctx.stroke(RC.path);
   ctx.strokeStyle = '#4E5257'; ctx.lineWidth = RC_W - 8; ctx.stroke(RC.path);
@@ -11534,9 +11594,9 @@ function rcDraw(ctx, now, dt){
     // names above the others
     if (p && j !== i){ ctx.save(); ctx.translate(o.x, o.y); ctx.rotate(me0.h + Math.PI/2); ctx.font = '900 13px Nunito, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 3.5; ctx.strokeStyle = '#000'; ctx.fillStyle = '#fff'; ctx.strokeText(p.name.slice(0, 10), 0, -36); ctx.fillText(p.name.slice(0, 10), 0, -36); ctx.restore(); }
   });
-  // hits: a star burst
-  RC.fx = RC.fx.filter(q => nt - q.t < 500);
-  for (const q of RC.fx){ const k = (nt - q.t)/500; ctx.save(); ctx.translate(q.x, q.y); ctx.rotate(k); ctx.fillStyle = 'rgba(255,217,59,' + (1 - k) + ')'; ctx.strokeStyle = 'rgba(0,0,0,' + (1 - k) + ')'; ctx.lineWidth = 3; ctx.beginPath(); for (let a = 0; a < 16; a++){ const r = (a % 2 ? 14 : 34)*(.6 + k); ctx.lineTo(Math.cos(a*Math.PI/8)*r, Math.sin(a*Math.PI/8)*r); } ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.restore(); }
+  // hits: each car its own burst, with the word written upright on my screen
+  RC.fx = RC.fx.filter(q => nt - q.t < 700);
+  for (const q of RC.fx) rcHitFx(ctx, q, (nt - q.t)/700, me0.h);
   ctx.restore();
   // minimap, top right
   rcMini(ctx, W - 118, 8, 110);
@@ -11552,12 +11612,55 @@ function rcDraw(ctx, now, dt){
     ctx.strokeText(RC.banner.big, W/2, 340); ctx.fillText(RC.banner.big, W/2, 340);
   }
 }
+function rcHitFx(ctx, q, k, camH){
+  const a = 1 - k, sz = q.big ? 1.35 : 1;
+  ctx.save(); ctx.translate(q.x, q.y); ctx.scale(sz, sz);
+  ctx.lineJoin = 'round';
+  if (q.look === 'formula'){
+    // lightning: jagged blue-white bolts
+    ctx.strokeStyle = 'rgba(120,200,255,' + a + ')'; ctx.lineWidth = 4;
+    for (let b = 0; b < 6; b++){ const an = q.seed + b*Math.PI/3; ctx.beginPath(); ctx.moveTo(0, 0); for (let r = 8; r <= 46*(.5 + k); r += 9){ const j = (b*7 + r) % 3 - 1; ctx.lineTo(Math.cos(an + j*.25)*r, Math.sin(an + j*.25)*r); } ctx.stroke(); }
+    ctx.fillStyle = 'rgba(255,255,255,' + a + ')'; ctx.beginPath(); ctx.arc(0, 0, 10*(1 - k*.5), 0, Math.PI*2); ctx.fill();
+  } else if (q.look === 'beetle'){
+    // a shower of pink and yellow confetti
+    for (let b = 0; b < 14; b++){ const an = q.seed + b*.45, r = 10 + 44*k + (b % 3)*6; ctx.fillStyle = (b % 2 ? 'rgba(255,120,190,' : 'rgba(255,217,59,') + a + ')'; ctx.save(); ctx.translate(Math.cos(an)*r, Math.sin(an)*r); ctx.rotate(an + k*6); ctx.fillRect(-4, -2.5, 8, 5); ctx.restore(); }
+  } else if (q.look === 'pickup'){
+    // clods of earth and straw thrown out
+    for (let b = 0; b < 10; b++){ const an = q.seed + b*.63, r = 8 + 40*k + (b % 2)*8; ctx.fillStyle = (b % 2 ? 'rgba(122,82,48,' : 'rgba(226,190,90,') + a + ')'; ctx.beginPath(); ctx.arc(Math.cos(an)*r, Math.sin(an)*r, b % 2 ? 6 : 4, 0, Math.PI*2); ctx.fill(); }
+    ctx.strokeStyle = 'rgba(0,0,0,' + a*.6 + ')'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(0, 0, 14 + 40*k, 0, Math.PI*2); ctx.stroke();
+  } else if (q.look === 'van'){
+    // a big grey cloud
+    for (let b = 0; b < 7; b++){ const an = q.seed + b*.9, r = 12 + 22*k; ctx.fillStyle = 'rgba(150,150,150,' + a*.7 + ')'; ctx.beginPath(); ctx.arc(Math.cos(an)*r, Math.sin(an)*r, 14 + 12*k, 0, Math.PI*2); ctx.fill(); }
+  } else {
+    // the classic star
+    ctx.rotate(k); ctx.fillStyle = 'rgba(255,217,59,' + a + ')'; ctx.strokeStyle = 'rgba(0,0,0,' + a + ')'; ctx.lineWidth = 3; ctx.beginPath();
+    for (let b = 0; b < 16; b++){ const r = (b % 2 ? 14 : 34)*(.6 + k); ctx.lineTo(Math.cos(b*Math.PI/8)*r, Math.sin(b*Math.PI/8)*r); } ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.rotate(-k);
+  }
+  // the word, upright for me
+  ctx.rotate(camH + Math.PI/2); ctx.globalAlpha = a; ctx.font = '22px Bangers, Impact, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 4; ctx.strokeStyle = '#000'; ctx.fillStyle = '#fff';
+  const w = (RC_HITFX[q.look] || RC_HITFX.coupe).w; ctx.strokeText(w, 0, -30 - 16*k); ctx.fillText(w, 0, -30 - 16*k);
+  ctx.restore();
+}
 function rcPitPath(T, pt){
   const p = new Path2D(), N = T.N, n = (pt.b - pt.a + N) % N, side = pt.side;
   const at = (k, off) => { const q = T.pts[k % N], tg = T.tan[k % N]; return [q[0] - tg[1]*off*side, q[1] + tg[0]*off*side]; };
   for (let s = 0; s <= n; s++){ const [x, y] = at(pt.a + s, RC_W/2 + (s < 4 ? s/4 : s > n - 4 ? (n - s)/4 : 1)*RC_PIT_W); s ? p.lineTo(x, y) : p.moveTo(x, y); }
   for (let s = n; s >= 0; s--){ const [x, y] = at(pt.a + s, RC_W/2 - 6); p.lineTo(x, y); }
   p.closePath(); return p;
+}
+// where the jerrycans go: along the middle of the pit lane, kept only where the whole can (with a margin) sits on the
+// pit asphalt and clear of the main track, which is painted over the inner edge of the pit lane
+function rcCans(T, pt, path){
+  const N = T.N, n = (pt.b - pt.a + N) % N, out = [], probe = document.createElement('canvas').getContext('2d');
+  const near = (x, y) => { let bd = 1e18; for (let j = -6; j <= n + 6; j++){ const q = T.pts[(pt.a + j + N) % N]; bd = Math.min(bd, (q[0] - x)**2 + (q[1] - y)**2); } return Math.sqrt(bd); };
+  for (let s = 6; s <= n - 6; s += 6){
+    const kk = (pt.a + s) % N, q = T.pts[kk], tg = T.tan[kk], off = pt.side*(RC_W/2 + RC_PIT_W/2);
+    const x = q[0] - tg[1]*off, y = q[1] + tg[0]*off, rot = Math.atan2(tg[1], tg[0]) + Math.PI/2, cs = Math.cos(rot), sn = Math.sin(rot);
+    const ok = [[-15, -23], [15, -23], [15, 18], [-15, 18], [0, -23], [0, 18], [-15, 0], [15, 0]].every(([u, v]) => { const px = x + u*cs - v*sn, py = y + u*sn + v*cs; return probe.isPointInPath(path, px, py) && near(px, py) > RC_W/2 + 4; });
+    if (ok) out.push([x, y, rot]);
+  }
+  return out;
 }
 // a red jerrycan painted on the pit lane
 function rcCan(ctx){
