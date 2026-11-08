@@ -282,6 +282,16 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 #pToast.on{transform:translate(-50%,0)}
 .keys{color:var(--muted);font-size:13px;text-align:center}
 .ctlhelp,.game .keys,.pong .keys{color:#111!important;font-size:15px!important;font-weight:700;line-height:1.5;background:#fff;border:3px solid var(--line);box-shadow:4px 4px 0 var(--line);padding:9px 12px;margin:6px auto 0!important;max-width:min(100%,640px);text-align:left!important}
+.gh{display:flex!important;flex-direction:column;gap:5px;font-size:14px!important;font-weight:600!important;line-height:1.35!important}
+.ctlhelp.gh::before{display:none}
+.ghr{display:flex;gap:8px;align-items:flex-start}
+.ghi{flex:none;width:1.35em;text-align:center;font-size:15px;line-height:1.3}
+.ght{display:flex;flex-wrap:wrap;align-items:center;gap:3px 7px;min-width:0}
+.ghr.goal .ght{font-weight:900;font-size:15px}
+.ghr.tip{border-top:2px dashed rgba(0,0,0,.18);padding-top:5px;color:#333}
+.ghdot{color:#999;font-weight:900}
+.ghk{display:inline-flex;align-items:center;gap:3px;margin-right:4px}
+.gh kbd{font:800 12px/1 Nunito,sans-serif;color:#000;background:#FFF3B0;border:2px solid #000;border-bottom-width:3px;border-radius:5px;padding:2px 5px;white-space:nowrap}
 .ctlhelp::before,.game .keys::before,.pong .keys::before{content:"";display:inline-block;width:1.1em;height:1.1em;margin-right:.35em;vertical-align:-.2em;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 7h10a5 5 0 0 1 4.9 6l-.8 4a2.6 2.6 0 0 1-4.5 1.1L14.5 16h-5l-2.1 2.1A2.6 2.6 0 0 1 2.9 17l-.8-4A5 5 0 0 1 7 7z'/%3E%3Cpath d='M7 10.5v3M5.5 12h3'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 7h10a5 5 0 0 1 4.9 6l-.8 4a2.6 2.6 0 0 1-4.5 1.1L14.5 16h-5l-2.1 2.1A2.6 2.6 0 0 1 2.9 17l-.8-4A5 5 0 0 1 7 7z'/%3E%3Cpath d='M7 10.5v3M5.5 12h3'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat}
 .ic{width:1.15em;height:1.15em;flex:none;vertical-align:-.22em;margin-right:.4em}
 .choice,.coffee,.idea{display:inline-flex;align-items:center;justify-content:center}
@@ -853,7 +863,6 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
     <div class="play" id="play">
       <div class="side">
         <div class="me" id="meTag"></div>
-        <div class="box"><label>Réserve</label><canvas id="holdCv" width="96" height="56"></canvas></div>
         <div class="box"><label>Suivantes</label><canvas id="nextCv" width="96" height="168"></canvas></div>
         <div class="box">
           <div class="stat"><label>Lignes</label><b id="stLines">0</b></div>
@@ -875,7 +884,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
       <button data-a="down" aria-label="Descendre">↓</button>
       <button data-a="right" aria-label="Droite">→</button>
     </div>
-    <p class="keys">← → déplacer · ↓ descendre · ↑ ou X tourner · Z tourner à gauche · Espace chute · C réserve<br>Souris : la pièce suit le curseur · clic tourner · molette descendre · clic droit chute</p>
+    <div class="hint ctlhelp" data-help="tetris"></div>
   </div>
 </section>
 
@@ -890,7 +899,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
     <div class="slider" id="pslide" role="slider" aria-label="Position de votre gardien" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
       <div class="thumb" id="pthumb"></div>
     </div>
-    <p class="keys">← → ou A D : déplacer votre gardien · ou glisser sur le terrain</p>
+    <div class="hint ctlhelp" data-help="pong"></div>
   </div>
 </section>
 
@@ -908,7 +917,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
       <div class="msg pm" id="derbyMsg"></div>
       <div class="toast pm" id="dToast" aria-live="polite"></div>
     </div>
-    <p class="hint ctlhelp">Repassez toute la figure d'un seul trait, en partant du point vert, sans sortir de la bande bleue. Plus vous restez au centre, plus votre cheval avance.</p>
+    <div class="hint ctlhelp" data-help="derby"></div>
   </div>
 </section>
 
@@ -930,7 +939,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
       <button id="nvCancel" class="ghost">Annuler</button>
     </div>
     <ul class="nvplayers" id="nvPlayers"></ul>
-    <p class="hint ctlhelp">À votre tour, touchez une case. Dans l'eau, vous seul voyez combien de cases de bateau entourent la case (diagonales comprises, coulées ou non). Éliminé, vous voyez les chiffres de tout le monde.</p>
+    <div class="hint ctlhelp" data-help="naval"></div>
   </div>
 </section>
 
@@ -953,6 +962,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
     </div>
     <div class="mlmine" id="mlMine"><canvas id="mlMineCv" width="120" height="110" aria-hidden="true"></canvas><span id="mlMineTxt">Vos taupes ressemblent à celle-ci : elles ne se tapent pas.</span></div>
     <ul class="mlscores" id="mlScores"></ul>
+    <div class="hint ctlhelp" data-help="mole"></div>
   </div>
 </section>
 
@@ -974,8 +984,8 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
       <button id="cuR" class="ghost" aria-pressed="true">Effet à droite ↻</button>
     </div>
     <ul class="nvplayers" id="cuPlayers"></ul>
-    <p class="hint ctlhelp" id="cuHelp"></p>
-    <p class="keys">Clavier : ← → viser · ↑ ↓ puissance · Q ou D effet · Entrée lancer · Espace balayer</p>
+    <div class="hint ctlhelp" data-help="curling"></div>
+    
   </div>
 </section>
 
@@ -989,7 +999,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
       <div class="toast pm" id="mcToast" aria-live="polite"></div>
     </div>
     <ul class="nvplayers" id="mcPlayers"></ul>
-    <p class="hint ctlhelp">Quand le disque s'arrête, touchez vite une chaise libre. Toucher une chaise pendant la musique coûte 1 s de pénalité. Attention aux faux arrêts : si le disque tourne encore, ce n'est pas fini !</p>
+    <div class="hint ctlhelp" data-help="chairs"></div>
   </div>
 </section>
 
@@ -1005,7 +1015,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
     <div class="mmpal" id="mmPal" role="group" aria-label="Couleurs"></div>
     <div class="mmact"><button id="mmDel" class="ghost">Effacer</button><button id="mmOk">Valider</button></div>
     <ul class="nvplayers" id="mmOthers"></ul>
-    <p class="hint ctlhelp">Trouvez le code : 4 couleurs toutes différentes. Pion noir : bonne couleur bien placée. Pion blanc : bonne couleur mal placée. Tout le monde cherche le même code, le premier qui trouve marque le plus. Clavier : 1 à 6, Retour arrière, Entrée.</p>
+    <div class="hint ctlhelp" data-help="master"></div>
   </div>
 </section>
 
@@ -1019,7 +1029,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
       <div class="toast pm" id="kbToast" aria-live="polite"></div>
     </div>
     <ul class="nvplayers" id="kbPlayers"></ul>
-    <p class="hint ctlhelp">Posez le doigt n'importe où et glissez : c'est un joystick. Attaquant : gardez le doigt appuyé (ou Espace) pour retenir votre souffle, touchez des défenseurs puis revenez dans votre camp avant la fin du souffle. Au contact, l'attaquant reste collé au défenseur : pour se libérer, il doit tirer franchement dans l'autre sens une demi-seconde. Accroché par plusieurs, il est presque bloqué. La bande claire près de la ligne vous est interdite tant qu'il n'est pas entré. Clavier : flèches ou ZQSD.</p>
+    <div class="hint ctlhelp" data-help="kabaddi"></div>
   </div>
 </section>
 
@@ -1034,7 +1044,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
     </div>
     <button id="dbCatch">✋ Attraper ✋</button>
     <ul class="nvplayers" id="dbPlayers"></ul>
-    <p class="hint ctlhelp">Posez le doigt n'importe où et glissez pour courir (joystick). Passez sur une balle pour la ramasser, touchez brièvement le terrain pour la lancer à cet endroit. « Attraper » lève les mains un court instant : une balle attrapée fait perdre un cœur au lanceur. Clavier : flèches ou ZQSD, Espace lancer, E attraper.</p>
+    <div class="hint ctlhelp" data-help="dodge"></div>
   </div>
 </section>
 
@@ -1049,7 +1059,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
     </div>
     <button id="tkFire">💥 FEU ! 💥</button>
     <ul class="nvplayers" id="tkPlayers"></ul>
-    <p class="hint ctlhelp" id="tkHelp"></p>
+    <div class="hint ctlhelp" id="tkHelp"></div>
   </div>
 </section>
 
@@ -1065,7 +1075,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
     </div>
     <button id="shBark">🐶 OUAF !</button>
     <ul class="nvplayers" id="shPlayers"></ul>
-    <p class="hint ctlhelp">Tous ensemble : posez le doigt n'importe où et glissez pour courir. Les moutons fuient les chiens ; rabattez-les dans l'enclos avant le coucher du soleil. « Ouaf ! » (ou une touche brève, ou Espace) fait détaler les moutons proches et chasse le loup. Deux chiens près d'un loup, ou un « Ouaf ! » sous son nez, le font déguerpir (il reviendra ailleurs) ; un chien qui le bouscule lui fait lâcher son mouton.</p>
+    <div class="hint ctlhelp" data-help="sheep"></div>
   </div>
 </section>
 
@@ -1082,7 +1092,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
       <canvas id="dkPad" width="600" height="130" aria-label="Rythme et coups de l'équipage"></canvas>
       <div class="dkbtns"><button id="dkL">◀ GAUCHE</button><button id="dkR">DROITE ▶</button></div>
     </div>
-    <p class="hint ctlhelp" id="dkHelp"></p>
+    <div class="hint ctlhelp" id="dkHelp"></div>
   </div>
 </section>
 
@@ -1098,7 +1108,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
     <button id="ljGo" class="big" hidden>🪓 Valider la direction</button>
     <div class="nvwrap" id="ljCutWrap"><canvas id="ljCut" width="600" height="260" aria-label="Le tronc vu de côté"></canvas></div>
     <ul class="nvplayers" id="ljPlayers"></ul>
-    <p class="hint ctlhelp" id="ljHelp"></p>
+    <div class="hint ctlhelp" id="ljHelp"></div>
   </div>
 </section>
 
@@ -1117,7 +1127,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
       <div class="toast pm" id="agToast" aria-live="polite"></div>
     </div>
     <ul class="nvplayers" id="agPlayers"></ul>
-    <p class="hint ctlhelp" id="agHelp"></p>
+    <div class="hint ctlhelp" id="agHelp"></div>
   </div>
 </section>
 
@@ -1135,7 +1145,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
       <button id="mdDrop" type="button">⬇ Lâcher</button>
     </div>
     <ul class="nvplayers" id="mdPlayers"></ul>
-    <p class="hint ctlhelp" id="mdHelp"></p>
+    <div class="hint ctlhelp" id="mdHelp"></div>
   </div>
 </section>
 
@@ -1149,7 +1159,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
     </div>
     <div class="blctl"><span class="bllab">Énergie</span><div class="mdst blbar" title="Énergie"><i id="blE"></i></div><span class="cuend" id="blRf">Renforts 0/3</span></div>
     <ul class="nvplayers" id="blPlayers"></ul>
-    <p class="hint ctlhelp" id="blHelp"></p>
+    <div class="hint ctlhelp" id="blHelp"></div>
   </div>
 </section>
 
@@ -1175,7 +1185,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
         <div class="rcsteer" id="rcSteer" aria-label="Volant : glissez à gauche ou à droite"><span class="rcl">◀</span><span class="rcr">▶</span><i id="rcKnob"></i></div>
         <div class="rcbtns"><button id="rcGas" type="button">⛽ ACCÉLÉRER</button><button id="rcBrake" type="button">▼ Freiner</button><button id="rcHit" type="button">💥 FRAPPER</button></div>
       </div>
-      <p class="hint ctlhelp" id="rcHelp">Glissez le volant à gauche ou à droite (il revient au centre quand vous le lâchez). Maintenez Accélérer pour aller plus vite en brûlant de l'essence, Freiner avant les virages serrés. Trop vite dans un virage, les pneus crissent et la voiture glisse vers l'extérieur. L'essence revient doucement, bien plus vite dans les deux stands (les zones aux jerricans, à côté de la piste). Frapper : votre voiture frappe vers l'avant après une courte charge visible ; la voiture touchée perd 20 % de sa vitesse et 15 % de son essence, puis clignote 3 s pendant lesquelles on lui passe à travers. Clavier : ← → pour tourner, ↑ accélérer, ↓ freiner, Espace frapper.</p>
+            <div class="hint ctlhelp" data-help="racer"></div>
     </div>
   </div>
 </section>
@@ -1196,7 +1206,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
         <div class="toast pm" id="gpToast" aria-live="polite"></div>
       </div>
       <div class="gpbtns" id="gpBtns"><button id="gpL" type="button" aria-label="Se décaler à gauche">◀</button><button id="gpA" type="button">GALOP !</button><button id="gpR" type="button" aria-label="Se décaler à droite">▶</button><button id="gpB" type="button">▼ RALENTIR</button></div>
-      <p class="hint ctlhelp" id="gpHelp"></p>
+      <div class="hint ctlhelp" id="gpHelp"></div>
     </div>
   </div>
 </section>
@@ -2129,13 +2139,6 @@ function rotate(dir){
   }
 }
 function hardDrop(){ let n = 0; while (move(0,1)) n++; G.score += n*2; lock(); }
-function hold(){
-  if (!G.canHold || !G.p) return;
-  const t = { t:G.p.t, sp:G.p.sp };
-  if (G.hold == null){ G.hold = t; spawn(); }
-  else { const h = G.hold; G.hold = t; setPiece(h); if (!fits(G.p)) die(); }
-  G.canHold = false; G.dirty = true;
-}
 // Enemy bricks are cracked: a cleared line breaks the enemy bricks right above and below it.
 // Each broken brick goes back to the player who sent it, and the column above it settles by one cell.
 function clearLines(shatter){
@@ -2523,10 +2526,8 @@ function drawMini(ctx, width, it, top, alpha){
   cells.forEach(([x,y], i) => paint(ctx, ox + x*s, oy + y*s, s, i === it.sp ? t + '*' : t, now));
   ctx.globalAlpha = 1;
 }
-const holdCtx = $('holdCv').getContext('2d'), nextCtx = $('nextCv').getContext('2d');
+const nextCtx = $('nextCv').getContext('2d');
 function drawSide(){
-  holdCtx.clearRect(0, 0, 96, 56);
-  drawMini(holdCtx, 96, G.hold, 0, G.canHold ? 1 : .35);
   nextCtx.clearRect(0, 0, 96, 168);
   G.queue.slice(0, 3).forEach((t, i) => drawMini(nextCtx, 96, t, i*56, 1));
 }
@@ -2571,14 +2572,13 @@ function act(a){
     case 'rotr': rotate(1); break;
     case 'rotl': rotate(-1); break;
     case 'drop': hardDrop(); break;
-    case 'hold': hold(); break;
   }
 }
 function release(a){
   if (a === 'down') input.soft = false;
   if ((a === 'left' && input.das && input.das.dir === -1) || (a === 'right' && input.das && input.das.dir === 1)) input.das = null;
 }
-const KEYMAP = { arrowleft:'left', arrowright:'right', arrowdown:'down', arrowup:'rotr', x:'rotr', z:'rotl', w:'rotl', control:'rotl', ' ':'drop', c:'hold', shift:'hold' };
+const KEYMAP = { arrowleft:'left', arrowright:'right', arrowdown:'down', arrowup:'rotr', x:'rotr', z:'rotl', w:'rotl', control:'rotl', ' ':'drop' };
 addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT') return;
   if (cur === 'curl' || cur === 'chairs' || cur === 'master' || cur === 'kabaddi' || cur === 'dodge' || cur === 'tank' || cur === 'sheep' || cur === 'drakkar' || cur === 'lumber' || cur === 'agility' || cur === 'galop' || cur === 'meduse' || cur === 'blob' || cur === 'racer') return;
@@ -4394,11 +4394,6 @@ function curlHeader(){
   } else el.textContent = CU.ph === 'score' ? 'Fin de la manche' : 'Préparation…';
   el.classList.toggle('mine', mine);
   $('cuCtl').classList.toggle('off', !(mine && CU.ph === 'aim'));
-  $('cuHelp').textContent = mine && CU.ph === 'aim'
-    ? 'Tirez vers l\'arrière depuis n\'importe où sur la piste, puis relâchez : plus vous tirez, plus c\'est fort. L\'effet fait tourner la pierre en fin de course.'
-    : mine && CU.ph === 'run'
-    ? 'Frottez la glace devant la pierre (glissez vite le doigt ou la souris, ou maintenez Espace) : elle va plus loin et tourne moins.'
-    : 'À la fin de la manche, le joueur le plus proche du centre marque 1 point par pierre mieux placée que la meilleure des autres.';
 }
 function syncCurlBtns(){ $('cuL').setAttribute('aria-pressed', String(CU.curl < 0)); $('cuR').setAttribute('aria-pressed', String(CU.curl > 0)); }
 $('cuL').onclick = () => { if (CU){ CU.curl = -1; syncCurlBtns(); } };
@@ -6197,9 +6192,7 @@ function startTank(m){
   const pn = (players.find(p => p.id === partner) || {}).name || '?';
   $('tkRole').textContent = !mine ? 'Spectateur' : TK.role === 'pilote' ? 'Vous PILOTEZ le char ' + (mine.i + 1) + ' · ' + pn + ' tire' : 'Vous TIREZ depuis le char ' + (mine.i + 1) + ' · ' + pn + ' pilote';
   $('tkFire').hidden = TK.role !== 'canon';
-  $('tkHelp').textContent = TK.role === 'pilote'
-    ? 'Pilote : posez le doigt n\'importe où et glissez, le char tourne puis roule dans cette direction (tirez vers l\'arrière pour reculer). Clavier : flèches ou ZQSD. Votre équipier vise et tire : ne lui parlez pas, devinez-le !'
-    : 'Canonnier : glissez pour orienter la tourelle, touchez brièvement ou « FEU ! » pour tirer (un obus toutes les 1,5 s). Souris : visez avec le curseur, cliquez pour tirer. Clavier : ← → tourelle, Espace feu.';
+  gameHelp($('tkHelp'), TK.role === 'pilote' ? 'tank' : 'tankGun');
   tankMsg(''); renderTkPlayers();
 }
 const tankMsg = big => { const m = $('tkMsg'); m.textContent = ''; if (big){ const s = document.createElement('strong'); s.textContent = big; m.append(s); } };
@@ -7123,7 +7116,7 @@ function startDrakkar(m){
     cum:0, lastA:null, turns:0, myPh:0, judge:null, judgeT:0, pulse:0, count:3, lastPhSend:0, over:false, end:null, wave:0 };
   $('dkRole').textContent = DK.role === 'rameur' ? 'Ramez en rythme !' : 'Spectateur';
   $('dkRow').hidden = DK.role !== 'rameur';
-  $('dkHelp').textContent = 'Un coup de rame par BOUM, en alternant GAUCHE et DROITE (clavier : ← et →). Le tambour accélère quand tout l\'équipage est synchro. Les éclats de couleur montrent les coups des autres rameurs : calez-vous ensemble.';
+  gameHelp($('dkHelp'), 'drakkar');
   drakkarMsg('');
 }
 const drakkarMsg = big => { const m = $('dkMsg'); m.textContent = ''; if (big){ const s = document.createElement('strong'); s.textContent = big; m.append(s); } };
@@ -7755,7 +7748,7 @@ function startLumber(m){
   for (const p of players) LJ.tot[p.id] = 0;
   ljHead('Préparation…'); ljTimer(''); ljMsg(''); renderLjPlayers();
   $('ljGo').hidden = true;
-  $('ljHelp').textContent = 'Touchez le jardin pour choisir où tombe l\'arbre, sans rien écraser, puis validez. Ensuite, abattez-le comme un vrai bûcheron, en suivant les pointillés : l\'entaille d\'un seul geste (1 : on descend le long du biais puis on ressort par le bas), puis le trait d\'abattage (2). Posez le doigt sur le rond jaune et glissez. Plus les coupes sont droites, plus l\'arbre suit votre direction. Faire tomber l\'arbre dans une ouverture étroite, ou au ras d\'un obstacle sans le toucher avec une coupe propre, rapporte un gros bonus. Clavier : ← → viser, Entrée valider, Espace scier, ↑ ↓ corriger.';
+  gameHelp($('ljHelp'), 'lumber');
 }
 const ljMsg = big => { const m = $('ljMsg'); m.textContent = ''; if (big){ const s = document.createElement('strong'); s.textContent = big; m.append(s); } };
 let ljToastT = null;
@@ -8546,7 +8539,7 @@ function agGoRecv(m){
   if (mine != null && AG_DOGS[mine]){ AG.dog = AG_DOGS[mine]; AG.ks = agKs(AG.dog); }
   agShowPick(false);
   agHead(AG.mode === 'watch' ? 'Spectateur' : 'À vos marques…'); renderAgPlayers();
-  $('agHelp').textContent = AG.mode === 'watch' ? 'Vous regardez le parcours.' : 'Votre chien : ' + AG.dog.breed + '. ' + AG_HELP.run;
+  gameHelp($('agHelp'), 'agility', { c:AG.mode === 'watch' ? 'Vous regardez le parcours.' : AG_HELP.run, x:AG.mode === 'watch' ? null : ['🐕', 'Votre chien : ' + AG.dog.breed] });
 }
 const agMsg = big => { const m = $('agMsg'); m.textContent = ''; if (big){ const s = document.createElement('strong'); s.textContent = big; m.append(s); } };
 let agToastT = null;
@@ -8590,7 +8583,7 @@ function agSetHelp(){
   const ob = agUpcoming(), key = AG.done ? 'done' : AG.mode === 'run' || AG.mode === 'count' ? (ob && ob.s0 - AG.d < 260 ? ob.type : 'run') : AG.mode === 'weavego' ? 'weave' : AG.mode === 'zone' || AG.mode === 'refus' ? 'run' : AG.mode;
   if (AG.helpKey === key) return;
   AG.helpKey = key;
-  $('agHelp').textContent = AG_HELP[key] || AG_HELP.run;
+  gameHelp($('agHelp'), 'agility', { c:AG_HELP[key] || AG_HELP.run, x:AG.dog ? ['🐕', 'Votre chien : ' + AG.dog.breed] : null });
   if (ob && key === ob.type) agHead((AG.next + 1) + '. ' + AG_NAMES[ob.type], true);
   else if (!AG.done) agHead('Obstacle ' + Math.min(AG.next + 1, AG.C.obs.length) + '/' + AG.C.obs.length);
 }
@@ -9368,7 +9361,7 @@ function galopRecv(m){
     GP.me = GP.R.findIndex(r => r.id === me.id);
     $('gpPick').hidden = true; $('gpRace').hidden = false;
     const mh = GP.me >= 0 ? GP.R[GP.me] : null;
-    $('gpHelp').textContent = mh ? 'Vous montez ' + GP_HORSES[mh.h].n + ' (stalle ' + (mh.stall + 1) + '). ◀ ▶ pour vous décaler, GALOP pour accélérer (coûte de l\'énergie), RALENTIR pour souffler et sortir d\'un blocage (récupération rapide). Collé derrière un cheval, vous récupérez plus vite et profitez de ses accélérations. Clavier : ← →, ↑ ou Espace, ↓ pour ralentir.' : 'Vous regardez la course.';
+    gameHelp($('gpHelp'), 'galop', mh ? { x:['🐎', 'Vous montez ' + GP_HORSES[mh.h].n + ', stalle ' + (mh.stall + 1)] } : { c:'Vous regardez la course.', t:null, k:null });
     $('gpBtns').hidden = !mh;
     sfx('clack');
   }
@@ -10157,7 +10150,7 @@ function startMeduse(m){
   const i = players.findIndex(p => p.id === me.id); if (i >= 0) MD.aimX = (i - (players.length - 1)/2)*90;
   $('mdMsg').textContent = ''; mdHead('Méduse'); renderMdPlayers();
   $('mdTurn').textContent = '⏱ 2:00'; $('mdTime').textContent = '🔭 –';
-  $('mdHelp').textContent = 'Glissez le doigt au-dessus du radeau pour viser, relâchez pour lâcher votre naufragé (souris : visez et cliquez ; clavier : ← → puis Espace). Il se balance de debout à couché : lâchez au bon moment. Votre naufragé le plus haut, une fois posé, marque des points ; pendant le passage de l\'Argus, 5 fois plus.';
+  gameHelp($('mdHelp'), 'meduse');
 }
 function mdHead(t){ $('mdHead').textContent = t; }
 let mdToastT = null;
@@ -10800,7 +10793,7 @@ function startBlob(m){
     spec:!players.some(p => p.id === me.id), draw:null, img:null, dirty:true, fx:[], tot:BL_IN.reduce((a, b) => a + b, 0) };
   blHead('Blob'); renderBlPlayers();
   $('blTime').textContent = '⏱ 3:00'; $('blRf').textContent = 'Renforts 0/' + BL_RF_MAX;
-  $('blHelp').textContent = 'Glissez le doigt depuis votre blob pour tracer où il doit pousser ; tracez jusque dans un autre blob pour l\'attaquer. Touchez votre blob pour y poser un renfort qui durcit avec le temps. Votre énergie revient doucement, d\'autant moins que votre blob est grand (plus du tout à la moitié de la boîte) ; chaque gros flocon couvert l\'accélère, et le laborantin en ajoute de temps en temps. Tout morceau coupé de la partie qui porte le visage dépérit. Le plus grand blob au bout de 3 minutes gagne.';
+  gameHelp($('blHelp'), 'blob');
   blVeins();
 }
 function blHead(t){ $('blHead').textContent = t; }
@@ -11724,8 +11717,52 @@ function rcCar(ctx, look, col, hit, wind, t){
 // ================= before each game: the rules in 2-3 slides, then everyone taps "Prêt" =================
 // The creator's "start" opens this briefing for the whole room; the game really starts once every player is ready
 // (or when the creator decides not to wait). "Rejouer" skips it: everybody already knows the game.
+// ================= the help card under each game: goal, controls for this device, a tip =================
+// t: what to do with a finger (phrases); k: [keys, what they do] for keyboard and mouse; x: an extra line; c: a
+// controls line that is the same everywhere (it replaces t and k); tip: one piece of advice.
+const HELP = {
+  tetris:{ g:'Faites des lignes pour ensevelir les autres. Le dernier debout gagne.', t:['↻ pivoter', '← → déplacer', '↓ descendre'], k:[['← →', 'déplacer'], ['↑', 'pivoter'], ['↓', 'descendre'], ['Espace', 'chute'], ['Clic', 'pivoter']], tip:'Chaque ligne détruite ira gêner les autres joueurs.' },
+  pong:{ g:'Protégez votre but et gardez vos 5 vies.', t:['Glissez pour déplacer votre gardien'], k:[['← →', 'déplacer'], ['Souris', 'glisser sur le terrain']], tip:'Revenez au centre de votre but entre deux ballons.' },
+  derby:{ g:'Tracé propre = cheval rapide.', t:['Repassez la figure d\'un trait, depuis le point vert'], k:[['Souris', 'tracer depuis le point vert']], tip:'Restez au centre de la bande bleue : la précision compte plus que la vitesse.' },
+  naval:{ g:'Coulez les flottes adverses avant la vôtre.', t:['À votre tour, touchez une case'], k:[['Clic', 'tirer sur une case']], x:['🔢', 'Le chiffre = cases de bateau autour, vous seul le voyez'], tip:'Croisez les chiffres de plusieurs cases pour situer un bateau.' },
+  mole:{ g:'Tapez les taupes des autres, jamais les vôtres. Premier à 20 points.', t:['Touchez vite les taupes'], k:[['Clic', 'taper']], tip:'Repérez la couleur et l\'accessoire avant de taper.' },
+  curling:{ g:'Placez vos pierres au plus près du centre.', t:['Tirez en arrière, relâchez', 'Frottez la glace devant la pierre'], k:[['Souris', 'tirer, relâcher'], ['← →', 'viser'], ['↑ ↓', 'puissance'], ['Q D', 'effet'], ['Entrée', 'lancer'], ['Espace', 'balayer']], tip:'Balayer fait aller la pierre plus loin et plus droit.' },
+  chairs:{ g:'Disque arrêté ? Foncez sur une chaise libre.', t:['Touchez une chaise libre'], k:[['Clic', 'une chaise libre']], x:['⚠️', 'Toucher pendant la musique : 1 s de pénalité'], tip:'Méfiez-vous des faux arrêts : tant que le disque tourne, attendez.' },
+  master:{ g:'Trouvez le code de 4 couleurs avant les autres.', t:['Touchez 4 couleurs, puis validez'], k:[['1 à 6', 'couleurs'], ['Retour arrière', 'effacer'], ['Entrée', 'valider']], x:['⚫', 'bien placée · ⚪ mal placée'], tip:'Un essai qui élimine beaucoup de couleurs vaut mieux qu\'un essai au hasard.' },
+  kabaddi:{ g:'Attaque : touchez et rentrez avant la fin du souffle. Défense : accrochez-le à plusieurs.', t:['Glissez pour courir', 'Doigt appuyé : souffle'], k:[['ZQSD', 'courir'], ['Espace', 'souffle']], tip:'Accroché ? Tirez franchement dans l\'autre sens pour vous libérer.' },
+  dodge:{ g:'Le dernier avec des cœurs gagne.', t:['Glissez pour courir', 'Touchez pour lancer', 'Attraper au bon moment'], k:[['ZQSD', 'courir'], ['Espace', 'lancer'], ['E', 'attraper']], tip:'Une balle attrapée fait perdre un cœur au lanceur.' },
+  tank:{ g:'Le dernier char debout gagne. Interdit de parler !', t:['Glissez : le char tourne puis roule'], k:[['ZQSD', 'piloter']], tip:'Cachez-vous dans les forêts et tirez à l\'abri des obstacles.' },
+  tankGun:{ g:'Le dernier char debout gagne. Interdit de parler !', t:['Glissez pour viser', 'Touchez pour tirer'], k:[['Souris', 'viser, cliquer'], ['← →', 'tourelle'], ['Espace', 'feu']], tip:'Devinez où va votre pilote et anticipez le tir.' },
+  sheep:{ g:'Tous les moutons dans l\'enclos avant la nuit.', t:['Glissez pour courir', '« Ouaf ! » fait fuir moutons et loup'], k:[['ZQSD', 'courir'], ['Espace', 'aboyer']], tip:'Encerclez le troupeau à plusieurs, sans foncer dedans.' },
+  drakkar:{ g:'Ramez en rythme, tous ensemble.', t:['GAUCHE puis DROITE, un coup par BOUM'], k:[['← →', 'en alternance, un coup par BOUM']], tip:'Plus l\'équipage est synchro, plus le tambour accélère.' },
+  lumber:{ g:'Faites tomber l\'arbre où vous visez, sans rien écraser.', t:['1. Touchez où il tombe', '2. Sciez sur les pointillés'], k:[['← →', 'viser'], ['Entrée', 'valider'], ['Espace', 'scier']], tip:'Coupes bien droites = chute précise. Une coupe bâclée l\'envoie n\'importe où.' },
+  agility:{ g:'Le bon geste sur chaque obstacle, sinon +5 s.', tip:'Whippet rapide, Jack Russell meilleur sauteur, Corgi plus endurant.' },
+  galop:{ g:'Gérez l\'énergie, profitez de l\'aspiration.', t:['◀ ▶ se décaler', 'GALOP accélère', 'RALENTIR fait souffler'], k:[['← →', 'se décaler'], ['↑', 'galop'], ['↓', 'ralentir']], tip:'Collé derrière un cheval, vous récupérez plus vite.' },
+  meduse:{ g:'Tenez le sommet de la pile, surtout au passage de l\'Argus (×5).', t:['Glissez pour viser, relâchez pour lâcher'], k:[['← →', 'viser'], ['Espace', 'lâcher']], tip:'Couché, un corps tient mieux ; debout, il monte plus haut mais bascule.' },
+  racer:{ g:'2 tours : frappez, gérez l\'essence, passez aux stands.', t:['Volant à gauche', 'Accélérer, Freiner, Frapper à droite'], k:[['← →', 'tourner'], ['↑', 'accélérer'], ['↓', 'freiner'], ['Espace', 'frapper']], tip:'Freinez avant les virages, pas dedans.' },
+  blob:{ g:'Le plus grand blob au bout de 3 minutes gagne.', t:['Glissez depuis votre blob pour pousser', 'Touchez-le pour le renforcer'], k:[['Souris', 'glisser pour pousser'], ['Clic', 'renforcer']], tip:'Passé la moitié de la boîte, seuls les flocons vous nourrissent : volez ceux des autres.' }
+};
+const helpFine = () => { try { return matchMedia('(hover: hover) and (pointer: fine)').matches; } catch(_){ return false; } };
+function gameHelp(el, game, o){
+  if (!el) return;
+  const D = Object.assign({}, HELP[game] || {}, o || {});
+  el.textContent = ''; el.classList.add('gh');
+  const row = (ic, fill, cls) => { const r = document.createElement('div'); r.className = 'ghr' + (cls ? ' ' + cls : ''); const i = document.createElement('span'); i.className = 'ghi'; i.textContent = ic; const t = document.createElement('span'); t.className = 'ght'; fill(t); r.append(i, t); el.append(r); };
+  const txt = s => t => { const b = document.createElement('span'); b.textContent = s; t.append(b); };
+  const dots = list => t => list.forEach((s, n) => { if (n){ const d = document.createElement('span'); d.className = 'ghdot'; d.textContent = '·'; t.append(d); } const b = document.createElement('span'); b.textContent = s; t.append(b); });
+  if (D.g) row('🎯', txt(D.g), 'goal');
+  if (D.x) row(D.x[0], txt(D.x[1]));
+  if (D.c) row('👉', txt(D.c));
+  else if (helpFine() && D.k) row('⌨️', t => D.k.forEach(([keys, what]) => {
+    const p = document.createElement('span'); p.className = 'ghk';
+    for (const k of keys.split(' ')){ if (k === 'à'){ const a = document.createElement('span'); a.textContent = k; p.append(a); continue; } const b = document.createElement('kbd'); b.textContent = k === 'Retour' ? 'Retour arrière' : k; if (k !== 'arrière') p.append(b); }
+    const w = document.createElement('span'); w.textContent = what; p.append(w); t.append(p); }));
+  else if (D.t) row('👆', dots(D.t));
+  if (D.tip) row('💡', txt(D.tip), 'tip');
+}
+document.querySelectorAll('[data-help]').forEach(el => gameHelp(el, el.dataset.help));
 const BRIEF = {
-  tetris:{ ctl:[['📱', 'Boutons sous le puits : ↻ tourner, ← → déplacer, ↓ descendre.'], ['💻', '← → déplacer · ↓ descendre · ↑ ou X tourner · Z tourner à gauche · Espace chute · C réserve. Souris : la pièce suit le curseur, clic pour tourner, molette pour descendre, clic droit pour la chute.']],
+  tetris:{ ctl:[['📱', 'Boutons sous le puits : ↻ tourner, ← → déplacer, ↓ descendre.'], ['💻', '← → déplacer · ↓ descendre · ↑ ou X tourner · Z tourner à gauche · Espace chute. Souris : la pièce suit le curseur, clic pour tourner, molette pour descendre, clic droit pour la chute.']],
     tip:'Une ligne effacée envoie des briques fendues aux autres. Effacez une ligne collée à une brique fendue : elle repart chez celui qui l\'a envoyée.' },
   pong:{ ctl:[['📱', 'Glissez le doigt sur le terrain, ou sur la barre en dessous, pour déplacer votre gardien.'], ['💻', '← → ou A D, ou la souris : cliquez et glissez sur le terrain.']],
     tip:'5 vies chacun : chaque but encaissé en coûte une. Le dernier gardien debout gagne.' },
