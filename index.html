@@ -1115,7 +1115,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
 <!-- BLOB -->
 <section id="scrBlob" hidden>
   <div class="naval">
-    <div class="nvhead blhead"><div class="nvturn" id="blHead">Blob</div><div class="dkchips"><span class="cuend" id="blPct">0 %</span><span class="cuend" id="blTime">⏱ 4:00</span></div></div>
+    <div class="nvhead blhead"><div class="nvturn" id="blHead">Blob</div><div class="dkchips"><span class="cuend" id="blPct">0 %</span><span class="cuend" id="blTime">⏱ 3:00</span></div></div>
     <div class="nvwrap" id="blWrap">
       <canvas id="blCv" width="600" height="600" aria-label="La boîte de Petri : tracez où votre blob doit pousser, touchez-le pour le renforcer"></canvas>
       <div class="toast pm" id="blToast" aria-live="polite"></div>
@@ -1415,7 +1415,7 @@ const GAME_DESC = {
   galop:'Course de galop de 3000 m, chacun sur son cheval, vue du dessus. Choisissez votre monture parmi 20, nouvelles à chaque partie (accélération, vitesse, maniabilité, et une forme du jour cachée), des robots complètent jusqu\'à 8 partants. Le cheval suit la piste tout seul : vous vous décalez à gauche ou à droite et vous demandez du galop, qui coûte de l\'énergie. Collé derrière un autre, vous récupérez plus vite et profitez de ses accélérations.',
   meduse:'Le radeau de la Méduse, en version bande dessinée : la pyramide de corps du tableau, c\'est vous qui la construisez. Pendant deux minutes, chacun lâche ses naufragés sur le radeau quand il veut, un toutes les trois secondes. Le corps suspendu se balance de debout à couché : à vous de choisir le moment. Les corps glissent, le radeau tangue, certains tombent à l\'eau et disparaissent. Votre naufragé le plus haut, une fois posé, marque des points tant qu\'il reste au sommet ; trois fois, l\'Argus passe à l\'horizon et le sommet vaut alors cinq fois plus. Lâcher un corps sur la tête du leader pour le déloger fait partie du jeu. Des robots complètent seul ou à deux.',
   derby:'Course de chevaux : tout le monde reçoit la même série de figures à tracer. Chaque figure réussie fait avancer votre cheval, plus loin si elle est complexe et bien tracée. Le premier à la ligne gagne.',
-  blob:'Le blob, ce drôle d\'organisme qui se réveille dans une boîte de Petri : chaque joueur en a un, dans la même boîte. Tracez du doigt un chemin depuis votre blob, il pousse le long du tracé en dépensant son énergie. Tracez jusque dans un autre blob et vous l\'envahissez, plus cher, d\'autant plus qu\'il a d\'énergie. Votre énergie revient doucement, d\'autant moins que votre blob est grand, et plus du tout passé la moitié de la boîte : il faut alors tenir des gros flocons d\'avoine, qui l\'accélèrent tant que vous les couvrez. Le laborantin en ajoute de temps en temps, n\'importe où. Les miettes se mangent d\'un coup. Un morceau coupé du reste de votre blob, sans flocon, dépérit. Touchez votre blob pour y poser un renfort qui durcit avec le temps. Au bout de 4 minutes, le plus grand blob gagne. Des robots complètent seul ou à deux.'
+  blob:'Le blob, ce drôle d\'organisme qui se réveille dans une boîte de Petri : chaque joueur en a un, dans la même boîte. Tracez du doigt un chemin depuis votre blob, il pousse le long du tracé en dépensant son énergie. Tracez jusque dans un autre blob et vous l\'envahissez, plus cher, d\'autant plus qu\'il a d\'énergie. Votre énergie revient doucement, d\'autant moins que votre blob est grand, et plus du tout passé la moitié de la boîte : il faut alors tenir des gros flocons d\'avoine, qui l\'accélèrent tant que vous les couvrez. Le laborantin en ajoute de temps en temps, n\'importe où. Les miettes se mangent d\'un coup. Un morceau coupé du reste de votre blob, sans flocon, dépérit. Touchez votre blob pour y poser un renfort qui durcit avec le temps. Au bout de 3 minutes, le plus grand blob gagne. Des robots complètent seul ou à deux.'
 };
 
 const cleanName = s => String(s || '').replace(/[\u0000-\u001f<>]/g,'').trim().slice(0,14) || (LANG === 'en' ? 'Player' : 'Joueur');
@@ -10438,8 +10438,8 @@ function mdMast(ctx, mb, t){
 // along it, spending energy; draw it into another blob and you push into it, which costs more and is resisted by its
 // energy. Big oat flakes feed whoever covers them, for as long as they do; crumbs are eaten in one go. Every bit of
 // blob costs a little upkeep, and any part cut off from all of its flakes starves and withers away. A tap inside your
-// own blob grows a reinforcement that hardens over time. After four minutes the largest blob wins.
-const BL_N = 96, BL_T = 240, BL_TICK = .1, BL_CX = 306, BL_CY = 309, BL_R = 218;
+// own blob grows a reinforcement that hardens over time. After three minutes the largest blob wins.
+const BL_N = 96, BL_T = 180, BL_TICK = .1, BL_CX = 306, BL_CY = 309, BL_R = 218;
 let BL_GROW = 7, BL_BITE = 2, BL_COST = .25, BL_ATK = 2.2, BL_BASE = 2.5, BL_FARM = 2.5, BL_CRUMB = 6, BL_DROP = [20, 30], BL_FMAX = 20;
 const BL_RF_COST = 8, BL_RF_MAX = 3, BL_RF_R = 4.5, BL_E0 = 50;
 let HBL = null, BL = null;
@@ -10718,8 +10718,8 @@ function startBlob(m){
   BL = { t:0, g:new Uint8Array(BL_N*BL_N), farms:[], crumbs:new Set(), rf:[], e:[], a:[], pa:[], count:3, ph:'wait', over:false, banner:null,
     spec:!players.some(p => p.id === me.id), draw:null, img:null, dirty:true, fx:[], tot:BL_IN.reduce((a, b) => a + b, 0) };
   blHead('Blob'); renderBlPlayers();
-  $('blTime').textContent = '⏱ 4:00'; $('blRf').textContent = 'Renforts 0/' + BL_RF_MAX;
-  $('blHelp').textContent = 'Glissez le doigt depuis votre blob pour tracer où il doit pousser ; tracez jusque dans un autre blob pour l\'attaquer. Touchez votre blob pour y poser un renfort qui durcit avec le temps. Votre énergie revient doucement, d\'autant moins que votre blob est grand (plus du tout à la moitié de la boîte) ; chaque gros flocon couvert l\'accélère, et le laborantin en ajoute de temps en temps. Un morceau coupé du reste sans flocon dépérit. Le plus grand blob au bout de 4 minutes gagne.';
+  $('blTime').textContent = '⏱ 3:00'; $('blRf').textContent = 'Renforts 0/' + BL_RF_MAX;
+  $('blHelp').textContent = 'Glissez le doigt depuis votre blob pour tracer où il doit pousser ; tracez jusque dans un autre blob pour l\'attaquer. Touchez votre blob pour y poser un renfort qui durcit avec le temps. Votre énergie revient doucement, d\'autant moins que votre blob est grand (plus du tout à la moitié de la boîte) ; chaque gros flocon couvert l\'accélère, et le laborantin en ajoute de temps en temps. Un morceau coupé du reste sans flocon dépérit. Le plus grand blob au bout de 3 minutes gagne.';
   blVeins();
 }
 function blHead(t){ $('blHead').textContent = t; }
