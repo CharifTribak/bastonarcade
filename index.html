@@ -1415,7 +1415,7 @@ const GAME_DESC = {
   galop:'Course de galop de 3000 m, chacun sur son cheval, vue du dessus. Choisissez votre monture parmi 20, nouvelles à chaque partie (accélération, vitesse, maniabilité, et une forme du jour cachée), des robots complètent jusqu\'à 8 partants. Le cheval suit la piste tout seul : vous vous décalez à gauche ou à droite et vous demandez du galop, qui coûte de l\'énergie. Collé derrière un autre, vous récupérez plus vite et profitez de ses accélérations.',
   meduse:'Le radeau de la Méduse, en version bande dessinée : la pyramide de corps du tableau, c\'est vous qui la construisez. Pendant deux minutes, chacun lâche ses naufragés sur le radeau quand il veut, un toutes les trois secondes. Le corps suspendu se balance de debout à couché : à vous de choisir le moment. Les corps glissent, le radeau tangue, certains tombent à l\'eau et disparaissent. Votre naufragé le plus haut, une fois posé, marque des points tant qu\'il reste au sommet ; trois fois, l\'Argus passe à l\'horizon et le sommet vaut alors cinq fois plus. Lâcher un corps sur la tête du leader pour le déloger fait partie du jeu. Des robots complètent seul ou à deux.',
   derby:'Course de chevaux : tout le monde reçoit la même série de figures à tracer. Chaque figure réussie fait avancer votre cheval, plus loin si elle est complexe et bien tracée. Le premier à la ligne gagne.',
-  blob:'Le blob, ce drôle d\'organisme qui se réveille dans une boîte de Petri : chaque joueur en a un, dans la même boîte. Tracez du doigt un chemin depuis votre blob, il pousse le long du tracé en dépensant son énergie. Tracez jusque dans un autre blob et vous l\'envahissez, plus cher, d\'autant plus qu\'il a d\'énergie. Votre énergie revient doucement, d\'autant moins que votre blob est grand, et plus du tout passé la moitié de la boîte : il faut alors tenir des gros flocons d\'avoine, qui l\'accélèrent tant que vous les couvrez. Le laborantin en ajoute de temps en temps, n\'importe où. Les miettes se mangent d\'un coup. Un morceau coupé du reste de votre blob, sans flocon, dépérit. Touchez votre blob pour y poser un renfort qui durcit avec le temps. Au bout de 3 minutes, le plus grand blob gagne. Des robots complètent seul ou à deux.'
+  blob:'Le blob, ce drôle d\'organisme qui se réveille dans une boîte de Petri : chaque joueur en a un, dans la même boîte. Tracez du doigt un chemin depuis votre blob, il pousse le long du tracé en dépensant son énergie. Tracez jusque dans un autre blob et vous l\'envahissez, plus cher, d\'autant plus qu\'il a d\'énergie. Votre énergie revient doucement, d\'autant moins que votre blob est grand, et plus du tout passé la moitié de la boîte : il faut alors tenir des gros flocons d\'avoine, qui l\'accélèrent tant que vous les couvrez. Le laborantin en ajoute de temps en temps, n\'importe où. Les miettes se mangent d\'un coup. Tout morceau coupé de la partie qui porte le visage de votre blob dépérit. Touchez votre blob pour y poser un renfort qui durcit avec le temps. Au bout de 3 minutes, le plus grand blob gagne. Des robots complètent seul ou à deux.'
 };
 
 const cleanName = s => String(s || '').replace(/[\u0000-\u001f<>]/g,'').trim().slice(0,14) || (LANG === 'en' ? 'Player' : 'Joueur');
@@ -10570,7 +10570,7 @@ function blGrow(id){
     if (HBL.crumbs.has(k)){ HBL.crumbs.delete(k); HBL.E[id] = Math.min(100, HBL.E[id] + BL_CRUMB); H.stats[id].crumbs++; broadcast({ t:'bl_ev', k:'eat', a:id, c:k }); }
   }
 }
-// the parts of a blob that no flake of its own feeds wither from their edges
+// the parts of a blob cut off from its main body wither from their edges
 function blStarve(){
   // label the separate pieces of every blob
   const g = HBL.g, comp = new Int32Array(g.length).fill(-1), info = [], farmAt = new Set(HBL.farms.map(f => f.y*BL_N + f.x));
@@ -10587,11 +10587,11 @@ function blStarve(){
     }
     info.push({ o, n, farm });
   }
-  // a piece lives if it holds a flake, or if it is the biggest piece of its blob
+  // only the biggest piece of each blob (the one with the face) lives; any arm cut off from it withers
   const big = {};
   info.forEach((c, i) => { if (big[c.o] == null || c.n > info[big[c.o]].n) big[c.o] = i; });
   const fed = new Uint8Array(g.length);
-  for (let k = 0; k < g.length; k++) if (g[k]){ const c = info[comp[k]]; fed[k] = c.farm || big[c.o] === comp[k] ? 1 : 0; }
+  for (let k = 0; k < g.length; k++) if (g[k]){ const c = info[comp[k]]; fed[k] = big[c.o] === comp[k] ? 1 : 0; }
   HBL.fed = fed;
   for (let k = 0; k < g.length; k++){
     if (!g[k] || fed[k]) continue;
@@ -10720,7 +10720,7 @@ function startBlob(m){
     spec:!players.some(p => p.id === me.id), draw:null, img:null, dirty:true, fx:[], tot:BL_IN.reduce((a, b) => a + b, 0) };
   blHead('Blob'); renderBlPlayers();
   $('blTime').textContent = '⏱ 3:00'; $('blRf').textContent = 'Renforts 0/' + BL_RF_MAX;
-  $('blHelp').textContent = 'Glissez le doigt depuis votre blob pour tracer où il doit pousser ; tracez jusque dans un autre blob pour l\'attaquer. Touchez votre blob pour y poser un renfort qui durcit avec le temps. Votre énergie revient doucement, d\'autant moins que votre blob est grand (plus du tout à la moitié de la boîte) ; chaque gros flocon couvert l\'accélère, et le laborantin en ajoute de temps en temps. Un morceau coupé du reste sans flocon dépérit. Le plus grand blob au bout de 3 minutes gagne.';
+  $('blHelp').textContent = 'Glissez le doigt depuis votre blob pour tracer où il doit pousser ; tracez jusque dans un autre blob pour l\'attaquer. Touchez votre blob pour y poser un renfort qui durcit avec le temps. Votre énergie revient doucement, d\'autant moins que votre blob est grand (plus du tout à la moitié de la boîte) ; chaque gros flocon couvert l\'accélère, et le laborantin en ajoute de temps en temps. Tout morceau coupé de la partie qui porte le visage dépérit. Le plus grand blob au bout de 3 minutes gagne.';
   blVeins();
 }
 function blHead(t){ $('blHead').textContent = t; }
@@ -10984,7 +10984,7 @@ const BRIEF = {
   agility:{ ctl:[['📱', 'Choisissez un chien. Haie, pneu, triple : un tap quand le cercle est vert. Slalom : tracez le zigzag. Tunnel : doigt sur le chien, glissez. Passerelle : restez appuyé, lâchez sur le jaune. Bascule : un tap sur le vert au milieu. Table : un tap puis plus rien. Sprint final : tapez à toute vitesse.'], ['💻', 'Les mêmes gestes à la souris, ou Espace (à marteler pour le sprint).']],
     tip:'Chaque race a 6 étoiles : Vitesse, Saut ou Énergie. Un Whippet file entre les obstacles, un Jack Russell a plus de marge sur les haies, un Corgi va plus vite au sprint et dans les obstacles longs.' },
   blob:{ ctl:[['📱', 'Glissez le doigt depuis votre blob pour tracer où il doit pousser, jusque dans un autre blob pour l\'attaquer. Touchez votre blob pour poser un renfort.'], ['💻', 'Pareil à la souris : glissez pour tracer, cliquez sur votre blob pour renforcer.']],
-    tip:'Passé la moitié de la boîte, seule la nourriture des flocons vous fait avancer : volez ceux des autres. Coupez un adversaire en deux, le petit morceau sans flocon dépérit tout seul.' },
+    tip:'Passé la moitié de la boîte, seule la nourriture des flocons vous fait avancer : volez ceux des autres. Coupez un bras à un adversaire : séparé de son visage, il dépérit tout seul.' },
   meduse:{ ctl:[['📱', 'Glissez le doigt au-dessus du radeau pour viser, relâchez pour lâcher votre naufragé.'], ['💻', 'Visez à la souris et cliquez, ou ← → puis Espace.']],
     tip:'Couché, un corps tient mieux ; debout, il monte plus haut mais bascule. L\'Argus passe trois fois : soyez au sommet à ce moment-là, ça vaut 5 fois plus.' },
   galop:{ ctl:[['📱', 'Choisissez un cheval. ◀ ▶ pour vous décaler, GALOP pour accélérer (coûte de l\'énergie), RALENTIR pour souffler.'], ['💻', '← → se décaler · ↑ ou Espace galop · ↓ ralentir. Ou cliquez les boutons.']],
