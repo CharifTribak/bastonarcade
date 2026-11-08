@@ -12189,7 +12189,9 @@ addEventListener('pagehide', () => { if (net && !me.host && net.conn && net.conn
 // leaving the page by mistake while in a room: the browser asks first
 addEventListener('beforeunload', e => { if (net && !net.solo && phase !== 'menu'){ e.preventDefault(); e.returnValue = ''; } });
 // Invitation link: <page>?salon=CODE. Opening it fills the code and joins straight away when a name is already saved.
-const inviteUrl = () => location.origin + location.pathname + '?salon=' + (net && net.code || $('lobbyCode').textContent);
+// played inside a page of another site (itch.io), invitations still point to bastonarcade.com
+const inviteBase = () => /(^|\.)itch\.(zone|io)$/.test(location.hostname) ? 'https://bastonarcade.com/' : location.origin + location.pathname;
+const inviteUrl = () => inviteBase() + '?salon=' + (net && net.code || $('lobbyCode').textContent);
 let inviteT = null;
 const canShareLink = () => !!navigator.share && matchMedia('(pointer: coarse)').matches;
 if (canShareLink()) $('btnInvite').textContent = '📤 Partager le lien';
