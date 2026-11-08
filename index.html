@@ -10440,7 +10440,7 @@ function mdMast(ctx, mb, t){
 // blob costs a little upkeep, and any part cut off from all of its flakes starves and withers away. A tap inside your
 // own blob grows a reinforcement that hardens over time. After three minutes the largest blob wins.
 const BL_N = 96, BL_T = 180, BL_TICK = .1, BL_CX = 306, BL_CY = 309, BL_R = 218;
-let BL_GROW = 7, BL_BITE = 2, BL_COST = .25, BL_ATK = 2.2, BL_BASE = 2.5, BL_FARM = 2.5, BL_CRUMB = 6, BL_DROP = [20, 30], BL_FMAX = 20;
+let BL_GROW = 7, BL_BITE = 2, BL_COST = .25, BL_ATK = 2.2, BL_BASE = 2.5, BL_FARM = 3.5, BL_CRUMB = 6, BL_DROP = [20, 30], BL_FMAX = 20;
 const BL_RF_COST = 8, BL_RF_MAX = 3, BL_RF_R = 4.5, BL_E0 = 50;
 let HBL = null, BL = null;
 function blLater(fn, ms){ const g = HBL; const t = setTimeout(() => { if (HBL === g && H && !H.over) fn(); }, ms); HBL.timers.push(t); }
@@ -10462,7 +10462,7 @@ function blobHostStart(){
   H.n = players.length;
   for (const p of players) H.stats[p.id] = { pts:0, area:0, farms:0, stolen:0, crumbs:0, best:0, left:false, out:false };
   const n = players.length, g = new Uint8Array(BL_N*BL_N), c = (BL_N - 1)/2;
-  HBL = { timers:[], ph:'wait', t:0, acc:0, g, E:{}, path:{}, rf:[], rid:1, farms:[], crumbs:new Set(), lastSend:0, bot:{}, idx:{}, dirty:true };
+  HBL = { timers:[], ph:'wait', t:0, acc:0, atk:{}, hurt:{}, g, E:{}, path:{}, rf:[], rid:1, farms:[], crumbs:new Set(), lastSend:0, bot:{}, idx:{}, dirty:true };
   players.forEach((p, i) => { HBL.idx[p.id] = i + 1; HBL.E[p.id] = BL_E0; HBL.path[p.id] = []; });
   const free = (x, y, d) => HBL.farms.every(f => Math.hypot(f.x - x, f.y - y) > d);
   // each blob starts on its own flake, spread around the dish
@@ -10561,7 +10561,7 @@ function blGrow(id){
       const cost = BL_ATK*(1 + blHard(k)*1.6)*(.6 + .8*Math.min(1, dE/100));
       if (HBL.E[id] < cost) { HBL.path[id] = []; break; }
       HBL.E[id] -= cost; if (def) HBL.E[def] = Math.max(0, HBL.E[def] - .4);
-      g[k] = o; bites++; grown++; H.stats[id].stolen++;
+      g[k] = o; bites++; grown++; H.stats[id].stolen++; HBL.atk[id] = HBL.t; if (def) HBL.hurt[def] = HBL.t;
       HBL.rf = HBL.rf.filter(r => !(r.x + r.y*BL_N === k));
     } else {
       if (HBL.E[id] < BL_COST){ break; }
@@ -10658,7 +10658,8 @@ function blobHostFrame(dt, now){
     broadcastSnap({ t:'bl_s', tt:Math.round(HBL.t*10), g:blCode(),
       e:players.map(p => Math.round(HBL.E[p.id])), a:players.map(p => H.stats[p.id] ? H.stats[p.id].area : 0),
       rf:HBL.rf.map(r => [r.x, r.y, r.o, Math.round((HBL.t - r.t0)*10)]),
-      pa:players.map(p => (HBL.path[p.id] || []).slice(0, 12).map(q => [Math.round(q[0]), Math.round(q[1])])) });
+      pa:players.map(p => (HBL.path[p.id] || []).slice(0, 12).map(q => [Math.round(q[0]), Math.round(q[1])])),
+      md:players.map(p => HBL.t - (HBL.atk[p.id] ?? -9) < 1.2 ? 1 : HBL.t - (HBL.hurt[p.id] ?? -9) < 1.5 ? 2 : 0) });
   }
   if (HBL.t >= BL_T || players.filter(p => !H.stats[p.id].out && blIn(p.id)).length <= 1 && HBL.t > 5) blFinish();
 }
@@ -10749,7 +10750,7 @@ function blobRecv(m){
     blHead('Les blobs se réveillent…');
   } else if (m.t === 'bl_go'){ BL.ph = 'play'; phase = 'play'; blHead('Poussez !'); }
   else if (m.t === 'bl_s'){
-    BL.t = m.tt/10; blDecode(m.g); BL.e = m.e; BL.a = m.a; BL.rf = m.rf; BL.pa = m.pa; BL.dirty = true;
+    BL.t = m.tt/10; blDecode(m.g); BL.e = m.e; BL.a = m.a; BL.rf = m.rf; BL.pa = m.pa; BL.md = m.md || []; BL.dirty = true;
     renderBlPlayers();
   } else if (m.t === 'bl_ev'){
     if (m.k === 'eat'){ BL.crumbs.delete(m.c); if (m.a === me.id) sfx('tap'); }
@@ -10828,6 +10829,41 @@ function blVeins(){
   BL_VEINS = c;
 }
 const blRGB = hex => { const h = hex.replace('#', ''); return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)]; };
+// a comic face in the player's colour: breathing, blinking, eyes on where it is heading;
+// mood 1 = biting someone (teeth out, frowning brows), 2 = being bitten (sulking, a drop of sweat)
+function blFace(ctx, x, y, p, mood, t, look, F){
+  const br = Math.sin(t*3), r = 17;
+  ctx.save(); ctx.translate(x, y + (mood === 1 ? Math.sin(t*22)*1.2 : br*1.2)); ctx.scale(1 + br*.04, 1 - br*.04);
+  ctx.fillStyle = p.color; ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = 'rgba(255,255,255,.35)'; ctx.beginPath(); ctx.ellipse(-6, -8, 5, 3, -.5, 0, Math.PI*2); ctx.fill();
+  // eyes, looking towards the path
+  let lx = 0, ly = 0;
+  if (look){ const dx = look[0] - x, dy = look[1] - y, d = Math.hypot(dx, dy) || 1; lx = dx/d*1.8; ly = dy/d*1.8; }
+  F.blink -= 1/60; const shut = F.blink < .12; if (F.blink < 0) F.blink = 2.5 + Math.random()*3;
+  const ink = /^#f/i.test(inkOn(p.color)) ? '#fff' : '#000';
+  for (const ex of [-6, 6]){
+    ctx.fillStyle = '#fff'; ctx.strokeStyle = '#000'; ctx.lineWidth = 1.8;
+    const eh = shut ? 1 : mood === 2 ? 3 : 5;
+    ctx.beginPath(); ctx.ellipse(ex, -3, 4, eh, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+    if (!shut){ ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(ex + lx, -3 + ly + (mood === 2 ? 1 : 0), 1.9, 0, Math.PI*2); ctx.fill(); }
+  }
+  // brows
+  ctx.strokeStyle = '#000'; ctx.lineWidth = 2.6; ctx.lineCap = 'round';
+  if (mood === 1){ ctx.beginPath(); ctx.moveTo(-10, -11); ctx.lineTo(-3, -8); ctx.moveTo(10, -11); ctx.lineTo(3, -8); ctx.stroke(); }
+  else if (mood === 2){ ctx.beginPath(); ctx.moveTo(-10, -8); ctx.lineTo(-3, -10); ctx.moveTo(10, -8); ctx.lineTo(3, -10); ctx.stroke(); }
+  // mouth
+  if (mood === 1){
+    ctx.fillStyle = '#5A0E12'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-8, 4, 16, 8, 3) : ctx.rect(-8, 4, 16, 8); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#fff'; for (let k = 0; k < 4; k++){ ctx.beginPath(); ctx.moveTo(-7 + k*4, 4.5); ctx.lineTo(-5 + k*4, 8); ctx.lineTo(-3 + k*4, 4.5); ctx.fill(); ctx.beginPath(); ctx.moveTo(-7 + k*4, 11.5); ctx.lineTo(-5 + k*4, 8.5); ctx.lineTo(-3 + k*4, 11.5); ctx.fill(); }
+  } else if (mood === 2){
+    ctx.beginPath(); ctx.arc(0, 13, 6, Math.PI*1.15, Math.PI*1.85); ctx.stroke();
+    ctx.fillStyle = '#8FD3FF'; ctx.strokeStyle = '#000'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(13, -12); ctx.quadraticCurveTo(17, -5, 13, -3); ctx.quadraticCurveTo(9, -5, 13, -12); ctx.fill(); ctx.stroke();
+  } else { ctx.beginPath(); ctx.arc(0, 4, 6, Math.PI*.15, Math.PI*.85); ctx.stroke(); }
+  ctx.restore();
+}
 function blDraw(ctx, now){
   const t = now/1000;
   ctx.fillStyle = '#1C1C1E'; ctx.fillRect(0, 0, 600, 600);
@@ -10888,11 +10924,24 @@ function blDraw(ctx, now){
   const line = (pts, col, w) => { if (!pts || !pts.length) return; ctx.strokeStyle = col; ctx.lineWidth = w; ctx.setLineDash([6, 6]); ctx.beginPath(); pts.forEach((q, j) => { const [x, y] = P(q[0], q[1]); if (j) ctx.lineTo(x, y); else ctx.moveTo(x, y); }); ctx.stroke(); ctx.setLineDash([]); const q = pts[pts.length - 1], [ex, ey] = P(q[0], q[1]); ctx.fillStyle = col; ctx.beginPath(); ctx.arc(ex, ey, 4, 0, Math.PI*2); ctx.fill(); };
   if (BL.draw) line(BL.draw.pts, '#fff', 3);
   else if (mi >= 0) line(BL.pa[mi], 'rgba(255,255,255,.75)', 2.5);
-  // names on the blobs
-  ctx.font = '900 12px Nunito, sans-serif'; ctx.textAlign = 'center';
+  // a face on every blob: it bares its teeth when it bites, sulks when it gets bitten
   const sums = players.map(() => [0, 0, 0]);
   for (let k = 0; k < BL.g.length; k += 2){ const v = BL.g[k]; if (v && v <= 5){ const s = sums[v - 1]; s[0] += k % BL_N; s[1] += Math.floor(k/BL_N); s[2]++; } }
-  players.forEach((p, i) => { const s = sums[i]; if (s[2] < 6) return; const [x, y] = P(s[0]/s[2], s[1]/s[2]); const lb = p.id === me.id ? 'VOUS' : p.name.slice(0, 10); ctx.lineWidth = 3.5; ctx.strokeStyle = 'rgba(0,0,0,.75)'; ctx.fillStyle = '#fff'; ctx.strokeText(lb, x, y); ctx.fillText(lb, x, y); });
+  BL.face = BL.face || [];
+  players.forEach((p, i) => {
+    const s = sums[i]; if (s[2] < 6) { BL.face[i] = null; return; }
+    // sit on the blob cell nearest to its middle
+    const mx = s[0]/s[2], my = s[1]/s[2]; let best = null, bd = 1e9;
+    for (let k = 0; k < BL.g.length; k += 3) if (BL.g[k] === i + 1){ const x = k % BL_N, y = Math.floor(k/BL_N), d = (x - mx)**2 + (y - my)**2; if (d < bd){ bd = d; best = [x, y]; } }
+    if (!best) return;
+    const F = BL.face[i] || (BL.face[i] = { x:best[0], y:best[1], blink:2 + Math.random()*3 });
+    F.x += (best[0] - F.x)*.08; F.y += (best[1] - F.y)*.08;
+    const [x, y] = P(F.x, F.y), path = BL.pa[i] && BL.pa[i][0];
+    blFace(ctx, x, y, p, BL.md && BL.md[i] || 0, t + i*1.7, path ? P(path[0], path[1]) : null, F);
+    const lb = p.id === me.id ? 'VOUS' : p.name.slice(0, 10);
+    ctx.font = '900 11px Nunito, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 3.5; ctx.strokeStyle = 'rgba(0,0,0,.75)'; ctx.fillStyle = '#fff';
+    ctx.strokeText(lb, x, y + 30); ctx.fillText(lb, x, y + 30);
+  });
   if (BL.banner){
     ctx.fillStyle = 'rgba(0,0,0,.6)'; ctx.fillRect(0, 250, 600, 90);
     ctx.font = '34px Bangers, Impact, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 6; ctx.strokeStyle = '#000'; ctx.fillStyle = BL.banner.col;
