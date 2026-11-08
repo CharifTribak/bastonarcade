@@ -13,7 +13,7 @@ jobs:
     env:
       BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Build the itch.io version
         run: python3 tools/itch_build.py dist/itch
       - name: Install butler
