@@ -1,0 +1,29 @@
+# Sends the game to itch.io (https://chariftribak.itch.io/bastonarcade) after each change to the game files.
+# Needs the repository secret BUTLER_API_KEY (an itch.io API key: itch.io > Settings > API keys).
+name: itch.io
+on:
+  push:
+    branches: [main]
+    paths: ['index.html', 'lib/**', 'img/**', 'fonts/**', 'tools/itch_build.py']
+  workflow_dispatch:
+concurrency: itch
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    env:
+      BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the itch.io version
+        run: python3 tools/itch_build.py dist/itch
+      - name: Install butler
+        if: env.BUTLER_API_KEY != ''
+        run: |
+          curl -sSL -o butler.zip https://broth.itch.zone/butler/linux-amd64/LATEST/archive/default
+          unzip -q butler.zip -d butler && chmod +x butler/butler && ./butler/butler -V
+      - name: Push to itch.io
+        if: env.BUTLER_API_KEY != ''
+        run: ./butler/butler push dist/itch chariftribak/bastonarcade:html5 --userversion "$(date -u +%Y.%m.%d)-${GITHUB_SHA::7}"
+      - name: No key yet
+        if: env.BUTLER_API_KEY == ''
+        run: echo "BUTLER_API_KEY is not set, nothing sent to itch.io"
