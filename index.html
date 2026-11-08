@@ -11096,6 +11096,9 @@ const RC_LAPS = 2, RC_CRUISE = 290, RC_VMAX = 400, RC_ACC = 150, RC_BOOST_ACC = 
 const RC_FUEL_BURN = 13, RC_FUEL_REGEN = 2.2, RC_FUEL_PIT = 32, RC_PIT_V = 230, RC_OFF_V = 150, RC_PIT_W = 95, RC_R = 16;
 const RC_WIND = .4, RC_CD = 3, RC_GHOST = 3, RC_PICK_T = 25, RC_TMAX = 240;
 // where each kind of car strikes, in its own frame (forward, right), the radius, and what it costs the victim
+// a strike reaches one car length ahead of the bumper, a little wider than a car
+const RC_REACH = [8, 23 + 46 + RC_R], RC_REACH_W = 12 + RC_R + 4;
+function rcInReach(c, o){ const fx = Math.cos(c.h), fy = Math.sin(c.h), dx = o.x - c.x, dy = o.y - c.y, a = dx*fx + dy*fy, l = -dx*fy + dy*fx; return a >= RC_REACH[0] && a <= RC_REACH[1] && Math.abs(l) <= RC_REACH_W; }
 const RC_ZONE = { f:{ f:40, r:0, rad:30, v:.8, fu:15, push:0 }, b:{ f:-42, r:0, rad:32, v:.95, fu:10, push:0 }, l:{ f:0, r:-30, rad:28, v:.93, fu:12, push:-70 }, r:{ f:0, r:30, rad:28, v:.93, fu:12, push:70 } };
 let HRC = null, RC = null;
 function rcLater(fn, ms){ const g = HRC; const t = setTimeout(() => { if (HRC === g && H && !H.over) fn(); }, ms); HRC.timers.push(t); }
@@ -11210,13 +11213,12 @@ function rcStep(dt){
   }
 }
 function rcStrike(id, c){
-  const Z = RC_ZONE[RC_CARS[c.car].hit], fx = Math.cos(c.h), fy = Math.sin(c.h);
-  const zx = c.x + fx*Z.f - fy*Z.r, zy = c.y + fy*Z.f + fx*Z.r;
+  const Z = RC_ZONE.f;
   let any = false;
   for (const p of players){
     if (p.id === id) continue;
     const o = HRC.cars[p.id]; if (!o || o.done) continue;
-    if (o.ghost > 0 || Math.hypot(o.x - zx, o.y - zy) > Z.rad + RC_R) continue;
+    if (o.ghost > 0 || !rcInReach(c, o)) continue;
     o.ghost = RC_GHOST; o.v *= Z.v; o.fuel = Math.max(0, o.fuel - Z.fu); o.slip += Z.push;
     H.stats[id].hits++; H.stats[p.id].hit++; any = true;
     broadcast({ t:'rc_ev', k:'hit', a:id, b:p.id, x:Math.round(o.x), y:Math.round(o.y) });
@@ -11298,8 +11300,7 @@ function rcBots(dt){
     c.gas = !c.brake && turn < .5 && c.fuel > 20 && !(pitNear && c.fuel < 35);
     // strike if someone is in the zone (with some hesitation)
     if (c.cd <= 0 && Math.random() < .025){
-      const Z = RC_ZONE[RC_CARS[c.car].hit], fx = Math.cos(c.h), fy = Math.sin(c.h), zx = c.x + fx*Z.f - fy*Z.r, zy = c.y + fy*Z.f + fx*Z.r;
-      if (players.some(o => o.id !== p.id && HRC.cars[o.id] && !(HRC.cars[o.id].ghost > 0) && Math.hypot(HRC.cars[o.id].x - zx, HRC.cars[o.id].y - zy) < Z.rad + RC_R + 6)) racerHit(p.id);
+      if (players.some(o => o.id !== p.id && HRC.cars[o.id] && !(HRC.cars[o.id].ghost > 0) && rcInReach(c, HRC.cars[o.id]))) racerHit(p.id);
     }
   }
 }
@@ -11382,7 +11383,7 @@ function racerRecv(m){
     else if (m.k === 'fin'){ if (m.a === me.id){ boom('ARRIVÉE ! ' + m.place + (m.place === 1 ? 'er' : 'e'), { size:30, x:.5, y:.3, pal:BOOM_COLORS[1], ms:1400 }); sfx(m.place === 1 ? 'win' : 'ok'); } else if (m.place === 1) rcToast(rcName(m.a) + ' franchit la ligne en tête !'); }
     else if (m.k === 'left'){ const p = players.find(x => x.id === m.a); if (p) p.left = true; }
   } else if (m.t === 'rc_res'){
-    RC.ph = 'res'; phase = 'res';
+    RC.ph = 'res'; phase = 'res'; rcEngineStop();
     const k = m.order.indexOf(me.id);
     RC.banner = k === 0 ? { big:'VICTOIRE !', col:'#3DDC97' } : { big:(k >= 0 ? (k + 1) + 'e' : '') + ' · ' + rcName(m.order[0]).toUpperCase() + ' GAGNE', col:'#FFD93B' };
   }
@@ -11412,6 +11413,32 @@ addEventListener('keydown', e => {
 });
 addEventListener('keyup', e => { if (cur !== 'racer' || !RC) return; RC.keys[e.key.toLowerCase()] = false; });
 
+// ---- engine sound: two detuned oscillators through a low-pass filter; pitch follows speed, the pedal opens it up ----
+const RC_ENGINE = { formula:{ w:'sawtooth', f:70, d:1.5 }, beetle:{ w:'square', f:38, d:1.02 }, pickup:{ w:'sawtooth', f:34, d:.5 }, coupe:{ w:'sawtooth', f:52, d:1.01 }, van:{ w:'triangle', f:30, d:.5 } };
+function rcEngine(look, v, gas, on){
+  const c = on && SND.on ? sndCtx() : null;
+  if (!c){ rcEngineStop(); return; }
+  let E = RC.eng;
+  if (!E || E.look !== look){
+    rcEngineStop();
+    const V = RC_ENGINE[look] || RC_ENGINE.coupe, o1 = c.createOscillator(), o2 = c.createOscillator(), f = c.createBiquadFilter(), g = c.createGain();
+    o1.type = V.w; o2.type = 'square'; f.type = 'lowpass'; f.Q.value = 4; g.gain.value = 0;
+    o1.connect(f); o2.connect(f); f.connect(g).connect(c.destination); o1.start(); o2.start();
+    E = RC.eng = { look, o1, o2, f, g, V, c, at:performance.now() };
+    rcEngine.watch = rcEngine.watch || setInterval(() => { if (RC && RC.eng && performance.now() - RC.eng.at > 400) rcEngineStop(); if (!RC && rcEngine.last) { try { rcEngine.last.g.gain.value = 0; rcEngine.last.o1.stop(); rcEngine.last.o2.stop(); } catch(_){} rcEngine.last = null; } }, 500);
+    rcEngine.last = E;
+  }
+  E.at = performance.now();
+  const k = Math.max(0, Math.min(1.2, v/RC_VMAX)), t = c.currentTime, fr = E.V.f*(.7 + k*1.6)*(gas ? 1.08 : 1);
+  E.o1.frequency.setTargetAtTime(fr, t, .06); E.o2.frequency.setTargetAtTime(fr*E.V.d + (gas ? 3 : 0), t, .06);
+  E.f.frequency.setTargetAtTime(gas ? 1800 + k*1400 : 500 + k*500, t, .08);
+  E.g.gain.setTargetAtTime(gas ? .07 : .035, t, .08);
+}
+function rcEngineStop(){
+  const E = RC && RC.eng; if (!E) return;
+  try { E.g.gain.setTargetAtTime(0, E.c.currentTime, .05); E.o1.stop(E.c.currentTime + .3); E.o2.stop(E.c.currentTime + .3); } catch(_){}
+  RC.eng = null; rcEngine.last = null;
+}
 // ---- loop ----
 function racerFrame(dtMs, now){
   if (!RC) return;
@@ -11443,6 +11470,7 @@ function racerFrame(dtMs, now){
     $('rcSpd').textContent = Math.round(mc.v*.6) + ' km/h';
     $('rcHit').disabled = mc.cd > 0 || RC.ph !== 'play'; $('rcHit').textContent = mc.cd > 0 ? '💥 ' + Math.ceil(mc.cd) : '💥 FRAPPER';
   }
+  if (mc && RC.looks[i]) rcEngine(RC_CARS[RC.looks[i][0]].look, mc.v, !!(mc.f & 1), (RC.ph === 'play' || RC.ph === 'count') && !(mc.f & 64));
   if (RC.T) rcDraw(rcctx, now, dt);
 }
 // race order: laps, then distance along the track
@@ -11500,6 +11528,7 @@ function rcDraw(ctx, now, dt){
     const wind = o.windAt && nt - o.windAt < RC_WIND*1000 ? (nt - o.windAt)/(RC_WIND*1000) : 0;
     ctx.save(); if (o.f & 128) ctx.globalAlpha = Math.floor(nt/110) % 2 ? .25 : .85;
     ctx.translate(o.x + (wind ? (Math.random() - .5)*3 : 0), o.y); ctx.rotate(o.h + Math.PI/2);
+    if (wind){ ctx.fillStyle = 'rgba(230,38,43,' + (.15 + .3*wind) + ')'; ctx.strokeStyle = 'rgba(230,38,43,.8)'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]); ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-RC_REACH_W, -RC_REACH[1], RC_REACH_W*2, RC_REACH[1] - 22, 8) : ctx.rect(-RC_REACH_W, -RC_REACH[1], RC_REACH_W*2, RC_REACH[1] - 22); ctx.fill(); ctx.stroke(); ctx.setLineDash([]); }
     rcCar(ctx, C.look, p ? p.color : '#888', C.hit, wind, t);
     ctx.restore();
     // names above the others
