@@ -1175,7 +1175,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
         <div class="rcsteer" id="rcSteer" aria-label="Volant : glissez à gauche ou à droite"><span class="rcl">◀</span><span class="rcr">▶</span><i id="rcKnob"></i></div>
         <div class="rcbtns"><button id="rcGas" type="button">⛽ ACCÉLÉRER</button><button id="rcBrake" type="button">▼ Freiner</button><button id="rcHit" type="button">💥 FRAPPER</button></div>
       </div>
-      <p class="hint ctlhelp" id="rcHelp">Glissez le volant à gauche ou à droite (il revient au centre quand vous le lâchez). Maintenez Accélérer pour aller plus vite en brûlant de l'essence, Freiner avant les virages serrés. Trop vite dans un virage, les pneus crissent et la voiture glisse vers l'extérieur. L'essence revient doucement, bien plus vite dans les deux stands (les zones aux jerricans, à côté de la piste). Frapper : votre voiture frappe de son côté après une courte charge visible ; la victime perd 5 % de sa vitesse et 10 % de son essence. Clavier : ← → pour tourner, ↑ accélérer, ↓ freiner, Espace frapper.</p>
+      <p class="hint ctlhelp" id="rcHelp">Glissez le volant à gauche ou à droite (il revient au centre quand vous le lâchez). Maintenez Accélérer pour aller plus vite en brûlant de l'essence, Freiner avant les virages serrés. Trop vite dans un virage, les pneus crissent et la voiture glisse vers l'extérieur. L'essence revient doucement, bien plus vite dans les deux stands (les zones aux jerricans, à côté de la piste). Frapper : votre voiture frappe vers l'avant après une courte charge visible ; la voiture touchée perd 20 % de sa vitesse et 15 % de son essence, puis clignote 3 s pendant lesquelles on lui passe à travers. Clavier : ← → pour tourner, ↑ accélérer, ↓ freiner, Espace frapper.</p>
     </div>
   </div>
 </section>
@@ -1474,7 +1474,7 @@ const GAME_DESC = {
   meduse:'Le radeau de la Méduse, en version bande dessinée : la pyramide de corps du tableau, c\'est vous qui la construisez. Pendant deux minutes, chacun lâche ses naufragés sur le radeau quand il veut, un toutes les trois secondes. Le corps suspendu se balance de debout à couché : à vous de choisir le moment. Les corps glissent, le radeau tangue, certains tombent à l\'eau et disparaissent. Votre naufragé le plus haut, une fois posé, marque des points tant qu\'il reste au sommet ; trois fois, l\'Argus passe à l\'horizon et le sommet vaut alors cinq fois plus. Lâcher un corps sur la tête du leader pour le déloger fait partie du jeu. Des robots complètent seul ou à deux.',
   derby:'Course de chevaux : tout le monde reçoit la même série de figures à tracer. Chaque figure réussie fait avancer votre cheval, plus loin si elle est complexe et bien tracée. Le premier à la ligne gagne.',
   blob:'Le blob, ce drôle d\'organisme qui se réveille dans une boîte de Petri : chaque joueur en a un, dans la même boîte. Tracez du doigt un chemin depuis votre blob, il pousse le long du tracé en dépensant son énergie. Tracez jusque dans un autre blob et vous l\'envahissez, plus cher, d\'autant plus qu\'il a d\'énergie. Votre énergie revient doucement, d\'autant moins que votre blob est grand, et plus du tout passé la moitié de la boîte : il faut alors tenir des gros flocons d\'avoine, qui l\'accélèrent tant que vous les couvrez. Le laborantin en ajoute de temps en temps, n\'importe où. Les miettes se mangent d\'un coup. Tout morceau coupé de la partie qui porte le visage de votre blob dépérit. Touchez votre blob pour y poser un renfort qui durcit avec le temps. Au bout de 3 minutes, le plus grand blob gagne. Des robots complètent seul ou à deux.',
-  racer:'Une course de voitures vue du dessus, entre Mario Kart et course auto. Choisissez l\'une des 5 voitures : elles vont toutes aussi vite, mais chacune frappe d\'un côté (avant, arrière, gauche ou droite). Ajoutez un bonus : turbo, aérodynamisme ou pneus qui collent. Pilotez avec un volant à glisser qui revient au centre : trop vite dans un virage, les pneus crissent et la voiture glisse vers l\'extérieur. Accélérer brûle l\'essence, qui revient doucement, bien plus vite dans les deux stands à côté de la piste. Frapper prend une courte charge visible : celui qui ne l\'esquive pas perd 5 % de sa vitesse et 10 % de son essence. Deux tours sur l\'un des 5 circuits, à 5 voitures, des robots complètent.'
+  racer:'Une course de voitures vue du dessus, entre Mario Kart et course auto. Choisissez l\'une des 5 voitures, toutes armées d\'un pare-chocs de combat à l\'avant, et ajoutez un bonus : turbo, aérodynamisme ou pneus qui collent. Pilotez avec un volant à glisser qui revient au centre : trop vite dans un virage, les pneus crissent et la voiture glisse vers l\'extérieur. Accélérer brûle l\'essence, qui revient doucement, bien plus vite dans les deux stands à côté de la piste. Frapper vers l\'avant prend une courte charge visible : celui qui ne l\'esquive pas perd 20 % de sa vitesse et 15 % de son essence, puis clignote 3 s, le temps que les autres lui passent à travers. Deux tours sur l\'un des 5 circuits, à 5 voitures, des robots complètent.'
 };
 
 const cleanName = s => String(s || '').replace(/[\u0000-\u001f<>]/g,'').trim().slice(0,14) || (LANG === 'en' ? 'Player' : 'Joueur');
@@ -11084,9 +11084,9 @@ function rcBuild(ti){
 
 const RC_CARS = [
   { n:'Formule',    hit:'f', look:'formula' },
-  { n:'Coccinelle', hit:'b', look:'beetle' },
-  { n:'Pick-up',    hit:'l', look:'pickup' },
-  { n:'Coupé',      hit:'r', look:'coupe' },
+  { n:'Coccinelle', hit:'f', look:'beetle' },
+  { n:'Pick-up',    hit:'f', look:'pickup' },
+  { n:'Coupé',      hit:'f', look:'coupe' },
   { n:'Fourgon',    hit:'f', look:'van' }
 ];
 const RC_SIDES = { f:'à l\'avant', b:'à l\'arrière', l:'à gauche', r:'à droite' };
@@ -11094,9 +11094,9 @@ const RC_ARROW = { f:'⬆', b:'⬇', l:'⬅', r:'➡' };
 const RC_BONUS = { turbo:{ ic:'🚀', n:'Turbo nitro', d:'Accélération +12 %' }, aero:{ ic:'✈️', n:'Aéro chasseur', d:'Vitesse de pointe +5 %' }, gum:{ ic:'🍬', n:'Pneus chewing-gum', d:'Adhérence +12 %' } };
 const RC_LAPS = 2, RC_CRUISE = 290, RC_VMAX = 400, RC_ACC = 150, RC_BOOST_ACC = 210, RC_BRAKE = 420, RC_GRIP = 560, RC_TURN = 1.9;
 const RC_FUEL_BURN = 13, RC_FUEL_REGEN = 2.2, RC_FUEL_PIT = 32, RC_PIT_V = 230, RC_OFF_V = 150, RC_PIT_W = 95, RC_R = 16;
-const RC_WIND = .4, RC_CD = 3, RC_PICK_T = 25, RC_TMAX = 240;
+const RC_WIND = .4, RC_CD = 3, RC_GHOST = 3, RC_PICK_T = 25, RC_TMAX = 240;
 // where each kind of car strikes, in its own frame (forward, right), the radius, and what it costs the victim
-const RC_ZONE = { f:{ f:40, r:0, rad:28, v:.95, fu:10, push:0 }, b:{ f:-42, r:0, rad:32, v:.95, fu:10, push:0 }, l:{ f:0, r:-30, rad:28, v:.93, fu:12, push:-70 }, r:{ f:0, r:30, rad:28, v:.93, fu:12, push:70 } };
+const RC_ZONE = { f:{ f:40, r:0, rad:30, v:.8, fu:15, push:0 }, b:{ f:-42, r:0, rad:32, v:.95, fu:10, push:0 }, l:{ f:0, r:-30, rad:28, v:.93, fu:12, push:-70 }, r:{ f:0, r:30, rad:28, v:.93, fu:12, push:70 } };
 let HRC = null, RC = null;
 function rcLater(fn, ms){ const g = HRC; const t = setTimeout(() => { if (HRC === g && H && !H.over) fn(); }, ms); HRC.timers.push(t); }
 function rcClear(){ if (HRC) HRC.timers.forEach(t => clearTimeout(t)); }
@@ -11165,7 +11165,7 @@ function rcStep(dt){
   for (const p of players){
     const c = HRC.cars[p.id]; if (!c) continue;
     const B = c.bonus;
-    c.cd = Math.max(0, c.cd - dt);
+    c.cd = Math.max(0, c.cd - dt); c.ghost = Math.max(0, (c.ghost || 0) - dt);
     if (c.done){ c.v = Math.max(0, c.v - 200*dt); c.gas = c.brake = false; c.steer *= .9; }
     // where am I: on the asphalt, in a pit lane, or on the grass
     const at = rcTrack(c), ahead = (at.k - c.idx + N) % N;
@@ -11204,7 +11204,8 @@ function rcStep(dt){
   // cars bump each other
   const L = players.map(p => HRC.cars[p.id]).filter(Boolean);
   for (let i = 0; i < L.length; i++) for (let j = i + 1; j < L.length; j++){
-    const a = L[i], b = L[j], dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy);
+    const a = L[i], b = L[j]; if (a.ghost > 0 || b.ghost > 0) continue;
+    const dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy);
     if (d > 0 && d < RC_R*2){ const o = (RC_R*2 - d)/2, ux = dx/d, uy = dy/d; a.x -= ux*o; a.y -= uy*o; b.x += ux*o; b.y += uy*o; a.v *= .995; b.v *= .995; }
   }
 }
@@ -11215,8 +11216,8 @@ function rcStrike(id, c){
   for (const p of players){
     if (p.id === id) continue;
     const o = HRC.cars[p.id]; if (!o || o.done) continue;
-    if (Math.hypot(o.x - zx, o.y - zy) > Z.rad + RC_R) continue;
-    o.v *= Z.v; o.fuel = Math.max(0, o.fuel - Z.fu); o.slip += Z.push;
+    if (o.ghost > 0 || Math.hypot(o.x - zx, o.y - zy) > Z.rad + RC_R) continue;
+    o.ghost = RC_GHOST; o.v *= Z.v; o.fuel = Math.max(0, o.fuel - Z.fu); o.slip += Z.push;
     H.stats[id].hits++; H.stats[p.id].hit++; any = true;
     broadcast({ t:'rc_ev', k:'hit', a:id, b:p.id, x:Math.round(o.x), y:Math.round(o.y) });
   }
@@ -11241,7 +11242,7 @@ function racerHostFrame(dt, now){
   if (now - HRC.lastSend > 50){
     HRC.lastSend = now;
     broadcastSnap({ t:'rc_s', tt:Math.round(HRC.t*10), c:players.map(p => { const c = HRC.cars[p.id]; if (!c) return null;
-      return [Math.round(c.x*10), Math.round(c.y*10), Math.round(c.h*1000), Math.round(c.v), Math.round(c.fuel), c.lap, (c.gas && c.fuel > 0 ? 1 : 0) | (c.brake ? 2 : 0) | (c.skid ? 4 : 0) | (c.off ? 8 : 0) | (c.pit ? 16 : 0) | (c.wind > 0 ? 32 : 0) | (c.done ? 64 : 0), c.idx, Math.round(c.cd*10)]; }) });
+      return [Math.round(c.x*10), Math.round(c.y*10), Math.round(c.h*1000), Math.round(c.v), Math.round(c.fuel), c.lap, (c.gas && c.fuel > 0 ? 1 : 0) | (c.brake ? 2 : 0) | (c.skid ? 4 : 0) | (c.off ? 8 : 0) | (c.pit ? 16 : 0) | (c.wind > 0 ? 32 : 0) | (c.done ? 64 : 0) | (c.ghost > 0 ? 128 : 0), c.idx, Math.round(c.cd*10)]; }) });
   }
   const humans = players.filter(p => !p.bot && rcIn(p.id));
   // the race ends when every car is in, 8 s after the last human gets in, 25 s after the winner, or at the time limit
@@ -11296,9 +11297,9 @@ function rcBots(dt){
     c.brake = c.v > safe*1.05 && c.v > 140;
     c.gas = !c.brake && turn < .5 && c.fuel > 20 && !(pitNear && c.fuel < 35);
     // strike if someone is in the zone (with some hesitation)
-    if (c.cd <= 0 && Math.random() < .08){
+    if (c.cd <= 0 && Math.random() < .025){
       const Z = RC_ZONE[RC_CARS[c.car].hit], fx = Math.cos(c.h), fy = Math.sin(c.h), zx = c.x + fx*Z.f - fy*Z.r, zy = c.y + fy*Z.f + fx*Z.r;
-      if (players.some(o => o.id !== p.id && HRC.cars[o.id] && Math.hypot(HRC.cars[o.id].x - zx, HRC.cars[o.id].y - zy) < Z.rad + RC_R + 6)) racerHit(p.id);
+      if (players.some(o => o.id !== p.id && HRC.cars[o.id] && !(HRC.cars[o.id].ghost > 0) && Math.hypot(HRC.cars[o.id].x - zx, HRC.cars[o.id].y - zy) < Z.rad + RC_R + 6)) racerHit(p.id);
     }
   }
 }
@@ -11326,8 +11327,7 @@ function rcPickUI(){
     const cv = document.createElement('canvas'); cv.width = 90; cv.height = 110;
     const x = cv.getContext('2d'); x.translate(45, 58); x.scale(1.45, 1.45); rcCar(x, c.look, col, c.hit, 0, 0);
     const n = document.createElement('b'); n.textContent = c.n;
-    const s = document.createElement('span'); s.textContent = RC_ARROW[c.hit] + ' frappe ' + RC_SIDES[c.hit];
-    b.append(cv, n, s); b.onclick = () => rcSend({ car:i }); grid.append(b);
+    b.append(cv, n); b.onclick = () => rcSend({ car:i }); grid.append(b);
   });
   const bo = $('rcBonus'); bo.textContent = '';
   for (const [k, B] of Object.entries(RC_BONUS)){
@@ -11375,7 +11375,7 @@ function racerRecv(m){
     if (m.k === 'wind'){ const o = RC.cars[ai]; if (o) o.windAt = performance.now(); if (m.a === me.id) sfx('tap'); }
     else if (m.k === 'hit'){
       RC.fx.push({ x:m.x, y:m.y, t:performance.now() });
-      if (m.b === me.id){ RC.shake = 10; sfx('thud'); rcToast(rcName(m.a) + ' vous a percuté ! −5 % de vitesse, −10 % d\'essence'); }
+      if (m.b === me.id){ RC.shake = 10; sfx('thud'); rcToast(rcName(m.a) + ' vous a percuté ! −20 % de vitesse, −15 % d\'essence'); }
       else if (m.a === me.id){ sfx('ok'); boom('BAM !', { size:26, x:.5, y:.35, pal:BOOM_COLORS[0], ms:600 }); }
     } else if (m.k === 'miss'){ if (m.a === me.id) rcToast('Raté !'); }
     else if (m.k === 'lap'){ if (m.a === me.id){ rcToast('Dernier tour !'); sfx('myturn'); } }
@@ -11391,7 +11391,7 @@ let rcToastT = null;
 function rcToast(t){ const el = $('rcToast'); el.textContent = t; el.classList.add('on'); clearTimeout(rcToastT); rcToastT = setTimeout(() => el.classList.remove('on'), 2200); }
 // ---- controls: a steering slider that springs back to the middle, pedals, the strike button, keys ----
 const rcSl = $('rcSteer'), rcKnob = $('rcKnob');
-function rcSteerAt(e){ const r = rcSl.getBoundingClientRect(); RC.steer = Math.max(-1, Math.min(1, ((e.clientX - r.left)/r.width - .5)*2.2)); }
+function rcSteerAt(e){ const r = rcSl.getBoundingClientRect(); RC.steer = Math.max(-1, Math.min(1, ((e.clientX - r.left)/r.width - .5)*1.76)); }
 rcSl.addEventListener('pointerdown', e => { if (!RC) return; e.preventDefault(); RC.held = true; try { rcSl.setPointerCapture(e.pointerId); } catch(_){} rcSteerAt(e); });
 rcSl.addEventListener('pointermove', e => { if (RC && RC.held) rcSteerAt(e); });
 const rcRel = () => { if (RC) RC.held = false; };
@@ -11422,7 +11422,7 @@ function racerFrame(dtMs, now){
   if (phase === 'count'){ RC.count -= dt; countBeep(RC.count > 0 ? Math.min(3, Math.ceil(RC.count)) : 0); }
   // keys steer too; the slider springs back when let go
   const K = RC.keys, kx = ((K.arrowright || K.d) ? 1 : 0) - ((K.arrowleft || K.q || K.a) ? 1 : 0);
-  if (kx) RC.steer = Math.max(-1, Math.min(1, RC.steer + kx*dt*4));
+  if (kx) RC.steer = Math.max(-1, Math.min(1, RC.steer + kx*dt*3.2));
   else if (!RC.held) RC.steer *= Math.max(0, 1 - dt*9);
   const gas = RC.gas || K.arrowup || K.z || K.w, brake = RC.brake || K.arrowdown || K.s;
   rcKnob.style.left = (50 + RC.steer*42) + '%';
@@ -11441,7 +11441,7 @@ function racerFrame(dtMs, now){
     $('rcLap').textContent = (mc.f & 64) ? '🏁 Arrivé' : 'Tour ' + Math.min(RC_LAPS, mc.lap + 1) + '/' + RC_LAPS;
     $('rcPos').textContent = rcPlace(i) + (rcPlace(i) === 1 ? 'er' : 'e') + ' / ' + players.length;
     $('rcSpd').textContent = Math.round(mc.v*.6) + ' km/h';
-    $('rcHit').disabled = mc.cd > 0 || RC.ph !== 'play'; $('rcHit').textContent = mc.cd > 0 ? '💥 ' + Math.ceil(mc.cd) : '💥 FRAPPER ' + RC_ARROW[RC_CARS[RC.looks[i] ? RC.looks[i][0] : 0].hit];
+    $('rcHit').disabled = mc.cd > 0 || RC.ph !== 'play'; $('rcHit').textContent = mc.cd > 0 ? '💥 ' + Math.ceil(mc.cd) : '💥 FRAPPER';
   }
   if (RC.T) rcDraw(rcctx, now, dt);
 }
@@ -11498,7 +11498,8 @@ function rcDraw(ctx, now, dt){
     if (o.f & 4){ for (const s of [-9, 9]){ const rx = o.x - fx*14 - fy*s, ry = o.y - fy*14 + fx*s, L = o.lastM && o.lastM[s]; if (L) RC.marks.push({ x0:L[0], y0:L[1], x1:rx, y1:ry, t:nt }); (o.lastM || (o.lastM = {}))[s] = [rx, ry]; } if (j === i && nt - (RC.sq || 0) > 260){ RC.sq = nt; noise(.25, .05, 5000, 2500, 0, 8); } }
     else o.lastM = null;
     const wind = o.windAt && nt - o.windAt < RC_WIND*1000 ? (nt - o.windAt)/(RC_WIND*1000) : 0;
-    ctx.save(); ctx.translate(o.x + (wind ? (Math.random() - .5)*3 : 0), o.y); ctx.rotate(o.h + Math.PI/2);
+    ctx.save(); if (o.f & 128) ctx.globalAlpha = Math.floor(nt/110) % 2 ? .25 : .85;
+    ctx.translate(o.x + (wind ? (Math.random() - .5)*3 : 0), o.y); ctx.rotate(o.h + Math.PI/2);
     rcCar(ctx, C.look, p ? p.color : '#888', C.hit, wind, t);
     ctx.restore();
     // names above the others
