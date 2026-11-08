@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Baston Arcade : 18 jeux multijoueurs gratuits, sans compte ni appli</title>
-<meta name="description" content="Dix-huit jeux multijoueurs dans le navigateur : Gravats, Les Gardiens, Derby, Armada, Tape-taupe, Curling, Chaises musicales, Code secret, Kabaddi, Balle au prisonnier, Chars, Les bergers, Drakkars, Bûcherons, Agility, Galop, Méduse et Blob. Un salon, un code, de 1 à 5 joueurs.">
+<title>Baston Arcade : 19 jeux multijoueurs gratuits, sans compte ni appli</title>
+<meta name="description" content="Dix-neuf jeux multijoueurs dans le navigateur : Gravats, Les Gardiens, Derby, Armada, Tape-taupe, Curling, Chaises musicales, Code secret, Kabaddi, Balle au prisonnier, Chars, Les bergers, Drakkars, Bûcherons, Agility, Galop, Méduse, Blob et Grand Prix Baston. Un salon, un code, de 1 à 5 joueurs.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Baston Arcade">
-<meta property="og:description" content="Dix-huit jeux multijoueurs dans le navigateur. Créez un salon, partagez le code, jouez.">
+<meta property="og:description" content="Dix-neuf jeux multijoueurs dans le navigateur. Créez un salon, partagez le code, jouez.">
 <meta property="og:image" content="https://bastonarcade.com/img/share.jpg?v=2">
 <meta property="og:url" content="https://bastonarcade.com/">
 <link rel="canonical" href="https://bastonarcade.com/">
@@ -15,7 +15,7 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#FFD93B">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "Baston Arcade", "url": "https://bastonarcade.com/", "inLanguage": "fr", "description": "Dix-huit jeux multijoueurs gratuits dans le navigateur, de 1 à 5 joueurs sur téléphone ou ordinateur, sans compte, sans application et sans publicité."}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "Baston Arcade", "url": "https://bastonarcade.com/", "inLanguage": "fr", "description": "Dix-neuf jeux multijoueurs gratuits dans le navigateur, de 1 à 5 joueurs sur téléphone ou ordinateur, sans compte, sans application et sans publicité."}</script>
 <link rel="icon" type="image/png" sizes="64x64" href="img/icon-64.png">
 <link rel="icon" type="image/png" sizes="192x192" href="img/icon-192.png">
 <link rel="apple-touch-icon" href="img/icon-180.png">
@@ -448,6 +448,32 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 
 /* ---- méduse ---- */
 #mdWrap,.mdhead,.mdctl{width:min(100%,64vh,600px)}
+#rcWrap,#rcRace .rchead,.rcctl,.rcfuel{width:min(100%,52vh,600px)}
+#rcCv{display:block;width:100%;height:auto;aspect-ratio:600/660;touch-action:none;border:3px solid #000;box-shadow:6px 6px 0 #000}
+.rccars{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;width:100%}
+.rccar{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 3px;background:#fff;color:#000;font-size:12px;line-height:1.2}
+.rccar canvas{width:64px;height:auto}
+.rccar span{font-weight:700;font-size:11px}
+.rccar[aria-pressed=true],.rcbon[aria-pressed=true]{background:#FFD21F;transform:translate(3px,3px);box-shadow:none}
+.rcbonus{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;width:100%}
+.rcbon{display:flex;flex-direction:column;gap:2px;background:#fff;color:#000;font-size:13px;padding:8px 4px}
+.rcbon span{font-size:11px;font-weight:700}
+.rcready{font-size:20px;min-height:56px;width:min(100%,420px);background:#3DDC97;color:#000}
+.rcready.on{background:#FFD21F}
+.rcsub{font-size:20px}
+.rcctl{display:grid;grid-template-columns:1.25fr 1fr;gap:10px;align-items:stretch}
+.rcsteer{position:relative;border:3px solid #000;background:#fff;box-shadow:4px 4px 0 #000;min-height:120px;touch-action:none;user-select:none;-webkit-user-select:none}
+.rcsteer .rcl,.rcsteer .rcr{position:absolute;top:50%;transform:translateY(-50%);font-size:22px;opacity:.35}
+.rcsteer .rcl{left:8px}.rcsteer .rcr{right:8px}
+.rcsteer i{position:absolute;top:10%;bottom:10%;left:50%;width:46px;margin-left:-23px;background:#1E5BFF;border:3px solid #000;border-radius:10px}
+.rcbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.rcbtns button{min-height:56px;font-size:15px;touch-action:none;user-select:none;-webkit-user-select:none}
+#rcGas{grid-column:1/3;background:#3DDC97;color:#000;font-size:18px}
+#rcGas.on{background:#1FAF6E}
+#rcBrake{background:#fff;color:#000}#rcBrake.on{background:#FFD21F}
+#rcHit{background:var(--accent);color:#fff}
+#rcHit:disabled{opacity:.55}
+@media (max-width:520px){.rccar span{font-size:10px}.rccar{font-size:11px}}
 #blWrap,.blhead,.blctl{width:min(100%,56vh,600px)}
 #blCv{display:block;width:100%;height:auto;aspect-ratio:1;touch-action:none;border:3px solid #000;box-shadow:6px 6px 0 #000;background:#1C1C1E}
 .blctl{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;font-weight:900}
@@ -662,7 +688,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
 <section id="scrMenu" class="center">
   <div class="card">
     <h1 class="logosvg" data-appname><svg viewBox="0 0 520 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Baston Arcade"><polygon points="260,8 292,62 352,22 356,86 428,58 404,118 494,120 438,166 508,214 428,226 456,292 384,270 372,322 318,276 262,318 222,270 156,306 152,248 76,262 104,206 18,184 92,148 36,92 116,94 102,30 172,62 204,8 228,58" fill="#000" transform="translate(7,7)"/><polygon points="260,8 292,62 352,22 356,86 428,58 404,118 494,120 438,166 508,214 428,226 456,292 384,270 372,322 318,276 262,318 222,270 156,306 152,248 76,262 104,206 18,184 92,148 36,92 116,94 102,30 172,62 204,8 228,58" fill="#E6262B" stroke="#000" stroke-width="5" stroke-linejoin="round"/><g transform="rotate(-6 260 168)"><text x="264" y="196" text-anchor="middle" font-family="Bangers, Impact, sans-serif" font-size="112" letter-spacing="3" fill="#000">BASTON !</text><text x="258" y="190" text-anchor="middle" font-family="Bangers, Impact, sans-serif" font-size="112" letter-spacing="3" fill="#fff" stroke="#000" stroke-width="6" paint-order="stroke" stroke-linejoin="round">BASTON !</text><text x="383" y="252" text-anchor="end" font-family="Bangers, Impact, sans-serif" font-size="52" letter-spacing="6" fill="#000">ARCADE</text><text x="379" y="248" text-anchor="end" font-family="Bangers, Impact, sans-serif" font-size="52" letter-spacing="6" fill="#FFD93B" stroke="#000" stroke-width="5" paint-order="stroke" stroke-linejoin="round">ARCADE</text></g><path d="M60 46 l26 14 M44 76 l30 6 M462 260 l-26 -12 M476 232 l-30 -4" stroke="#000" stroke-width="5" stroke-linecap="round"/></svg></h1>
-    <p class="tagline">Dix-huit jeux, de 1 à 5 joueurs</p>
+    <p class="tagline">Dix-neuf jeux, de 1 à 5 joueurs</p>
     <div class="hello" id="helloBox" hidden><span>Salut</span> <b id="helloName"></b><button id="btnName" class="ghost" type="button" aria-label="Changer de nom">✎</button></div>
     <div class="field" id="nameField">
       <label for="nameIn">Votre nom</label>
@@ -702,7 +728,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
       <button id="btnSound" class="ghost" type="button" aria-label="Son : activé" title="Son : activé">🔊</button>
       <button id="btnLang" class="ghost" type="button" translate="no" aria-label="English" title="English">EN</button>
     </div>
-    <details class="seolist"><summary>Les 18 jeux en détail</summary><ul><li><a href="jeux/gravats.html"><b>Gravats</b></a> : Empilez les pièces et effacez des lignes : chacune envoie des briques fendues chez les autres. Le dernier en jeu gagne.</li><li><a href="jeux/gardiens.html"><b>Les Gardiens</b></a> : Chacun garde son but, avec 5 vies. Arrêtez les ballons : le dernier gardien debout gagne.</li><li><a href="jeux/derby.html"><b>Derby</b></a> : Tracez les figures au doigt : plus c&#x27;est propre, plus votre cheval avance. Le premier à la ligne gagne.</li><li><a href="jeux/armada.html"><b>Armada</b></a> : Bataille navale sur une seule mer, chacun son tour. Le dernier bateau à flot gagne.</li><li><a href="jeux/tape-taupe.html"><b>Tape-taupe</b></a> : Tapez vite les taupes des autres quand elles sortent, jamais les vôtres. Premier à 20 points.</li><li><a href="jeux/curling.html"><b>Curling</b></a> : Lancez vos pierres vers la cible et frottez la glace pour les guider. Le plus proche du centre marque.</li><li><a href="jeux/chaises-musicales.html"><b>Chaises musicales</b></a> : Quand le disque s&#x27;arrête, touchez vite une chaise libre. Gare aux faux arrêts !</li><li><a href="jeux/code-secret.html"><b>Code secret</b></a> : Trouvez avant les autres le code secret de 4 couleurs, grâce à vos indices. Trois manches.</li><li><a href="jeux/kabaddi.html"><b>Kabaddi</b></a> : Attaquez en retenant votre souffle, touchez des défenseurs et rentrez chez vous à temps.</li><li><a href="jeux/balle-au-prisonnier.html"><b>Balle au prisonnier</b></a> : Ramassez, lancez, esquivez, attrapez. Chaque balle reçue coûte un cœur : le dernier debout gagne.</li><li><a href="jeux/chars.html"><b>Chars</b></a> : Deux par char, l&#x27;un pilote, l&#x27;autre tire, sans se parler. Le dernier char debout gagne.</li><li><a href="jeux/bergers.html"><b>Les bergers</b></a> : Ensemble, rabattez le troupeau dans l&#x27;enclos avant la nuit, et chassez les loups.</li><li><a href="jeux/drakkars.html"><b>Drakkars</b></a> : Tout le salon rame dans le même drakkar : en rythme avec le tambour pour battre les robots.</li><li><a href="jeux/bucherons.html"><b>Bûcherons</b></a> : Choisissez où tombe votre arbre, puis sciez-le proprement. N&#x27;écrasez rien !</li><li><a href="jeux/agility.html"><b>Agility</b></a> : Choisissez un chien et guidez-le sur le parcours : chaque obstacle a son geste. Le meilleur temps gagne.</li><li><a href="jeux/galop.html"><b>Galop</b></a> : Choisissez un cheval, placez-vous et dosez son énergie sur 3000 m. Le premier à la ligne gagne.</li><li><a href="jeux/meduse.html"><b>Méduse</b></a> : Lâchez vos naufragés sur le radeau qui tangue. Le plus haut, une fois posé, marque des points, et cinq fois plus quand passe l'Argus.</li><li><a href="jeux/blob.html"><b>Blob</b></a> : Tracez où votre blob doit pousser dans la boîte de Petri, prenez les flocons d'avoine et envahissez les autres. Le plus grand gagne.</li></ul><p>Tous les jeux sont gratuits, sans compte, sans application et sans publicité. Créez un salon, vos amis scannent le QR code ou tapent le code, et c'est parti. Seul, vous jouez contre des robots.</p></details>
+    <details class="seolist"><summary>Les 19 jeux en détail</summary><ul><li><a href="jeux/gravats.html"><b>Gravats</b></a> : Empilez les pièces et effacez des lignes : chacune envoie des briques fendues chez les autres. Le dernier en jeu gagne.</li><li><a href="jeux/gardiens.html"><b>Les Gardiens</b></a> : Chacun garde son but, avec 5 vies. Arrêtez les ballons : le dernier gardien debout gagne.</li><li><a href="jeux/derby.html"><b>Derby</b></a> : Tracez les figures au doigt : plus c&#x27;est propre, plus votre cheval avance. Le premier à la ligne gagne.</li><li><a href="jeux/armada.html"><b>Armada</b></a> : Bataille navale sur une seule mer, chacun son tour. Le dernier bateau à flot gagne.</li><li><a href="jeux/tape-taupe.html"><b>Tape-taupe</b></a> : Tapez vite les taupes des autres quand elles sortent, jamais les vôtres. Premier à 20 points.</li><li><a href="jeux/curling.html"><b>Curling</b></a> : Lancez vos pierres vers la cible et frottez la glace pour les guider. Le plus proche du centre marque.</li><li><a href="jeux/chaises-musicales.html"><b>Chaises musicales</b></a> : Quand le disque s&#x27;arrête, touchez vite une chaise libre. Gare aux faux arrêts !</li><li><a href="jeux/code-secret.html"><b>Code secret</b></a> : Trouvez avant les autres le code secret de 4 couleurs, grâce à vos indices. Trois manches.</li><li><a href="jeux/kabaddi.html"><b>Kabaddi</b></a> : Attaquez en retenant votre souffle, touchez des défenseurs et rentrez chez vous à temps.</li><li><a href="jeux/balle-au-prisonnier.html"><b>Balle au prisonnier</b></a> : Ramassez, lancez, esquivez, attrapez. Chaque balle reçue coûte un cœur : le dernier debout gagne.</li><li><a href="jeux/chars.html"><b>Chars</b></a> : Deux par char, l&#x27;un pilote, l&#x27;autre tire, sans se parler. Le dernier char debout gagne.</li><li><a href="jeux/bergers.html"><b>Les bergers</b></a> : Ensemble, rabattez le troupeau dans l&#x27;enclos avant la nuit, et chassez les loups.</li><li><a href="jeux/drakkars.html"><b>Drakkars</b></a> : Tout le salon rame dans le même drakkar : en rythme avec le tambour pour battre les robots.</li><li><a href="jeux/bucherons.html"><b>Bûcherons</b></a> : Choisissez où tombe votre arbre, puis sciez-le proprement. N&#x27;écrasez rien !</li><li><a href="jeux/agility.html"><b>Agility</b></a> : Choisissez un chien et guidez-le sur le parcours : chaque obstacle a son geste. Le meilleur temps gagne.</li><li><a href="jeux/galop.html"><b>Galop</b></a> : Choisissez un cheval, placez-vous et dosez son énergie sur 3000 m. Le premier à la ligne gagne.</li><li><a href="jeux/meduse.html"><b>Méduse</b></a> : Lâchez vos naufragés sur le radeau qui tangue. Le plus haut, une fois posé, marque des points, et cinq fois plus quand passe l'Argus.</li><li><a href="jeux/blob.html"><b>Blob</b></a> : Tracez où votre blob doit pousser dans la boîte de Petri, prenez les flocons d'avoine et envahissez les autres. Le plus grand gagne.</li><li><a href="jeux/grand-prix.html"><b>Grand Prix Baston</b></a> : Course de voitures vue du dessus : pilotez, dosez l'essence, passez aux stands et percutez les autres. Deux tours, cinq voitures.</li></ul><p>Tous les jeux sont gratuits, sans compte, sans application et sans publicité. Créez un salon, vos amis scannent le QR code ou tapent le code, et c'est parti. Seul, vous jouez contre des robots.</p></details>
     <p class="legal"><a href="legal.html">Mentions légales et confidentialité</a></p>
   </div>
 </section>
@@ -785,6 +811,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
       <button data-g="agility" aria-pressed="false"><img src="img/agility.webp" alt=""><span>Agility</span></button>
       <button data-g="galop" aria-pressed="false"><img src="img/galop.webp" alt=""><span>Galop</span></button>
       <button data-g="meduse" aria-pressed="false"><img src="img/meduse.webp" alt=""><span>Méduse</span></button>
+      <button data-g="racer" aria-pressed="false"><img src="img/racer.webp" alt=""><span>Grand Prix Baston</span></button>
       <button data-g="blob" aria-pressed="false"><img src="img/blob.webp" alt=""><span>Blob</span></button>
     </div>
     </div>
@@ -1126,6 +1153,33 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
   </div>
 </section>
 
+<!-- GRAND PRIX BASTON -->
+<section id="scrRacer" hidden>
+  <div class="naval">
+    <div id="rcPick" class="gppick">
+      <div class="nvhead rchead"><div class="nvturn">Choisissez votre voiture</div><div class="dkchips"><span class="cuend" id="rcTrackName"></span><span class="cuend" id="rcPickTime">⏱ 25</span></div></div>
+      <div class="rccars" id="rcCars"></div>
+      <div class="nvturn rcsub">Et votre bonus</div>
+      <div class="rcbonus" id="rcBonus"></div>
+      <button id="rcReady" class="rcready" type="button">✔ Je suis prêt</button>
+      <ul class="nvplayers" id="rcWho"></ul>
+    </div>
+    <div id="rcRace" class="naval" hidden>
+      <div class="nvhead rchead"><div class="nvturn" id="rcHead">Grand Prix</div><div class="dkchips"><span class="cuend" id="rcPos">1er / 5</span><span class="cuend" id="rcLap">Tour 1/2</span><span class="cuend" id="rcSpd">0 km/h</span></div></div>
+      <div class="nvwrap" id="rcWrap">
+        <canvas id="rcCv" width="600" height="660" aria-label="La course vue du dessus, votre voiture pointée vers le haut"></canvas>
+        <div class="toast pm" id="rcToast" aria-live="polite"></div>
+      </div>
+      <div class="blctl rcfuel"><span class="bllab">⛽ Essence</span><div class="mdst blbar"><i id="rcFuel"></i></div></div>
+      <div class="rcctl">
+        <div class="rcsteer" id="rcSteer" aria-label="Volant : glissez à gauche ou à droite"><span class="rcl">◀</span><span class="rcr">▶</span><i id="rcKnob"></i></div>
+        <div class="rcbtns"><button id="rcGas" type="button">⛽ ACCÉLÉRER</button><button id="rcBrake" type="button">▼ Freiner</button><button id="rcHit" type="button">💥 FRAPPER</button></div>
+      </div>
+      <p class="hint ctlhelp" id="rcHelp">Glissez le volant à gauche ou à droite (il revient au centre quand vous le lâchez). Maintenez Accélérer pour aller plus vite en brûlant de l'essence, Freiner avant les virages serrés. Trop vite dans un virage, les pneus crissent et la voiture glisse vers l'extérieur. L'essence revient doucement, bien plus vite dans les deux stands (les zones aux jerricans, à côté de la piste). Frapper : votre voiture frappe de son côté après une courte charge visible ; la victime perd 5 % de sa vitesse et 10 % de son essence. Clavier : ← → pour tourner, ↑ accélérer, ↓ freiner, Espace frapper.</p>
+    </div>
+  </div>
+</section>
+
 <!-- GALOP -->
 <section id="scrGalop" hidden>
   <div class="naval">
@@ -1193,6 +1247,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
       <button data-f="drakkar" aria-pressed="false">Drakkars</button>
       <button data-f="lumber" aria-pressed="false">Bûcherons</button>
       <button data-f="meduse" aria-pressed="false">Méduse</button>
+      <button data-f="racer" aria-pressed="false">Grand Prix</button>
       <button data-f="blob" aria-pressed="false">Blob</button>
       <button data-f="agility" aria-pressed="false">Agility</button>
       <button data-f="galop" aria-pressed="false">Galop</button>
@@ -1333,7 +1388,7 @@ let D = null;                   // derby state
 let NV = null, HN = null;       // armada: my view / host's full map
 let BOT = null;                  // host-side robot when someone plays alone
 let ML = null, HM = null;       // tape-taupe: my view / host referee
-const GAME_NAMES = { tetris:'Gravats', pong:'Les Gardiens', derby:'Derby', naval:'Armada', mole:'Tape-taupe', curling:'Curling', chairs:'Chaises musicales', master:'Code secret', kabaddi:'Kabaddi', dodge:'Balle au prisonnier', tank:'Chars', sheep:'Les bergers', drakkar:'Drakkars', lumber:'Bûcherons', agility:'Agility', galop:'Galop', meduse:'Méduse', blob:'Blob' };
+const GAME_NAMES = { tetris:'Gravats', pong:'Les Gardiens', derby:'Derby', naval:'Armada', mole:'Tape-taupe', curling:'Curling', chairs:'Chaises musicales', master:'Code secret', kabaddi:'Kabaddi', dodge:'Balle au prisonnier', tank:'Chars', sheep:'Les bergers', drakkar:'Drakkars', lumber:'Bûcherons', agility:'Agility', galop:'Galop', meduse:'Méduse', racer:'Grand Prix Baston', blob:'Blob' };
 // the gist in two lines, for the rules slides before a game (the full text stays on the game card)
 const GAME_SHORT = {
   tetris:'Empilez les pièces et effacez des lignes : chacune envoie des briques fendues chez les autres. Le dernier en jeu gagne.',
@@ -1353,7 +1408,8 @@ const GAME_SHORT = {
   agility:'Choisissez un chien et guidez-le sur le parcours : chaque obstacle a son geste. Le meilleur temps gagne.',
   galop:'Choisissez un cheval, placez-vous et dosez son énergie sur 3000 m. Le premier à la ligne gagne.',
   meduse:'Empilez vos naufragés sur le radeau de Géricault : le plus haut fait signe à l\'Argus et marque des points.',
-  blob:'Votre blob pousse là où vous tracez : prenez les flocons d\'avoine, envahissez les autres, couvrez la plus grande part de la boîte.'
+  blob:'Votre blob pousse là où vous tracez : prenez les flocons d\'avoine, envahissez les autres, couvrez la plus grande part de la boîte.',
+  racer:'Course de voitures vue du dessus : pilotez au volant, dosez votre essence, passez aux stands et percutez les autres.'
 };
 // the game intro: a little story under the picture, then the idea of the game in one sentence
 const GAME_STORY = {
@@ -1374,7 +1430,8 @@ const GAME_STORY = {
   agility:'Concours canin du dimanche : les maîtres s\'égosillent, les chiens s\'élancent, le chrono tourne.',
   galop:'Grand prix de 3000 m : les partants piaffent dans les stalles. Vingt chevaux au paddock, un seul sera le vôtre.',
   meduse:'1816 : le radeau de la Méduse dérive depuis des jours. À l\'horizon, une voile, l\'Argus. Il faut grimper le plus haut possible pour être vu.',
-  blob:'Au labo, quelqu\'un a réveillé plusieurs blobs dans la même boîte de Petri. Les flocons d\'avoine sont comptés.'
+  blob:'Au labo, quelqu\'un a réveillé plusieurs blobs dans la même boîte de Petri. Les flocons d\'avoine sont comptés.',
+  racer:'Grand Prix Baston, deux tours, cinq voitures, et un règlement qui autorise les coups de pare-chocs. Les stands sont ouverts.'
 };
 const GAME_IDEA = {
   tetris:'Compléter des lignes pour envoyer des briques fendues chez les autres, et faire éclater celles qu\'on vous envoie pour les leur retourner. Le dernier qui n\'est pas enseveli gagne.',
@@ -1394,7 +1451,8 @@ const GAME_IDEA = {
   agility:'Faire le bon geste au bon moment sur chaque obstacle pour éviter les 5 s de pénalité, et finir par un sprint endiablé.',
   galop:'Gérer astucieusement l\'aspiration et les accélérations pour se placer ou gagner la course, en prenant soin de ne pas épuiser son cheval.',
   meduse:'Lâcher ses naufragés au bon moment pour bâtir le plus haut, tenir le sommet le plus longtemps, surtout quand passe l\'Argus, et faire tomber les autres de la pile.',
-  blob:'Tracer les bons chemins vers les flocons, couper les autres de leur nourriture et renforcer ce qu\'on tient, sans grandir plus vite que son énergie.'
+  blob:'Tracer les bons chemins vers les flocons, couper les autres de leur nourriture et renforcer ce qu\'on tient, sans grandir plus vite que son énergie.',
+  racer:'Prendre les virages sans glisser, brûler son essence au bon moment, s\'arrêter aux stands quand il faut, et frapper les autres avant qu\'ils vous frappent.'
 };
 const GAME_DESC = {
   tetris:'Empilez des pièces de 2, 3 et 5 briques. Chaque ligne effacée envoie des briques fendues à vos adversaires. Effacez une ligne collée à une brique fendue : elle éclate et repart chez son expéditeur.',
@@ -1415,14 +1473,15 @@ const GAME_DESC = {
   galop:'Course de galop de 3000 m, chacun sur son cheval, vue du dessus. Choisissez votre monture parmi 20, nouvelles à chaque partie (accélération, vitesse, maniabilité, et une forme du jour cachée), des robots complètent jusqu\'à 8 partants. Le cheval suit la piste tout seul : vous vous décalez à gauche ou à droite et vous demandez du galop, qui coûte de l\'énergie. Collé derrière un autre, vous récupérez plus vite et profitez de ses accélérations.',
   meduse:'Le radeau de la Méduse, en version bande dessinée : la pyramide de corps du tableau, c\'est vous qui la construisez. Pendant deux minutes, chacun lâche ses naufragés sur le radeau quand il veut, un toutes les trois secondes. Le corps suspendu se balance de debout à couché : à vous de choisir le moment. Les corps glissent, le radeau tangue, certains tombent à l\'eau et disparaissent. Votre naufragé le plus haut, une fois posé, marque des points tant qu\'il reste au sommet ; trois fois, l\'Argus passe à l\'horizon et le sommet vaut alors cinq fois plus. Lâcher un corps sur la tête du leader pour le déloger fait partie du jeu. Des robots complètent seul ou à deux.',
   derby:'Course de chevaux : tout le monde reçoit la même série de figures à tracer. Chaque figure réussie fait avancer votre cheval, plus loin si elle est complexe et bien tracée. Le premier à la ligne gagne.',
-  blob:'Le blob, ce drôle d\'organisme qui se réveille dans une boîte de Petri : chaque joueur en a un, dans la même boîte. Tracez du doigt un chemin depuis votre blob, il pousse le long du tracé en dépensant son énergie. Tracez jusque dans un autre blob et vous l\'envahissez, plus cher, d\'autant plus qu\'il a d\'énergie. Votre énergie revient doucement, d\'autant moins que votre blob est grand, et plus du tout passé la moitié de la boîte : il faut alors tenir des gros flocons d\'avoine, qui l\'accélèrent tant que vous les couvrez. Le laborantin en ajoute de temps en temps, n\'importe où. Les miettes se mangent d\'un coup. Tout morceau coupé de la partie qui porte le visage de votre blob dépérit. Touchez votre blob pour y poser un renfort qui durcit avec le temps. Au bout de 3 minutes, le plus grand blob gagne. Des robots complètent seul ou à deux.'
+  blob:'Le blob, ce drôle d\'organisme qui se réveille dans une boîte de Petri : chaque joueur en a un, dans la même boîte. Tracez du doigt un chemin depuis votre blob, il pousse le long du tracé en dépensant son énergie. Tracez jusque dans un autre blob et vous l\'envahissez, plus cher, d\'autant plus qu\'il a d\'énergie. Votre énergie revient doucement, d\'autant moins que votre blob est grand, et plus du tout passé la moitié de la boîte : il faut alors tenir des gros flocons d\'avoine, qui l\'accélèrent tant que vous les couvrez. Le laborantin en ajoute de temps en temps, n\'importe où. Les miettes se mangent d\'un coup. Tout morceau coupé de la partie qui porte le visage de votre blob dépérit. Touchez votre blob pour y poser un renfort qui durcit avec le temps. Au bout de 3 minutes, le plus grand blob gagne. Des robots complètent seul ou à deux.',
+  racer:'Une course de voitures vue du dessus, entre Mario Kart et course auto. Choisissez l\'une des 5 voitures : elles vont toutes aussi vite, mais chacune frappe d\'un côté (avant, arrière, gauche ou droite). Ajoutez un bonus : turbo, aérodynamisme ou pneus qui collent. Pilotez avec un volant à glisser qui revient au centre : trop vite dans un virage, les pneus crissent et la voiture glisse vers l\'extérieur. Accélérer brûle l\'essence, qui revient doucement, bien plus vite dans les deux stands à côté de la piste. Frapper prend une courte charge visible : celui qui ne l\'esquive pas perd 5 % de sa vitesse et 10 % de son essence. Deux tours sur l\'un des 5 circuits, à 5 voitures, des robots complètent.'
 };
 
 const cleanName = s => String(s || '').replace(/[\u0000-\u001f<>]/g,'').trim().slice(0,14) || (LANG === 'en' ? 'Player' : 'Joueur');
 // names shown to everyone in the public list: anything that looks like a link or an address is replaced
 const publicName = s => { const n = cleanName(s); return /https?|www|\.\s*[a-z]{2,}|@|\/\/|discord|t\.me|bit\.ly/i.test(n) ? (LANG === 'en' ? 'Player' : 'Joueur') : n; };
 const genCode = () => { const a='ABCDEFGHJKMNPQRSTUVWXYZ23456789'; let s=''; for(let i=0;i<4;i++) s+=a[Math.floor(Math.random()*a.length)]; return s; };
-const show = id => { for (const s of ['scrMenu','scrStats','scrLobby','scrGame','scrPong','scrDerby','scrNaval','scrMole','scrCurl','scrChairs','scrMaster','scrKabaddi','scrDodge','scrTank','scrSheep','scrDrakkar','scrLumber','scrAgility','scrGalop','scrMeduse','scrBlob']) $(s).hidden = s !== id; if (id === 'scrKabaddi') try { window.scrollTo(0, 0); } catch(_){} document.documentElement.classList.toggle('joyon', ['scrKabaddi','scrDodge','scrTank','scrSheep'].includes(id)); };
+const show = id => { for (const s of ['scrMenu','scrStats','scrLobby','scrGame','scrPong','scrDerby','scrNaval','scrMole','scrCurl','scrChairs','scrMaster','scrKabaddi','scrDodge','scrTank','scrSheep','scrDrakkar','scrLumber','scrAgility','scrGalop','scrMeduse','scrBlob','scrRacer']) $(s).hidden = s !== id; if (id === 'scrKabaddi') try { window.scrollTo(0, 0); } catch(_){} document.documentElement.classList.toggle('joyon', ['scrKabaddi','scrDodge','scrTank','scrSheep'].includes(id)); };
 const store = { get(k){ try { return localStorage.getItem(k); } catch(_) { return null; } }, set(k,v){ try { localStorage.setItem(k,v); } catch(_){} } };
 
 $('nameIn').value = store.get('tm-name') || ((LANG === 'en' ? 'Player' : 'Joueur') + Math.floor(Math.random()*90+10));
@@ -1496,7 +1555,7 @@ function teardown(){
   if (HN && HN.timer) clearTimeout(HN.timer);
   if (HM) moleClearTimers();
   if (HC) clearTimeout(HC.timer);
-  HC = null; CU = null; mcClear(); HMC = null; MC = null; mmClear(); HMM = null; MM = null; kbClear(); HKB = null; KB = null; dbClear(); HDB = null; DB = null; tkClear(); HTK = null; TK = null; shClear(); HSH = null; SHV = null; dkClear(); HDK = null; ljClear(); HLJ = null; LJ = null; sawStop(); agClear(); HAG = null; AG = null; gpClear(); HGP = null; GP = null; DK = null; mdClear(); HMD = null; MD = null; blClear(); HBL = null; BL = null;
+  HC = null; CU = null; mcClear(); HMC = null; MC = null; mmClear(); HMM = null; MM = null; kbClear(); HKB = null; KB = null; dbClear(); HDB = null; DB = null; tkClear(); HTK = null; TK = null; shClear(); HSH = null; SHV = null; dkClear(); HDK = null; ljClear(); HLJ = null; LJ = null; sawStop(); agClear(); HAG = null; AG = null; gpClear(); HGP = null; GP = null; DK = null; mdClear(); HMD = null; MD = null; blClear(); HBL = null; BL = null; rcClear(); HRC = null; RC = null;
   CHAT.length = 0; renderChat();
   net = null; H = null; G = null; PG = null; D = null; NV = null; HN = null; cur = null; me.host = false; me.id = null; players = []; opps.clear();
 }
@@ -1522,7 +1581,7 @@ function soloCreate(){
 }
 // arriving from a game's page (?jeu=galop): once the room (or the solo game) is open, that game's card opens
 const GAME_SLUGS = { gravats:'tetris', gardiens:'pong', armada:'naval', 'tape-taupe':'mole', 'chaises-musicales':'chairs', 'code-secret':'master',
-  'balle-au-prisonnier':'dodge', chars:'tank', bergers:'sheep', drakkars:'drakkar', bucherons:'lumber' };
+  'balle-au-prisonnier':'dodge', chars:'tank', bergers:'sheep', drakkars:'drakkar', bucherons:'lumber', 'grand-prix':'racer' };
 let PENDING_GAME = null;
 (() => {
   let g = null; try { g = (new URLSearchParams(location.search).get('jeu') || '').trim().toLowerCase(); } catch(_){}
@@ -1724,7 +1783,7 @@ function hostDrop(conn){
   net.conns.delete(id);
   if (phase === 'lobby'){ const p = players.find(x => x.id === id); players = players.filter(p => p.id !== id); if (VOTES[id]){ delete VOTES[id]; broadcast({ t:'votes', v:VOTES }); } sendLobby(false); briefCheck(); if (BR) briefStatus(); if (p) chatSys(p.name + ' a quitté le salon'); return; }
   if (H && H.alive.has(id)){
-    if (H.game === 'pong') pongDrop(id); else if (H.game === 'curling') curlDrop(id); else if (H.game === 'chairs') chairsDrop(id); else if (H.game === 'master') masterDrop(id); else if (H.game === 'kabaddi') kabaddiDrop(id); else if (H.game === 'dodge') dodgeDrop(id); else if (H.game === 'tank') tankDrop(id); else if (H.game === 'sheep') sheepDrop(id); else if (H.game === 'drakkar') drakkarDrop(id); else if (H.game === 'lumber') lumberDrop(id); else if (H.game === 'agility') agilityDrop(id); else if (H.game === 'galop') galopDrop(id); else if (H.game === 'meduse') meduseDrop(id); else if (H.game === 'blob') blobDrop(id); else if (H.game === 'derby') derbyDrop(id); else if (H.game === 'naval') navalDrop(id); else if (H.game === 'mole') moleDrop(id); else hostHandle(id, { t:'dead', left:true });
+    if (H.game === 'pong') pongDrop(id); else if (H.game === 'curling') curlDrop(id); else if (H.game === 'chairs') chairsDrop(id); else if (H.game === 'master') masterDrop(id); else if (H.game === 'kabaddi') kabaddiDrop(id); else if (H.game === 'dodge') dodgeDrop(id); else if (H.game === 'tank') tankDrop(id); else if (H.game === 'sheep') sheepDrop(id); else if (H.game === 'drakkar') drakkarDrop(id); else if (H.game === 'lumber') lumberDrop(id); else if (H.game === 'agility') agilityDrop(id); else if (H.game === 'galop') galopDrop(id); else if (H.game === 'meduse') meduseDrop(id); else if (H.game === 'blob') blobDrop(id); else if (H.game === 'racer') racerDrop(id); else if (H.game === 'derby') derbyDrop(id); else if (H.game === 'naval') navalDrop(id); else if (H.game === 'mole') moleDrop(id); else hostHandle(id, { t:'dead', left:true });
   }
 }
 
@@ -1788,6 +1847,7 @@ function hostLaunch(){
   if (gameKind === 'galop') return galopHostStart();
   if (gameKind === 'meduse') return meduseHostStart();
   if (gameKind === 'blob') return blobHostStart();
+  if (gameKind === 'racer') return racerHostStart();
   unannounce();                                   // a started game leaves the public list at once
   broadcast({ t:'start', players, game:gameKind, seed:Math.floor(Math.random() * 2**31) });
 }
@@ -1840,6 +1900,12 @@ function hostHandle(id, m){
     meduseInput(id, m);
   } else if (m.t === 'md_push'){
     medusePush(id);
+  } else if (m.t === 'rc_choose'){
+    racerChoose(id, m);
+  } else if (m.t === 'rc_in'){
+    racerInput(id, m);
+  } else if (m.t === 'rc_hit'){
+    racerHit(id);
   } else if (m.t === 'bl_path'){
     blobPath(id, m);
   } else if (m.t === 'bl_rf'){
@@ -1916,9 +1982,9 @@ function clientRecv(m){
       players = (Array.isArray(m.players) ? m.players : []).slice(0, MAXP).filter(p => p && typeof p.id === 'string').map(p => ({ ...p, id:p.id.slice(0, 12), name:cleanName(p.name), color:PALETTE.includes(p.color) ? p.color : '#888' }));
       if (m.you) me.id = m.you;
       if (net && !net.solo && !me.host) try { sessionStorage.setItem('ba-room', net.code); } catch(_){}   // after an accidental reload, come straight back
-      if (['tetris','pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber','agility','galop','meduse','blob'].includes(m.game)) gameKind = m.game;
+      if (['tetris','pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber','agility','galop','meduse','blob','racer'].includes(m.game)) gameKind = m.game;
       if (phase === 'menu' || phase === 'lobby' || m.back){
-        phase = 'lobby'; $('scrEnd').hidden = true; G = null; PG = null; D = null; NV = null; ML = null; CU = null; MC = null; MM = null; KB = null; DB = null; TK = null; SHV = null; DK = null; if (LJ){ LJ = null; sawStop(); } AG = null; GP = null; MD = null; BL = null; cur = null; show('scrLobby'); renderLobby();
+        phase = 'lobby'; $('scrEnd').hidden = true; G = null; PG = null; D = null; NV = null; ML = null; CU = null; MC = null; MM = null; KB = null; DB = null; TK = null; SHV = null; DK = null; if (LJ){ LJ = null; sawStop(); } AG = null; GP = null; MD = null; BL = null; RC = null; cur = null; show('scrLobby'); renderLobby();
       }
       break;
     case 'nv_start': startNaval(m); break;
@@ -1947,13 +2013,14 @@ function clientRecv(m){
     case 'ag_p': case 'ag_done': case 'ag_left': case 'ag_pick': case 'ag_go': agilityRecv(m); break;
     case 'md_round': case 'md_go': case 'md_s': case 'md_ev': case 'md_res': meduseRecv(m); break;
     case 'bl_round': case 'bl_go': case 'bl_s': case 'bl_ev': case 'bl_res': blobRecv(m); break;
+    case 'rc_pick': case 'rc_picks': case 'rc_round': case 'rc_go': case 'rc_s': case 'rc_ev': case 'rc_res': racerRecv(m); break;
     case 'gp_pick': case 'gp_race': case 'gp_go': case 'gp_s': case 'gp_fin': galopRecv(m); break;
     case 'brief': if (phase === 'lobby') openBrief(m.game, m.ready); break;
     case 'votes': VOTES = m.v && typeof m.v === 'object' ? m.v : {}; renderVotes(); if (BR && BR.mode === 'pick') briefStatus(); break;
     case 'peek': if (!me.host){ PEEK = GAME_NAMES[m.g] ? m.g : null; renderVotes(); } break;
     case 'brief_st': if (BR){ BR.ready = new Set(m.ready || []); briefStatus(); } break;
     case 'brief_off': closeBrief(); break;
-    case 'start': closeGameSheet(); closeBrief(); PEEK = null; VOTES = {}; $('colPick').hidden = true; if (m.game === 'galop') startGalop(m); else if (m.game === 'meduse') startMeduse(m); else if (m.game === 'blob') startBlob(m); else if (m.game === 'agility') startAgility(m); else if (m.game === 'lumber') startLumber(m); else if (m.game === 'drakkar') startDrakkar(m); else if (m.game === 'sheep') startSheep(m); else if (m.game === 'tank') startTank(m); else if (m.game === 'dodge') startDodge(m); else if (m.game === 'kabaddi') startKabaddi(m); else if (m.game === 'master') startMaster(m); else if (m.game === 'chairs') startChairs(m); else if (m.game === 'curling') startCurling(m); else if (m.game === 'pong') startPong(m.players); else if (m.game === 'derby') startDerby(m.players, m.seed|0); else startGame(m.players); break;
+    case 'start': closeGameSheet(); closeBrief(); PEEK = null; VOTES = {}; $('colPick').hidden = true; if (m.game === 'galop') startGalop(m); else if (m.game === 'meduse') startMeduse(m); else if (m.game === 'blob') startBlob(m); else if (m.game === 'racer') startRacer(m); else if (m.game === 'agility') startAgility(m); else if (m.game === 'lumber') startLumber(m); else if (m.game === 'drakkar') startDrakkar(m); else if (m.game === 'sheep') startSheep(m); else if (m.game === 'tank') startTank(m); else if (m.game === 'dodge') startDodge(m); else if (m.game === 'kabaddi') startKabaddi(m); else if (m.game === 'master') startMaster(m); else if (m.game === 'chairs') startChairs(m); else if (m.game === 'curling') startCurling(m); else if (m.game === 'pong') startPong(m.players); else if (m.game === 'derby') startDerby(m.players, m.seed|0); else startGame(m.players); break;
     case 'dr': derbyRemote(m); break;
     case 'ps': pongState(m); break;
     case 'pg': pongGoalFx(m.side|0); break;
@@ -2248,7 +2315,7 @@ function showEnd(ranking, game){
   phase = 'end';
   if (G) G.p = null;
   if (PG) PG.ph = 'over';
-  const pong = game === 'pong', derby = game === 'derby', naval = game === 'naval', mole = game === 'mole', curl = game === 'curling', chairs = game === 'chairs', master = game === 'master', kab = game === 'kabaddi', dodge = game === 'dodge', tank = game === 'tank', coop = game === 'sheep', viking = game === 'drakkar', lumber = game === 'lumber', agil = game === 'agility', galop = game === 'galop', medu = game === 'meduse', blob = game === 'blob';
+  const pong = game === 'pong', derby = game === 'derby', naval = game === 'naval', mole = game === 'mole', curl = game === 'curling', chairs = game === 'chairs', master = game === 'master', kab = game === 'kabaddi', dodge = game === 'dodge', tank = game === 'tank', coop = game === 'sheep', viking = game === 'drakkar', lumber = game === 'lumber', agil = game === 'agility', galop = game === 'galop', medu = game === 'meduse', blob = game === 'blob', racer = game === 'racer';
   if (ML) ML.over = true;
   if (NV) NV.over = true;
   if (D) D.over = true;
@@ -2265,10 +2332,10 @@ function showEnd(ranking, game){
   if (GP) GP.over = true;
   if (MD){ MD.over = true; MD.ph = 'end'; }
   const hd = $('rankHead'); hd.textContent = '';
-  for (const h of ['#','Joueur', ...(blob ? ['Surface','Flocons','Volé','Miettes'] : medu ? ['Points','Au sommet','Lâchés','À l\'eau'] : galop ? ['Cheval','Temps','Écart'] : agil ? ['Temps','Fautes','Total'] : lumber ? ['Points','Précision','Manches'] : viking ? ['Rôle','Coups','Synchro'] : coop ? ['Manches','Moutons','Ouaf'] : tank ? ['Char','Rôle','Touches'] : dodge ? ['Vies','Touches','Arrêts'] : kab ? ['Points','Raids réussis','Plaquages'] : master ? ['Points','Trouvés','Essais'] : chairs ? ['Vies','Chaises','Réflexe'] : curl ? ['Points','Maison','Meilleure'] : pong ? ['Vies','Arrêts'] : derby ? ['Figures','Distance','Temps'] : naval ? ['Tirs','Touchés','À flot'] : mole ? ['Points','Tapées','Échappées'] : ['Lignes','Briques','Score'])]){
+  for (const h of ['#','Joueur', ...(racer ? ['Temps','Meilleur tour','Frappes','Encaissées'] : blob ? ['Surface','Flocons','Volé','Miettes'] : medu ? ['Points','Au sommet','Lâchés','À l\'eau'] : galop ? ['Cheval','Temps','Écart'] : agil ? ['Temps','Fautes','Total'] : lumber ? ['Points','Précision','Manches'] : viking ? ['Rôle','Coups','Synchro'] : coop ? ['Manches','Moutons','Ouaf'] : tank ? ['Char','Rôle','Touches'] : dodge ? ['Vies','Touches','Arrêts'] : kab ? ['Points','Raids réussis','Plaquages'] : master ? ['Points','Trouvés','Essais'] : chairs ? ['Vies','Chaises','Réflexe'] : curl ? ['Points','Maison','Meilleure'] : pong ? ['Vies','Arrêts'] : derby ? ['Figures','Distance','Temps'] : naval ? ['Tirs','Touchés','À flot'] : mole ? ['Points','Tapées','Échappées'] : ['Lignes','Briques','Score'])]){
     const th = document.createElement('th'); th.textContent = h; hd.append(th);
   }
-  $('rankNote').textContent = blob ? '« Surface » : part de la boîte couverte à la fin. « Flocons » : gros flocons tenus. « Volé » : morceaux pris aux autres blobs. « Miettes » : miettes mangées.' : medu ? '« Points » : 1 par seconde au sommet, 5 pendant le passage de l\'Argus. « Au sommet » : temps passé tout en haut. « Lâchés » : naufragés lâchés. « À l\'eau » : naufragés tombés à la mer.' : galop ? '« Écart » : retard sur le vainqueur à l\'arrivée, en secondes. Les chevaux des robots sont classés avec les autres.' : agil ? '« Total » : temps du parcours plus 5 s par faute. Un chien qui n\'a pas fini est classé après les autres.' : lumber ? '« Précision » : moyenne de vos coupes. « Manches » : manches finies sans rien écraser. Un joueur qui écrase quelque chose est éliminé.' : viking ? 'Course en équipe. « Synchro » : coups de rame donnés en rythme avec le tambour.' : coop ? 'Partie en équipe : tout le monde partage le score. « Moutons » : moutons rentrés au total, « Ouaf » : aboiements.' : tank ? 'Les deux membres d\'un équipage partagent la même place. « Touches » : obus du canonnier qui ont fait mouche.' : dodge ? '« Touches » : balles qui ont atteint un adversaire. « Arrêts » : balles attrapées.' : kab ? '« Raids réussis » : raids rentrés avec au moins un défenseur touché. « Plaquages » : attaquants retenus jusqu\'au bout du souffle.' : master ? '« Trouvés » : codes trouvés. « Essais » : total des essais sur la partie.' : chairs ? '« Chaises » : chaises gagnées. « Réflexe » : votre plus rapide, de l\'arrêt du disque à la chaise.' : curl ? '« Maison » : pierres dans la maison en fin de manche. « Meilleure » : pierre la plus proche du centre.' : mole ? '« Tapées » : taupes adverses tapées. « Échappées » : vos taupes que personne n\'a eues.' : naval ? '« À flot » : cases de bateau encore intactes à la fin.' : pong ? '« Arrêts » : ballons repoussés par le gardien.' : derby ? '« Temps » : durée pour franchir la ligne, pour ceux qui l\'ont franchie.' : '« Briques » : nombre de briques envoyées aux adversaires.';
+  $('rankNote').textContent = racer ? '« Temps » : temps de course (– si pas arrivé). « Meilleur tour » : le tour le plus rapide. « Frappes » : coups réussis. « Encaissées » : coups reçus.' : blob ? '« Surface » : part de la boîte couverte à la fin. « Flocons » : gros flocons tenus. « Volé » : morceaux pris aux autres blobs. « Miettes » : miettes mangées.' : medu ? '« Points » : 1 par seconde au sommet, 5 pendant le passage de l\'Argus. « Au sommet » : temps passé tout en haut. « Lâchés » : naufragés lâchés. « À l\'eau » : naufragés tombés à la mer.' : galop ? '« Écart » : retard sur le vainqueur à l\'arrivée, en secondes. Les chevaux des robots sont classés avec les autres.' : agil ? '« Total » : temps du parcours plus 5 s par faute. Un chien qui n\'a pas fini est classé après les autres.' : lumber ? '« Précision » : moyenne de vos coupes. « Manches » : manches finies sans rien écraser. Un joueur qui écrase quelque chose est éliminé.' : viking ? 'Course en équipe. « Synchro » : coups de rame donnés en rythme avec le tambour.' : coop ? 'Partie en équipe : tout le monde partage le score. « Moutons » : moutons rentrés au total, « Ouaf » : aboiements.' : tank ? 'Les deux membres d\'un équipage partagent la même place. « Touches » : obus du canonnier qui ont fait mouche.' : dodge ? '« Touches » : balles qui ont atteint un adversaire. « Arrêts » : balles attrapées.' : kab ? '« Raids réussis » : raids rentrés avec au moins un défenseur touché. « Plaquages » : attaquants retenus jusqu\'au bout du souffle.' : master ? '« Trouvés » : codes trouvés. « Essais » : total des essais sur la partie.' : chairs ? '« Chaises » : chaises gagnées. « Réflexe » : votre plus rapide, de l\'arrêt du disque à la chaise.' : curl ? '« Maison » : pierres dans la maison en fin de manche. « Meilleure » : pierre la plus proche du centre.' : mole ? '« Tapées » : taupes adverses tapées. « Échappées » : vos taupes que personne n\'a eues.' : naval ? '« À flot » : cases de bateau encore intactes à la fin.' : pong ? '« Arrêts » : ballons repoussés par le gardien.' : derby ? '« Temps » : durée pour franchir la ligne, pour ceux qui l\'ont franchie.' : '« Briques » : nombre de briques envoyées aux adversaires.';
   const tb = $('rankBody'); tb.textContent = '';
   (ranking || []).forEach(r => {
     const tr = document.createElement('tr'); if (r.place === 1) tr.className = 'win';
@@ -2277,7 +2344,8 @@ function showEnd(ranking, game){
     const d = document.createElement('span'); d.className = 'dot'; d.style.background = r.color;
     const s = document.createElement('span'); s.textContent = r.name + (r.id === me.id ? ' (vous)' : '') + (r.left ? ' · parti' : '');
     w.append(d, s); nm.append(w);
-    if (blob) tr.append(td(r.place), nm, td((r.pct|0) + ' %'), td(r.farms|0), td(r.stolen|0), td(r.crumbs|0));
+    if (racer) tr.append(td(r.place), nm, td(r.time ? r.time.toFixed(1).replace('.', ',') + ' s' : '–'), td(r.best ? r.best.toFixed(1).replace('.', ',') + ' s' : '–'), td(r.hits|0), td(r.hit|0));
+    else if (blob) tr.append(td(r.place), nm, td((r.pct|0) + ' %'), td(r.farms|0), td(r.stolen|0), td(r.crumbs|0));
     else if (medu) tr.append(td(r.place), nm, td(r.pts|0), td((r.top|0) + ' s'), td(r.drops|0), td(r.lost|0));
     else if (galop){ tr.append(td(r.place), nm, td(r.horse || ''), td(r.t ? fmtSec(r.t) : '–'), td(r.gap == null ? '–' : r.gap > 0 ? '+' + r.gap.toLocaleString('fr-FR', { minimumFractionDigits:2, maximumFractionDigits:2 }) : '')); [...tr.children].slice(-2).forEach(c => c.style.whiteSpace = 'nowrap'); }
     else if (agil) tr.append(td(r.place), nm, td(r.done ? fmtSec(Math.round(r.time*1000)) : '–'), td(r.done ? r.faults|0 : '–'), td(r.done ? fmtSec(Math.round(r.total*1000)) : 'abandon'));
@@ -2306,7 +2374,7 @@ function showEnd(ranking, game){
   $('winPanel').style.background = viking ? (iWon ? '#3DDC97' : '#8A84B0') : coop ? '#3DDC97' : win ? win.color : '#FFD93B';
   $('winName').textContent = viking ? (iWon ? 'L\'Angleterre est à vous !' : 'Les autres Vikings arrivent avant vous') : coop ? 'Score d\'équipe : ' + ((win && win.score) | 0) : win ? (iWon ? 'Vous gagnez !' : (galop && win.bot && win.horse ? win.horse : win.name) + ' gagne !') : '';
   $('myPlace').textContent = viking ? 'Drakkars' + (iWon && win.t ? ' · ' + fmtSec(win.t) : '') : coop ? 'Les bergers · ' + ((win && win.rounds) | 0) + '/' + SH_ROUNDS + ' manches réussies' : (GAME_NAMES[game] || 'Gravats') + (mine ? ' · vous finissez ' + (mine.place === 1 ? '1er' : mine.place + 'e') + ' sur ' + ranking.length : '');
-  (blob ? blToast : medu ? (t => { const el = $('mdMsg'); if (el) el.textContent = t || ''; }) : galop ? (t => { const el = $('gpMsg'); if (el) el.textContent = t || ''; }) : agil ? agMsg : lumber ? ljMsg : viking ? drakkarMsg : coop ? sheepMsg : tank ? tankMsg : dodge ? dodgeMsg : kab ? kabaddiMsg : master ? masterMsg : chairs ? chairsMsg : curl ? curlMsg : pong ? pongMsg : derby ? derbyMsg : naval ? navalMsg : mole ? moleMsg : setMsg)('', '');
+  (racer ? rcToast : blob ? blToast : medu ? (t => { const el = $('mdMsg'); if (el) el.textContent = t || ''; }) : galop ? (t => { const el = $('gpMsg'); if (el) el.textContent = t || ''; }) : agil ? agMsg : lumber ? ljMsg : viking ? drakkarMsg : coop ? sheepMsg : tank ? tankMsg : dodge ? dodgeMsg : kab ? kabaddiMsg : master ? masterMsg : chairs ? chairsMsg : curl ? curlMsg : pong ? pongMsg : derby ? derbyMsg : naval ? navalMsg : mole ? moleMsg : setMsg)('', '');
   $('btnAgain').hidden = false; $('btnReplay').hidden = !me.host; $('btnAgain').classList.toggle('ghost', me.host);
   $('endHint').textContent = me.host ? '' : 'Le créateur choisit la suite : rejouer ou revenir au salon.';
   $('btnAgain').style.gridColumn = me.host ? '' : '1 / -1';
@@ -2513,7 +2581,7 @@ function release(a){
 const KEYMAP = { arrowleft:'left', arrowright:'right', arrowdown:'down', arrowup:'rotr', x:'rotr', z:'rotl', w:'rotl', control:'rotl', ' ':'drop', c:'hold', shift:'hold' };
 addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT') return;
-  if (cur === 'curl' || cur === 'chairs' || cur === 'master' || cur === 'kabaddi' || cur === 'dodge' || cur === 'tank' || cur === 'sheep' || cur === 'drakkar' || cur === 'lumber' || cur === 'agility' || cur === 'galop' || cur === 'meduse' || cur === 'blob') return;
+  if (cur === 'curl' || cur === 'chairs' || cur === 'master' || cur === 'kabaddi' || cur === 'dodge' || cur === 'tank' || cur === 'sheep' || cur === 'drakkar' || cur === 'lumber' || cur === 'agility' || cur === 'galop' || cur === 'meduse' || cur === 'blob' || cur === 'racer') return;
   if (cur === 'pong'){ const k = PKEYS[e.key.toLowerCase()]; if (k){ e.preventDefault(); pin[k] = true; } return; }
   const a = KEYMAP[e.key.toLowerCase()]; if (!a) return;
   e.preventDefault();
@@ -9515,7 +9583,7 @@ function drawGalop(now){
 const BOOM_COLORS = [['#FFD93B','#E6262B'], ['#FFFFFF','#1E5BFF'], ['#E6262B','#FFFFFF'], ['#1E5BFF','#FFD93B']];
 function gameWrap(){
   return cur === 'tetris' ? document.querySelector('#play .well') : cur === 'pong' ? $('pwrap') : cur === 'derby' ? $('padwrap')
-    : cur === 'naval' ? document.querySelector('#scrNaval .nvwrap') : cur === 'mole' ? $('mlWrap') : cur === 'curl' ? $('cuWrap') : cur === 'chairs' ? $('mcWrap') : cur === 'master' ? $('mmWrap') : cur === 'kabaddi' ? $('kbWrap') : cur === 'dodge' ? $('dbWrap') : cur === 'tank' ? $('tkWrap') : cur === 'sheep' ? $('shWrap') : cur === 'drakkar' ? $('dkWrap') : cur === 'lumber' ? $('ljWrap') : cur === 'agility' ? $('agWrap') : cur === 'galop' ? $('gpWrap') : cur === 'meduse' ? $('mdWrap') : cur === 'blob' ? $('blWrap') : null;
+    : cur === 'naval' ? document.querySelector('#scrNaval .nvwrap') : cur === 'mole' ? $('mlWrap') : cur === 'curl' ? $('cuWrap') : cur === 'chairs' ? $('mcWrap') : cur === 'master' ? $('mmWrap') : cur === 'kabaddi' ? $('kbWrap') : cur === 'dodge' ? $('dbWrap') : cur === 'tank' ? $('tkWrap') : cur === 'sheep' ? $('shWrap') : cur === 'drakkar' ? $('dkWrap') : cur === 'lumber' ? $('ljWrap') : cur === 'agility' ? $('agWrap') : cur === 'galop' ? $('gpWrap') : cur === 'meduse' ? $('mdWrap') : cur === 'blob' ? $('blWrap') : cur === 'racer' ? $('rcWrap') : null;
 }
 // x, y: position in the wrap (0..1); size in px; pal: one of BOOM_COLORS
 function boom(text, o = {}){
@@ -9710,7 +9778,7 @@ async function resultCard(){
   // footer: where to play
   c.fillStyle = '#000'; c.fillRect(0, H - 120, W, 120);
   c.fillStyle = '#FFD93B'; c.textAlign = 'center'; c.font = '58px Bangers, Impact, sans-serif'; c.fillText('Viens jouer : bastonarcade.com', W/2, H - 64);
-  c.fillStyle = '#fff'; c.font = '700 26px Nunito, sans-serif'; c.fillText('18 jeux à plusieurs, gratuits, sans compte, sans pub', W/2, H - 22);
+  c.fillStyle = '#fff'; c.font = '700 26px Nunito, sans-serif'; c.fillText('19 jeux à plusieurs, gratuits, sans compte, sans pub', W/2, H - 22);
   return cv;
 }
 $('btnShare').onclick = async () => {
@@ -10963,6 +11031,563 @@ function blDraw(ctx, now){
   }
 }
 
+// ================= GRAND PRIX BASTON : arcade car race seen from above =================
+// Five cars (robots fill in), two laps of one of five circuits drawn at random. Each car has the same performance; what
+// differs is its look and the side it strikes on (front, back, left or right), plus a small bonus picked before the
+// race (turbo, aero or grip). The driver steers with a slider that springs back to the middle, holds a pedal to burn
+// fuel for speed, brakes, and strikes: a 0.4 s wind-up anyone can see, then a hit that costs whoever is still there 5 %
+// of their speed and 10 % of their fuel. Too much speed in a corner and the tyres squeal and slide outwards. Fuel comes
+// back slowly, much faster in the two pit lanes beside the track. The host runs everything.
+const RC_TRACKS = [
+  { n:'Le Ruban',     p:[[0,-1],[.7,-.95],[1,-.6],[.95,.1],[.6,.35],[.35,.75],[.7,.95],[.4,1.15],[-.3,1.05],[-.85,.8],[-1,.2],[-.75,-.25],[-.95,-.7],[-.55,-1.05]] },
+  { n:'Le Haricot',   p:[[-.2,-1],[.6,-1],[1.05,-.55],[1.05,.2],[.7,.8],[0,1],[-.55,.75],[-.4,.25],[-.85,.05],[-1.1,-.4],[-.85,-.9]] },
+  { n:'Le Serpent',   p:[[-1,-1],[-.2,-1.05],[.15,-.7],[.6,-.95],[1.05,-.7],[.95,-.15],[.5,.05],[.95,.35],[1,.9],[.3,1.05],[-.1,.7],[-.55,1.05],[-1.05,.8],[-.8,.25],[-1.1,-.3]] },
+  { n:'La Corniche',  p:[[-1,0],[-.9,-.75],[-.35,-1],[.1,-.6],[.55,-1],[1.05,-.8],[1.1,-.1],[.75,.25],[1,.75],[.55,1.05],[0,.8],[-.5,1.05],[-1,.7]] },
+  { n:"L'Hippodrome", p:[[-.9,-.75],[.9,-.75],[1.15,-.35],[1.15,.35],[.9,.75],[.25,.75],[0,.45],[-.25,.75],[-.9,.75],[-1.15,.35],[-1.15,-.35]] }
+];
+const RC_LEN = 15000, RC_W = 170, RC_STEP = 20;
+// a closed Catmull-Rom curve through the points, resampled every RC_STEP units and scaled to RC_LEN
+function rcBuild(ti){
+  const P = RC_TRACKS[ti].p, n = P.length, raw = [];
+  for (let i = 0; i < n; i++){
+    const p0 = P[(i - 1 + n) % n], p1 = P[i], p2 = P[(i + 1) % n], p3 = P[(i + 2) % n];
+    for (let k = 0; k < 40; k++){
+      const t = k/40, t2 = t*t, t3 = t2*t;
+      raw.push([.5*((2*p1[0]) + (-p0[0] + p2[0])*t + (2*p0[0] - 5*p1[0] + 4*p2[0] - p3[0])*t2 + (-p0[0] + 3*p1[0] - 3*p2[0] + p3[0])*t3),
+                .5*((2*p1[1]) + (-p0[1] + p2[1])*t + (2*p0[1] - 5*p1[1] + 4*p2[1] - p3[1])*t2 + (-p0[1] + 3*p1[1] - 3*p2[1] + p3[1])*t3)]);
+    }
+  }
+  let L = 0; for (let i = 0; i < raw.length; i++){ const a = raw[i], b = raw[(i + 1) % raw.length]; L += Math.hypot(b[0] - a[0], b[1] - a[1]); }
+  const sc = RC_LEN/L, pts = [];
+  // resample at even spacing
+  let acc = 0, i = 0, a = raw[0];
+  pts.push([a[0]*sc, a[1]*sc]);
+  let need = RC_STEP/sc;
+  while (pts.length < RC_LEN/RC_STEP){
+    const b = raw[(i + 1) % raw.length], d = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    if (acc + d >= need){ const u = (need - acc)/d; a = [a[0] + (b[0] - a[0])*u, a[1] + (b[1] - a[1])*u]; pts.push([a[0]*sc, a[1]*sc]); acc = 0; }
+    else { acc += d; a = b; i++; if (i > raw.length*2) break; }
+  }
+  const N = pts.length, tan = pts.map((q, k) => { const b = pts[(k + 1) % N], c = pts[(k - 1 + N) % N]; const dx = b[0] - c[0], dy = b[1] - c[1], l = Math.hypot(dx, dy) || 1; return [dx/l, dy/l]; });
+  // two pit lanes, on the outside of fairly straight stretches, at about a third and two thirds of the lap
+  const curv = k => { const a1 = Math.atan2(tan[(k + 12) % N][1], tan[(k + 12) % N][0]), a0 = Math.atan2(tan[k][1], tan[k][0]); let d = a1 - a0; while (d > Math.PI) d -= 2*Math.PI; while (d < -Math.PI) d += 2*Math.PI; return d; };
+  const pits = [];
+  for (const f of [.3, .72]){
+    let best = null, bv = 1e9;
+    for (let k = Math.floor(N*(f - .1)); k < N*(f + .1); k++){ let v = 0; for (let j = 0; j < 35; j += 5) v += Math.abs(curv((k + j) % N)); if (v < bv){ bv = v; best = k; } }
+    // the outside of the lap: the side away from the middle of the circuit
+    const q = pts[best], nx = -tan[best][1], ny = tan[best][0], side = (q[0]*nx + q[1]*ny) > 0 ? 1 : -1;
+    pits.push({ a:best, b:(best + 32) % N, side });
+  }
+  return { pts, tan, N, pits, name:RC_TRACKS[ti].n };
+}
+
+const RC_CARS = [
+  { n:'Formule',    hit:'f', look:'formula' },
+  { n:'Coccinelle', hit:'b', look:'beetle' },
+  { n:'Pick-up',    hit:'l', look:'pickup' },
+  { n:'Coupé',      hit:'r', look:'coupe' },
+  { n:'Fourgon',    hit:'f', look:'van' }
+];
+const RC_SIDES = { f:'à l\'avant', b:'à l\'arrière', l:'à gauche', r:'à droite' };
+const RC_ARROW = { f:'⬆', b:'⬇', l:'⬅', r:'➡' };
+const RC_BONUS = { turbo:{ ic:'🚀', n:'Turbo nitro', d:'Accélération +12 %' }, aero:{ ic:'✈️', n:'Aéro chasseur', d:'Vitesse de pointe +5 %' }, gum:{ ic:'🍬', n:'Pneus chewing-gum', d:'Adhérence +12 %' } };
+const RC_LAPS = 2, RC_CRUISE = 290, RC_VMAX = 400, RC_ACC = 150, RC_BOOST_ACC = 210, RC_BRAKE = 420, RC_GRIP = 560, RC_TURN = 1.9;
+const RC_FUEL_BURN = 13, RC_FUEL_REGEN = 2.2, RC_FUEL_PIT = 32, RC_PIT_V = 230, RC_OFF_V = 150, RC_PIT_W = 95, RC_R = 16;
+const RC_WIND = .4, RC_CD = 3, RC_PICK_T = 25, RC_TMAX = 240;
+// where each kind of car strikes, in its own frame (forward, right), the radius, and what it costs the victim
+const RC_ZONE = { f:{ f:40, r:0, rad:28, v:.95, fu:10, push:0 }, b:{ f:-42, r:0, rad:32, v:.95, fu:10, push:0 }, l:{ f:0, r:-30, rad:28, v:.93, fu:12, push:-70 }, r:{ f:0, r:30, rad:28, v:.93, fu:12, push:70 } };
+let HRC = null, RC = null;
+function rcLater(fn, ms){ const g = HRC; const t = setTimeout(() => { if (HRC === g && H && !H.over) fn(); }, ms); HRC.timers.push(t); }
+function rcClear(){ if (HRC) HRC.timers.forEach(t => clearTimeout(t)); }
+const rcIn = id => !!(H && H.stats[id] && !H.stats[id].left);
+
+// ---- host ----
+function racerHostStart(){
+  const names = ['Robot', 'Robot 2', 'Robot 3', 'Robot 4'];
+  for (const [i, id] of ['ai', 'ai2', 'ai3', 'ai4'].entries()){
+    if (players.length >= 5) break;
+    if (players.some(p => p.id === id)) continue;
+    players.push({ id, name:names[i], color:pickColor(), bot:true });
+    H.alive.add(id);
+  }
+  H.n = players.length;
+  for (const p of players) H.stats[p.id] = { pts:0, time:0, lap:0, best:0, hits:0, hit:0, pits:0, done:false, left:false };
+  HRC = { timers:[], ph:'pick', t:0, ti:Math.floor(Math.random()*RC_TRACKS.length), pick:{}, cars:{}, lastSend:0, bot:{}, order:[], first:0 };
+  for (const p of players) HRC.pick[p.id] = p.bot ? { car:Math.floor(Math.random()*5), bonus:['turbo', 'aero', 'gum'][Math.floor(Math.random()*3)], ready:true } : { car:players.indexOf(p) % 5, bonus:'turbo', ready:false };
+  broadcast({ t:'start', players, game:'racer' });
+  rcLater(() => broadcast({ t:'rc_pick', ti:HRC.ti, left:RC_PICK_T, pick:HRC.pick }), 300);
+  rcLater(rcGrid, RC_PICK_T*1000 + 600);
+}
+function racerChoose(id, m){
+  if (!HRC || HRC.ph !== 'pick' || !HRC.pick[id]) return;
+  const P = HRC.pick[id];
+  if (m.car != null && RC_CARS[m.car | 0]) P.car = m.car | 0;
+  if (m.bonus && RC_BONUS[m.bonus]) P.bonus = m.bonus;
+  if (m.ready != null) P.ready = !!m.ready;
+  broadcast({ t:'rc_picks', pick:HRC.pick });
+  if (players.every(p => !rcIn(p.id) || HRC.pick[p.id].ready)) rcLater(rcGrid, 800);
+}
+function rcGrid(){
+  if (!HRC || HRC.ph !== 'pick') return;
+  HRC.ph = 'count';
+  const T = HRC.T = rcBuild(HRC.ti);
+  players.forEach((p, i) => {
+    // two columns behind the line
+    const k = (T.N - 4 - Math.floor(i/2)*4 - (i % 2)*2) % T.N, q = T.pts[k], tg = T.tan[k], side = i % 2 ? 1 : -1;
+    const P = HRC.pick[p.id];
+    HRC.cars[p.id] = { x:q[0] - tg[1]*side*38, y:q[1] + tg[0]*side*38, h:Math.atan2(tg[1], tg[0]), v:0, slip:0, fuel:100, idx:k, lap:0, half:false,
+      steer:0, gas:false, brake:false, car:P.car, bonus:P.bonus, wind:0, cd:0, skid:false, off:false, pit:false, done:false, place:0 };
+  });
+  broadcast({ t:'rc_round', ti:HRC.ti, cars:players.map(p => [HRC.cars[p.id].car, HRC.cars[p.id].bonus]) });
+  rcLater(() => { HRC.ph = 'play'; HRC.t = 0; broadcast({ t:'rc_go' }); }, 3300);
+}
+function racerInput(id, m){
+  const c = HRC && HRC.cars[id]; if (!c) return;
+  c.steer = Math.max(-1, Math.min(1, (+m.s || 0)/100)); c.gas = !!m.g; c.brake = !!m.b;
+}
+function racerHit(id){
+  const c = HRC && HRC.cars[id]; if (!c || HRC.ph !== 'play' || c.done || c.cd > 0 || c.wind > 0) return;
+  c.wind = RC_WIND; c.cd = RC_CD + RC_WIND;
+  broadcast({ t:'rc_ev', k:'wind', a:id });
+}
+// where a car is along the track: the nearest sample, searched around the last one
+function rcTrack(c){
+  const T = HRC.T, N = T.N; let best = c.idx, bd = 1e18;
+  for (let d = -12; d <= 12; d++){ const k = (c.idx + d + N) % N, q = T.pts[k], e = (q[0] - c.x)**2 + (q[1] - c.y)**2; if (e < bd){ bd = e; best = k; } }
+  const q = T.pts[best], tg = T.tan[best], lat = (c.x - q[0])*(-tg[1]) + (c.y - q[1])*tg[0];
+  return { k:best, lat };
+}
+const rcInPit = (T, k, lat) => T.pits.some(p => { const inK = p.a < p.b ? k >= p.a && k <= p.b : k >= p.a || k <= p.b; return inK && lat*p.side >= RC_W/2 - 10 && lat*p.side <= RC_W/2 + RC_PIT_W; });
+function rcStep(dt){
+  const T = HRC.T, N = T.N;
+  HRC.t += dt;
+  for (const p of players){
+    const c = HRC.cars[p.id]; if (!c) continue;
+    const B = c.bonus;
+    c.cd = Math.max(0, c.cd - dt);
+    if (c.done){ c.v = Math.max(0, c.v - 200*dt); c.gas = c.brake = false; c.steer *= .9; }
+    // where am I: on the asphalt, in a pit lane, or on the grass
+    const at = rcTrack(c), ahead = (at.k - c.idx + N) % N;
+    if (ahead < N/2){ if (c.idx > N*.75 && at.k < N*.25 && c.half){ c.lap++; c.half = false; rcLap(p.id, c); } }
+    if (at.k > N*.4 && at.k < N*.6) c.half = true;
+    c.idx = at.k;
+    c.pit = rcInPit(T, at.k, at.lat); c.off = !c.pit && Math.abs(at.lat) > RC_W/2;
+    // speed: cruise on its own, more with the pedal (burns fuel), less with the brake
+    const vmax = RC_VMAX*(B === 'aero' ? 1.05 : 1), acc = (c.gas && c.fuel > 0 ? RC_BOOST_ACC : RC_ACC)*(B === 'turbo' ? 1.12 : 1);
+    let target = c.gas && c.fuel > 0 ? vmax : RC_CRUISE*(B === 'aero' ? 1.02 : 1);
+    if (c.off) target = Math.min(target, RC_OFF_V);
+    if (c.pit) target = Math.min(target, RC_PIT_V);
+    if (HRC.ph !== 'play') target = 0;
+    if (c.brake) c.v = Math.max(60, c.v - RC_BRAKE*dt);
+    else if (c.v < target) c.v = Math.min(target, c.v + acc*dt);
+    else c.v = Math.max(target, c.v - (c.off ? 300 : 120)*dt);
+    if (c.gas && c.fuel > 0 && !c.done) c.fuel = Math.max(0, c.fuel - RC_FUEL_BURN*dt);
+    else c.fuel = Math.min(100, c.fuel + (c.pit ? RC_FUEL_PIT : RC_FUEL_REGEN)*dt);
+    // a pit stop counts once per pit lane
+    if (c.pit && HRC.t - (c.pitT ?? -99) > 8){ H.stats[p.id].pits++; }
+    if (c.pit) c.pitT = HRC.t;
+    // steering: the turn the tyres can hold depends on grip and speed; asking for more makes the car slide outwards
+    const grip = RC_GRIP*(B === 'gum' ? 1.12 : 1)*(c.off ? .7 : 1);
+    let w = c.steer*RC_TURN*Math.min(1, c.v/60);
+    const lat = Math.abs(w)*c.v;
+    c.skid = lat > grip && c.v > 120;
+    if (c.skid){ const w2 = Math.sign(w)*grip/c.v; c.slip += -Math.sign(w)*(lat - grip)/grip*c.v*.9*dt; w = w2 + (w - w2)*.35; }
+    c.slip *= Math.max(0, 1 - 2.2*dt);
+    c.h += w*dt;
+    const fx = Math.cos(c.h), fy = Math.sin(c.h);
+    // the slide pushes sideways, to the outside of the turn (to the left of the car when turning right)
+    c.x += (fx*c.v + -fy*-c.slip)*dt; c.y += (fy*c.v + fx*-c.slip)*dt;
+    // strikes: the wind-up ends, whoever is in the zone gets hit
+    if (c.wind > 0){ c.wind -= dt; if (c.wind <= 0) rcStrike(p.id, c); }
+  }
+  // cars bump each other
+  const L = players.map(p => HRC.cars[p.id]).filter(Boolean);
+  for (let i = 0; i < L.length; i++) for (let j = i + 1; j < L.length; j++){
+    const a = L[i], b = L[j], dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy);
+    if (d > 0 && d < RC_R*2){ const o = (RC_R*2 - d)/2, ux = dx/d, uy = dy/d; a.x -= ux*o; a.y -= uy*o; b.x += ux*o; b.y += uy*o; a.v *= .995; b.v *= .995; }
+  }
+}
+function rcStrike(id, c){
+  const Z = RC_ZONE[RC_CARS[c.car].hit], fx = Math.cos(c.h), fy = Math.sin(c.h);
+  const zx = c.x + fx*Z.f - fy*Z.r, zy = c.y + fy*Z.f + fx*Z.r;
+  let any = false;
+  for (const p of players){
+    if (p.id === id) continue;
+    const o = HRC.cars[p.id]; if (!o || o.done) continue;
+    if (Math.hypot(o.x - zx, o.y - zy) > Z.rad + RC_R) continue;
+    o.v *= Z.v; o.fuel = Math.max(0, o.fuel - Z.fu); o.slip += Z.push;
+    H.stats[id].hits++; H.stats[p.id].hit++; any = true;
+    broadcast({ t:'rc_ev', k:'hit', a:id, b:p.id, x:Math.round(o.x), y:Math.round(o.y) });
+  }
+  if (!any) broadcast({ t:'rc_ev', k:'miss', a:id });
+}
+function rcLap(id, c){
+  const s = H.stats[id];
+  s.lap = c.lap;
+  const lt = HRC.t - (c.lapT || 0); c.lapT = HRC.t; if (!s.best || lt < s.best) s.best = Math.round(lt*10)/10;
+  if (c.lap >= RC_LAPS && !c.done){
+    c.done = true; s.done = true; s.time = Math.round(HRC.t*10)/10;
+    HRC.order.push(id); c.place = HRC.order.length;
+    broadcast({ t:'rc_ev', k:'fin', a:id, place:c.place, time:s.time });
+    if (!HRC.first) HRC.first = HRC.t;
+  } else broadcast({ t:'rc_ev', k:'lap', a:id, lap:c.lap + 1 });
+}
+function racerHostFrame(dt, now){
+  if (!HRC || !H || H.over || (HRC.ph !== 'play' && HRC.ph !== 'count') || !HRC.T) return;
+  if (HRC.ph === 'play') rcBots(dt);
+  const n = Math.max(1, Math.round(dt*60));
+  for (let i = 0; i < n; i++) rcStep(dt/n);
+  if (now - HRC.lastSend > 50){
+    HRC.lastSend = now;
+    broadcastSnap({ t:'rc_s', tt:Math.round(HRC.t*10), c:players.map(p => { const c = HRC.cars[p.id]; if (!c) return null;
+      return [Math.round(c.x*10), Math.round(c.y*10), Math.round(c.h*1000), Math.round(c.v), Math.round(c.fuel), c.lap, (c.gas && c.fuel > 0 ? 1 : 0) | (c.brake ? 2 : 0) | (c.skid ? 4 : 0) | (c.off ? 8 : 0) | (c.pit ? 16 : 0) | (c.wind > 0 ? 32 : 0) | (c.done ? 64 : 0), c.idx, Math.round(c.cd*10)]; }) });
+  }
+  const humans = players.filter(p => !p.bot && rcIn(p.id));
+  // the race ends when every car is in, 8 s after the last human gets in, 25 s after the winner, or at the time limit
+  if (HRC.ph === 'play' && !HRC.hd && humans.every(p => HRC.cars[p.id] && HRC.cars[p.id].done)) HRC.hd = HRC.t;
+  if (HRC.ph === 'play' && (players.every(p => !HRC.cars[p.id] || HRC.cars[p.id].done || !rcIn(p.id)) || (HRC.hd && HRC.t - HRC.hd > 8) || (HRC.first && HRC.t - HRC.first > 25) || HRC.t > RC_TMAX)) rcFinish();
+}
+function rcRanking(){
+  const prog = id => { const c = HRC.cars[id]; return c ? c.lap*HRC.T.N + ((c.idx - 0 + HRC.T.N) % HRC.T.N)*(c.half || c.idx < HRC.T.N/2 ? 1 : 0) : -1; };
+  const ids = Object.keys(H.stats).sort((a, b) => { const A = H.stats[a], B = H.stats[b];
+    if (A.left !== B.left) return A.left ? 1 : -1;
+    if (A.done !== B.done) return A.done ? -1 : 1;
+    if (A.done) return A.time - B.time;
+    return prog(b) - prog(a); });
+  return ids.map((pid, i) => { const p = players.find(x => x.id === pid) || { name:'?', color:'#888' }, st = H.stats[pid];
+    return { id:pid, name:p.name, color:p.color, place:i + 1, ...st, pts:Math.max(0, 10 - i*2) + st.hits }; });
+}
+function rcFinish(){
+  if (!H || H.over) return;
+  H.over = true; rcClear(); HRC.ph = 'end';
+  const ranking = rcRanking();
+  broadcast({ t:'rc_res', order:ranking.map(r => r.id) });
+  setTimeout(() => broadcast({ t:'end', ranking, game:'racer' }), 2500);
+}
+function racerDrop(id){
+  if (!H || H.over || !H.stats[id]) return;
+  H.stats[id].left = true;
+  broadcast({ t:'rc_ev', k:'left', a:id });
+  if (!players.some(p => !p.bot && rcIn(p.id))) return rcFinish();
+  if (HRC && HRC.ph === 'pick' && players.every(p => !rcIn(p.id) || HRC.pick[p.id].ready)) rcLater(rcGrid, 500);
+}
+// robots: aim at a point further down the track (on their lane), slow down before tight corners, use the pedal on
+// straights while fuel lasts, go through a pit lane when fuel runs low, strike whoever sits in their zone
+function rcBots(dt){
+  const T = HRC.T, N = T.N;
+  for (const p of players){
+    if (!p.bot) continue;
+    const c = HRC.cars[p.id]; if (!c || c.done) continue;
+    const B = HRC.bot[p.id] || (HRC.bot[p.id] = { lane:(Math.random() - .5)*70, t:0, skill:.85 + Math.random()*.15 });
+    B.t -= dt; if (B.t <= 0){ B.t = 2 + Math.random()*3; B.lane = (Math.random() - .5)*80; }
+    // pit lane wanted?
+    let lane = B.lane;
+    const pitNear = T.pits.find(q => { const d = (q.a - c.idx + N) % N; return d < 45 || ((c.idx - q.a + N) % N) < 32; });
+    if (c.fuel < 35 && pitNear) lane = pitNear.side*(RC_W/2 + RC_PIT_W/2);
+    const look = Math.round((140 + c.v*.45)/RC_STEP), k = (c.idx + look) % N, q = T.pts[k], tg = T.tan[k];
+    const tx = q[0] - tg[1]*lane, ty = q[1] + tg[0]*lane;
+    let d = Math.atan2(ty - c.y, tx - c.x) - c.h; while (d > Math.PI) d -= 2*Math.PI; while (d < -Math.PI) d += 2*Math.PI;
+    c.steer = Math.max(-1, Math.min(1, d*2.6));
+    // how much the track turns in the next stretch
+    const a0 = Math.atan2(T.tan[c.idx][1], T.tan[c.idx][0]), k2 = (c.idx + Math.round((200 + c.v*.9)/RC_STEP)) % N, a1 = Math.atan2(T.tan[k2][1], T.tan[k2][0]);
+    let turn = Math.abs(a1 - a0); if (turn > Math.PI) turn = 2*Math.PI - turn;
+    const safe = Math.sqrt(RC_GRIP*B.skill*(120 + 900/(turn + .3))) ;
+    c.brake = c.v > safe*1.05 && c.v > 140;
+    c.gas = !c.brake && turn < .5 && c.fuel > 20 && !(pitNear && c.fuel < 35);
+    // strike if someone is in the zone (with some hesitation)
+    if (c.cd <= 0 && Math.random() < .08){
+      const Z = RC_ZONE[RC_CARS[c.car].hit], fx = Math.cos(c.h), fy = Math.sin(c.h), zx = c.x + fx*Z.f - fy*Z.r, zy = c.y + fy*Z.f + fx*Z.r;
+      if (players.some(o => o.id !== p.id && HRC.cars[o.id] && Math.hypot(HRC.cars[o.id].x - zx, HRC.cars[o.id].y - zy) < Z.rad + RC_R + 6)) racerHit(p.id);
+    }
+  }
+}
+
+// ---- my view ----
+const rccv = $('rcCv'), rcctx = rccv.getContext('2d');
+function startRacer(m){
+  lastCountShown = null;
+  players = m.players; cur = 'racer'; G = null; PG = null; D = null; phase = 'pick';
+  $('scrEnd').hidden = true; show('scrRacer');
+  RC = { ph:'pick', ti:0, T:null, pick:{}, until:0, cars:[], looks:[], t:0, count:3, steer:0, held:false, gas:false, brake:false, sent:'', lastSend:0, keys:{},
+    smoke:[], marks:[], fx:[], shake:0, spec:!players.some(p => p.id === me.id), banner:null, myCd:0, lapShown:0 };
+  if (!RC.spec) RC.pick[me.id] = { car:Math.max(0, rcMe()) % 5, bonus:'turbo', ready:false };
+  $('rcPick').hidden = false; $('rcRace').hidden = true;
+  rcPickUI();
+}
+const rcName = id => { const p = players.find(x => x.id === id); return p ? p.name : '?'; };
+const rcMe = () => players.findIndex(p => p.id === me.id);
+// ---- choosing a car and a bonus ----
+function rcPickUI(){
+  const grid = $('rcCars'); grid.textContent = '';
+  const mine = RC.pick[me.id] || { car:Math.max(0, rcMe()) % 5, bonus:'turbo' }, col = (players[rcMe()] || {}).color || '#E6262B';
+  RC_CARS.forEach((c, i) => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'rccar'; b.setAttribute('aria-pressed', mine.car === i ? 'true' : 'false');
+    const cv = document.createElement('canvas'); cv.width = 90; cv.height = 110;
+    const x = cv.getContext('2d'); x.translate(45, 58); x.scale(1.45, 1.45); rcCar(x, c.look, col, c.hit, 0, 0);
+    const n = document.createElement('b'); n.textContent = c.n;
+    const s = document.createElement('span'); s.textContent = RC_ARROW[c.hit] + ' frappe ' + RC_SIDES[c.hit];
+    b.append(cv, n, s); b.onclick = () => rcSend({ car:i }); grid.append(b);
+  });
+  const bo = $('rcBonus'); bo.textContent = '';
+  for (const [k, B] of Object.entries(RC_BONUS)){
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'rcbon'; b.setAttribute('aria-pressed', mine.bonus === k ? 'true' : 'false');
+    const t = document.createElement('b'); t.textContent = B.ic + ' ' + B.n; const d = document.createElement('span'); d.textContent = B.d;
+    b.append(t, d); b.onclick = () => rcSend({ bonus:k }); bo.append(b);
+  }
+  $('rcReady').textContent = mine.ready ? '✔ Prêt ! (changer)' : '✔ Je suis prêt';
+  $('rcReady').classList.toggle('on', !!mine.ready);
+  const ul = $('rcWho'); ul.textContent = '';
+  for (const p of players){
+    const P = RC.pick[p.id]; if (!P) continue;
+    const li = document.createElement('li'); if (p.id === me.id) li.classList.add('me');
+    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color;
+    const t = document.createElement('span'); t.textContent = p.name + ' · ' + RC_CARS[P.car].n + ' ' + RC_BONUS[P.bonus].ic + (P.ready ? ' ✔' : '');
+    li.append(d, t); ul.append(li);
+  }
+}
+function rcSend(o){
+  if (RC.spec || RC.ph !== 'pick') return;
+  const P = RC.pick[me.id] || (RC.pick[me.id] = { car:0, bonus:'turbo', ready:false });
+  Object.assign(P, o); rcPickUI(); sfx('tap');
+  toHost({ t:'rc_choose', ...o });
+}
+$('rcReady').addEventListener('click', () => { const P = RC && RC.pick[me.id]; if (P) rcSend({ ready:!P.ready }); });
+function racerRecv(m){
+  if (!RC) return;
+  if (m.t === 'rc_pick'){ RC.ti = m.ti; RC.pick = m.pick; RC.until = performance.now() + m.left*1000; $('rcTrackName').textContent = 'Circuit : ' + RC_TRACKS[m.ti].n; rcPickUI(); }
+  else if (m.t === 'rc_picks'){ RC.pick = m.pick; rcPickUI(); }
+  else if (m.t === 'rc_round'){
+    RC.ph = 'count'; phase = 'count'; RC.count = 3.2; lastCountShown = null;
+    RC.ti = m.ti; RC.T = rcBuild(m.ti); RC.looks = m.cars; RC.path = null;
+    $('rcPick').hidden = true; $('rcRace').hidden = false;
+    $('rcHead').textContent = RC.T.name;
+  } else if (m.t === 'rc_go'){ RC.ph = 'play'; phase = 'play'; $('rcHead').textContent = 'Partez !'; }
+  else if (m.t === 'rc_s'){
+    RC.t = m.tt/10;
+    m.c.forEach((q, i) => {
+      if (!q) return;
+      const o = RC.cars[i] || (RC.cars[i] = { x:q[0]/10, y:q[1]/10, h:q[2]/1000 });
+      o.tx = q[0]/10; o.ty = q[1]/10; o.th = q[2]/1000; o.v = q[3]; o.fuel = q[4]; o.lap = q[5]; o.f = q[6]; o.idx = q[7]; o.cd = q[8]/10;
+    });
+  } else if (m.t === 'rc_ev'){
+    const ai = players.findIndex(p => p.id === m.a);
+    if (m.k === 'wind'){ const o = RC.cars[ai]; if (o) o.windAt = performance.now(); if (m.a === me.id) sfx('tap'); }
+    else if (m.k === 'hit'){
+      RC.fx.push({ x:m.x, y:m.y, t:performance.now() });
+      if (m.b === me.id){ RC.shake = 10; sfx('thud'); rcToast(rcName(m.a) + ' vous a percuté ! −5 % de vitesse, −10 % d\'essence'); }
+      else if (m.a === me.id){ sfx('ok'); boom('BAM !', { size:26, x:.5, y:.35, pal:BOOM_COLORS[0], ms:600 }); }
+    } else if (m.k === 'miss'){ if (m.a === me.id) rcToast('Raté !'); }
+    else if (m.k === 'lap'){ if (m.a === me.id){ rcToast('Dernier tour !'); sfx('myturn'); } }
+    else if (m.k === 'fin'){ if (m.a === me.id){ boom('ARRIVÉE ! ' + m.place + (m.place === 1 ? 'er' : 'e'), { size:30, x:.5, y:.3, pal:BOOM_COLORS[1], ms:1400 }); sfx(m.place === 1 ? 'win' : 'ok'); } else if (m.place === 1) rcToast(rcName(m.a) + ' franchit la ligne en tête !'); }
+    else if (m.k === 'left'){ const p = players.find(x => x.id === m.a); if (p) p.left = true; }
+  } else if (m.t === 'rc_res'){
+    RC.ph = 'res'; phase = 'res';
+    const k = m.order.indexOf(me.id);
+    RC.banner = k === 0 ? { big:'VICTOIRE !', col:'#3DDC97' } : { big:(k >= 0 ? (k + 1) + 'e' : '') + ' · ' + rcName(m.order[0]).toUpperCase() + ' GAGNE', col:'#FFD93B' };
+  }
+}
+let rcToastT = null;
+function rcToast(t){ const el = $('rcToast'); el.textContent = t; el.classList.add('on'); clearTimeout(rcToastT); rcToastT = setTimeout(() => el.classList.remove('on'), 2200); }
+// ---- controls: a steering slider that springs back to the middle, pedals, the strike button, keys ----
+const rcSl = $('rcSteer'), rcKnob = $('rcKnob');
+function rcSteerAt(e){ const r = rcSl.getBoundingClientRect(); RC.steer = Math.max(-1, Math.min(1, ((e.clientX - r.left)/r.width - .5)*2.2)); }
+rcSl.addEventListener('pointerdown', e => { if (!RC) return; e.preventDefault(); RC.held = true; try { rcSl.setPointerCapture(e.pointerId); } catch(_){} rcSteerAt(e); });
+rcSl.addEventListener('pointermove', e => { if (RC && RC.held) rcSteerAt(e); });
+const rcRel = () => { if (RC) RC.held = false; };
+rcSl.addEventListener('pointerup', rcRel); rcSl.addEventListener('pointercancel', rcRel);
+const rcHold = (id, key) => {
+  const b = $(id);
+  b.addEventListener('pointerdown', e => { if (!RC) return; e.preventDefault(); RC[key] = true; b.classList.add('on'); try { b.setPointerCapture(e.pointerId); } catch(_){} });
+  const up = () => { if (RC) RC[key] = false; b.classList.remove('on'); };
+  b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up); b.addEventListener('lostpointercapture', up);
+};
+rcHold('rcGas', 'gas'); rcHold('rcBrake', 'brake');
+$('rcHit').addEventListener('click', () => { if (RC && RC.ph === 'play' && !RC.spec) toHost({ t:'rc_hit' }); });
+addEventListener('keydown', e => {
+  if (cur !== 'racer' || !RC || e.target.tagName === 'INPUT') return;
+  const k = e.key.toLowerCase();
+  if (['arrowleft', 'arrowright', 'arrowup', 'arrowdown', 'q', 'a', 'd', 'z', 'w', 's'].includes(k)){ e.preventDefault(); RC.keys[k] = true; }
+  if (k === ' '){ e.preventDefault(); if (!e.repeat) $('rcHit').click(); }
+});
+addEventListener('keyup', e => { if (cur !== 'racer' || !RC) return; RC.keys[e.key.toLowerCase()] = false; });
+
+// ---- loop ----
+function racerFrame(dtMs, now){
+  if (!RC) return;
+  const dt = Math.min(.05, dtMs/1000);
+  if (RC.ph === 'pick'){
+    const left = Math.max(0, (RC.until - now)/1000); $('rcPickTime').textContent = '⏱ ' + Math.ceil(left); return;
+  }
+  if (phase === 'count'){ RC.count -= dt; countBeep(RC.count > 0 ? Math.min(3, Math.ceil(RC.count)) : 0); }
+  // keys steer too; the slider springs back when let go
+  const K = RC.keys, kx = ((K.arrowright || K.d) ? 1 : 0) - ((K.arrowleft || K.q || K.a) ? 1 : 0);
+  if (kx) RC.steer = Math.max(-1, Math.min(1, RC.steer + kx*dt*4));
+  else if (!RC.held) RC.steer *= Math.max(0, 1 - dt*9);
+  const gas = RC.gas || K.arrowup || K.z || K.w, brake = RC.brake || K.arrowdown || K.s;
+  rcKnob.style.left = (50 + RC.steer*42) + '%';
+  if ((RC.ph === 'play' || RC.ph === 'count') && !RC.spec){
+    const key = Math.round(RC.steer*100) + ':' + (gas ? 1 : 0) + (brake ? 1 : 0);
+    if (key !== RC.sent && now - RC.lastSend > 33){ RC.sent = key; RC.lastSend = now; toHost({ t:'rc_in', s:Math.round(RC.steer*100), g:gas ? 1 : 0, b:brake ? 1 : 0 }); }
+  }
+  if (me.host) racerHostFrame(dt, now);
+  const k = Math.min(1, dt*14);
+  for (const o of RC.cars){ if (!o) continue; o.x += (o.tx - o.x)*k; o.y += (o.ty - o.y)*k; let d = o.th - o.h; while (d > Math.PI) d -= 2*Math.PI; while (d < -Math.PI) d += 2*Math.PI; o.h += d*k; }
+  RC.shake *= Math.max(0, 1 - dt*8);
+  // HUD
+  const i = rcMe(), mc = RC.cars[i];
+  if (mc && RC.T){
+    $('rcFuel').style.width = mc.fuel + '%'; $('rcFuel').classList.toggle('low', mc.fuel < 20);
+    $('rcLap').textContent = (mc.f & 64) ? '🏁 Arrivé' : 'Tour ' + Math.min(RC_LAPS, mc.lap + 1) + '/' + RC_LAPS;
+    $('rcPos').textContent = rcPlace(i) + (rcPlace(i) === 1 ? 'er' : 'e') + ' / ' + players.length;
+    $('rcSpd').textContent = Math.round(mc.v*.6) + ' km/h';
+    $('rcHit').disabled = mc.cd > 0 || RC.ph !== 'play'; $('rcHit').textContent = mc.cd > 0 ? '💥 ' + Math.ceil(mc.cd) : '💥 FRAPPER ' + RC_ARROW[RC_CARS[RC.looks[i] ? RC.looks[i][0] : 0].hit];
+  }
+  if (RC.T) rcDraw(rcctx, now, dt);
+}
+// race order: laps, then distance along the track
+function rcPlace(i){
+  const N = RC.T.N, sc = o => o ? ((o.f & 64) ? 1e6 - (o.doneAt || 0) : o.lap*N + o.idx - (o.idx > N*.9 && o.lap === 0 ? N : 0)) : -1;
+  const me0 = sc(RC.cars[i]); return 1 + RC.cars.filter((o, j) => j !== i && sc(o) > me0).length;
+}
+// ---- drawing ----
+function rcDraw(ctx, now, dt){
+  const W = 600, Hh = 660, t = now/1000, T = RC.T, i = rcMe() >= 0 ? rcMe() : 0, me0 = RC.cars[i] || { x:T.pts[0][0], y:T.pts[0][1], h:0 };
+  ctx.save();
+  ctx.fillStyle = '#4FA35A'; ctx.fillRect(0, 0, W, Hh);
+  if (RC.shake > .3) ctx.translate((Math.random() - .5)*RC.shake, (Math.random() - .5)*RC.shake);
+  // the camera: my car near the bottom, pointing up
+  const sc = 1.1;
+  ctx.translate(W/2, Hh*.7); ctx.rotate(-me0.h - Math.PI/2); ctx.scale(sc, sc); ctx.translate(-me0.x, -me0.y);
+  // mown stripes on the grass
+  ctx.fillStyle = 'rgba(255,255,255,.06)';
+  const gx = Math.floor(me0.x/160)*160, gy = Math.floor(me0.y/160)*160;
+  for (let a = -6; a <= 6; a++) for (let b = -6; b <= 6; b++) if ((a + b + Math.floor(me0.x/160) + Math.floor(me0.y/160)) % 2 === 0) ctx.fillRect(gx + a*160, gy + b*160, 160, 160);
+  // the track: kerbs, asphalt with white edges, a dashed middle line
+  if (!RC.path){ const p = new Path2D(); T.pts.forEach((q, k) => k ? p.lineTo(q[0], q[1]) : p.moveTo(q[0], q[1])); p.closePath(); RC.path = p; RC.pitPaths = T.pits.map(pt => rcPitPath(T, pt)); }
+  ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+  ctx.strokeStyle = '#fff'; ctx.lineWidth = RC_W + 18; ctx.stroke(RC.path);
+  ctx.strokeStyle = '#D7262B'; ctx.setLineDash([40, 40]); ctx.stroke(RC.path); ctx.setLineDash([]);
+  // pit lanes, beside the track, with jerrycans painted on them
+  for (const [k, pt] of T.pits.entries()){
+    ctx.fillStyle = '#9AA0A6'; ctx.strokeStyle = '#fff'; ctx.lineWidth = 4; ctx.fill(RC.pitPaths[k]); ctx.stroke(RC.pitPaths[k]);
+    for (let s = 3; s < 32; s += 7){
+      const kk = (pt.a + s) % T.N, q = T.pts[kk], tg = T.tan[kk], off = pt.side*(RC_W/2 + RC_PIT_W/2 + 4);
+      ctx.save(); ctx.translate(q[0] - tg[1]*off, q[1] + tg[0]*off); ctx.rotate(Math.atan2(tg[1], tg[0]) + Math.PI/2); rcCan(ctx); ctx.restore();
+    }
+  }
+  ctx.strokeStyle = '#fff'; ctx.lineWidth = RC_W; ctx.stroke(RC.path);
+  ctx.strokeStyle = '#4E5257'; ctx.lineWidth = RC_W - 8; ctx.stroke(RC.path);
+  ctx.strokeStyle = 'rgba(255,255,255,.45)'; ctx.lineWidth = 3; ctx.setLineDash([30, 40]); ctx.stroke(RC.path); ctx.setLineDash([]);
+  // start and finish: a chequered band across the track
+  { const q = T.pts[0], tg = T.tan[0]; ctx.save(); ctx.translate(q[0], q[1]); ctx.rotate(Math.atan2(tg[1], tg[0])); for (let a = 0; a < 2; a++) for (let b = -9; b < 9; b++){ ctx.fillStyle = (a + b) % 2 ? '#111' : '#fff'; ctx.fillRect(a*10 - 10, b*(RC_W - 8)/18, 10, (RC_W - 8)/18); } ctx.restore(); }
+  // skid marks
+  const nt = performance.now();
+  RC.marks = RC.marks.filter(q => nt - q.t < 6000);
+  ctx.strokeStyle = '#222'; ctx.lineWidth = 4;
+  for (const q of RC.marks){ ctx.globalAlpha = .45*(1 - (nt - q.t)/6000); ctx.beginPath(); ctx.moveTo(q.x0, q.y0); ctx.lineTo(q.x1, q.y1); ctx.stroke(); }
+  ctx.globalAlpha = 1;
+  // smoke behind cars on the pedal
+  RC.smoke = RC.smoke.filter(q => nt - q.t < 800);
+  for (const q of RC.smoke){ const k = (nt - q.t)/800; ctx.fillStyle = 'rgba(120,120,120,' + (.45*(1 - k)) + ')'; ctx.beginPath(); ctx.arc(q.x, q.y, 6 + k*16, 0, Math.PI*2); ctx.fill(); }
+  // the cars
+  RC.cars.forEach((o, j) => {
+    if (!o) return;
+    const p = players[j], look = RC.looks[j] || [0, 'turbo'], C = RC_CARS[look[0]], fx = Math.cos(o.h), fy = Math.sin(o.h);
+    if ((o.f & 1) && Math.random() < .7) RC.smoke.push({ x:o.x - fx*30 + (Math.random() - .5)*8, y:o.y - fy*30 + (Math.random() - .5)*8, t:nt });
+    if (o.f & 4){ for (const s of [-9, 9]){ const rx = o.x - fx*14 - fy*s, ry = o.y - fy*14 + fx*s, L = o.lastM && o.lastM[s]; if (L) RC.marks.push({ x0:L[0], y0:L[1], x1:rx, y1:ry, t:nt }); (o.lastM || (o.lastM = {}))[s] = [rx, ry]; } if (j === i && nt - (RC.sq || 0) > 260){ RC.sq = nt; noise(.25, .05, 5000, 2500, 0, 8); } }
+    else o.lastM = null;
+    const wind = o.windAt && nt - o.windAt < RC_WIND*1000 ? (nt - o.windAt)/(RC_WIND*1000) : 0;
+    ctx.save(); ctx.translate(o.x + (wind ? (Math.random() - .5)*3 : 0), o.y); ctx.rotate(o.h + Math.PI/2);
+    rcCar(ctx, C.look, p ? p.color : '#888', C.hit, wind, t);
+    ctx.restore();
+    // names above the others
+    if (p && j !== i){ ctx.save(); ctx.translate(o.x, o.y); ctx.rotate(me0.h + Math.PI/2); ctx.font = '900 13px Nunito, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 3.5; ctx.strokeStyle = '#000'; ctx.fillStyle = '#fff'; ctx.strokeText(p.name.slice(0, 10), 0, -36); ctx.fillText(p.name.slice(0, 10), 0, -36); ctx.restore(); }
+  });
+  // hits: a star burst
+  RC.fx = RC.fx.filter(q => nt - q.t < 500);
+  for (const q of RC.fx){ const k = (nt - q.t)/500; ctx.save(); ctx.translate(q.x, q.y); ctx.rotate(k); ctx.fillStyle = 'rgba(255,217,59,' + (1 - k) + ')'; ctx.strokeStyle = 'rgba(0,0,0,' + (1 - k) + ')'; ctx.lineWidth = 3; ctx.beginPath(); for (let a = 0; a < 16; a++){ const r = (a % 2 ? 14 : 34)*(.6 + k); ctx.lineTo(Math.cos(a*Math.PI/8)*r, Math.sin(a*Math.PI/8)*r); } ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.restore(); }
+  ctx.restore();
+  // minimap, top right
+  rcMini(ctx, W - 118, 8, 110);
+  // starting lights
+  if (RC.ph === 'count'){
+    const n = Math.ceil(RC.count);
+    ctx.fillStyle = '#111'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(W/2 - 80, 120, 160, 56, 10) : ctx.rect(W/2 - 80, 120, 160, 56); ctx.fill();
+    for (let a = 0; a < 3; a++){ ctx.fillStyle = 3 - a >= n && n > 0 ? '#E6262B' : n <= 0 ? '#3DDC97' : '#333'; ctx.beginPath(); ctx.arc(W/2 - 48 + a*48, 148, 18, 0, Math.PI*2); ctx.fill(); }
+  }
+  if (RC.banner){
+    ctx.fillStyle = 'rgba(0,0,0,.6)'; ctx.fillRect(0, 280, W, 90);
+    ctx.font = '36px Bangers, Impact, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 6; ctx.strokeStyle = '#000'; ctx.fillStyle = RC.banner.col;
+    ctx.strokeText(RC.banner.big, W/2, 340); ctx.fillText(RC.banner.big, W/2, 340);
+  }
+}
+function rcPitPath(T, pt){
+  const p = new Path2D(), N = T.N, n = (pt.b - pt.a + N) % N, side = pt.side;
+  const at = (k, off) => { const q = T.pts[k % N], tg = T.tan[k % N]; return [q[0] - tg[1]*off*side, q[1] + tg[0]*off*side]; };
+  for (let s = 0; s <= n; s++){ const [x, y] = at(pt.a + s, RC_W/2 + (s < 4 ? s/4 : s > n - 4 ? (n - s)/4 : 1)*RC_PIT_W); s ? p.lineTo(x, y) : p.moveTo(x, y); }
+  for (let s = n; s >= 0; s--){ const [x, y] = at(pt.a + s, RC_W/2 - 6); p.lineTo(x, y); }
+  p.closePath(); return p;
+}
+// a red jerrycan painted on the pit lane
+function rcCan(ctx){
+  ctx.fillStyle = '#D7262B'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-11, -14, 22, 28, 4) : ctx.rect(-11, -14, 22, 28); ctx.fill(); ctx.stroke();
+  ctx.strokeStyle = '#fff'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(-6, -6); ctx.lineTo(6, 8); ctx.moveTo(6, -6); ctx.lineTo(-6, 8); ctx.stroke();
+  ctx.fillStyle = '#000'; ctx.fillRect(-4, -19, 8, 5);
+}
+function rcMini(ctx, x0, y0, s){
+  const T = RC.T;
+  if (!RC.mini){ let a = 1e9, b = -1e9, c = 1e9, d = -1e9; for (const q of T.pts){ a = Math.min(a, q[0]); b = Math.max(b, q[0]); c = Math.min(c, q[1]); d = Math.max(d, q[1]); } RC.mini = { a, c, k:(s - 14)/Math.max(b - a, d - c), w:b - a, h:d - c }; }
+  const M = RC.mini, P = q => [x0 + 7 + (q[0] - M.a)*M.k + (s - 14 - M.w*M.k)/2, y0 + 7 + (q[1] - M.c)*M.k + (s - 14 - M.h*M.k)/2];
+  ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.fillRect(x0, y0, s, s);
+  ctx.strokeStyle = '#ddd'; ctx.lineWidth = 3; ctx.beginPath(); T.pts.forEach((q, k) => { if (k % 4) return; const [x, y] = P(q); k ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }); ctx.closePath(); ctx.stroke();
+  RC.cars.forEach((o, j) => { if (!o || !players[j]) return; const [x, y] = P([o.x, o.y]); ctx.fillStyle = players[j].color; ctx.strokeStyle = j === rcMe() ? '#fff' : '#000'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(x, y, j === rcMe() ? 5 : 4, 0, Math.PI*2); ctx.fill(); ctx.stroke(); });
+}
+// a car seen from above, pointing up, about 24 x 46, in the player's colour, with its weapon on the side it strikes
+function rcCar(ctx, look, col, hit, wind, t){
+  const ink = '#000', glass = '#9FD3F2', dark = 'rgba(0,0,0,.25)';
+  ctx.lineJoin = 'round'; ctx.lineWidth = 2.2; ctx.strokeStyle = ink;
+  const wheel = (x, y, w, h) => { ctx.fillStyle = '#1A1A1A'; ctx.fillRect(x - w/2, y - h/2, w, h); };
+  const rr = (x, y, w, h, r) => { ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h); };
+  // the weapon first, under the body
+  const metal = wind ? 'rgb(' + Math.round(120 + 135*wind) + ',60,40)' : '#6B6F75';
+  ctx.fillStyle = metal;
+  if (hit === 'f'){ ctx.beginPath(); ctx.moveTo(-12, -22); ctx.lineTo(0, -34 - wind*4); ctx.lineTo(12, -22); ctx.closePath(); ctx.fill(); ctx.stroke(); }
+  if (hit === 'b'){ for (const x of [-8, 0, 8]){ ctx.beginPath(); ctx.moveTo(x - 4, 22); ctx.lineTo(x, 32 + wind*4); ctx.lineTo(x + 4, 22); ctx.closePath(); ctx.fill(); ctx.stroke(); } }
+  if (hit === 'l' || hit === 'r'){ const sg = hit === 'l' ? -1 : 1; ctx.beginPath(); ctx.moveTo(sg*11, -10); ctx.lineTo(sg*(22 + wind*4), -2); ctx.lineTo(sg*(22 + wind*4), 4); ctx.lineTo(sg*11, 10); ctx.closePath(); ctx.fill(); ctx.stroke(); }
+  if (look === 'formula'){
+    wheel(-11, -14, 6, 10); wheel(11, -14, 6, 10); wheel(-12, 14, 7, 12); wheel(12, 14, 7, 12);
+    ctx.fillStyle = col; rr(-5, -22, 10, 42, 4); ctx.fill(); ctx.stroke();
+    rr(-14, -24, 28, 5, 2); ctx.fill(); ctx.stroke(); rr(-13, 18, 26, 6, 2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#FFD21F'; ctx.beginPath(); ctx.arc(0, 0, 4.5, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+  } else if (look === 'beetle'){
+    wheel(-11, -11, 5, 9); wheel(11, -11, 5, 9); wheel(-11, 12, 5, 9); wheel(11, 12, 5, 9);
+    ctx.fillStyle = col; ctx.beginPath(); ctx.ellipse(0, 0, 12, 22, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = glass; ctx.beginPath(); ctx.ellipse(0, -2, 8, 10, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = col; ctx.beginPath(); ctx.ellipse(0, 0, 6.5, 7, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+  } else if (look === 'pickup'){
+    wheel(-12, -13, 5, 9); wheel(12, -13, 5, 9); wheel(-12, 13, 5, 9); wheel(12, 13, 5, 9);
+    ctx.fillStyle = col; rr(-12, -23, 24, 46, 4); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = glass; rr(-9, -15, 18, 7, 2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = dark; rr(-9, 2, 18, 18, 2); ctx.fill(); ctx.stroke();
+    ctx.strokeStyle = 'rgba(0,0,0,.4)'; ctx.lineWidth = 1.2; for (const y of [7, 12, 17]){ ctx.beginPath(); ctx.moveTo(-8, y); ctx.lineTo(8, y); ctx.stroke(); }
+  } else if (look === 'coupe'){
+    wheel(-11, -13, 5, 9); wheel(11, -13, 5, 9); wheel(-11, 13, 5, 9); wheel(11, 13, 5, 9);
+    ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(-8, -23); ctx.quadraticCurveTo(0, -27, 8, -23); ctx.lineTo(12, 18); ctx.quadraticCurveTo(0, 25, -12, 18); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = glass; ctx.beginPath(); ctx.moveTo(-8, -9); ctx.lineTo(8, -9); ctx.lineTo(7, 4); ctx.lineTo(-7, 4); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#111'; ctx.fillRect(-2, -22, 4, 12);
+  } else {
+    wheel(-12, -14, 5, 9); wheel(12, -14, 5, 9); wheel(-12, 14, 5, 9); wheel(12, 14, 5, 9);
+    ctx.fillStyle = col; rr(-13, -24, 26, 48, 3); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = glass; rr(-10, -21, 20, 6, 2); ctx.fill(); ctx.stroke();
+    ctx.strokeStyle = 'rgba(0,0,0,.45)'; ctx.lineWidth = 1.5; rr(-9, -10, 18, 30, 2); ctx.stroke(); for (const y of [-2, 6, 14]){ ctx.beginPath(); ctx.moveTo(-9, y); ctx.lineTo(9, y); ctx.stroke(); }
+    ctx.strokeStyle = ink; ctx.lineWidth = 2.2; ctx.fillStyle = '#6B6F75'; rr(-13, -28, 26, 4, 1); ctx.fill(); ctx.stroke();
+  }
+  // headlights
+  ctx.fillStyle = '#FFF6B0'; ctx.beginPath(); ctx.arc(-6, -21, 2, 0, Math.PI*2); ctx.arc(6, -21, 2, 0, Math.PI*2); ctx.fill();
+}
+
 // ================= before each game: the rules in 2-3 slides, then everyone taps "Prêt" =================
 // The creator's "start" opens this briefing for the whole room; the game really starts once every player is ready
 // (or when the creator decides not to wait). "Rejouer" skips it: everybody already knows the game.
@@ -10999,6 +11624,8 @@ const BRIEF = {
     tip:'Chaque race a 6 étoiles : Vitesse, Saut ou Énergie. Un Whippet file entre les obstacles, un Jack Russell a plus de marge sur les haies, un Corgi va plus vite au sprint et dans les obstacles longs.' },
   blob:{ ctl:[['📱', 'Glissez le doigt depuis votre blob pour tracer où il doit pousser, jusque dans un autre blob pour l\'attaquer. Touchez votre blob pour poser un renfort.'], ['💻', 'Pareil à la souris : glissez pour tracer, cliquez sur votre blob pour renforcer.']],
     tip:'Passé la moitié de la boîte, seule la nourriture des flocons vous fait avancer : volez ceux des autres. Coupez un bras à un adversaire : séparé de son visage, il dépérit tout seul.' },
+  racer:{ ctl:[['📱', 'Pouce gauche sur le volant à glisser (il revient au centre). Pouce droit : Accélérer (maintenu), Freiner, Frapper.'], ['💻', '← → pour tourner, ↑ pour accélérer, ↓ pour freiner, Espace pour frapper.']],
+    tip:'Freinez avant les virages serrés plutôt que dedans. Gardez de l\'essence pour la dernière ligne droite, et passez aux stands quand la jauge rougit.' },
   meduse:{ ctl:[['📱', 'Glissez le doigt au-dessus du radeau pour viser, relâchez pour lâcher votre naufragé.'], ['💻', 'Visez à la souris et cliquez, ou ← → puis Espace.']],
     tip:'Couché, un corps tient mieux ; debout, il monte plus haut mais bascule. L\'Argus passe trois fois : soyez au sommet à ce moment-là, ça vaut 5 fois plus.' },
   galop:{ ctl:[['📱', 'Choisissez un cheval. ◀ ▶ pour vous décaler, GALOP pour accélérer (coûte de l\'énergie), RALENTIR pour souffler.'], ['💻', '← → se décaler · ↑ ou Espace galop · ↓ ralentir. Ou cliquez les boutons.']],
@@ -11193,7 +11820,7 @@ function saveGame(ranking, game){
   if (!Array.isArray(ranking) || !ranking.length || lastSaved === ranking) return;
   lastSaved = ranking;
   const h = loadHist();
-  h.unshift({ at:Date.now(), game:['pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber','agility','galop','meduse','blob'].includes(game) ? game : 'tetris', n:ranking.length,
+  h.unshift({ at:Date.now(), game:['pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber','agility','galop','meduse','blob','racer'].includes(game) ? game : 'tetris', n:ranking.length,
     p:ranking.map(r => ({ name:String(r.name).slice(0,14), color:r.color, place:r.place|0, sc:r.sc|0, ln:r.ln|0, sent:r.sent|0, score:r.score|0, sync:r.sync|0, lives:r.lives|0, seats:r.seats|0, catches:r.catches|0, tank:r.tank|0, role:String(r.role || '').slice(0, 8), hits:r.hits|0, pts:r.pts|0, whacks:r.whacks|0, shots:r.shots|0, afloat:r.afloat|0, shapes:r.shapes|0, d:Math.round(r.d||0), t:+r.t||0, me:r.id === me.id })) });
   store.set(HIST_KEY, JSON.stringify(h.slice(0, HIST_MAX)));
 }
@@ -11209,13 +11836,13 @@ function renderBoard(){
     a.games++; if (p.place === 1 && g.n > 1) a.wins++;
     a.pts += Math.max(0, g.n - p.place);                  // 1 point per player finished ahead of
     if (g.game === 'derby' || g.game === 'agility' || g.game === 'galop'){ if (p.t > 0 && (!a.bestT || p.t < a.bestT)) a.bestT = p.t; }
-    else a.best = Math.max(a.best, (g.game === 'pong' || g.game === 'naval') ? p.hits : g.game === 'mole' ? (p.whacks || 0) : g.game === 'curling' ? (p.pts || 0) : g.game === 'chairs' ? (p.seats || 0) : (g.game === 'dodge' || g.game === 'tank') ? (p.hits || 0) : g.game === 'sheep' ? (p.score || 0) : g.game === 'drakkar' ? (p.sync || 0) : (g.game === 'master' || g.game === 'kabaddi' || g.game === 'lumber' || g.game === 'meduse' || g.game === 'blob') ? (p.pts || 0) : p.sc);
+    else a.best = Math.max(a.best, (g.game === 'pong' || g.game === 'naval') ? p.hits : g.game === 'mole' ? (p.whacks || 0) : g.game === 'curling' ? (p.pts || 0) : g.game === 'chairs' ? (p.seats || 0) : (g.game === 'dodge' || g.game === 'tank') ? (p.hits || 0) : g.game === 'sheep' ? (p.score || 0) : g.game === 'drakkar' ? (p.sync || 0) : (g.game === 'master' || g.game === 'kabaddi' || g.game === 'lumber' || g.game === 'meduse' || g.game === 'blob' || g.game === 'racer') ? (p.pts || 0) : p.sc);
     agg.set(k, a);
   }
   const rows = [...agg.values()].sort((x, y) => y.pts - x.pts || y.wins - x.wins || x.games - y.games);
   const showBest = lbFilter !== 'all';
   const hd = $('lbHead'); hd.textContent = '';
-  for (const t of ['#','Joueur','Parties','Victoires','Points', ...(showBest ? [lbFilter === 'pong' ? 'Arrêts max' : (lbFilter === 'derby' || lbFilter === 'agility' || lbFilter === 'galop') ? 'Meilleur temps' : lbFilter === 'naval' ? 'Touchés max' : lbFilter === 'mole' ? 'Taupes tapées max' : lbFilter === 'curling' ? 'Points max' : lbFilter === 'chairs' ? 'Chaises max' : (lbFilter === 'dodge' || lbFilter === 'tank') ? 'Touches max' : lbFilter === 'sheep' ? 'Record d\'équipe' : lbFilter === 'drakkar' ? 'Synchro max (%)' : (lbFilter === 'master' || lbFilter === 'kabaddi' || lbFilter === 'lumber' || lbFilter === 'meduse' || lbFilter === 'blob') ? 'Points max' : 'Meilleur score'] : [])]){
+  for (const t of ['#','Joueur','Parties','Victoires','Points', ...(showBest ? [lbFilter === 'pong' ? 'Arrêts max' : (lbFilter === 'derby' || lbFilter === 'agility' || lbFilter === 'galop') ? 'Meilleur temps' : lbFilter === 'naval' ? 'Touchés max' : lbFilter === 'mole' ? 'Taupes tapées max' : lbFilter === 'curling' ? 'Points max' : lbFilter === 'chairs' ? 'Chaises max' : (lbFilter === 'dodge' || lbFilter === 'tank') ? 'Touches max' : lbFilter === 'sheep' ? 'Record d\'équipe' : lbFilter === 'drakkar' ? 'Synchro max (%)' : (lbFilter === 'master' || lbFilter === 'kabaddi' || lbFilter === 'lumber' || lbFilter === 'meduse' || lbFilter === 'blob' || lbFilter === 'racer') ? 'Points max' : 'Meilleur score'] : [])]){
     const th = document.createElement('th'); th.textContent = t; hd.append(th);
   }
   const tb = $('lbBody'); tb.textContent = '';
@@ -11278,7 +11905,8 @@ function frame(now){
   if (cur === 'agility') agilityFrame(dt, now);
   if (cur === 'galop') try { galopFrame(dt, now); } catch(e){ console.error(e); }
   if (cur === 'meduse') meduseFrame(dt, now);
-  if (cur === 'blob') blobFrame(dt, now);   // one bad frame must not freeze the race
+  if (cur === 'blob') blobFrame(dt, now);
+  if (cur === 'racer') racerFrame(dt, now);   // one bad frame must not freeze the race
   if (cur === 'tetris' && G && phase === 'count'){
     G.count -= dt/1000;
     if (G.count <= 0){ phase = 'play'; setMsg('', ''); countBeep(0); }
@@ -11425,11 +12053,11 @@ $('btnQuit').onclick = () => toMenu('');
 function backToLobby(){
   if (me.host){
     if (H) H.over = true;
-    H = null; if (HC) clearTimeout(HC.timer); HC = null; mcClear(); HMC = null; mmClear(); HMM = null; kbClear(); HKB = null; dbClear(); HDB = null; tkClear(); HTK = null; shClear(); HSH = null; dkClear(); HDK = null; ljClear(); HLJ = null; agClear(); HAG = null; gpClear(); HGP = null; mdClear(); HMD = null; blClear(); HBL = null;
+    H = null; if (HC) clearTimeout(HC.timer); HC = null; mcClear(); HMC = null; mmClear(); HMM = null; kbClear(); HKB = null; dbClear(); HDB = null; tkClear(); HTK = null; shClear(); HSH = null; dkClear(); HDK = null; ljClear(); HLJ = null; agClear(); HAG = null; gpClear(); HGP = null; mdClear(); HMD = null; blClear(); HBL = null; rcClear(); HRC = null;
     players = players.filter(p => p.id === 'h' || net.conns.has(p.id));
     sendLobby(true);                                       // everyone goes back
   } else {
-    phase = 'lobby'; $('scrEnd').hidden = true; G = null; PG = null; D = null; NV = null; ML = null; CU = null; MC = null; MM = null; KB = null; DB = null; TK = null; SHV = null; DK = null; if (LJ){ LJ = null; sawStop(); } AG = null; GP = null; MD = null; BL = null; cur = null;
+    phase = 'lobby'; $('scrEnd').hidden = true; G = null; PG = null; D = null; NV = null; ML = null; CU = null; MC = null; MM = null; KB = null; DB = null; TK = null; SHV = null; DK = null; if (LJ){ LJ = null; sawStop(); } AG = null; GP = null; MD = null; BL = null; RC = null; cur = null;
     if (HM) moleClearTimers();
     show('scrLobby'); renderLobby();                      // wait there for the creator
   }
