@@ -9682,6 +9682,8 @@ let lastCountShown = null;
 // ================= audience (GoatCounter: no cookie, no personal data), room QR code, shareable result card =================
 const GC_ON = !!NET_CFG.goatcounter;
 if (GC_ON){
+  // inside itch.io the game runs in a frame, which count.js skips unless told otherwise; those visits are counted as /itch
+  if (/(^|\.)itch\.(zone|io)$/.test(location.hostname)) window.goatcounter = { allow_frame:true, path:'/itch' };
   const sc = document.createElement('script'); sc.async = true; sc.src = 'https://gc.zgo.at/count.js';
   sc.dataset.goatcounter = NET_CFG.goatcounter; document.head.append(sc);
 }
