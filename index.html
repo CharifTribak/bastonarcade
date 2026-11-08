@@ -10598,7 +10598,11 @@ function blStarve(){
     // starving: only the edge cells die, a few at a time
     const x = k % BL_N;
     const edge = (x === 0 || g[k - 1] !== g[k]) || (x === BL_N - 1 || g[k + 1] !== g[k]) || g[k - BL_N] !== g[k] || g[k + BL_N] !== g[k];
-    if (edge && Math.random() < .09) g[k] = 0;
+    if (edge && Math.random() < .09){
+      // a dying cell wrapped in another blob is swallowed by it
+      const x2 = k % BL_N, nb = [x2 > 0 ? g[k - 1] : 0, x2 < BL_N - 1 ? g[k + 1] : 0, g[k - BL_N] || 0, g[k + BL_N] || 0];
+      g[k] = nb[0] && nb[0] !== g[k] && nb.every(v => v === nb[0]) ? nb[0] : 0;
+    }
   }
 }
 // the lab assistant drops a new flake somewhere in the dish now and then, its shadow showing 3 s before
