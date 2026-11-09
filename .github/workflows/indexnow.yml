@@ -1,0 +1,18 @@
+# After each change to the sitemap, tells IndexNow (Bing and others, not Google) which pages changed.
+name: IndexNow
+on:
+  push:
+    branches: [main]
+    paths: ['sitemap.xml']
+  workflow_dispatch:
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      # let GitHub Pages publish the new pages (and the key file) first
+      - run: sleep 90
+      - name: Send the changed pages
+        run: python3 tools/indexnow.py "${{ github.event_name == 'push' && github.event.before || 'HEAD~50' }}"
