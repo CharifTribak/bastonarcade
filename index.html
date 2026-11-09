@@ -9809,6 +9809,8 @@ function openStats(){
   if (stKey()) stLoad();
 }
 const stSleep = ms => new Promise(r => setTimeout(r, ms));
+// GoatCounter API paths, built in pieces so search engines do not take them for pages of this site
+const ST_TOTAL = '/stats' + '/total', ST_HITS = '/stats' + '/hits';
 async function stGet(path, q){
   const u = new URL(stApi() + path);
   for (const [k, v] of Object.entries(q || {})) if (k !== '_retry') u.searchParams.set(k, v);
@@ -9819,7 +9821,7 @@ async function stGet(path, q){
   finally { clearTimeout(to); }
   if (r.status === 401 || r.status === 403) throw new Error('clé');
   // GoatCounter answers 404 when the key belongs to a user of another GoatCounter site
-  if (r.status === 404 && path === '/stats/total') throw new Error('site');
+  if (r.status === 404 && path === ST_TOTAL) throw new Error('site');
   if (r.status === 429 && (q && q._retry || 0) < 3){ await stSleep(1500); return stGet(path, { ...q, _retry:((q && q._retry) || 0) + 1 }); }
   if (r.status === 202){ await stSleep(1500); return stGet(path, q); }               // GoatCounter may still be computing
   if (!r.ok){ let t = ''; try { t = (await r.text()).slice(0, 140); } catch(_){} throw new Error('HTTP ' + r.status + ' sur ' + path + (t ? ' : ' + t : '')); }
@@ -9835,12 +9837,12 @@ async function stLoad(){
   try {
     const step = t => { $('stMsg').textContent = 'Chargement : ' + t + '…'; };
     step('total des visites');
-    const total = await stGet('/stats/total', q);
+    const total = await stGet(ST_TOTAL, q);
     step('pages et événements');
     // every path and event, page by page
     let hits = [], excl = [];
     for (let k = 0; k < 4; k++){
-      const r = await stGet('/stats/hits', { ...q, limit:100, ...(excl.length ? { exclude_paths:excl.join(',') } : {}) });
+      const r = await stGet(ST_HITS, { ...q, limit:100, ...(excl.length ? { exclude_paths:excl.join(',') } : {}) });
       hits = hits.concat(r.hits || []); excl = hits.map(h => h.path_id);
       if (!r.more) break;
     }
