@@ -11771,6 +11771,11 @@ const LA_ART = {
   annonciation:{ n:'L\'Annonciation', w:1500, h:667, pal:['#b7c1c3', '#640d0d', '#98b290', '#ddaa56', '#274e57', '#e0af87', '#ecaa2e'] },
   rochers:{ n:'La Vierge aux rochers', w:794, h:1260, pal:['#b18541', '#394741', '#cad3cb', '#8b222e', '#92a3a3', '#0e5b62'] },
   cene:{ n:'La Cène', w:1386, h:721, pal:['#b58f33', '#f2ecd1', '#413121', '#e42929', '#164c6f', '#c2ac7d', '#3d643d'] },
+  sainteanne:{ n:'La Sainte Anne', w:863, h:1159, pal:['#265c34', '#c28c2a', '#62a8d0', '#dd522a', '#eda374', '#21488d'] },
+  ginevra:{ n:'Ginevra de\' Benci', w:971, h:1030, pal:['#9b6c18', '#f4eccb', '#020201', '#712335', '#7fb2cc'] },
+  ferronniere:{ n:'La Belle Ferronnière', w:832, h:1202, pal:['#911e2f', '#2c5036', '#e89f6d', '#341c15', '#d09b2c', '#8e7356', '#030402'] },
+  oeillet:{ n:'La Madone à l\'œillet', w:876, h:1142, pal:['#236439', '#f79d82', '#a2a2a2', '#77b9e1', '#c81b40', '#b9871d'] },
+  benois:{ n:'La Madone Benois', w:799, h:1252, pal:['#63907f', '#1c517f', '#3c1714', '#faa372', '#c31d40', '#d09d48'] },
 };
 // the pool of paintings; each game draws LA_N of them at random, in a random order
 const LA_POOL = Object.keys(LA_ART), LA_N = 3;
@@ -12173,7 +12178,7 @@ function laIntro(ctx, now){
   const Y = R*1.35 + R*2.1 - V.vh*.36;
   ctx.textAlign = 'center'; ctx.lineJoin = 'round';
   ctx.font = Math.round(Math.min(34, V.vw/11)) + 'px Bangers, Impact, sans-serif'; ctx.lineWidth = 5; ctx.strokeStyle = '#000'; ctx.fillStyle = '#FFD93B';
-  ctx.strokeText(a.n.toUpperCase(), cx, (Y + V.vh*.36)); ctx.fillText(a.n.toUpperCase(), cx, (Y + V.vh*.36));
+  ctx.strokeText(a.n.toUpperCase(), cx, (Y + V.vh*.36), V.vw - 16); ctx.fillText(a.n.toUpperCase(), cx, (Y + V.vh*.36), V.vw - 16);
   ctx.font = '900 15px Nunito, sans-serif'; ctx.fillStyle = '#000';
   ctx.fillText('Tableau ' + (LA.k + 1) + ' sur ' + LA_ORDER.length + ' · ' + LA_MEMO + ' s pour regarder, ' + LA_PAINT + ' s pour peindre', cx, (Y + V.vh*.36) + 26, V.vw - 16);
   if (!LA.spec){
