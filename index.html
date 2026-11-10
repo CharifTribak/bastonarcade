@@ -12552,15 +12552,25 @@ $('btnSound').onclick = () => {
 syncSoundBtn();
 
 // ---- menu music: a short original chiptune loop, synthesised on the fly (no audio file), only on the menu screens ----
-// A minor, Am F C G, 112 bpm: kick and hats, a bass, a quiet arpeggio and a lead; it fades in and out with the menus.
-const MUS = { on:true, g:null, next:0, step:0, timer:0 };
+// Kick and hats, a bass, a quiet arpeggio and a lead; it fades in and out with the menus.
+const MUS = { on:true, g:null, next:0, step:0, timer:0, track:0 };
 try { MUS.on = localStorage.getItem('tm-music') !== '0'; } catch(_){}
-const MUS_SPS = 60/112/4, MUS_CH = [[57, 60, 64], [53, 57, 60], [48, 52, 55], [55, 59, 62]];
-const MUS_LEAD = [
-  76,0,0,74, 72,0,69,0, 72,0,74,0, 76,0,0,0,
-  77,0,0,76, 74,0,72,0, 69,0,72,0, 74,0,0,0,
-  76,0,79,0, 81,0,79,0, 76,0,74,0, 72,0,74,0,
-  74,0,0,72, 71,0,67,0, 71,0,74,0, 79,0,0,0];
+// two tracks, each played twice (about 35 s) before handing over to the other
+const MUS_TRACKS = [
+  // A minor, Am F C G, 112 bpm, a singing lead
+  { sps:60/112/4, ch:[[57, 60, 64], [53, 57, 60], [48, 52, 55], [55, 59, 62]], lead:[
+    76,0,0,74, 72,0,69,0, 72,0,74,0, 76,0,0,0,
+    77,0,0,76, 74,0,72,0, 69,0,72,0, 74,0,0,0,
+    76,0,79,0, 81,0,79,0, 76,0,74,0, 72,0,74,0,
+    74,0,0,72, 71,0,67,0, 71,0,74,0, 79,0,0,0] },
+  // E minor, Em C G D, 124 bpm, a jumpy syncopated lead
+  { sps:60/124/4, ch:[[52, 55, 59], [48, 52, 55], [55, 59, 62], [50, 54, 57]], lead:[
+    71,0,71,0, 0,74,0,71, 0,0,67,0, 69,0,71,0,
+    72,0,72,0, 0,76,0,72, 0,0,67,0, 64,0,0,0,
+    74,0,74,0, 0,79,0,74, 0,0,71,0, 72,0,74,0,
+    76,0,74,0, 72,0,69,0, 66,0,69,0, 74,0,0,0] }
+];
+let MUS_SPS = MUS_TRACKS[0].sps, MUS_CH = MUS_TRACKS[0].ch, MUS_LEAD = MUS_TRACKS[0].lead;
 const mHz = m => 440*Math.pow(2, (m - 69)/12);
 function mNote(c, f, t, dur, type, vol, slide){
   const o = c.createOscillator(), g = c.createGain();
@@ -12585,15 +12595,19 @@ function musStep(c, s, t){
   const m = MUS_LEAD[bar*16 + i];
   if (m){ let n = 1; while (n < 4 && !MUS_LEAD[(bar*16 + i + n) % 64]) n++; mNote(c, mHz(m), t, MUS_SPS*n*.85, 'square', .045); }
 }
+function musTrack(k){ MUS.track = k % MUS_TRACKS.length; const T = MUS_TRACKS[MUS.track]; MUS_SPS = T.sps; MUS_CH = T.ch; MUS_LEAD = T.lead; }
 function musSched(){
   const c = SND.ctx; if (!c || !MUS.g) return;
   if (MUS.next < c.currentTime) MUS.next = c.currentTime + .05;
-  while (MUS.next < c.currentTime + .3){ musStep(c, MUS.step, MUS.next); MUS.next += MUS_SPS; MUS.step = (MUS.step + 1) % 128; }
+  while (MUS.next < c.currentTime + .3){
+    musStep(c, MUS.step, MUS.next); MUS.next += MUS_SPS; MUS.step = (MUS.step + 1) % 128;
+    if (MUS.step === 0) musTrack(MUS.track + 1);
+  }
 }
 function musStart(){
   const c = sndCtx(); if (!c || c.state !== 'running' || MUS.g) return;
   MUS.g = c.createGain(); MUS.g.gain.setValueAtTime(0.0001, c.currentTime); MUS.g.gain.exponentialRampToValueAtTime(.8, c.currentTime + 1.2);
-  MUS.g.connect(c.destination); MUS.next = c.currentTime + .1; MUS.step = 0;
+  MUS.g.connect(c.destination); MUS.next = c.currentTime + .1; MUS.step = 0; musTrack(MUS.track);
   MUS.timer = setInterval(musSched, 60); musSched();
 }
 function musStop(){
