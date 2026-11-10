@@ -202,6 +202,7 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 #menuHint:empty{display:none}
 .iconbar{display:flex;justify-content:center;gap:12px}
 .iconbar button,.iconbar a{width:48px;height:44px;padding:0;font-size:20px;font-weight:900}
+#btnMusic.off{opacity:.45;text-decoration:line-through}
 .support{display:flex;flex-direction:column;gap:12px}
 .support a{display:flex;align-items:center;justify-content:center;text-decoration:none;border:3px solid var(--line);box-shadow:5px 5px 0 var(--line);padding:12px;font-weight:900;font-size:16px;text-align:center}
 .support a.coffee{background:#FFD93B;color:#000;font-size:18px;transform:rotate(-1deg)}
@@ -749,6 +750,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
     <div class="iconbar">
       <button id="btnBoard" class="ghost" type="button" aria-label="Classement général" title="Classement général">🏆</button>
       <button id="btnSound" class="ghost" type="button" aria-label="Son : activé" title="Son : activé">🔊</button>
+      <button id="btnMusic" class="ghost" type="button" aria-label="Musique : activée" title="Musique : activée">🎵</button>
       <button id="btnLang" class="ghost" type="button" translate="no" aria-label="English" title="English">EN</button>
     </div>
     <details class="seolist"><summary>Les 20 jeux en détail</summary><ul><li><a href="jeux/gravats.html"><b>Gravats</b></a> : Empilez les pièces et effacez des lignes : chacune envoie des briques fendues chez les autres. Le dernier en jeu gagne.</li><li><a href="jeux/gardiens.html"><b>Les Gardiens</b></a> : Chacun garde son but, avec 5 vies. Arrêtez les ballons : le dernier gardien debout gagne.</li><li><a href="jeux/derby.html"><b>Derby</b></a> : Tracez les figures au doigt : plus c&#x27;est propre, plus votre cheval avance. Le premier à la ligne gagne.</li><li><a href="jeux/armada.html"><b>Armada</b></a> : Bataille navale sur une seule mer, chacun son tour. Le dernier bateau à flot gagne.</li><li><a href="jeux/tape-taupe.html"><b>Tape-taupe</b></a> : Tapez vite les taupes des autres quand elles sortent, jamais les vôtres. Premier à 20 points.</li><li><a href="jeux/curling.html"><b>Curling</b></a> : Lancez vos pierres vers la cible et frottez la glace pour les guider. Le plus proche du centre marque.</li><li><a href="jeux/chaises-musicales.html"><b>Chaises musicales</b></a> : Quand le disque s&#x27;arrête, touchez vite une chaise libre. Gare aux faux arrêts !</li><li><a href="jeux/code-secret.html"><b>Code secret</b></a> : Trouvez avant les autres le code secret de 4 couleurs, grâce à vos indices. Trois manches.</li><li><a href="jeux/kabaddi.html"><b>Kabaddi</b></a> : Attaquez en retenant votre souffle, touchez des défenseurs et rentrez chez vous à temps.</li><li><a href="jeux/balle-au-prisonnier.html"><b>Balle au prisonnier</b></a> : Ramassez, lancez, esquivez, attrapez. Chaque balle reçue coûte un cœur : le dernier debout gagne.</li><li><a href="jeux/chars.html"><b>Chars</b></a> : Deux par char, l&#x27;un pilote, l&#x27;autre tire, sans se parler. Le dernier char debout gagne.</li><li><a href="jeux/bergers.html"><b>Les bergers</b></a> : Ensemble, rabattez le troupeau dans l&#x27;enclos avant la nuit, et chassez les loups.</li><li><a href="jeux/drakkars.html"><b>Drakkars</b></a> : Tout le salon rame dans le même drakkar : en rythme avec le tambour pour battre les robots.</li><li><a href="jeux/bucherons.html"><b>Bûcherons</b></a> : Choisissez où tombe votre arbre, puis sciez-le proprement. N&#x27;écrasez rien !</li><li><a href="jeux/agility.html"><b>Agility</b></a> : Choisissez un chien et guidez-le sur le parcours : chaque obstacle a son geste. Le meilleur temps gagne.</li><li><a href="jeux/galop.html"><b>Galop</b></a> : Choisissez un cheval, placez-vous et dosez son énergie sur 3000 m. Le premier à la ligne gagne.</li><li><a href="jeux/meduse.html"><b>Méduse</b></a> : Lâchez vos naufragés sur le radeau qui tangue. Le plus haut, une fois posé, marque des points, et cinq fois plus quand passe l'Argus.</li><li><a href="jeux/blob.html"><b>Blob</b></a> : Tracez où votre blob doit pousser dans la boîte de Petri, prenez les flocons d'avoine et envahissez les autres. Le plus grand gagne.</li><li><a href="jeux/grand-prix.html"><b>Grand Prix Baston</b></a> : Course de voitures vue du dessus : pilotez, dosez l'essence, passez aux stands et percutez les autres. Deux tours, cinq voitures.</li><li><a href="jeux/atelier-de-leonard.html"><b>L'Atelier de Léonard</b></a> : En équipe, coloriez trois tableaux de Léonard de Vinci tirés au sort, 30 secondes chacun, avec chacun vos pots de couleur.</li></ul><p>Tous les jeux sont gratuits, sans compte, sans application et sans publicité. Créez un salon, vos amis scannent le QR code ou tapent le code, et c'est parti. Seul, vous jouez contre des robots.</p></details>
@@ -12545,9 +12547,88 @@ function syncSoundBtn(){ const b = $('btnSound'), l = SND.on ? 'Son : activé' :
 $('btnLang').onclick = () => { try { localStorage.setItem(LANG_KEY, LANG === 'fr' ? 'en' : 'fr'); } catch(_){} location.reload(); };
 $('btnSound').onclick = () => {
   SND.on = !SND.on; try { localStorage.setItem('tm-sound', SND.on ? '1' : '0'); } catch(_){}
-  syncSoundBtn(); if (SND.on) sfx('ok');
+  syncSoundBtn(); if (SND.on) sfx('ok'); else musStop();
 };
 syncSoundBtn();
+
+// ---- menu music: a short original chiptune loop, synthesised on the fly (no audio file), only on the menu screens ----
+// A minor, Am F C G, 112 bpm: kick and hats, a bass, a quiet arpeggio and a lead; it fades in and out with the menus.
+const MUS = { on:true, g:null, next:0, step:0, timer:0 };
+try { MUS.on = localStorage.getItem('tm-music') !== '0'; } catch(_){}
+const MUS_SPS = 60/112/4, MUS_CH = [[57, 60, 64], [53, 57, 60], [48, 52, 55], [55, 59, 62]];
+const MUS_LEAD = [
+  76,0,0,74, 72,0,69,0, 72,0,74,0, 76,0,0,0,
+  77,0,0,76, 74,0,72,0, 69,0,72,0, 74,0,0,0,
+  76,0,79,0, 81,0,79,0, 76,0,74,0, 72,0,74,0,
+  74,0,0,72, 71,0,67,0, 71,0,74,0, 79,0,0,0];
+const mHz = m => 440*Math.pow(2, (m - 69)/12);
+function mNote(c, f, t, dur, type, vol, slide){
+  const o = c.createOscillator(), g = c.createGain();
+  o.type = type; o.frequency.setValueAtTime(f, t); if (slide) o.frequency.exponentialRampToValueAtTime(slide, t + dur);
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .008); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(g).connect(MUS.g); o.start(t); o.stop(t + dur + .02);
+}
+let musHat = null;
+function mHat(c, t, vol){
+  if (!musHat){ const n = Math.floor(c.sampleRate*.05); musHat = c.createBuffer(1, n, c.sampleRate); const d = musHat.getChannelData(0); for (let i = 0; i < n; i++) d[i] = (Math.random()*2 - 1)*(1 - i/n); }
+  const src = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain();
+  src.buffer = musHat; f.type = 'highpass'; f.frequency.value = 6000; g.gain.value = vol;
+  src.connect(f).connect(g).connect(MUS.g); src.start(t);
+}
+function musStep(c, s, t){
+  const i = s % 16, bar = Math.floor(s/16) % 4, loop = Math.floor(s/64) % 2, ch = MUS_CH[bar];
+  if (i % 8 === 0) mNote(c, 130, t, .14, 'sine', .16, 45);
+  if (i % 4 === 2) mHat(c, t, .05);
+  if (i % 4 === 0) mNote(c, mHz(ch[0] - 24), t, MUS_SPS*1.8, 'triangle', .18);
+  if (i % 4 === 3) mNote(c, mHz(ch[0] - 12), t, MUS_SPS*.8, 'triangle', .11);
+  mNote(c, mHz(ch[i % 3] + (loop ? 12 : 0)), t, MUS_SPS*.7, 'square', .018);
+  const m = MUS_LEAD[bar*16 + i];
+  if (m){ let n = 1; while (n < 4 && !MUS_LEAD[(bar*16 + i + n) % 64]) n++; mNote(c, mHz(m), t, MUS_SPS*n*.85, 'square', .045); }
+}
+function musSched(){
+  const c = SND.ctx; if (!c || !MUS.g) return;
+  if (MUS.next < c.currentTime) MUS.next = c.currentTime + .05;
+  while (MUS.next < c.currentTime + .3){ musStep(c, MUS.step, MUS.next); MUS.next += MUS_SPS; MUS.step = (MUS.step + 1) % 128; }
+}
+function musStart(){
+  const c = sndCtx(); if (!c || c.state !== 'running' || MUS.g) return;
+  MUS.g = c.createGain(); MUS.g.gain.setValueAtTime(0.0001, c.currentTime); MUS.g.gain.exponentialRampToValueAtTime(.8, c.currentTime + 1.2);
+  MUS.g.connect(c.destination); MUS.next = c.currentTime + .1; MUS.step = 0;
+  MUS.timer = setInterval(musSched, 60); musSched();
+}
+function musStop(){
+  if (!MUS.g) return;
+  const g = MUS.g, c = SND.ctx; MUS.g = null; clearInterval(MUS.timer);
+  try { g.gain.cancelScheduledValues(c.currentTime); g.gain.setValueAtTime(Math.max(.0001, g.gain.value), c.currentTime); g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + .5); } catch(_){}
+  setTimeout(() => { try { g.disconnect(); } catch(_){} }, 700);
+}
+// on the menu, the scores and the room, with sound and music on and the page in view
+const musWanted = () => SND.on && MUS.on && !document.hidden && ['scrMenu', 'scrStats', 'scrLobby'].some(id => !$(id).hidden);
+setInterval(() => { if (musWanted()) musStart(); else musStop(); }, 250);
+function syncMusicBtn(){ const b = $('btnMusic'), l = MUS.on ? 'Musique : activée' : 'Musique : coupée'; b.classList.toggle('off', !MUS.on); b.setAttribute('aria-label', l); b.title = l; }
+$('btnMusic').onclick = () => { MUS.on = !MUS.on; try { localStorage.setItem('tm-music', MUS.on ? '1' : '0'); } catch(_){} syncMusicBtn(); };
+syncMusicBtn();
+// ---- light blips while moving through the menus: a click, going back, picking a game, and a faint tick on hover or keyboard focus ----
+SFX.nav = () => tone(1046, .045, 'triangle', .05, 1568);
+SFX.navBack = () => tone(784, .06, 'triangle', .045, 466);
+SFX.navPick = () => { tone(880, .04, 'square', .028); tone(1318, .07, 'square', .028, null, .045); };
+SFX.navTick = () => tone(2093, .018, 'sine', .014);
+{
+  const NAV = '#scrMenu, #scrStats, #scrLobby, #briefPop, #scrEnd';
+  const CTL = 'button, a.btn, summary, [role=button], .chip';
+  document.addEventListener('click', e => {
+    const b = e.target.closest && e.target.closest(CTL);
+    if (!b || !b.closest(NAV) || b.id === 'btnSound' || b.disabled) return;
+    if (b.closest('#gamePick')) sfx('navPick');
+    else if (/✕|Retour|Quitter|Annuler|Back|Leave|Cancel|Close/i.test(b.textContent + ' ' + (b.getAttribute('aria-label') || ''))) sfx('navBack');
+    else sfx('nav');
+  }, true);
+  let last = null, lastT = 0;
+  const tick = b => { const n = performance.now(); if (b === last || n - lastT < 60) return; last = b; lastT = n; sfx('navTick'); };
+  const fine = () => { try { return matchMedia('(hover: hover) and (pointer: fine)').matches; } catch(_){ return false; } };
+  document.addEventListener('pointerover', e => { if (e.pointerType !== 'mouse' || !fine()) return; const b = e.target.closest && e.target.closest(CTL); if (!b){ last = null; return; } if (b.closest(NAV) && !b.disabled) tick(b); });
+  document.addEventListener('focusin', e => { const b = e.target.closest && e.target.closest(CTL); if (b && b.closest(NAV) && b.matches(':focus-visible')) tick(b); });
+}
 
 
 // ================= lobby chat: speech bubbles, relayed by the creator =================
