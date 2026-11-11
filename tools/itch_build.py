@@ -7,6 +7,8 @@ D = (sys.argv[1] if len(sys.argv) > 1 else 'dist/itch').rstrip('/') + '/'
 shutil.rmtree(D, ignore_errors=True); os.makedirs(D)
 s = open(A + 'index.html', encoding='utf-8').read()
 s = re.sub(r'href="((?:jeux|en)/[^"]+|legal\.html)"', r'href="https://bastonarcade.com/\1" target="_blank" rel="noopener"', s)
+# no app install inside itch.io: its page is the app there
+s = s.replace('<link rel="manifest" href="manifest.webmanifest">\n', '')
 open(D + 'index.html', 'w', encoding='utf-8').write(s)
 for d in ['lib', 'img', 'fonts']:
     shutil.copytree(A + d, D + d, ignore=shutil.ignore_patterns('*.md'))

@@ -1,0 +1,20 @@
+{
+  "name": "Baston Arcade",
+  "short_name": "Baston",
+  "description": "Mini-jeux multijoueurs à plusieurs, sans compte : créez un salon, partagez le code, jouez.",
+  "lang": "fr",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#FFD93B",
+  "theme_color": "#FFD93B",
+  "categories": ["games", "entertainment"],
+  "icons": [
+    { "src": "img/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "img/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "img/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "img/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
