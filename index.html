@@ -1555,6 +1555,7 @@ const GAME_DESC = {
   racer:'Une course de voitures vue du dessus, entre Mario Kart et course auto. Choisissez l\'une des 5 voitures, toutes armées d\'un pare-chocs de combat à l\'avant, et ajoutez un bonus : turbo, aérodynamisme, pneus qui collent ou super coup de latte. Pilotez avec un volant à glisser qui revient au centre : trop vite dans un virage, les pneus crissent et la voiture glisse vers l\'extérieur. Accélérer brûle l\'essence, qui revient doucement, bien plus vite dans les deux stands à côté de la piste. Frapper vers l\'avant prend une courte charge visible : celui qui ne l\'esquive pas perd 20 % de sa vitesse et 15 % de son essence, puis clignote 3 s, le temps que les autres lui passent à travers. Deux tours sur l\'un des 5 circuits, à 5 voitures, des robots complètent.'
 };
 
+const isGame = g => typeof g === 'string' && Object.prototype.hasOwnProperty.call(GAME_NAMES, g);
 const cleanName = s => String(s || '').replace(/[\u0000-\u001f<>]/g,'').trim().slice(0,14) || (LANG === 'en' ? 'Player' : 'Joueur');
 // names shown to everyone in the public list: anything that looks like a link or an address is replaced
 const publicName = s => { const n = cleanName(s); return /https?|www|\.\s*[a-z]{2,}|@|\/\/|discord|t\.me|bit\.ly/i.test(n) ? (LANG === 'en' ? 'Player' : 'Joueur') : n; };
@@ -1664,8 +1665,8 @@ let PENDING_GAME = null;
 (() => {
   let g = null; try { g = (new URLSearchParams(location.search).get('jeu') || '').trim().toLowerCase(); } catch(_){}
   if (!g) return;
-  g = GAME_SLUGS[g] || g;
-  if (!GAME_NAMES[g]) return;
+  g = (Object.prototype.hasOwnProperty.call(GAME_SLUGS, g) && GAME_SLUGS[g]) || g;
+  if (!isGame(g)) return;
   PENDING_GAME = g;
   try { history.replaceState(null, '', location.pathname); } catch(_){}
   setTimeout(() => { if (phase === 'menu') menuHint('Jeu choisi : ' + GAME_NAMES[g] + '. Jouez seul, ou à plusieurs en créant un salon.'); }, 0);
@@ -3863,6 +3864,7 @@ function molePut(id, cells){
   if (!HM || !HM.waiting || !HM.waiting.has(id)) return;
   const ok = new Set();
   if (Array.isArray(cells)) for (const c of cells){
+    if (!Array.isArray(c)) continue;
     const x = c[0]|0, y = c[1]|0;
     if (x >= 0 && y >= 0 && x < ML_N && y < ML_N) ok.add(x + ',' + y);
     if (ok.size >= ML_PER) break;
@@ -5743,7 +5745,7 @@ function dodgeThrow(id, x, y){
   if (!HDB || HDB.ph !== 'play' || !H.alive.has(id)) return;
   const p = HDB.P[id]; if (!p || p.ball < 0) return;
   let dx, dy;
-  if (x != null && isFinite(+x)){ dx = +x - p.x; dy = +y - p.y; } else { dx = p.fx; dy = p.fy; }
+  if (x != null && isFinite(+x) && y != null && isFinite(+y)){ dx = +x - p.x; dy = +y - p.y; } else { dx = p.fx; dy = p.fy; }
   const L = Math.hypot(dx, dy); if (L < 1) return;
   const b = HDB.balls[p.ball];
   b.st = 'live'; b.by = id; b.d = 0; b.vx = dx/L * DB_BSP; b.vy = dy/L * DB_BSP;
@@ -13103,8 +13105,13 @@ SFX.navTick = () => tone(2093, .018, 'sine', .014);
 
 // ================= lobby chat: speech bubbles, relayed by the creator =================
 const CHAT = [], chatLast = {};
+// players are often young and may not know each other: anything that would let someone be contacted outside the game
+// (a link, an address, a social network handle, a phone number) is hidden before the message is passed on
+const CHAT_HIDE = [/\b(?:https?:\/\/|www\.)\S+/gi, /\S+@\S+\.\S+/g, /\b[\w-]+\s*(?:\.|\(dot\)| dot | point )\s*(?:com|fr|net|org|io|gg|me|be|ch|ca|tv|ly|co|app|xyz|link)\b\S*/gi,
+  /@\w{2,}/g, /\b(?:discord|insta(?:gram)?|snap(?:chat)?|tiktok|telegram|t\.me|whats ?app|wa\.me|bit\.ly|kik|signal)\b\S*/gi, /(?:\+|\b)\d(?:[\s.\-()]*\d){7,}/g];
+function chatSafe(t){ for (const re of CHAT_HIDE) t = t.replace(re, '***'); return t; }
 function hostChat(id, text){
-  const t = String(text || '').replace(/[\u0000-\u001f\u007f]/g, ' ').trim().slice(0, 120);
+  const t = chatSafe(String(text || '').replace(/[\u0000-\u001f\u007f]/g, ' ').trim().slice(0, 120));
   if (!t || !net) return;
   const now = Date.now();
   if (now - (chatLast[id] || 0) < 600) return;              // a little flood guard
@@ -13115,7 +13122,7 @@ function hostChat(id, text){
 function chatSys(text){ if (me.host) broadcast({ t:'chat', sys:true, text }); }
 function addChat(m){
   if (!m || typeof m.text !== 'string') return;
-  CHAT.push({ id:m.id || null, name:String(m.name || '').slice(0, 14), color:m.color || '#888', text:m.text.slice(0, 120), sys:!!m.sys });
+  CHAT.push({ id:m.id || null, name:String(m.name || '').slice(0, 14), color:PALETTE.includes(m.color) ? m.color : '#888', text:m.text.slice(0, 120), sys:!!m.sys });
   if (CHAT.length > 60) CHAT.splice(0, CHAT.length - 60);
   renderChat();
   if (!m.sys && m.id !== me.id){ tone(880, .08, 'sine', .08, null); tone(1320, .12, 'sine', .07, null, .09); chatNotify(m.name); }
@@ -13334,13 +13341,13 @@ $('peekBar').onclick = () => { if (PEEK) openGameSheet(PEEK); };
 let VOTES = {}, PEEK = null;
 function hostVote(id, g){
   if (!me.host || phase !== 'lobby') return;
-  if (g && GAME_NAMES[g]) VOTES[id] = g; else delete VOTES[id];
+  if (isGame(g)) VOTES[id] = g; else delete VOTES[id];
   broadcast({ t:'votes', v:VOTES });
 }
 function renderVotes(){
   const solo = !net || net.solo, host = players.find(p => p.id === 'h');
   for (const id of Object.keys(VOTES)) if (!players.some(p => p.id === id)) delete VOTES[id];
-  const count = {}; for (const [id, g] of Object.entries(VOTES)) (count[g] = count[g] || []).push(players.find(p => p.id === id));
+  const count = Object.create(null); for (const [id, g] of Object.entries(VOTES)) if (isGame(g)) (count[g] = count[g] || []).push(players.find(p => p.id === id));
   const top = Math.max(0, ...Object.values(count).map(a => a.length));
   for (const b of $('gamePick').querySelectorAll('button')){
     b.setAttribute('aria-pressed', 'false');
