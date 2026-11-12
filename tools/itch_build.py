@@ -1,4 +1,4 @@
-# Builds the itch.io version of the site into a folder: index.html at the root, plus lib/, img/ and fonts/.
+# Builds the itch.io version of the site into a folder: index.html at the root, plus lib/, img/, fonts/ and vid/.
 # Links to the site's other pages (game pages, English pages, legal notice) go to bastonarcade.com in a new tab.
 # Usage: python3 tools/itch_build.py <output folder>
 import os, re, shutil, sys
@@ -10,6 +10,6 @@ s = re.sub(r'href="((?:jeux|en)/[^"]+|legal\.html)"', r'href="https://bastonarca
 # no app install inside itch.io: its page is the app there
 s = s.replace('<link rel="manifest" href="manifest.webmanifest">\n', '')
 open(D + 'index.html', 'w', encoding='utf-8').write(s)
-for d in ['lib', 'img', 'fonts']:
+for d in ['lib', 'img', 'fonts', 'vid']:
     shutil.copytree(A + d, D + d, ignore=shutil.ignore_patterns('*.md'))
 print('itch build in', D, sum(len(f) for _, _, f in os.walk(D)), 'files')

@@ -4,7 +4,7 @@ name: itch.io
 on:
   push:
     branches: [main]
-    paths: ['index.html', 'lib/**', 'img/**', 'fonts/**', 'tools/itch_build.py']
+    paths: ['index.html', 'lib/**', 'img/**', 'fonts/**', 'vid/**', 'tools/itch_build.py']
   workflow_dispatch:
 concurrency: itch
 jobs:
