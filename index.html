@@ -110,7 +110,7 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .tiles button{padding:0;background:var(--panel);color:var(--fg);box-shadow:3px 3px 0 var(--line);display:flex;flex-direction:column;font-size:15px;min-width:0}
 .tiles button:nth-child(1){transform:rotate(-3deg)}.tiles button:nth-child(2){transform:rotate(2deg)}.tiles button:nth-child(3){transform:rotate(-1deg)}.tiles button:nth-child(4){transform:rotate(3deg)}.tiles button:nth-child(5){transform:rotate(-2deg)}.tiles button:nth-child(6){transform:rotate(2deg)}.tiles button:nth-child(7){transform:rotate(-2deg)}.tiles button:nth-child(8){transform:rotate(3deg)}.tiles button:nth-child(9){transform:rotate(-1deg)}.tiles button:nth-child(10){transform:rotate(2deg)}.tiles button:nth-child(11){transform:rotate(-3deg)}.tiles button:nth-child(12){transform:rotate(2deg)}.tiles button:nth-child(13){transform:rotate(-2deg)}
 .tiles img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;border-bottom:3px solid var(--line)}
-.tiles span{padding:3px 0;width:100%;text-align:center;overflow:hidden;white-space:nowrap}
+.tiles span{padding:3px 3px;width:100%;text-align:center;line-height:1.05;flex:1;display:flex;align-items:center;justify-content:center;overflow-wrap:anywhere}
 .tiles button[aria-pressed="true"]{background:var(--accent);color:#fff}
 .tiles button:disabled{opacity:1;cursor:default}
 .tiles button:disabled[aria-pressed="false"] img{filter:saturate(.5)}
@@ -11365,7 +11365,12 @@ function rcBots(dt){
   for (const p of players){
     if (!p.bot) continue;
     const c = HRC.cars[p.id]; if (!c || c.done) continue;
-    const B = HRC.bot[p.id] || (HRC.bot[p.id] = { skill:.86 + Math.random()*.12, lane:0, seen:0, react:.18 + Math.random()*.25, pitGo:false });
+    // robots of a kids' party game: they take the bends less tight, keep under full speed, strike late, and ease off
+    // when they get too far ahead of the best human (a little extra push when far behind), so races stay close
+    const B = HRC.bot[p.id] || (HRC.bot[p.id] = { skill:.68 + Math.random()*.1, top:.82 + Math.random()*.08, lane:0, seen:0, react:.35 + Math.random()*.3, pitGo:false });
+    let best = -1; for (const o of players){ if (o.bot) continue; const q = HRC.cars[o.id]; if (q) best = Math.max(best, q.done ? 1e9 : q.lap*N + q.idx); }
+    let cap = B.top;
+    if (best >= 0 && best < 1e9){ const lead = c.lap*N + c.idx - best; if (lead > 10) cap *= Math.max(.68, 1 - (lead - 10)*.004); else if (lead < -60) cap = Math.min(1, cap + .08); }
     const grip = RC_GRIP*(c.bonus === 'gum' ? 1.12 : 1)*B.skill;
     // the slowest speed the bends ahead allow, and the speed I may carry now to get there with the brake
     const reachD = c.v*c.v/(2*RC_BRAKE*.75) + 120;
@@ -11400,13 +11405,13 @@ function rcBots(dt){
     const tx = q[0] - tg[1]*aim, ty = q[1] + tg[0]*aim;
     let d = Math.atan2(ty - c.y, tx - c.x) - c.h; while (d > Math.PI) d -= 2*Math.PI; while (d < -Math.PI) d += 2*Math.PI;
     c.steer = Math.max(-1, Math.min(1, d*3 - c.slip*.004));
-    const vmax = RC_VMAX*(c.bonus === 'aero' ? 1.05 : 1);
+    const vmax = RC_VMAX*(c.bonus === 'aero' ? 1.05 : 1)*cap;
     c.brake = c.v > vNow + 6 && c.v > 140;
-    c.gas = !c.brake && c.fuel > 8 && vNow > Math.min(vmax, c.v + 40) && !(B.pitGo && c.fuel < 30) && !c.pit && !c.off;
+    c.gas = !c.brake && c.fuel > 8 && c.v < vmax && vNow > Math.min(vmax, c.v + 40) && !(B.pitGo && c.fuel < 30) && !c.pit && !c.off;
     // strike once someone has stayed in the zone for my reaction time
     const inZ = c.cd <= 0 && players.some(o => o.id !== p.id && HRC.cars[o.id] && !HRC.cars[o.id].done && !(HRC.cars[o.id].ghost > 0) && rcInReach(c, HRC.cars[o.id]));
     B.seen = inZ ? B.seen + dt : 0;
-    if (B.seen > B.react){ B.seen = 0; B.react = .18 + Math.random()*.25; racerHit(p.id); }
+    if (B.seen > B.react){ B.seen = 0; B.react = .35 + Math.random()*.3; racerHit(p.id); }
   }
 }
 
