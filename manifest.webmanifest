@@ -4,7 +4,7 @@
   "description": "Mini-jeux multijoueurs à plusieurs, sans compte : créez un salon, partagez le code, jouez.",
   "lang": "fr",
   "id": "/",
-  "start_url": "/",
+  "start_url": "/?ref=app",
   "scope": "/",
   "display": "standalone",
   "orientation": "any",

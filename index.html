@@ -1670,7 +1670,7 @@ let PENDING_GAME = null;
   g = (Object.prototype.hasOwnProperty.call(GAME_SLUGS, g) && GAME_SLUGS[g]) || g;
   if (!isGame(g)) return;
   PENDING_GAME = g;
-  try { history.replaceState(null, '', location.pathname); } catch(_){}
+  try { history.replaceState(null, '', keepRef()); } catch(_){}
   setTimeout(() => { if (phase === 'menu') menuHint('Jeu choisi : ' + GAME_NAMES[g] + '. Jouez seul, ou à plusieurs en créant un salon.'); }, 0);
 })();
 function pendingGame(){
@@ -9849,7 +9849,7 @@ async function resultCard(){
   });
   // a QR code to the site, beside the podium
   if (typeof qrcode === 'function'){
-    const qc = document.createElement('canvas'); drawQR(qc, 'https://bastonarcade.com', 260, 'JOUER');
+    const qc = document.createElement('canvas'); drawQR(qc, 'https://bastonarcade.com/?ref=carte', 260, 'JOUER');
     const qx = W - 70 - qc.width, qy = hy + 36;
     c.fillStyle = '#000'; c.fillRect(qx + 8, qy + 8, qc.width, qc.height); c.drawImage(qc, qx, qy); c.lineWidth = 5; c.strokeRect(qx, qy, qc.width, qc.height);
   }
@@ -9865,7 +9865,7 @@ $('btnShare').onclick = async () => {
     const cv = await resultCard(); if (!cv) return;
     const blob = await new Promise(r => cv.toBlob(r, 'image/png'));
     const file = new File([blob], 'baston-arcade-resultat.png', { type:'image/png' });
-    const text = tr('On joue à Baston Arcade ! Viens défier tout le monde :') + ' https://bastonarcade.com';
+    const text = tr('On joue à Baston Arcade ! Viens défier tout le monde :') + ' https://bastonarcade.com/?ref=partage';
     if (navigator.canShare && navigator.canShare({ files:[file] })){
       try { await navigator.share({ files:[file], text, title:'Baston Arcade' }); track('resultat-partage'); } catch(_){}
     } else {
@@ -13381,7 +13381,10 @@ addEventListener('beforeunload', e => { if (net && !net.solo && phase !== 'menu'
 // Invitation link: <page>?salon=CODE. Opening it fills the code and joins straight away when a name is already saved.
 // played inside a page of another site (itch.io), invitations still point to bastonarcade.com
 const inviteBase = () => /(^|\.)itch\.(zone|io)$/.test(location.hostname) ? 'https://bastonarcade.com/' : location.origin + location.pathname;
-const inviteUrl = () => inviteBase() + '?salon=' + (net && net.code || $('lobbyCode').textContent);
+const inviteUrl = () => inviteBase() + '?salon=' + (net && net.code || $('lobbyCode').textContent) + '&ref=invitation';
+// the address is tidied once read, but its ?ref= stays: the audience counter reads it to say where a visit came from
+// (invitation, shared result card, the installed app…), where the browser itself gives no referrer
+function keepRef(){ const r = new URLSearchParams(location.search).get('ref'); return location.pathname + (r && /^[\w-]{1,30}$/.test(r) ? '?ref=' + r : ''); }
 let inviteT = null;
 const canShareLink = () => !!navigator.share && matchMedia('(pointer: coarse)').matches;
 if (canShareLink()) $('btnInvite').textContent = '📤 Partager le lien';
@@ -13406,7 +13409,7 @@ $('btnInvite').onclick = async () => {
   try { c = (new URLSearchParams(location.search).get('salon') || '').trim().toUpperCase(); } catch(_){}
   if (!c){ try { c = (sessionStorage.getItem('ba-room') || '').toUpperCase(); } catch(_){} if (c && /^[A-Z0-9]{4}$/.test(c) && store.get('tm-name')) menuHint('Retour dans le salon ' + c + '…'); }
   if (!c || !/^[A-Z0-9]{4}$/.test(c)) return;
-  try { history.replaceState(null, '', location.pathname); } catch(_){}   // a reload does not rejoin
+  try { history.replaceState(null, '', keepRef()); } catch(_){}   // a reload does not rejoin
   $('codeIn').value = c; menuView(true);
   if (store.get('tm-name')) $('btnJoin').click();
   else { menuHint('Choisissez votre nom, puis touchez « Entrer » pour rejoindre le salon ' + c + '.'); $('nameIn').focus(); $('nameIn').select(); }
