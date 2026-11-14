@@ -13059,28 +13059,91 @@ function mHat(c, t, vol){
   src.connect(f).connect(g).connect(MUS.g); src.start(t);
 }
 function musStep(c, s, t){
-  const i = s % 16, bar = Math.floor(s/16) % 4, loop = Math.floor(s/64) % 2, ch = MUS_CH[bar];
-  if (i % 8 === 0) mNote(c, 130, t, .14, 'sine', .16, 45);
-  if (i % 4 === 2) mHat(c, t, .05);
-  if (i % 4 === 0) mNote(c, mHz(ch[0] - 24), t, MUS_SPS*1.8, 'triangle', .18);
-  if (i % 4 === 3) mNote(c, mHz(ch[0] - 12), t, MUS_SPS*.8, 'triangle', .11);
-  mNote(c, mHz(ch[i % 3] + (loop ? 12 : 0)), t, MUS_SPS*.7, 'square', .018);
-  const m = MUS_LEAD[bar*16 + i];
-  if (m){ let n = 1; while (n < 4 && !MUS_LEAD[(bar*16 + i + n) % 64]) n++; mNote(c, mHz(m), t, MUS_SPS*n*.85, 'square', .045); }
+  const T = MUS.T || MUS_TRACKS[MUS.track], N = T.steps || 16, i = s % N, bar = Math.floor(s/N) % 4, loop = Math.floor(s/(N*4)) % 2, ch = T.ch[bar], sps = MUS_SPS;
+  const dr = T.dr || 'pop', beat = N === 12 ? 3 : 4;
+  // drums, in the style of the game
+  if (dr === 'pop'){ if (i % 8 === 0) mNote(c, 130, t, .14, 'sine', .16, 45); if (i % 4 === 2) mHat(c, t, .05); }
+  else if (dr === 'march'){ if (i % 8 === 0) mNote(c, 120, t, .14, 'sine', .17, 45); if (i % 8 === 4 || i === 14) { mHat(c, t, .09); mNote(c, 200, t, .06, 'triangle', .05, 120); } }
+  else if (dr === 'gallop'){ if (i % beat === 0) mNote(c, 120, t, .1, 'sine', .14, 50); if (i % beat === beat - 1 || i % beat === 1) mHat(c, t, .04); }
+  else if (dr === 'tabla'){ if (i % 8 === 0 || i === 11) mNote(c, 95, t, .18, 'sine', .16, 70); if (i % 4 === 2 || i === 7) mNote(c, 420, t, .09, 'sine', .07, 330); if (i % 2 === 1) mHat(c, t, .02); }
+  else if (dr === 'heart'){ if (i === 0 || i === 3) mNote(c, 75, t, .2, 'sine', i ? .13 : .19, 40); if (i === 8 || i === 11) mNote(c, 75, t, .2, 'sine', i === 11 ? .1 : .15, 40); }
+  else if (dr === 'viking'){ if (i % 8 === 0) mNote(c, 80, t, .35, 'sine', .22, 40); if (i % 8 === 4) mNote(c, 110, t, .2, 'triangle', .08, 60); }
+  else if (dr === 'waltz'){ if (i === 0) mNote(c, 120, t, .12, 'sine', .15, 50); if (i === 4 || i === 8) mHat(c, t, .04); }
+  else if (dr === 'soft'){ if (i % beat === 0 && i === 0) mNote(c, 110, t, .12, 'sine', .1, 50); if (i % (beat*2) === beat) mHat(c, t, .025); }
+  // bass: on the beat (or a held drone), then a light octave
+  if (T.drone){ if (i === 0) { mNote(c, mHz(ch[0] - 24), t, sps*N*.95, 'sawtooth', .025); mNote(c, mHz(ch[0] - 17), t, sps*N*.95, 'sawtooth', .018); } }
+  else if (T.bass8){ if (i % 2 === 0) mNote(c, mHz(ch[0] - 24 + (i % 4 === 2 ? 12 : 0)), t, sps*1.4, T.bw || 'triangle', .15); }
+  else { if (i % beat === 0) mNote(c, mHz(ch[0] - 24), t, sps*1.8, T.bw || 'triangle', .18); if (i % beat === beat - 1) mNote(c, mHz(ch[0] - 12), t, sps*.8, T.bw || 'triangle', .1); }
+  if (T.aw !== null) mNote(c, mHz(ch[i % 3] + (loop ? 12 : 0)), t, sps*.7, T.aw || 'square', T.av || .018);
+  const m = T.lead[bar*N + i];
+  if (m){ let n = 1; while (n < 4 && !T.lead[(bar*N + i + n) % (N*4)]) n++; mNote(c, mHz(m + (T.up || 0)), t, sps*n*.85, T.lw || 'square', T.lv || .045); }
 }
-function musTrack(k){ MUS.track = k % MUS_TRACKS.length; const T = MUS_TRACKS[MUS.track]; MUS_SPS = T.sps; MUS_CH = T.ch; MUS_LEAD = T.lead; }
+function musTrack(k){ MUS.T = null; MUS.track = k % MUS_TRACKS.length; const T = MUS_TRACKS[MUS.track]; MUS_SPS = T.sps; MUS_CH = T.ch; MUS_LEAD = T.lead; }
+// ---- one theme per game, played while its presentation is open ----
+// Each is described by a key, a mode, a tempo, four chords and a style; the tune itself is composed here, always the
+// same for a given game: a motif, an answer, the motif again on the third chord, and a cadence back home.
+const MUS_SCALES = { maj:[0,2,4,5,7,9,11], min:[0,2,3,5,7,8,10], hmin:[0,2,3,5,7,8,11], dor:[0,2,3,5,7,9,10], phr:[0,1,3,5,7,8,10], bhai:[0,1,4,5,7,8,11], mix:[0,2,4,5,7,9,10], wt:[0,2,4,6,8,10,12] };
+const MUS_GAME = {
+  tetris:{ k:57, m:'hmin', bpm:138, deg:[0, 4, 5, 4], dr:'pop', rh:2 },
+  pong:{ k:60, m:'maj', bpm:128, deg:[0, 5, 3, 4], dr:'pop', rh:1, lw:'square' },
+  derby:{ k:62, m:'maj', bpm:150, deg:[0, 3, 4, 0], dr:'gallop', steps:12, rh:3, lw:'square' },
+  naval:{ k:62, m:'dor', bpm:96, deg:[0, 6, 3, 0], dr:'march', steps:12, rh:3, lw:'triangle', lv:.07 },
+  mole:{ k:65, m:'maj', bpm:132, deg:[0, 4, 5, 4], dr:'pop', rh:4, lw:'square', aw:'triangle' },
+  curling:{ k:67, m:'maj', bpm:100, deg:[0, 2, 3, 4], dr:'soft', rh:0, lw:'sine', lv:.08, aw:'triangle', av:.025 },
+  chairs:{ k:60, m:'maj', bpm:150, deg:[0, 4, 4, 0], dr:'waltz', steps:12, rh:3, lw:'square' },
+  master:{ k:64, m:'min', bpm:92, deg:[0, 5, 3, 4], dr:'soft', rh:0, lw:'sine', lv:.07, aw:'sine', av:.03 },
+  kabaddi:{ k:60, m:'bhai', bpm:118, deg:[0, 1, 0, 4], dr:'tabla', rh:2, lw:'sawtooth', lv:.03, aw:null, drone:true },
+  dodge:{ k:58, m:'maj', bpm:136, deg:[0, 3, 4, 5], dr:'pop', rh:2, lw:'square' },
+  tank:{ k:60, m:'min', bpm:112, deg:[0, 5, 6, 4], dr:'march', rh:1, lw:'sawtooth', lv:.03 },
+  sheep:{ k:67, m:'maj', bpm:104, deg:[0, 3, 0, 4], dr:'soft', steps:12, rh:3, lw:'sine', lv:.08, aw:'triangle', av:.02 },
+  drakkar:{ k:62, m:'min', bpm:84, deg:[0, 6, 5, 6], dr:'viking', rh:0, lw:'sawtooth', lv:.03, aw:null, up:-12 },
+  lumber:{ k:65, m:'maj', bpm:116, deg:[0, 3, 4, 0], dr:'march', steps:12, rh:3, lw:'triangle', lv:.08 },
+  agility:{ k:69, m:'maj', bpm:144, deg:[0, 3, 4, 3], dr:'pop', rh:4, lw:'square', bass8:true },
+  galop:{ k:64, m:'min', bpm:160, deg:[0, 5, 6, 4], dr:'gallop', steps:12, rh:3, lw:'square' },
+  meduse:{ k:57, m:'dor', bpm:100, deg:[0, 3, 6, 4], dr:'waltz', steps:12, rh:3, lw:'triangle', lv:.08 },
+  blob:{ k:60, m:'wt', bpm:96, deg:[0, 1, 2, 1], dr:'soft', rh:0, lw:'sine', lv:.08, aw:'sine', av:.03 },
+  racer:{ k:64, m:'min', bpm:152, deg:[0, 5, 6, 6], dr:'pop', rh:2, lw:'sawtooth', lv:.035, bass8:true },
+  leo:{ k:62, m:'dor', bpm:88, deg:[0, 6, 3, 4], dr:'soft', steps:12, rh:3, lw:'triangle', lv:.08, aw:'triangle', av:.03 },
+  mino:{ k:64, m:'phr', bpm:76, deg:[0, 1, 0, 6], dr:'heart', rh:0, lw:'sine', lv:.07, aw:'sine', av:.02, up:-12 }
+};
+const MUS_RH = [   // where the notes fall in a bar (1 = a note), by feel
+  [1,0,0,0, 1,0,0,0, 1,0,1,0, 1,0,0,0], [1,0,1,0, 0,0,1,0, 1,0,1,0, 1,0,0,0], [1,0,0,1, 0,0,1,0, 1,0,1,0, 1,0,0,0],
+  [1,0,1, 1,0,0, 1,0,1, 1,0,0], [1,0,1,1, 0,1,0,1, 1,0,1,0, 0,1,0,0]];
+const musTheme = {};
+function musGameTrack(g){
+  if (musTheme[g]) return musTheme[g];
+  const P = MUS_GAME[g]; if (!P) return null;
+  const sc = MUS_SCALES[P.m], N = P.steps || 16, L = sc.length;
+  let seed = [...g].reduce((a, ch) => (a*31 + ch.charCodeAt(0)) >>> 0, 7); const rnd = () => ((seed = (seed*1664525 + 1013904223) >>> 0) / 4294967296);
+  const note = d => P.k + sc[((d % L) + L) % L] + 12*Math.floor(d/L);
+  const ch = P.deg.map(d => [note(d) - 12, note(d + 2) - 12, note(d + 4) - 12]);
+  const rh = MUS_RH[P.rh].slice(0, N);
+  // a motif in scale degrees, rising or falling by small steps around the chord
+  const motif = () => { const out = []; let d = 0; for (let i = 0; i < N; i++){ if (!rh[i]) { out.push(null); continue; } const r = rnd(); d += r < .35 ? 1 : r < .6 ? -1 : r < .75 ? 2 : r < .85 ? -2 : 0; d = Math.max(-2, Math.min(5, d)); out.push(d); } return out; };
+  const A = motif(), B = motif(), lead = [];
+  [[A, P.deg[0]], [B, P.deg[1]], [A, P.deg[2]], [null, P.deg[3]]].forEach(([mo, base], bar) => {
+    for (let i = 0; i < N; i++){
+      if (mo){ const d = mo[i]; lead.push(d == null ? 0 : note(base + (i % (N/4) === 0 ? Math.round(d/2)*2 : d))); }
+      else lead.push(i === 0 ? note(base + 2) : i === N/4 ? note(base + 1) : i === N/2 ? note(0) : 0);   // cadence: home on the root
+    }
+  });
+  return musTheme[g] = { sps:60/P.bpm/(N === 12 ? 3 : 4), ch, lead, steps:N, dr:P.dr, lw:P.lw, lv:P.lv, aw:P.aw, av:P.av, drone:P.drone, bass8:P.bass8, up:P.up || 0 };
+}
+
 function musSched(){
   const c = SND.ctx; if (!c || !MUS.g) return;
   if (MUS.next < c.currentTime) MUS.next = c.currentTime + .05;
   while (MUS.next < c.currentTime + .3){
-    musStep(c, MUS.step, MUS.next); MUS.next += MUS_SPS; MUS.step = (MUS.step + 1) % 128;
-    if (MUS.step === 0) musTrack(MUS.track + 1);
+    musStep(c, MUS.step, MUS.next); MUS.next += MUS_SPS; MUS.step = (MUS.step + 1) % ((MUS.T ? MUS.T.steps : 16)*8);
+    if (MUS.step === 0 && !MUS.T) musTrack(MUS.track + 1);
   }
 }
-function musStart(){
+function musStart(theme){
   const c = sndCtx(); if (!c || c.state !== 'running' || MUS.g) return;
+  MUS.theme = theme || 'menu';
   MUS.g = c.createGain(); MUS.g.gain.setValueAtTime(0.0001, c.currentTime); MUS.g.gain.exponentialRampToValueAtTime(.8, c.currentTime + 1.2);
   MUS.g.connect(c.destination); MUS.next = c.currentTime + .1; MUS.step = 0; musTrack(MUS.track);
+  const gt = theme && theme !== 'menu' && musGameTrack(theme); if (gt){ MUS.T = gt; MUS_SPS = gt.sps; }
   MUS.timer = setInterval(musSched, 60); musSched();
 }
 function musStop(){
@@ -13091,7 +13154,13 @@ function musStop(){
 }
 // on the menu, the scores and the room, with sound and music on and the page in view
 const musWanted = () => SND.on && MUS.on && !document.hidden && ['scrMenu', 'scrStats', 'scrLobby'].some(id => !$(id).hidden);
-setInterval(() => { if (musWanted()) musStart(); else musStop(); }, 250);
+const musWantTheme = () => (BR && !$('briefPop').hidden && MUS_GAME[BR.game]) ? BR.game : 'menu';
+setInterval(() => {
+  if (!musWanted()) return musStop();
+  const th = musWantTheme();
+  if (MUS.g && MUS.theme !== th) musStop();        // fades out, the new theme fades in on the next tick
+  else if (!MUS.g) musStart(th);
+}, 250);
 function syncMusicBtn(){ const b = $('btnMusic'), l = MUS.on ? 'Musique : activée' : 'Musique : coupée'; b.classList.toggle('off', !MUS.on); b.setAttribute('aria-label', l); b.title = l; }
 $('btnMusic').onclick = () => { MUS.on = !MUS.on; try { localStorage.setItem('tm-music', MUS.on ? '1' : '0'); } catch(_){} syncMusicBtn(); };
 syncMusicBtn();
