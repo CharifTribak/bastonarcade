@@ -7099,7 +7099,7 @@ let HDK = null, DK = null;
 
 // ---- host side ----
 function dkLater(fn, ms){ const g = HDK; const t = setTimeout(() => { if (HDK === g && H && !H.over) fn(); }, ms); HDK.timers.push(t); }
-function dkClear(){ if (HDK) { HDK.timers.forEach(t => clearTimeout(t)); clearTimeout(HDK.beatT); } }
+function dkClear(){ if (HDK) { HDK.timers.forEach(t => clearTimeout(t)); [].concat(HDK.beatT).forEach(t => clearTimeout(t)); } }
 const dkTeamOf = id => HDK.teams[0].includes(id) ? 0 : 1;
 function drakkarHostStart(){
   // the same number of rowers on each longship: robots fill in (alone, you race one robot)
@@ -7113,69 +7113,59 @@ function drakkarHostStart(){
   players.filter(p => p.bot).forEach(p => teams[teams[0].length <= teams[1].length ? 0 : 1].push(p.id));
   const rowers = [...teams[0], ...teams[1]];
   for (const p of players) H.stats[p.id] = { role:teams[0].includes(p.id) ? 'Drakkar rouge' : 'Drakkar bleu', strokes:0, sync:0, qs:0, qn:0, left:false };
-  HDK = { timers:[], drummer:'drum', teams, rowers, d:[0, 0], v:[0, 0], iv:1000, k:0, ph:'wait', buckets:{}, Q:[0, 0], taps:[], lastBeat:0, phases:{}, lastSend:0, t:0, botQ:[],
+  HDK = { timers:[], drummer:'drum', teams, rowers, d:[0, 0], v:[0, 0], iv:[1000, 1000], k:[0, 0], ph:'wait', buckets:[{}, {}], Q:[0, 0], taps:[], lastBeat:[0, 0], beatT:[null, null], phases:{}, lastSend:0, t:0, botQ:[[], []],
     bots:Object.fromEntries(players.filter(p => p.bot).map(p => [p.id, { skill:.55 + Math.random()*.25, side:'L' }])) };
   broadcast({ t:'start', players, game:'drakkar', drummer:'drum', rowers, teams, len:DK_LEN });
-  dkLater(() => { HDK.ph = 'play'; HDK.t0 = performance.now(); dkBeat(); }, 3200);
+  dkLater(() => { HDK.ph = 'play'; HDK.t0 = performance.now(); dkBeat(0); dkBeat(1); }, 3200);
 }
-function dkBeat(fromTap){
-  clearTimeout(HDK.beatT);
+// each crew has its own drum: it speeds up as the crew rows in time, and the faster it goes, the more a missed
+// stroke costs (the longship loses part of its speed at once)
+function dkBeat(t){
+  clearTimeout(HDK.beatT[t]);
   if (!H || H.over || HDK.ph !== 'play') return;
-  const now = performance.now();
-  HDK.k++; HDK.lastBeat = now;
-  // judge the strokes made around the previous beat (one beat of margin for slow connections), crew by crew
-  const b = HDK.buckets[HDK.k - 1] || {}; delete HDK.buckets[HDK.k - 2];
-  const qs = HDK.teams.map(team => {
-    const act = team.filter(id => H.stats[id] && !H.stats[id].left);
-    for (const id of act){ const st = H.stats[id]; st.qs += b[id] || 0; st.qn++; st.sync = Math.round(100*st.qs/st.qn); }
-    return act.length ? act.reduce((a, id) => a + (b[id] || 0), 0) / act.length : 0;
-  });
-  HDK.Q = HDK.Q.map((Q, t) => Q*.4 + qs[t]*.6);
-  broadcast({ t:'dk_beat', k:HDK.k, iv:HDK.iv, q:HDK.Q.map(x => Math.round(x*100)) });
+  HDK.k[t]++; HDK.lastBeat[t] = performance.now();
+  const k = HDK.k[t], bk = HDK.buckets[t], b = bk[k - 1] || {}; delete bk[k - 2];
+  const act = HDK.teams[t].filter(id => H.stats[id] && !H.stats[id].left);
+  for (const id of act){ const st = H.stats[id]; st.qs += b[id] || 0; st.qn++; st.sync = Math.round(100*st.qs/st.qn); }
+  const q = k > 1 && act.length ? act.reduce((a, id) => a + (b[id] || 0), 0) / act.length : .5;
+  HDK.Q[t] = HDK.Q[t]*.4 + q*.6;
+  const f = 1000/HDK.iv[t];
+  if (q < .5) HDK.v[t] *= 1 - Math.min(.8, (.5 - q)*.6*Math.pow(f, 1.5));
+  broadcast({ t:'dk_beat', tm:t, k, iv:HDK.iv[t], q:Math.round(HDK.Q[t]*100), miss:q < .35 ? 1 : 0 });
   // the robot rowers: a stroke a little before or after the beat, now and then a miss
-  for (const [id, B] of Object.entries(HDK.bots)){
-    if (H.stats[id].left || Math.random() < .08) continue;
-    const off = (Math.random() - .5)*2*(1 - B.skill)*HDK.iv*.7, k = HDK.k;
+  for (const id of HDK.teams[t]){
+    const B = HDK.bots[id]; if (!B || H.stats[id].left || Math.random() < .08) continue;
+    const off = (Math.random() - .5)*2*(1 - B.skill)*HDK.iv[t]*.7;
     dkLater(() => { B.side = B.side === 'L' ? 'R' : 'L'; drakkarStroke(id, k, off, B.side); }, Math.max(0, off));
   }
-  botDrum((qs[0] + qs[1])/2);
-  HDK.beatT = setTimeout(() => dkBeat(), HDK.iv);                       // the drum keeps going on its own
+  botDrum(t, q);
+  HDK.beatT[t] = setTimeout(() => dkBeat(t), HDK.iv[t]);
 }
-function drakkarTap(id){
-  if (!HDK || HDK.ph !== 'play' || id !== HDK.drummer) return;
-  const now = performance.now();
-  HDK.taps.push(now); HDK.taps = HDK.taps.filter(t => now - t < 4000).slice(-5);
-  if (HDK.taps.length >= 3){
-    const iv = []; for (let i = 1; i < HDK.taps.length; i++) iv.push(HDK.taps[i] - HDK.taps[i-1]);
-    iv.sort((a, b) => a - b); const m = iv[Math.floor(iv.length/2)];
-    if (m > DK_MIN_IV*.8 && m < DK_MAX_IV*1.3) HDK.iv = Math.max(DK_MIN_IV, Math.min(DK_MAX_IV, Math.round(m)));
-  }
-  if (now - HDK.lastBeat > HDK.iv*.3) dkBeat(true);                  // the tap is the beat
-}
+function drakkarTap(id){ /* the drums are the robots' */ }
 function drakkarStroke(id, k, off, side){
   if (!HDK || HDK.ph !== 'play' || !HDK.rowers.includes(id)) return;
   k = k|0; off = +off; if (!isFinite(off) || k < 1) return;
-  const iv = HDK.iv;
+  const tm = dkTeamOf(id), iv = HDK.iv[tm];
   if (off > iv/2){ k++; off -= iv; }                                 // late for this beat = early for the next one
   const q = Math.max(0, 1 - Math.abs(off)/(iv*.45));                  // generous window: almost half a beat each side
-  const b = HDK.buckets[k] || (HDK.buckets[k] = {});
+  const b = HDK.buckets[tm][k] || (HDK.buckets[tm][k] = {});
   b[id] = Math.max(b[id] || 0, q);
   if (H.stats[id]) H.stats[id].strokes++;
   broadcast({ t:'dk_tap', id, s:side === 'R' ? 'R' : 'L', q:Math.round(q*100), off:Math.round(off) });   // everyone sees everyone's stroke
 }
 function dkSendTo(id, msg){ if (id === 'h') clientRecv(msg); else if (!/^ai\d?$/.test(id)){ const c = net && net.conns.get(id); if (c && c.open) try { c.send(msg); } catch(_){} } }
 function drakkarPhase(id, a){ if (HDK && isFinite(+a)) HDK.phases[id] = +a; }
-function botDrum(q){
-  HDK.botQ.push(q); if (HDK.botQ.length < 4) return;
-  const avg = HDK.botQ.reduce((a, b) => a + b, 0) / HDK.botQ.length; HDK.botQ = [];
-  if (avg > .6) HDK.iv = Math.max(DK_MIN_IV, Math.round(HDK.iv * .93));       // the crew follows: a little faster
-  else if (avg < .3) HDK.iv = Math.min(DK_MAX_IV, Math.round(HDK.iv * 1.07)); // lost: a little slower
+function botDrum(t, q){
+  const Q = HDK.botQ[t]; Q.push(q); if (Q.length < 3) return;
+  const avg = Q.reduce((a, b) => a + b, 0) / Q.length; HDK.botQ[t] = [];
+  if (avg > .6) HDK.iv[t] = Math.max(DK_MIN_IV, Math.round(HDK.iv[t] * (1 - (avg - .6)*.25)));   // in time: faster, the more so the better
+  else if (avg < .35) HDK.iv[t] = Math.min(DK_MAX_IV, Math.round(HDK.iv[t] * 1.1));           // lost: slower
 }
 function drakkarHostFrame(dt, now){
   if (!HDK || !H || H.over || HDK.ph !== 'play') return;
   HDK.t += dt;
   for (let t = 0; t < 2; t++){
-    const vT = Math.pow(HDK.Q[t], .85) * (60000/HDK.iv)/60 * 9;          // metres per second
+    const vT = Math.pow(HDK.Q[t], .85) * (60000/HDK.iv[t])/60 * 9;       // metres per second
     HDK.v[t] += (vT - HDK.v[t]) * Math.min(1, dt*.8);
     HDK.d[t] += HDK.v[t]*dt;
   }
@@ -7223,8 +7213,9 @@ function drakkarRecv(m){
   if (!DK) return;
   switch (m.t){
     case 'dk_beat':
+      if (m.tm != null && m.tm !== DK.mt) break;
       if (phase === 'count'){ phase = 'play'; drakkarMsg(''); }
-      DK.k = m.k|0; DK.iv = m.iv|0 || 1200; DK.beatAt = performance.now(); DK.q = ((Array.isArray(m.q) ? m.q[DK.mt] : m.q)|0)/100; DK.pulse = 1;
+      DK.k = m.k|0; DK.iv = m.iv|0 || 1200; DK.beatAt = performance.now(); DK.q = (m.q|0)/100; DK.pulse = 1; if (m.miss) DK.splash = 1, DK.lost = performance.now();
       sfx('drum');
       if (DK.role === 'rameur' && SND.on && navigator.vibrate) try { navigator.vibrate(35); } catch(_){}
       break;
@@ -7349,23 +7340,23 @@ function drawDrakkar(now){
   if (!DK) return;
   const skyI = dkImg('sky.jpg'), seaI = dkImg('sea.jpg'), shipR = dkImg('ship_red.png'), shipB = dkImg('ship_blue.png');
   if (skyI && seaI){                                  // painted sky (England slides in at the end) and scrolling sea
-    const p = Math.min(1, DK.sd/DK_LEN), sx = p*(skyI.naturalWidth - W*150/skyI.naturalHeight);
+    const p = Math.min(1, DK.sd[DK.mt]/DK_LEN), sx = p*(skyI.naturalWidth - W*150/skyI.naturalHeight);
     ctx.drawImage(skyI, sx, 0, W*skyI.naturalHeight/150, skyI.naturalHeight, 0, 0, W, 150);
-    const sw = seaI.naturalWidth, so = (DK.sd*DK_PX*.9) % sw;
+    const sw = seaI.naturalWidth, so = (DK.sd[DK.mt]*DK_PX*.9) % sw;
     for (let x = -so; x < W; x += sw) ctx.drawImage(seaI, x, 128, sw, 260);
   }
-  const off = (DK.sd*DK_PX) % 80;
+  const off = (DK.sd[DK.mt]*DK_PX) % 80;
   if (!(skyI && seaI)){
   ctx.strokeStyle = 'rgba(255,255,255,.55)'; ctx.lineWidth = 2.5;
   for (let row = 0; row < 7; row++){ const y = 130 + row*34, sh = row % 2 ? 40 : 0;
     for (let x = -80 - off + sh; x < W + 80; x += 80){ ctx.beginPath(); ctx.moveTo(x, y); ctx.quadraticCurveTo(x + 10, y - 6, x + 20, y); ctx.stroke(); } }
   // clouds and far coast drifting by
   ctx.fillStyle = '#fff'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2;
-  for (let k = 0; k < 4; k++){ const x = ((k*190 - DK.sd*1.2) % (W + 200) + W + 200) % (W + 200) - 100, y = 30 + (k % 2)*25;
+  for (let k = 0; k < 4; k++){ const x = ((k*190 - DK.sd[DK.mt]*1.2) % (W + 200) + W + 200) % (W + 200) - 100, y = 30 + (k % 2)*25;
     ctx.beginPath(); ctx.arc(x, y, 14, 0, Math.PI*2); ctx.arc(x + 16, y - 6, 16, 0, Math.PI*2); ctx.arc(x + 32, y, 12, 0, Math.PI*2); ctx.fill(); }
   }
   // England: the white cliffs appear near the end
-  const fx = W/2 + (DK_LEN - DK.sd)*DK_PX + 60;
+  const fx = W/2 + (DK_LEN - DK.sd[DK.mt])*DK_PX + 60;
   if (fx < W + 200 && !(skyI && seaI)){
     ctx.fillStyle = '#F2F0E6'; ctx.beginPath(); ctx.moveTo(fx, Hh); ctx.lineTo(fx, 120); ctx.lineTo(fx + 20, 70); ctx.lineTo(fx + 60, 60); ctx.lineTo(fx + 300, 50); ctx.lineTo(fx + 300, Hh); ctx.closePath(); ctx.fill(); ctx.lineWidth = 3; ctx.stroke();
     ctx.fillStyle = '#6FB04A'; ctx.beginPath(); ctx.moveTo(fx + 20, 70); ctx.lineTo(fx + 60, 60); ctx.lineTo(fx + 300, 50); ctx.lineTo(fx + 300, 62); ctx.lineTo(fx + 40, 74); ctx.closePath(); ctx.fill(); ctx.stroke();
@@ -7384,6 +7375,8 @@ function drawDrakkar(now){
   } else { ctx.fillStyle = '#000'; ctx.font = '16px Bangers, Impact, sans-serif'; ctx.textAlign = bx < 0 ? 'left' : 'right'; ctx.fillText(bx < 0 ? '◀ les autres ' + Math.round(my - DK.sd[them]) + ' m' : 'les autres ' + Math.round(DK.sd[them] - my) + ' m ▶', bx < 0 ? 8 : W - 8, 150); }
   if (shipOf(me0)) dkShipImg(ctx, shipOf(me0), W/2, 300 + bob(2), .56, crewCols(me0), crewOars(me0), now, DK.pulse, true); else dkShip(ctx, W/2, 280 + bob(2), 1.05, crewCols(me0), sailOf(me0), crewOars(me0), now, DK.pulse);
   dkNames(ctx, me0, W/2, 346);
+  // a crew out of time loses speed at once, more so the faster the drum: say it
+  if (DK.lost && now - DK.lost < 800){ const a = 1 - (now - DK.lost)/800; ctx.save(); ctx.globalAlpha = a; ctx.font = '30px Bangers, Impact, sans-serif'; ctx.textAlign = 'center'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#000'; ctx.lineWidth = 6; ctx.strokeText('ÇA FREINE !', W/2 + 120, 175); ctx.fillStyle = '#FF4D4D'; ctx.fillText('ÇA FREINE !', W/2 + 120, 175); ctx.restore(); }
   // drum beat shown big for everyone
   if (DK.pulse > 0){ ctx.globalAlpha = DK.pulse; ctx.font = (26 + DK.pulse*10) + 'px Bangers, Impact, sans-serif'; ctx.textAlign = 'center'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#000'; ctx.lineWidth = 5; ctx.strokeText('BOUM', W/2 - 70, 220); ctx.fillStyle = '#FFD21F'; ctx.fillText('BOUM', W/2 - 70, 220); ctx.globalAlpha = 1; }
   // race bar
@@ -12012,11 +12005,14 @@ function laJudge(){
   if (!HLA || HLA.ph !== 'paint') return;
   HLA.ph = 'judge';
   const M = HLA.m, k = HLA.k;
+  // the zones whose colour only robots hold weigh a quarter: the result is mostly the humans' painting
+  const hum = new Set(); for (const p of players) if (!p.bot && laIn(p.id)) for (const c of (HLA.own[p.id] || [])) hum.add(c);
+  const wOf = t => !hum.size || hum.has(t) ? 1 : .25;
   let tot = 0, ok = 0; const okBy = new Array(players.length).fill(0), badBy = new Array(players.length).fill(0);
   if (M) for (let i = 0; i < M.t.length; i++){
-    const t = M.t[i]; if (t >= 250) continue; tot++;
+    const t = M.t[i]; if (t >= 250) continue; const w = wOf(t); tot += w;
     const p = M.p[i]; if (p === 255) continue;
-    if (p === t){ ok++; okBy[M.o[i]]++; } else badBy[M.o[i]]++;
+    if (p === t){ ok += w; okBy[M.o[i]] += w; } else badBy[M.o[i]] += w;
   }
   const pct = tot ? Math.round(ok/tot*100) : 0;
   HLA.scores.push(pct);
@@ -12816,7 +12812,7 @@ const HELP = {
   tank:{ g:'Le dernier char debout gagne. Interdit de parler !', t:['Glissez : le char tourne puis roule'], k:[['ZQSD', 'piloter']], tip:'Cachez-vous dans les forêts et tirez à l\'abri des obstacles.' },
   tankGun:{ g:'Le dernier char debout gagne. Interdit de parler !', t:['Glissez pour viser', 'Touchez pour tirer'], k:[['Souris', 'viser, cliquer'], ['← →', 'tourelle'], ['Espace', 'feu']], tip:'Devinez où va votre pilote et anticipez le tir.' },
   sheep:{ g:'Tous les moutons dans l\'enclos avant la nuit.', t:['Glissez pour courir', '« Ouaf ! » fait fuir moutons et loup'], k:[['ZQSD', 'courir'], ['Espace', 'aboyer']], tip:'Encerclez le troupeau à plusieurs, sans foncer dedans.' },
-  drakkar:{ g:'Ramez en rythme avec votre équipage.', t:['GAUCHE puis DROITE, un coup par BOUM'], k:[['← →', 'en alternance, un coup par BOUM']], tip:'Plus l\'équipage est synchro, plus le tambour accélère.' },
+  drakkar:{ g:'Ramez en rythme avec votre équipage.', t:['GAUCHE puis DROITE, un coup par BOUM'], k:[['← →', 'en alternance, un coup par BOUM']], tip:'Plus l\'équipage est synchro, plus son tambour accélère. Mais plus ça va vite, plus un raté freine fort !' },
   lumber:{ g:'Faites tomber l\'arbre où vous visez, sans rien écraser.', t:['1. Touchez où il tombe', '2. Sciez sur les pointillés'], k:[['← →', 'viser'], ['Entrée', 'valider'], ['Espace', 'scier']], tip:'Coupes bien droites = chute précise. Une coupe bâclée l\'envoie n\'importe où.' },
   agility:{ g:'Le bon geste sur chaque obstacle, sinon +5 s.', tip:'Whippet rapide, Jack Russell meilleur sauteur, Corgi plus endurant.' },
   galop:{ g:'Gérez l\'énergie, profitez de l\'aspiration.', t:['◀ ▶ se décaler', 'GALOP accélère', 'RALENTIR fait souffler'], k:[['← →', 'se décaler'], ['↑', 'galop'], ['↓', 'ralentir']], tip:'Collé derrière un cheval, vous récupérez plus vite.' },
