@@ -1,2 +1,4 @@
 itch-build/
 dist/
+_site/
+node_modules/
