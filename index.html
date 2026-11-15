@@ -2108,7 +2108,7 @@ function clientRecv(m){
     case 'la_round': case 'la_go': case 'la_p': case 'la_judge': case 'la_ev': case 'la_res': leoRecv(m); break;
     case 'rc_pick': case 'rc_picks': case 'rc_round': case 'rc_go': case 'rc_s': case 'rc_ev': case 'rc_res': racerRecv(m); break;
     case 'mn_go': case 'mn_s': case 'mn_ev': case 'mn_res': minoRecv(m); break;
-    case 'gp_pick': case 'gp_race': case 'gp_go': case 'gp_s': case 'gp_fin': galopRecv(m); break;
+    case 'gp_pick': case 'gp_race': case 'gp_go': case 'gp_s': case 'gp_fin': case 'gp_photo': galopRecv(m); break;
     case 'brief': if (phase === 'lobby') openBrief(m.game, m.ready); break;
     case 'votes': VOTES = m.v && typeof m.v === 'object' ? m.v : {}; renderVotes(); if (BR && BR.mode === 'pick') briefStatus(); break;
     case 'peek': if (!me.host){ PEEK = GAME_NAMES[m.g] ? m.g : null; renderVotes(); } break;
@@ -9235,6 +9235,7 @@ function gpBreed(){
 const GP_ACC = [0, 1.15, 1.45, 1.75, 2.05], GP_VMAX = [0, 36.17, 36.59, 37.01, 37.43], GP_LAT = [0, 1.7, 2.3, 2.9, 3.5];
 const GP_STR = 400, GP_RAD = 111.4, GP_LAP = 2*GP_STR + 2*Math.PI*GP_RAD, GP_DIST = 3000, GP_START = 300;
 const GP_GAP = 3.6, GP_LANE = 1.45, GP_W = 12.2, GP_RUNNERS = 8, GP_PICK = 20, GP_K = 20;   // GP_K: pixels per metre on screen
+const GP_PHOTO_M = 10, GP_HLEN = 4;   // photo finish: metres behind the winner still in the picture; a horse's length on the track
 const GP_STRATS = ['front', 'stalker', 'closer', 'pacer'];
 const GP_STRAT_NAMES = { front:'meneur', stalker:'planqué', closer:'finisseur', pacer:'régulier' };
 let HGP = null, GP = null;
@@ -9311,7 +9312,7 @@ function galopInput(id, m){ if (HGP) HGP.IN[id] = { l:!!m.l, r:!!m.r, a:!!m.a, b
 
 // ---- host: the race ----
 function gpStep(dt){
-  const R = HGP.R, N = R.length;
+  const R = HGP.R, N = R.length, nf = [];
   for (const h of R){
     // who is just ahead in my line, and is there anybody in front at all
     let A = null, g = 1e9, anyAhead = false;
@@ -9354,8 +9355,10 @@ function gpStep(dt){
     const r = gpRail(GP_START + h.s), f = r.bend ? GP_RAD/(GP_RAD + h.lat + .8) * (.915 + .022*GP_HORSES[h.h].s[2]) : 1;
     h.s += h.v*f*dt;
     if (A && !A.fin && !h.fin && h.s > A.s - GP_GAP){ h.s = Math.max(h.s - h.v*f*dt, A.s - GP_GAP); h.v = Math.min(h.v, A.v); }   // never through the horse in front
-    if (!h.fin && h.s >= GP_DIST){ h.fin = HGP.t; h.place = HGP.order.length + 1; HGP.order.push(h.id); broadcast({ t:'gp_fin', id:h.id, place:h.place, time:Math.round(HGP.t*100)/100 }); }
+    // the exact moment the nose crossed the line, between two steps: the photo finish needs it
+    if (!h.fin && h.s >= GP_DIST){ const T = HGP.ts != null ? HGP.ts : HGP.t; h.fin = Math.max(T - dt, T - (h.s - GP_DIST)/Math.max(1, h.v*f)); h.vf = h.v; h.lf = h.lat; nf.push(h); }
   }
+  nf.sort((a, b) => a.fin - b.fin).forEach(h => { h.place = HGP.order.length + 1; HGP.order.push(h.id); broadcast({ t:'gp_fin', id:h.id, place:h.place, time:Math.round(h.fin*1000)/1000 }); });
 }
 function galopHostFrame(dt, now){
   if (!HGP || !H || H.over || !HGP.R) return;
@@ -9366,7 +9369,8 @@ function galopHostFrame(dt, now){
       else { const I = HGP.IN[h.id] || {}; h.push = !!I.a; h.brake = !!I.b && !I.a; h.steer = (I.r ? 1 : 0) - (I.l ? 1 : 0); }
     }
     const n = Math.ceil(dt/(1/60));
-    for (let i = 0; i < n; i++) gpStep(dt/n);
+    HGP.ts = HGP.t - dt;
+    for (let i = 0; i < n; i++){ HGP.ts += dt/n; gpStep(dt/n); }
     if (HGP.R.every(h => h.fin) || HGP.t > 200) galopFinish();
   }
   if (now - HGP.lastSend > 80){                       // 12.5 updates a second, whole numbers only: light enough for a weak 4G link
@@ -9382,7 +9386,16 @@ function galopFinish(){
   const w = R[0].fin || HGP.t;
   const ranking = R.map((h, i) => ({ id:h.id, name:h.bot ? 'Robot' : h.name, color:h.color, place:i + 1, horse:GP_HORSES[h.h].n,
     t:h.fin ? Math.round(h.fin*1000) : 0, gap:h.fin ? Math.round((h.fin - w)*100)/100 : null, left:!!(H.stats[h.id] && H.stats[h.id].left), bot:h.bot }));
-  setTimeout(() => broadcast({ t:'end', ranking, game:'galop' }), 2200);
+  // the photo finish: the winner, plus the next two if they crossed within about two and a half lengths
+  const F = R.filter(h => h.fin);
+  let wait = 2200;
+  if (F.length){
+    const w0 = F[0], shots = F.slice(0, 3).filter((h, i) => !i || (h.fin - w0.fin)*(h.vf || 30) <= GP_PHOTO_M);
+    const m = F[1] ? (F[1].fin - w0.fin)*(F[1].vf || 30) : -1;
+    broadcast({ t:'gp_photo', p:shots.map(h => [h.id, Math.round((h.fin - w0.fin)*(h.vf || 30)*100)/100, Math.round((h.lf || 0)*100)/100]), m:Math.round(m*100)/100 });
+    wait = 5600;
+  }
+  setTimeout(() => broadcast({ t:'end', ranking, game:'galop' }), wait);
 }
 function galopDrop(id){
   if (!H || H.over || !H.stats[id]) return;
@@ -9494,6 +9507,77 @@ function galopRecv(m){
     if (m.id === me.id){ sfx(m.place === 1 ? 'win' : 'finish'); boom(m.place === 1 ? 'VICTOIRE !' : (m.place + (m.place === 1 ? 'er' : 'e')) + ' !', { size:38, x:.5, y:.35, pal:BOOM_COLORS[m.place === 1 ? 0 : 1], ms:1500 }); }
     else if (m.place === 1 && h) gpToast((h.bot ? GP_HORSES[h.h].n : h.name) + ' gagne la course !');
   }
+  else if (m.t === 'gp_photo'){
+    if (!GP.R || !Array.isArray(m.p)) return;
+    const shots = m.p.slice(0, 3).map(a => Array.isArray(a) && GP.R.find(r => r.id === a[0]) ? { h:GP.R.find(r => r.id === a[0]), d:Math.max(0, Math.min(GP_PHOTO_M + 2, +a[1] || 0)), lat:+a[2] || 0 } : null).filter(Boolean);
+    if (!shots.length) return;
+    GP.photo = { at:performance.now(), shots, m:+m.m };
+    noise(.05, .25, 4000, 2500); tone(2600, .08, 'square', .05, null, .03);   // the camera shutter
+  }
+}
+// the margin as racing people say it, from the distance between the noses
+function gpMargin(d){
+  if (d < 0) return '';
+  const L = d/GP_HLEN;
+  return d < .02 ? 'ex aequo !' : L < .1 ? 'un nez' : L < .2 ? 'une courte tête' : L < .35 ? 'une tête' : L < .55 ? 'une encolure' : L < .8 ? 'une demi-longueur'
+    : L < .95 ? 'trois quarts de longueur' : L < 1.25 ? 'une longueur' : L < 1.75 ? 'une longueur et demie' : Math.round(L) + ' longueurs';
+}
+// the photo, as a slit camera takes it: each horse is shown the moment its nose reaches the line, so the space between them is time
+function gpDrawPhoto(ctx, W, Hh, now){
+  const P = GP.photo, a = (now - P.at)/1000;
+  if (a < .5){ ctx.fillStyle = 'rgba(255,255,255,' + (1 - a/.5)*.9 + ')'; ctx.fillRect(0, 0, W, Hh); }   // flash
+  const k0 = Math.min(1, a/.35), pop = .9 + .1*(1 - Math.pow(1 - k0, 3));
+  const S = P.shots, n = S.length;
+  const bw = W - 36, sh = 190, bh = sh + 96, bx = 18, by = Math.round(Hh*.42 - bh/2);
+  ctx.save(); ctx.globalAlpha = k0;
+  ctx.translate(W/2, by + bh/2); ctx.scale(pop, pop); ctx.rotate(-.015); ctx.translate(-W/2, -(by + bh/2));
+  // the print, with a white border
+  ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fillRect(bx + 6, by + 8, bw, bh);
+  ctx.fillStyle = '#FFFDF5'; ctx.strokeStyle = '#000'; ctx.lineWidth = 4; ctx.fillRect(bx, by, bw, bh); ctx.strokeRect(bx, by, bw, bh);
+  ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic'; ctx.fillStyle = '#000'; ctx.font = '30px Bangers, Impact, sans-serif';
+  ctx.fillText(n > 1 ? 'PHOTO-FINISH' : 'ARRIVÉE', W/2, by + 36);
+  // the strip: sepia turf with the streaks a slit camera leaves
+  const sx = bx + 12, sy = by + 48, sw = bw - 24, lineX = sx + sw*.66;
+  ctx.save(); ctx.beginPath(); ctx.rect(sx, sy, sw, sh); ctx.clip();
+  const gr = ctx.createLinearGradient(0, sy, 0, sy + sh); gr.addColorStop(0, '#CDB58A'); gr.addColorStop(1, '#A88B5E');
+  ctx.fillStyle = gr; ctx.fillRect(sx, sy, sw, sh);
+  ctx.fillStyle = 'rgba(70,45,15,.12)'; for (let y = sy + 3; y < sy + sh; y += 7) ctx.fillRect(sx, y, sw, 1 + (y*7 % 3));
+  // the space a metre takes: enough room for the last horse shown, behind the line
+  const back = Math.max(...S.map(o => o.d)), k = Math.min(30, (lineX - sx - 12)/(back + GP_HLEN + .6));
+  // time marks along the bottom, every 0.05 s at the winner's speed (about 1.8 m)
+  ctx.fillStyle = 'rgba(40,25,5,.55)'; for (let i = 0, x = lineX; x > sx; i++, x = lineX - i*1.8*k) ctx.fillRect(x - 1, sy + sh - (i % 2 ? 8 : 14), 2, 14);
+  // the horses, top to bottom by their lane, nose on the line when they crossed it
+  const rows = S.slice().sort((p, q) => q.lat - p.lat);
+  rows.forEach((o, r) => {
+    const y = sy + sh*(r + 1)/(n + 1), x = lineX - o.d*k - 2.16*k;
+    ctx.save(); ctx.translate(x, y); ctx.scale(k, k);
+    gpDrawHorse(ctx, 0, 0, 0, GP_HORSES[o.h.h], o.h.color, o.h.stall + 1, 1.1 + r*1.7, true, 1);
+    ctx.restore();
+  });
+  // the finish line
+  ctx.fillStyle = '#FFFFFF'; ctx.fillRect(lineX - 2, sy, 4, sh); ctx.fillStyle = '#E6262B'; ctx.fillRect(lineX - .75, sy, 1.5, sh);
+  ctx.restore();
+  ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5; ctx.strokeRect(sx, sy, sw, sh);
+  // who is who, to the right of the line: place and name
+  rows.forEach((o, r) => {
+    const y = sy + sh*(r + 1)/(n + 1), place = S.indexOf(o) + 1, cx = lineX + 22;
+    ctx.fillStyle = place === 1 ? '#FFD21F' : '#FFFFFF'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.arc(cx, y, 14, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#000'; ctx.font = '19px Bangers, Impact, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(String(place), cx, y + 1);
+    const nm = o.h.bot ? GP_HORSES[o.h.h].n : o.h.name, mine = GP.me >= 0 && GP.R[GP.me] === o.h;
+    ctx.textAlign = 'left'; ctx.font = '900 14px Nunito, sans-serif'; ctx.lineWidth = 3; ctx.strokeStyle = '#000'; ctx.fillStyle = mine ? '#FFD21F' : '#FFFFFF';
+    let t = nm; const room = sx + sw - (cx + 20) - 4; while (t.length > 3 && ctx.measureText(t).width > room) t = t.slice(0, -1); if (t !== nm) t = t.slice(0, -1) + '…';
+    ctx.strokeText(t, cx + 20, y + 1); ctx.fillText(t, cx + 20, y + 1);
+  });
+  // the margin between the first two, in racing words
+  const mg = gpMargin(P.m);
+  ctx.textBaseline = 'alphabetic';
+  if (mg){
+    ctx.textAlign = 'center'; ctx.fillStyle = '#000';
+    ctx.font = '900 12px Nunito, sans-serif'; ctx.fillText('ÉCART', W/2, sy + sh + 18);
+    ctx.font = '26px Bangers, Impact, sans-serif'; ctx.fillStyle = '#E6262B'; ctx.fillText(mg, W/2, sy + sh + 43);
+  }
+  ctx.restore();
 }
 let gpToastT = null;
 function gpToast(t){ const el = $('gpToast'); el.textContent = t; el.classList.add('on'); clearTimeout(gpToastT); gpToastT = setTimeout(() => el.classList.remove('on'), 2000); }
@@ -9526,7 +9610,7 @@ function galopFrame(dtMs, now){
   if (GP.ph === 'gates' && phase === 'count'){ GP.count -= dt; if (GP.count > 0) countBeep(Math.ceil(GP.count)); }
   // a weak connection: after 0.6 s without news the horses stop guessing ahead, and the player is told
   if (!me.host && GP.ph === 'race'){
-    const stale = !!GP.lastS && now - GP.lastS > 600;
+    const stale = !!GP.lastS && now - GP.lastS > 600 && !GP.photo;   // after the finish the host stops sending: that is not a weak link
     if (stale !== !!GP.stale){ GP.stale = stale; $('gpWrap').classList.toggle('stale', stale); }
     if (stale && now - GP.lastS > 2500 && !GP.staleT){ GP.staleT = true; gpToast('Connexion faible…'); }
     if (!stale) GP.staleT = false;
@@ -9686,6 +9770,7 @@ function drawGalop(now){
     ctx.font = '14px Bangers, Impact, sans-serif'; ctx.textAlign = 'left'; ctx.fillStyle = '#000'; ctx.fillText('ÉNERGIE', bx + 6, by + 14);
     ctx.textAlign = 'right'; ctx.fillText(Math.round(mine.v*3.6/1.9) + ' KM/H', bx + bw - 6, by + 14);
   }
+  if (GP.photo) gpDrawPhoto(ctx, W, Hh, now);
 }
 
 // ================= comic sound effects in bursts =================
