@@ -1217,7 +1217,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
 <!-- CARROM -->
 <section id="scrCarrom" hidden>
   <div class="naval">
-    <div class="nvhead cmhead"><div class="nvturn" id="cmTurn">Carrom</div><div class="dkchips"><span class="cuend" id="cmLeft">19 pions</span><span class="cuend" id="cmTime"></span></div></div>
+    <div class="nvhead cmhead"><div class="nvturn" id="cmTurn">Carrom</div><div class="dkchips"><span class="cuend" id="cmLeft">13 pions</span><span class="cuend" id="cmTime"></span></div></div>
     <div class="nvwrap" id="cmWrap">
       <canvas id="cmCv" width="600" height="600" aria-label="Le plateau de carrom : glissez pour placer le palet, tirez-le vers vous pour viser"></canvas>
       <div class="toast pm" id="cmToast" aria-live="polite"></div>
@@ -1230,7 +1230,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
 <!-- DAHI HANDI -->
 <section id="scrDahi" hidden>
   <div class="naval">
-    <div class="nvhead dhhead"><div class="nvturn" id="dhHead">Dahi Handi</div><div class="dkchips"><span class="cuend" id="dhPots">🏺 0</span><span class="cuend" id="dhTime">⏱ 100</span></div></div>
+    <div class="nvhead dhhead"><div class="nvturn" id="dhHead">Dahi Handi</div><div class="dkchips"><span class="cuend" id="dhPots">🏺 0</span><span class="cuend" id="dhTime">⏱ 60</span></div></div>
     <div class="nvwrap" id="dhWrap">
       <canvas id="dhCv" width="540" height="760" aria-label="La pyramide humaine vue de côté : gardez votre étage droit"></canvas>
       <div class="toast pm" id="dhToast" aria-live="polite"></div>
@@ -1585,7 +1585,7 @@ const GAME_IDEA = {
   blob:'Tracer les bons chemins vers les flocons, couper les autres de leur nourriture et renforcer ce qu\'on tient, sans grandir plus vite que son énergie.',
   mino:'Trouver l\'une des deux sorties dans le noir avant la fin du temps. Pour le Minotaure : attraper tout le monde.',
   carrom:'Rentrer le plus de pions possible avec son palet : blanc 1 point, noir 2, la reine 5 à condition de la couvrir.',
-  dahi:'Garder la pyramide droite, tous ensemble, assez longtemps pour que le grimpeur casse le plus de pots possible en 100 secondes.',
+  dahi:'Garder la pyramide droite, tous ensemble, assez longtemps pour que le grimpeur casse le plus de pots possible en 60 secondes.',
   leo:'Se partager le tableau entre apprentis, chacun avec ses pots, et peindre vite, juste et sans déborder : 30 secondes par tableau.',
   racer:'Prendre les virages sans glisser, brûler son essence au bon moment, s\'arrêter aux stands quand il faut, et frapper les autres avant qu\'ils vous frappent.'
 };
@@ -1610,7 +1610,7 @@ const GAME_DESC = {
   derby:'Course de chevaux : tout le monde reçoit la même série de figures à tracer. Chaque figure réussie fait avancer votre cheval, plus loin si elle est complexe et bien tracée. Le premier à la ligne gagne.',
   blob:'Le blob, ce drôle d\'organisme qui se réveille dans une boîte de Petri : chaque joueur en a un, dans la même boîte. Tracez du doigt un chemin depuis votre blob, il pousse le long du tracé en dépensant son énergie. Tracez jusque dans un autre blob et vous l\'envahissez, plus cher, d\'autant plus qu\'il a d\'énergie. Votre énergie revient doucement, d\'autant moins que votre blob est grand, et plus du tout passé la moitié de la boîte : il faut alors tenir des gros flocons d\'avoine, qui l\'accélèrent tant que vous les couvrez. Le laborantin en ajoute de temps en temps, n\'importe où. Les miettes se mangent d\'un coup. Tout morceau coupé de la partie qui porte le visage de votre blob dépérit. Touchez votre blob pour y poser un renfort qui durcit avec le temps. Au bout de 3 minutes, le plus grand blob gagne. Des robots complètent seul ou à deux.',
   mino:'Un jeu de chasse dans un labyrinthe. Un joueur, tiré au sort, est le Minotaure : il voit tout le labyrinthe et tous les joueurs. Les autres ne voient que la lueur de leur torche, une flèche verte qui pointe vers la sortie la plus proche (à vol d\'oiseau, pas le chemin) et une jauge 🐂 qui se remplit quand le Minotaure approche par les couloirs. Le cœur bat de plus en plus vite, et le téléphone vibre. Il y a toujours deux sorties, à l\'opposé l\'une de l\'autre : le Minotaure ne peut pas garder les deux. Les coureurs ont 50 secondes à 3, 60 secondes à 4 pour sortir. Le Minotaure gagne s\'il attrape tout le monde. Des robots complètent jusqu\'à 4 joueurs.',
-  carrom:'Le carrom, le jeu de plateau préféré des familles en Inde, en version bande dessinée. Chacun joue à son tour depuis son côté de la planche : on glisse le palet sur sa ligne, on le tire vers soi comme un lance-pierre, on lâche. Chaque pion rentré dans un coin rapporte des points (blanc 1, noir 2) et fait rejouer. La reine rouge vaut 5, mais il faut rentrer un autre pion juste après, sinon elle revient au centre. Si votre palet tombe dans un trou, c\'est une faute : vous perdez un point et les pions rentrés reviennent au centre. Quatre à sept coups chacun, le plus de points gagne. Seul, vous jouez contre un robot.',
+  carrom:'Le carrom, le jeu de plateau préféré des familles en Inde, en version bande dessinée. Chacun joue à son tour depuis son côté de la planche : on glisse le palet sur sa ligne, on le tire vers soi comme un lance-pierre, on lâche. Chaque pion rentré dans un coin rapporte des points (blanc 1, noir 2) et fait rejouer. La reine rouge vaut 5, mais il faut rentrer un autre pion juste après, sinon elle revient au centre. Si votre palet tombe dans un trou, c\'est une faute : vous perdez un point et les pions rentrés reviennent au centre. Trois à six coups chacun, le plus de points gagne. Seul, vous jouez contre un robot.',
   dahi:'Un jeu coopératif inspiré du Dahi Handi, la fête indienne où des équipes montent en pyramide humaine pour casser un pot suspendu. Chaque joueur tient un étage : la bille de votre niveau à bulle glisse toute seule d\'un côté, ramenez-la au milieu avec les boutons gauche et droite. Tant que tous les étages sont droits, le petit grimpeur monte. S\'il atteint le sommet, il casse le pot et l\'équipe marque. Si un seul étage penche trop, toute la pyramide s\'écroule et il faut recommencer. La foule vous jette de l\'eau, et chaque pot cassé rend le suivant plus difficile. Les étages libres sont tenus par des robots.',
   leo:'Un jeu coopératif : vous êtes les apprentis de Léonard de Vinci et vous coloriez ensemble trois de ses tableaux, tirés au sort parmi les plus célèbres : La Joconde, La Dame à l\'hermine, L\'Annonciation, La Vierge aux rochers, La Cène… Chaque tableau vous est d\'abord montré en couleurs pendant 10 secondes, puis il redevient noir et blanc et vous avez 30 secondes pour le peindre du doigt ou à la souris, tous en même temps. Chaque apprenti n\'a que quelques pots de couleur, et l\'un d\'eux est aussi entre les mains d\'un autre apprenti, sans qu\'on sache lequel. Chaque tableau est noté sur la part peinte de la bonne couleur. À la fin, si la moyenne atteint 80 %, Léonard valide la commande ; sinon, il se met en colère. Des robots apprentis complètent seul ou à deux.',
   racer:'Une course de voitures vue du dessus, entre Mario Kart et course auto. Choisissez l\'une des 5 voitures, toutes armées d\'un pare-chocs de combat à l\'avant, et ajoutez un bonus : turbo, aérodynamisme, pneus qui collent ou super coup de latte. Pilotez avec un volant à glisser qui revient au centre : trop vite dans un virage, les pneus crissent et la voiture glisse vers l\'extérieur. Accélérer brûle l\'essence, qui revient doucement, bien plus vite dans les deux stands à côté de la piste. Frapper vers l\'avant prend une courte charge visible : celui qui ne l\'esquive pas perd 20 % de sa vitesse et 15 % de son essence, puis clignote 3 s, le temps que les autres lui passent à travers. Deux tours sur l\'un des 5 circuits, à 5 voitures, des robots complètent.'
@@ -12964,8 +12964,8 @@ function mnDraw(ctx, now){
 // The host simulates every coin; the shooter only sends where the striker sits on their line, the angle and the power.
 // Board in units of 600; each player shoots from one side (2 players face each other), the view turns so that mine is at the bottom.
 const CM_S = 600, CM_C = 300, CM_R = 13, CM_RS = 19, CM_MS = 2.2, CM_POCKET = [[24, 24], [576, 24], [24, 576], [576, 576]], CM_CATCH = 22;
-const CM_BASE_Y = 516, CM_BASE_X0 = 150, CM_BASE_X1 = 450, CM_VMAX = 1550, CM_FRIC = 330, CM_WALL = .72, CM_E = .92;
-const CM_TURN_MS = 20000, CM_SIDES = [0, 2, 1, 3], CM_VAL = { w:1, b:2, q:5 }, CM_MAXA = 1.38;
+const CM_BASE_Y = 516, CM_BASE_X0 = 150, CM_BASE_X1 = 450, CM_VMAX = 1550, CM_FRIC = 400, CM_WALL = .72, CM_E = .92;
+const CM_TURN_MS = 15000, CM_SIDES = [0, 2, 1, 3], CM_VAL = { w:1, b:2, q:5 }, CM_MAXA = 1.38;
 let HCM = null, CM = null;
 
 // local (my side at the bottom) <-> board, for side 0..3 turned a quarter each
@@ -12977,9 +12977,9 @@ function cmLayout(){
   const C = [{ id:0, k:'q', x:CM_C, y:CM_C }], d = 2*CM_R + .6;
   let id = 1;
   for (let i = 0; i < 6; i++){ const a = i*Math.PI/3; C.push({ id:id++, k:i % 2 ? 'b' : 'w', x:CM_C + Math.cos(a)*d, y:CM_C + Math.sin(a)*d }); }
-  for (let i = 0; i < 12; i++){
-    const a = i*Math.PI/6, r = i % 2 ? d*Math.sqrt(3) : 2*d;       // the outer ring: alternately on the points and in the gaps
-    C.push({ id:id++, k:i % 2 ? 'w' : 'b', x:CM_C + Math.cos(a)*r, y:CM_C + Math.sin(a)*r });
+  for (let i = 0; i < 6; i++){                                   // the outer ring: six coins in the gaps of the first one
+    const a = Math.PI/6 + i*Math.PI/3, r = d*Math.sqrt(3);
+    C.push({ id:id++, k:i % 2 ? 'b' : 'w', x:CM_C + Math.cos(a)*r, y:CM_C + Math.sin(a)*r });
   }
   return C.map(c => ({ ...c, vx:0, vy:0, r:CM_R, m:1 }));
 }
@@ -13032,10 +13032,10 @@ function carromHostStart(){
   const n = players.length;
   const order = players.map(p => p.id); for (let i = order.length - 1; i > 0; i--){ const j = Math.floor(Math.random()*(i + 1)); [order[i], order[j]] = [order[j], order[i]]; }
   const side = {}; players.forEach((p, i) => side[p.id] = CM_SIDES[i % 4]);
-  HCM = { order, side, coins:cmLayout(), k:0, turns:n <= 2 ? 7 : n === 3 ? 5 : 4, shots:{}, ph:'wait', shooter:null, st:null, timers:[], timer:null,
+  HCM = { order, side, coins:cmLayout(), k:0, turns:n <= 2 ? 6 : n === 3 ? 4 : 3, shots:{}, ph:'wait', shooter:null, st:null, timers:[], timer:null,
     lastSend:0, runT:0, ev:null, pot:[], queen:null, extra:0 };
   players.forEach(p => { HCM.shots[p.id] = 0; Object.assign(H.stats[p.id], { pts:0, w:0, b:0, q:0, fouls:0 }); });
-  broadcast({ t:'start', players, game:'carrom', side, turns:HCM.turns, c:cmSnap() });
+  broadcast({ t:'start', players, game:'carrom', side, turns:HCM.turns, c:cmSnap(), k:HCM.coins.map(c => c.k).join('') });
   cmLater(() => cmNextTurn(null), 3400);
 }
 const cmSnap = () => HCM.coins.map(c => [c.id, Math.round(c.x*10)/10, Math.round(c.y*10)/10]);
@@ -13222,7 +13222,7 @@ function startCarrom(m){
   const side = m.side && typeof m.side === 'object' ? m.side : {};
   CM = { side, my:Number.isInteger(side[me.id]) ? side[me.id] : 0, coins:new Map(), st:null, shooter:null, deadline:0, count:3.2, ph:'wait',
     u:.5, aim:null, drag:null, kbd:false, ka:0, kp:.6, charge:0, scores:players.map(() => 0), shots:players.map(() => m.turns|0), turns:m.turns|0,
-    fx:[], cl:0, wl:0, q:null, over:false, lastMove:0 };
+    fx:[], cl:0, wl:0, q:null, over:false, lastMove:0, kinds:typeof m.k === 'string' ? m.k : '' };
   cmSetCoins(m.c, true);
   gameHelp($('cmHelp'), 'carrom');
   renderCmPlayers(); cmHeader();
@@ -13239,7 +13239,7 @@ function cmSetCoins(arr, snap){
   }
   for (const id of [...CM.coins.keys()]) if (!seen.has(id)) CM.coins.delete(id);
 }
-const cmKindOf = id => id === 0 ? 'q' : id <= 6 ? (id % 2 ? 'w' : 'b') : ((id - 7) % 2 ? 'w' : 'b');
+const cmKindOf = id => { const k = CM && CM.kinds[id]; return k === 'q' || k === 'b' ? k : id === 0 ? 'q' : 'w'; };
 let cmToastT = null;
 function cmToast(t){ const el = $('cmToast'); el.textContent = t; el.classList.add('on'); clearTimeout(cmToastT); cmToastT = setTimeout(() => el.classList.remove('on'), 2000); }
 const cmName = id => { const p = players.find(x => x.id === id); return p ? p.name : '?'; };
@@ -13484,8 +13484,8 @@ function drawCarrom(now){
 // ================= DAHI HANDI (coop) : a human pyramid, everyone holds one level steady while the little one climbs to break the pot =================
 // Host: each level leans like a stick balanced upright (it falls away from the middle by itself, faster when the level below leans or the climber is on it).
 // Each player pushes their level left or right; past the limit the whole pyramid collapses. The crowd throws water to make it harder.
-const DH_P = { A:.7, AINC:.12, C:.35, U:2.5, D:1.7, LOAD:.45, SAFE:.5, CLIMB:.55, SPL:.8, Q:1 };
-const DH_T = 100, DH_W = 540, DH_H = 760, DH_LEAN = .32;          // seconds of play; canvas; radians of lean drawn at the limit
+const DH_P = { A:.9, AINC:.2, C:.4, U:2.5, D:1.7, LOAD:.5, SAFE:.5, CLIMB:.8, SPL:.9, Q:1.3 };
+const DH_T = 60, DH_W = 540, DH_H = 760, DH_LEAN = .32;          // seconds of play; canvas; radians of lean drawn at the limit
 let HDH = null, DH = null;
 
 // ---- host side ----
@@ -13533,7 +13533,7 @@ function dahiHostFrame(dt, now){
     }
     // water from the crowd
     HDH.splT -= dt;
-    if (HDH.splT <= 0){ HDH.splT = 5.5 + Math.random()*4.5; const i = Math.floor(Math.random()*n), sd = Math.random() < .5 ? -1 : 1; HDH.w[i] += sd*DH_P.SPL; broadcast({ t:'dh_ev', e:'splash', i, sd }); }
+    if (HDH.splT <= 0){ HDH.splT = 4 + Math.random()*3.5; const i = Math.floor(Math.random()*n), sd = Math.random() < .5 ? -1 : 1; HDH.w[i] += sd*DH_P.SPL; broadcast({ t:'dh_ev', e:'splash', i, sd }); }
     let ok = true, fell = -1;
     HDH.tiers.forEach((id, i) => {
       const st = H.stats[id], safe = Math.abs(HDH.th[i]) < DH_P.SAFE;
@@ -13543,12 +13543,12 @@ function dahiHostFrame(dt, now){
     });
     if (fell >= 0){
       HDH.falls++; const st = H.stats[HDH.tiers[fell]]; if (st) st.falls++;
-      HDH.ph = 'wait'; HDH.wait = 2.8;
+      HDH.ph = 'wait'; HDH.wait = 2.2;
       broadcast({ t:'dh_ev', e:'fall', i:fell, sd:Math.sign(HDH.th[fell]) });
     } else {
       if (ok) HDH.h += DH_P.CLIMB*dt;
       if (HDH.h >= n + .6){
-        HDH.pots++; HDH.round++; HDH.ph = 'wait'; HDH.wait = 2.8;
+        HDH.pots++; HDH.round++; HDH.ph = 'wait'; HDH.wait = 2.2;
         broadcast({ t:'dh_ev', e:'pot', pots:HDH.pots });
       }
     }
