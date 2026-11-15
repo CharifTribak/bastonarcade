@@ -1611,7 +1611,7 @@ const GAME_DESC = {
   blob:'Le blob, ce drôle d\'organisme qui se réveille dans une boîte de Petri : chaque joueur en a un, dans la même boîte. Tracez du doigt un chemin depuis votre blob, il pousse le long du tracé en dépensant son énergie. Tracez jusque dans un autre blob et vous l\'envahissez, plus cher, d\'autant plus qu\'il a d\'énergie. Votre énergie revient doucement, d\'autant moins que votre blob est grand, et plus du tout passé la moitié de la boîte : il faut alors tenir des gros flocons d\'avoine, qui l\'accélèrent tant que vous les couvrez. Le laborantin en ajoute de temps en temps, n\'importe où. Les miettes se mangent d\'un coup. Tout morceau coupé de la partie qui porte le visage de votre blob dépérit. Touchez votre blob pour y poser un renfort qui durcit avec le temps. Au bout de 3 minutes, le plus grand blob gagne. Des robots complètent seul ou à deux.',
   mino:'Un jeu de chasse dans un labyrinthe. Un joueur, tiré au sort, est le Minotaure : il voit tout le labyrinthe et tous les joueurs. Les autres ne voient que la lueur de leur torche, une flèche verte qui pointe vers la sortie la plus proche (à vol d\'oiseau, pas le chemin) et une jauge 🐂 qui se remplit quand le Minotaure approche par les couloirs. Le cœur bat de plus en plus vite, et le téléphone vibre. Il y a toujours deux sorties, à l\'opposé l\'une de l\'autre : le Minotaure ne peut pas garder les deux. Les coureurs ont 50 secondes à 3, 60 secondes à 4 pour sortir. Le Minotaure gagne s\'il attrape tout le monde. Des robots complètent jusqu\'à 4 joueurs.',
   carrom:'Le carrom, le jeu de plateau préféré des familles en Inde, en version bande dessinée. Chacun joue à son tour depuis son côté de la planche : on glisse le palet sur sa ligne, on le tire vers soi comme un lance-pierre, on lâche. Chaque pion rentré dans un coin rapporte des points (blanc 1, noir 2) et fait rejouer. La reine rouge vaut 5, mais il faut rentrer un autre pion juste après, sinon elle revient au centre. Si votre palet tombe dans un trou, c\'est une faute : vous perdez un point et les pions rentrés reviennent au centre. Trois à six coups chacun, le plus de points gagne. Seul, vous jouez contre un robot.',
-  dahi:'Un jeu coopératif inspiré du Dahi Handi, la fête indienne où des équipes montent en pyramide humaine pour casser un pot suspendu. Chaque joueur tient un étage : la bille de votre niveau à bulle glisse toute seule d\'un côté, ramenez-la au milieu avec les boutons gauche et droite. Tant que tous les étages sont droits, le petit grimpeur monte. S\'il atteint le sommet, il casse le pot et l\'équipe marque. Si un seul étage penche trop, toute la pyramide s\'écroule et il faut recommencer. La foule vous jette de l\'eau, et chaque pot cassé rend le suivant plus difficile. Les étages libres sont tenus par des robots.',
+  dahi:'Un jeu coopératif inspiré du Dahi Handi, la fête indienne où des équipes montent en pyramide humaine pour casser un pot suspendu. Chaque joueur tient un étage : la bille de votre niveau à bulle glisse toute seule d\'un côté, ramenez-la au milieu avec les boutons gauche et droite. Tant que tous les étages sont droits, le petit grimpeur monte. S\'il atteint le sommet, il casse le pot et l\'équipe marque. Si un seul étage penche trop, toute la pyramide s\'écroule et il faut recommencer. La foule vous jette de l\'eau, le vent souffle par rafales, et chaque pot cassé rend le suivant plus difficile. Les étages libres sont tenus par des robots.',
   leo:'Un jeu coopératif : vous êtes les apprentis de Léonard de Vinci et vous coloriez ensemble trois de ses tableaux, tirés au sort parmi les plus célèbres : La Joconde, La Dame à l\'hermine, L\'Annonciation, La Vierge aux rochers, La Cène… Chaque tableau vous est d\'abord montré en couleurs pendant 10 secondes, puis il redevient noir et blanc et vous avez 30 secondes pour le peindre du doigt ou à la souris, tous en même temps. Chaque apprenti n\'a que quelques pots de couleur, et l\'un d\'eux est aussi entre les mains d\'un autre apprenti, sans qu\'on sache lequel. Chaque tableau est noté sur la part peinte de la bonne couleur. À la fin, si la moyenne atteint 80 %, Léonard valide la commande ; sinon, il se met en colère. Des robots apprentis complètent seul ou à deux.',
   racer:'Une course de voitures vue du dessus, entre Mario Kart et course auto. Choisissez l\'une des 5 voitures, toutes armées d\'un pare-chocs de combat à l\'avant, et ajoutez un bonus : turbo, aérodynamisme, pneus qui collent ou super coup de latte. Pilotez avec un volant à glisser qui revient au centre : trop vite dans un virage, les pneus crissent et la voiture glisse vers l\'extérieur. Accélérer brûle l\'essence, qui revient doucement, bien plus vite dans les deux stands à côté de la piste. Frapper vers l\'avant prend une courte charge visible : celui qui ne l\'esquive pas perd 20 % de sa vitesse et 15 % de son essence, puis clignote 3 s, le temps que les autres lui passent à travers. Deux tours sur l\'un des 5 circuits, à 5 voitures, des robots complètent.'
 };
@@ -13484,7 +13484,7 @@ function drawCarrom(now){
 // ================= DAHI HANDI (coop) : a human pyramid, everyone holds one level steady while the little one climbs to break the pot =================
 // Host: each level leans like a stick balanced upright (it falls away from the middle by itself, faster when the level below leans or the climber is on it).
 // Each player pushes their level left or right; past the limit the whole pyramid collapses. The crowd throws water to make it harder.
-const DH_P = { A:.9, AINC:.2, C:.4, U:2.5, D:1.7, LOAD:.5, SAFE:.5, CLIMB:.8, SPL:.9, Q:1.3 };
+const DH_P = { A:1.05, AHUM:.08, AINC:.3, C:.45, U:2.6, D:1.6, LOAD:.7, SAFE:.4, CLIMB:.8, SPL:1.1, Q:1.5, WIND:1.1 };   // AHUM: a little gentler per extra human, since everyone must be good at once
 const DH_T = 60, DH_W = 540, DH_H = 760, DH_LEAN = .32;          // seconds of play; canvas; radians of lean drawn at the limit
 let HDH = null, DH = null;
 
@@ -13496,7 +13496,7 @@ function dahiHostStart(){
   const n = Math.max(4, ids.length), tiers = [];
   for (let i = 0; i < n; i++) tiers.push(i < ids.length ? ids[i] : 'bot' + i);   // robots fill the missing levels
   HDH = { tiers, n, nz:new Array(n).fill(0), th:new Array(n).fill(0), w:new Array(n).fill(0), d:new Array(n).fill(0), h:0, pots:0, falls:0, round:0, ph:'count', t:0, wait:0,
-    splT:7, timers:[], lastSend:0, bot:tiers.map(() => ({ t:0, d:0 })), IN:{} };
+    splT:5, windT:9 + Math.random()*4, wind:0, windOn:0, timers:[], lastSend:0, hum:players.filter(p => !p.bot).length, bot:tiers.map(() => ({ t:0, d:0 })), IN:{} };
   for (const p of players) Object.assign(H.stats[p.id], { tier:tiers.indexOf(p.id) + 1, safe:0, tot:0, falls:0 });
   broadcast({ t:'start', players, game:'dahi', tiers, T:DH_T });
   dhLater(() => { HDH.ph = 'play'; broadcast({ t:'dh_go' }); }, 3300);
@@ -13506,7 +13506,7 @@ function dahiInput(id, d){
   const i = HDH.tiers.indexOf(id); if (i < 0) return;
   d = +d; HDH.d[i] = d > 0 ? 1 : d < 0 ? -1 : 0;
 }
-function dhReset(){ HDH.th.fill(0); HDH.w.fill(0); HDH.nz.fill(0); HDH.h = 0; }
+function dhReset(){ HDH.th.fill(0); HDH.w.fill(0); HDH.nz.fill(0); HDH.h = 0; HDH.wind = 0; HDH.windOn = 0; HDH.windT = Math.max(HDH.windT, 4); }
 function dahiHostFrame(dt, now){
   if (!HDH || !H || H.over) return;
   if (HDH.ph === 'play' || HDH.ph === 'wait'){
@@ -13515,7 +13515,7 @@ function dahiHostFrame(dt, now){
   }
   if (HDH.ph === 'wait'){ HDH.wait -= dt; if (HDH.wait <= 0){ dhReset(); HDH.ph = 'play'; broadcast({ t:'dh_ev', e:'again' }); } }
   if (HDH.ph === 'play'){
-    const n = HDH.n, A = DH_P.A + DH_P.AINC*HDH.round, steps = Math.ceil(dt/(1/120)), h = dt/steps;
+    const n = HDH.n, A = DH_P.A - DH_P.AHUM*Math.max(0, HDH.hum - 1) + DH_P.AINC*HDH.round, steps = Math.ceil(dt/(1/120)), h = dt/steps;
     // the robots: they look a little ahead, push back towards the middle, and sometimes get it wrong
     HDH.tiers.forEach((id, i) => {
       const pl = players.find(p => p.id === id);
@@ -13528,9 +13528,13 @@ function dahiHostFrame(dt, now){
     for (let s = 0; s < steps; s++) for (let i = 0; i < n; i++){
       const below = i ? HDH.th[i - 1] : 0;
       HDH.nz[i] += -HDH.nz[i]*.7*h + (Math.random() - .5)*DH_P.Q*Math.sqrt(h);          // a slow drift: people sway, the ground is wet
-      const a = (A + (i === ct && HDH.h < n ? DH_P.LOAD : 0))*HDH.th[i] + DH_P.C*below + DH_P.U*HDH.d[i] - DH_P.D*HDH.w[i] + HDH.nz[i];
+      const a = (A + (i === ct && HDH.h < n ? DH_P.LOAD : 0))*HDH.th[i] + DH_P.C*below + DH_P.U*HDH.d[i] - DH_P.D*HDH.w[i] + HDH.nz[i] + (HDH.windOn > 0 ? HDH.wind*DH_P.WIND*(1 + i*.15) : 0);
       HDH.w[i] += a*h; HDH.th[i] += HDH.w[i]*h;
     }
+    // a gust of wind: announced one second ahead, then it pushes every level the same way for a second and a half
+    HDH.windT -= dt;
+    if (HDH.windT <= 0 && !HDH.wind){ HDH.wind = Math.random() < .5 ? -1 : 1; HDH.windOn = -1; broadcast({ t:'dh_ev', e:'wind', sd:HDH.wind }); }
+    if (HDH.wind){ HDH.windOn += dt; if (HDH.windOn > 1.5){ HDH.wind = 0; HDH.windOn = 0; HDH.windT = 8 + Math.random()*5; } }
     // water from the crowd
     HDH.splT -= dt;
     if (HDH.splT <= 0){ HDH.splT = 4 + Math.random()*3.5; const i = Math.floor(Math.random()*n), sd = Math.random() < .5 ? -1 : 1; HDH.w[i] += sd*DH_P.SPL; broadcast({ t:'dh_ev', e:'splash', i, sd }); }
@@ -13606,7 +13610,10 @@ function dahiRecv(m){
     if (!m.ph && DH.fall){ DH.fall = null; }
   }
   else if (m.t === 'dh_ev'){
-    if (m.e === 'splash'){
+    if (m.e === 'wind'){
+      DH.windFx = { sd:m.sd < 0 ? -1 : 1, t:0 };
+      sfx('sweep'); boom(m.sd < 0 ? '◀ VENT !' : 'VENT ! ▶', { size:32, x:.5, y:.22, pal:BOOM_COLORS[1], ms:1100 });
+    } else if (m.e === 'splash'){
       const i = m.i|0; DH.fx.push({ k:'splash', i, sd:m.sd < 0 ? -1 : 1, t:0 });
       sfx('splash'); if (i === DH.my) boom('SPLASH !', { size:30, x:m.sd < 0 ? .7 : .3, y:.55, pal:BOOM_COLORS[1], ms:800 });
     } else if (m.e === 'fall'){
@@ -13653,6 +13660,7 @@ function dahiFrame(dtMs, now){
   DH.th2 += (DH.h - DH.th2)*Math.min(1, dt*8);
   if (DH.fall) DH.fall.t += dt;
   if (DH.potFx) DH.potFx.t += dt;
+  if (DH.windFx){ DH.windFx.t += dt; if (DH.windFx.t > 2.6) DH.windFx = null; }
   for (const f of DH.fx) f.t += dt;
   DH.fx = DH.fx.filter(f => f.t < 1);
   dhHud();
@@ -13749,6 +13757,12 @@ function drawDahi(now){
     ctx.fillStyle = '#5BC8FF'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2;
     for (let j = 0; j < 7; j++){ const v = Math.max(0, u - j*.05); const px = sx + (tx - sx)*v + (j - 3)*4, py = gy + 20 + (ty - gy - 20)*v - Math.sin(v*Math.PI)*80 + j*3; ctx.beginPath(); ctx.arc(px, py, 7 - j*.6, 0, 7); ctx.fill(); ctx.stroke(); }
     ctx.globalAlpha = 1;
+  }
+  // the gust: streaks across the sky, blowing the announced way
+  if (DH.windFx){
+    const f = DH.windFx, a = f.t < 1 ? .35 : Math.max(0, 1 - (f.t - 1)/1.6);
+    ctx.strokeStyle = 'rgba(255,255,255,' + a + ')'; ctx.lineWidth = 4; ctx.lineCap = 'round';
+    for (let j = 0; j < 9; j++){ const y = 200 + j*48, x0 = ((now/2.2*f.sd + j*137) % (W + 200) + W + 200) % (W + 200) - 100; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x0 + 80*f.sd, y); ctx.stroke(); }
   }
   // my spirit level: keep the bubble in the middle
   if (DH.my >= 0){
@@ -13853,7 +13867,7 @@ const BRIEF = {
   carrom:{ ctl:[['📱', 'Glissez le doigt sur votre ligne pour placer le palet. Puis posez le doigt sur le palet, tirez vers vous comme un lance-pierre et lâchez : plus vous tirez, plus il part fort.'], ['💻', '← → pour placer, ↑ ↓ pour viser, Espace maintenu puis relâché pour tirer.']],
     tip:'Un pion rentré fait rejouer. La reine rouge ne compte que si vous rentrez un autre pion juste après. Et gare au palet : s\'il tombe, c\'est une faute.' },
   dahi:{ ctl:[['📱', 'Maintenez le bouton ◀ ou ▶ pour ramener la bille de votre niveau au milieu. Lâchez dès qu\'elle y est.'], ['💻', '← → ou Q D.']],
-    tip:'Votre étage est entouré de pointillés blancs. Il penche tout seul, et encore plus quand l\'étage du dessous penche ou quand le grimpeur passe sur vous. Gare aux seaux d\'eau de la foule !' },
+    tip:'Votre étage est entouré de pointillés blancs. Il penche tout seul, et encore plus quand l\'étage du dessous penche ou quand le grimpeur passe sur vous. Gare aux seaux d\'eau de la foule, et quand le vent est annoncé, poussez contre lui !' },
   leo:{ ctl:[['📱', 'Touchez un de vos pots de couleur, puis peignez du doigt sur le tableau. Si le tableau est plus grand que l\'écran, faites-le défiler avec la réglette.'], ['💻', 'Choisissez un pot (clic ou touches 1 à 7) et peignez à la souris. La molette fait défiler les grands tableaux.']],
     tip:'Grandes zones d\'abord : un fond bien couvert rapporte plus qu\'un visage soigné. Et parlez-vous : « qui a le bleu ? »' },
   meduse:{ ctl:[['📱', 'Glissez le doigt au-dessus du radeau pour viser, relâchez pour lâcher votre naufragé.'], ['💻', 'Visez à la souris et cliquez, ou ← → puis Espace.']],
