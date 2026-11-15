@@ -5,11 +5,11 @@
 <!-- the page may only load code from itself and talk to the services it uses: anything else is blocked by the browser -->
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://gc.zgo.at; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://chariftribak.goatcounter.com; font-src 'self'; media-src 'self' blob: data:; connect-src 'self' https://chariftribak.goatcounter.com https://*.metered.live https://yxwwkjzcoglfctrbayzv.supabase.co https://0.peerjs.com wss://0.peerjs.com; worker-src 'self'; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Baston Arcade : 21 jeux multijoueurs gratuits, sans compte ni appli</title>
-<meta name="description" content="Vingt et un jeux multijoueurs dans le navigateur : Gravats, Les Gardiens, Derby, Armada, Tape-taupe, Curling, Chaises musicales, Code secret, Kabaddi, Balle au prisonnier, Chars, Les bergers, Drakkars, Bûcherons, Agility, Galop, Méduse, Blob, Grand Prix Baston, L'Atelier de Léonard et Le Minotaure. Un salon, un code, de 1 à 5 joueurs.">
+<title>Baston Arcade : 22 jeux multijoueurs gratuits, sans compte ni appli</title>
+<meta name="description" content="Vingt-deux jeux multijoueurs dans le navigateur : Gravats, Les Gardiens, Derby, Armada, Tape-taupe, Curling, Chaises musicales, Code secret, Kabaddi, Balle au prisonnier, Chars, Les bergers, Drakkars, Bûcherons, Agility, Galop, Méduse, Blob, Grand Prix Baston, L'Atelier de Léonard, Le Minotaure et Carrom. Un salon, un code, de 1 à 5 joueurs.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Baston Arcade">
-<meta property="og:description" content="Vingt et un jeux multijoueurs dans le navigateur. Créez un salon, partagez le code, jouez.">
+<meta property="og:description" content="Vingt-deux jeux multijoueurs dans le navigateur. Créez un salon, partagez le code, jouez.">
 <meta property="og:image" content="https://bastonarcade.com/img/share.jpg?v=2">
 <meta property="og:url" content="https://bastonarcade.com/">
 <link rel="canonical" href="https://bastonarcade.com/">
@@ -17,7 +17,7 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#FFD93B">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "Baston Arcade", "url": "https://bastonarcade.com/", "inLanguage": "fr", "description": "Vingt et un jeux multijoueurs gratuits dans le navigateur, de 1 à 5 joueurs sur téléphone ou ordinateur, sans compte, sans application et sans publicité."}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "Baston Arcade", "url": "https://bastonarcade.com/", "inLanguage": "fr", "description": "Vingt-deux jeux multijoueurs gratuits dans le navigateur, de 1 à 5 joueurs sur téléphone ou ordinateur, sans compte, sans application et sans publicité."}</script>
 <link rel="icon" type="image/png" sizes="64x64" href="img/icon-64.png">
 <link rel="icon" type="image/png" sizes="192x192" href="img/icon-192.png">
 <link rel="apple-touch-icon" href="img/icon-180.png">
@@ -613,16 +613,23 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 /* ---- virtual joystick ---- */
 .joy{position:fixed;width:104px;height:104px;margin:-52px 0 0 -52px;border-radius:50%;border:3px solid #000;background:rgba(255,255,255,.35);pointer-events:none;z-index:7;box-shadow:3px 3px 0 #000}
 .joy i{position:absolute;left:50%;top:50%;width:44px;height:44px;border-radius:50%;background:#FFD93B;border:3px solid #000;transform:translate(-50%,-50%)}
-#scrKabaddi,#scrDodge,#scrTank,#scrSheep,#scrMino{touch-action:none;user-select:none;-webkit-user-select:none}
+#scrKabaddi,#scrDodge,#scrTank,#scrSheep,#scrMino,#scrCarrom{touch-action:none;user-select:none;-webkit-user-select:none}
 html.joyon,html.joyon body{touch-action:none;overscroll-behavior:none}
 html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would drop you out of the room */
-@media (max-height:780px){ #scrKabaddi .hint,#scrDodge .hint,#scrTank .hint,#scrSheep .hint,#scrMino .hint{display:none} }
+@media (max-height:780px){ #scrKabaddi .hint,#scrDodge .hint,#scrTank .hint,#scrSheep .hint,#scrMino .hint,#scrCarrom .hint{display:none} }
 
 /* ---- le minotaure ---- */
 #mnWrap,.mnhead{width:min(100%,62vh,600px)}
 #mnWrap{position:relative}
 #mnCv{display:block;width:100%;height:auto;aspect-ratio:1;touch-action:none;user-select:none;-webkit-user-select:none;border:3px solid #000;box-shadow:6px 6px 0 #000;background:#111}
 #mnTime.low{background:#E8262B;color:#fff}
+
+/* ---- carrom ---- */
+#cmWrap,.cmhead{width:min(100%,56vh,600px)}
+#cmWrap{position:relative}
+#cmCv{display:block;width:100%;height:auto;aspect-ratio:1;touch-action:none;user-select:none;-webkit-user-select:none;border:3px solid #000;box-shadow:6px 6px 0 #000;background:#7A4A22}
+#cmTime.low{background:#E8262B;color:#fff}
+#cmTime:empty{display:none}
 
 /* ---- kabaddi ---- */
 #kbWrap{width:min(100%,50vh,440px)}
@@ -729,7 +736,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
 <section id="scrMenu" class="center">
   <div class="card">
     <h1 class="logosvg" data-appname><svg viewBox="0 0 520 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Baston Arcade"><polygon points="260,8 292,62 352,22 356,86 428,58 404,118 494,120 438,166 508,214 428,226 456,292 384,270 372,322 318,276 262,318 222,270 156,306 152,248 76,262 104,206 18,184 92,148 36,92 116,94 102,30 172,62 204,8 228,58" fill="#000" transform="translate(7,7)"/><polygon points="260,8 292,62 352,22 356,86 428,58 404,118 494,120 438,166 508,214 428,226 456,292 384,270 372,322 318,276 262,318 222,270 156,306 152,248 76,262 104,206 18,184 92,148 36,92 116,94 102,30 172,62 204,8 228,58" fill="#E6262B" stroke="#000" stroke-width="5" stroke-linejoin="round"/><g transform="rotate(-6 260 168)"><text x="264" y="196" text-anchor="middle" font-family="Bangers, Impact, sans-serif" font-size="112" letter-spacing="3" fill="#000">BASTON !</text><text x="258" y="190" text-anchor="middle" font-family="Bangers, Impact, sans-serif" font-size="112" letter-spacing="3" fill="#fff" stroke="#000" stroke-width="6" paint-order="stroke" stroke-linejoin="round">BASTON !</text><text x="383" y="252" text-anchor="end" font-family="Bangers, Impact, sans-serif" font-size="52" letter-spacing="6" fill="#000">ARCADE</text><text x="379" y="248" text-anchor="end" font-family="Bangers, Impact, sans-serif" font-size="52" letter-spacing="6" fill="#FFD93B" stroke="#000" stroke-width="5" paint-order="stroke" stroke-linejoin="round">ARCADE</text></g><path d="M60 46 l26 14 M44 76 l30 6 M462 260 l-26 -12 M476 232 l-30 -4" stroke="#000" stroke-width="5" stroke-linecap="round"/></svg></h1>
-    <p class="tagline">Vingt et un jeux, de 1 à 5 joueurs</p>
+    <p class="tagline">Vingt-deux jeux, de 1 à 5 joueurs</p>
     <div class="hello" id="helloBox" hidden><span>Salut</span> <b id="helloName"></b><button id="btnName" class="ghost" type="button" aria-label="Changer de nom">✎</button></div>
     <div class="field" id="nameField">
       <label for="nameIn">Votre nom</label>
@@ -771,7 +778,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
       <button id="btnInstall" class="ghost" type="button" aria-label="Installer l'appli" title="Installer l'appli" hidden>📲</button>
       <button id="btnLang" class="ghost" type="button" translate="no" aria-label="English" title="English">EN</button>
     </div>
-    <details class="seolist"><summary>Les 21 jeux en détail</summary><ul><li><a href="jeux/gravats.html"><b>Gravats</b></a> : Empilez les pièces et effacez des lignes : chacune envoie des briques fendues chez les autres. Le dernier en jeu gagne.</li><li><a href="jeux/gardiens.html"><b>Les Gardiens</b></a> : Chacun garde son but, avec 5 vies. Arrêtez les ballons : le dernier gardien debout gagne.</li><li><a href="jeux/derby.html"><b>Derby</b></a> : Tracez les figures au doigt : plus c&#x27;est propre, plus votre cheval avance. Le premier à la ligne gagne.</li><li><a href="jeux/armada.html"><b>Armada</b></a> : Bataille navale sur une seule mer, chacun son tour. Le dernier bateau à flot gagne.</li><li><a href="jeux/tape-taupe.html"><b>Tape-taupe</b></a> : Tapez vite les taupes des autres quand elles sortent, jamais les vôtres. Premier à 20 points.</li><li><a href="jeux/curling.html"><b>Curling</b></a> : Lancez vos pierres vers la cible et frottez la glace pour les guider. Le plus proche du centre marque.</li><li><a href="jeux/chaises-musicales.html"><b>Chaises musicales</b></a> : Quand le disque s&#x27;arrête, touchez vite une chaise libre. Gare aux faux arrêts !</li><li><a href="jeux/code-secret.html"><b>Code secret</b></a> : Trouvez avant les autres le code secret de 4 couleurs, grâce à vos indices. Trois manches.</li><li><a href="jeux/kabaddi.html"><b>Kabaddi</b></a> : Attaquez en retenant votre souffle, touchez des défenseurs et rentrez chez vous à temps.</li><li><a href="jeux/balle-au-prisonnier.html"><b>Balle au prisonnier</b></a> : Ramassez, lancez, esquivez, attrapez. Chaque balle reçue coûte un cœur : le dernier debout gagne.</li><li><a href="jeux/chars.html"><b>Chars</b></a> : Deux par char, l&#x27;un pilote, l&#x27;autre tire, sans se parler. Le dernier char debout gagne.</li><li><a href="jeux/bergers.html"><b>Les bergers</b></a> : Ensemble, rabattez le troupeau dans l&#x27;enclos avant la nuit, et chassez les loups.</li><li><a href="jeux/drakkars.html"><b>Drakkars</b></a> : Deux drakkars font la course : chaque équipage rame en rythme avec le tambour, le plus synchro arrive le premier.</li><li><a href="jeux/bucherons.html"><b>Bûcherons</b></a> : Choisissez où tombe votre arbre, puis sciez-le proprement. N&#x27;écrasez rien !</li><li><a href="jeux/agility.html"><b>Agility</b></a> : Choisissez un chien et guidez-le sur le parcours : chaque obstacle a son geste. Le meilleur temps gagne.</li><li><a href="jeux/galop.html"><b>Galop</b></a> : Choisissez un cheval, placez-vous et dosez son énergie sur 3000 m. Le premier à la ligne gagne.</li><li><a href="jeux/meduse.html"><b>Méduse</b></a> : Lâchez vos naufragés sur le radeau qui tangue. Le plus haut, une fois posé, marque des points, et cinq fois plus quand passe l'Argus.</li><li><a href="jeux/blob.html"><b>Blob</b></a> : Tracez où votre blob doit pousser dans la boîte de Petri, prenez les flocons d'avoine et envahissez les autres. Le plus grand gagne.</li><li><a href="jeux/grand-prix.html"><b>Grand Prix Baston</b></a> : Course de voitures vue du dessus : pilotez, dosez l'essence, passez aux stands et percutez les autres. Deux tours, cinq voitures.</li><li><a href="jeux/atelier-de-leonard.html"><b>L'Atelier de Léonard</b></a> : En équipe, coloriez trois tableaux de Léonard de Vinci tirés au sort, 30 secondes chacun, avec chacun vos pots de couleur.</li><li><a href="jeux/minotaure.html"><b>Le Minotaure</b></a> : Un joueur est le Minotaure et voit tout le labyrinthe. Les autres fuient à la lueur d'une torche : sortez avant la fin, ou il vous attrape.</li></ul><p>Tous les jeux sont gratuits, sans compte, sans application et sans publicité. Créez un salon, vos amis scannent le QR code ou tapent le code, et c'est parti. Seul, vous jouez contre des robots.</p></details>
+    <details class="seolist"><summary>Les 22 jeux en détail</summary><ul><li><a href="jeux/gravats.html"><b>Gravats</b></a> : Empilez les pièces et effacez des lignes : chacune envoie des briques fendues chez les autres. Le dernier en jeu gagne.</li><li><a href="jeux/gardiens.html"><b>Les Gardiens</b></a> : Chacun garde son but, avec 5 vies. Arrêtez les ballons : le dernier gardien debout gagne.</li><li><a href="jeux/derby.html"><b>Derby</b></a> : Tracez les figures au doigt : plus c&#x27;est propre, plus votre cheval avance. Le premier à la ligne gagne.</li><li><a href="jeux/armada.html"><b>Armada</b></a> : Bataille navale sur une seule mer, chacun son tour. Le dernier bateau à flot gagne.</li><li><a href="jeux/tape-taupe.html"><b>Tape-taupe</b></a> : Tapez vite les taupes des autres quand elles sortent, jamais les vôtres. Premier à 20 points.</li><li><a href="jeux/curling.html"><b>Curling</b></a> : Lancez vos pierres vers la cible et frottez la glace pour les guider. Le plus proche du centre marque.</li><li><a href="jeux/chaises-musicales.html"><b>Chaises musicales</b></a> : Quand le disque s&#x27;arrête, touchez vite une chaise libre. Gare aux faux arrêts !</li><li><a href="jeux/code-secret.html"><b>Code secret</b></a> : Trouvez avant les autres le code secret de 4 couleurs, grâce à vos indices. Trois manches.</li><li><a href="jeux/kabaddi.html"><b>Kabaddi</b></a> : Attaquez en retenant votre souffle, touchez des défenseurs et rentrez chez vous à temps.</li><li><a href="jeux/balle-au-prisonnier.html"><b>Balle au prisonnier</b></a> : Ramassez, lancez, esquivez, attrapez. Chaque balle reçue coûte un cœur : le dernier debout gagne.</li><li><a href="jeux/chars.html"><b>Chars</b></a> : Deux par char, l&#x27;un pilote, l&#x27;autre tire, sans se parler. Le dernier char debout gagne.</li><li><a href="jeux/bergers.html"><b>Les bergers</b></a> : Ensemble, rabattez le troupeau dans l&#x27;enclos avant la nuit, et chassez les loups.</li><li><a href="jeux/drakkars.html"><b>Drakkars</b></a> : Deux drakkars font la course : chaque équipage rame en rythme avec le tambour, le plus synchro arrive le premier.</li><li><a href="jeux/bucherons.html"><b>Bûcherons</b></a> : Choisissez où tombe votre arbre, puis sciez-le proprement. N&#x27;écrasez rien !</li><li><a href="jeux/agility.html"><b>Agility</b></a> : Choisissez un chien et guidez-le sur le parcours : chaque obstacle a son geste. Le meilleur temps gagne.</li><li><a href="jeux/galop.html"><b>Galop</b></a> : Choisissez un cheval, placez-vous et dosez son énergie sur 3000 m. Le premier à la ligne gagne.</li><li><a href="jeux/meduse.html"><b>Méduse</b></a> : Lâchez vos naufragés sur le radeau qui tangue. Le plus haut, une fois posé, marque des points, et cinq fois plus quand passe l'Argus.</li><li><a href="jeux/blob.html"><b>Blob</b></a> : Tracez où votre blob doit pousser dans la boîte de Petri, prenez les flocons d'avoine et envahissez les autres. Le plus grand gagne.</li><li><a href="jeux/grand-prix.html"><b>Grand Prix Baston</b></a> : Course de voitures vue du dessus : pilotez, dosez l'essence, passez aux stands et percutez les autres. Deux tours, cinq voitures.</li><li><a href="jeux/atelier-de-leonard.html"><b>L'Atelier de Léonard</b></a> : En équipe, coloriez trois tableaux de Léonard de Vinci tirés au sort, 30 secondes chacun, avec chacun vos pots de couleur.</li><li><a href="jeux/minotaure.html"><b>Le Minotaure</b></a> : Un joueur est le Minotaure et voit tout le labyrinthe. Les autres fuient à la lueur d'une torche : sortez avant la fin, ou il vous attrape.</li><li><a href="jeux/carrom.html"><b>Carrom</b></a> : Le billard indien à pichenettes : envoyez le palet, rentrez les pions dans les coins. Blanc 1 point, noir 2, la reine rouge 5.</li></ul><p>Tous les jeux sont gratuits, sans compte, sans application et sans publicité. Créez un salon, vos amis scannent le QR code ou tapent le code, et c'est parti. Seul, vous jouez contre des robots.</p></details>
     <p class="legal"><a href="legal.html">Mentions légales et confidentialité</a> · <a href="https://chariftribak.itch.io/bastonarcade" target="_blank" rel="noopener">Aussi sur itch.io</a></p>
   </div>
 </section>
@@ -858,6 +865,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
       <button data-g="blob" aria-pressed="false"><img src="img/t/blob.webp" alt="" width="360" height="270" loading="lazy" decoding="async"><span>Blob</span></button>
       <button data-g="leo" aria-pressed="false"><img src="img/t/leo.webp" alt="" width="360" height="270" loading="lazy" decoding="async"><span>L'Atelier de Léonard</span></button>
       <button data-g="mino" aria-pressed="false"><img src="img/t/mino.webp" alt="" width="360" height="270" loading="lazy" decoding="async"><span>Le Minotaure</span></button>
+      <button data-g="carrom" aria-pressed="false"><img src="img/t/carrom.webp" alt="" width="360" height="270" loading="lazy" decoding="async"><span>Carrom</span></button>
     </div>
     </div>
     <div class="lobbyfoot">
@@ -1196,6 +1204,19 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
   </div>
 </section>
 
+<!-- CARROM -->
+<section id="scrCarrom" hidden>
+  <div class="naval">
+    <div class="nvhead cmhead"><div class="nvturn" id="cmTurn">Carrom</div><div class="dkchips"><span class="cuend" id="cmLeft">19 pions</span><span class="cuend" id="cmTime"></span></div></div>
+    <div class="nvwrap" id="cmWrap">
+      <canvas id="cmCv" width="600" height="600" aria-label="Le plateau de carrom : glissez pour placer le palet, tirez-le vers vous pour viser"></canvas>
+      <div class="toast pm" id="cmToast" aria-live="polite"></div>
+    </div>
+    <ul class="nvplayers" id="cmPlayers"></ul>
+    <div class="hint ctlhelp" id="cmHelp"></div>
+  </div>
+</section>
+
 <!-- L'ATELIER DE LÉONARD -->
 <section id="scrLeo" hidden>
   <div class="naval">
@@ -1321,6 +1342,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
       <button data-f="blob" aria-pressed="false">Blob</button>
       <button data-f="leo" aria-pressed="false">Léonard</button>
       <button data-f="mino" aria-pressed="false">Minotaure</button>
+      <button data-f="carrom" aria-pressed="false">Carrom</button>
       <button data-f="agility" aria-pressed="false">Agility</button>
       <button data-f="galop" aria-pressed="false">Galop</button>
     </div>
@@ -1465,7 +1487,7 @@ let D = null;                   // derby state
 let NV = null, HN = null;       // armada: my view / host's full map
 let BOT = null;                  // host-side robot when someone plays alone
 let ML = null, HM = null;       // tape-taupe: my view / host referee
-const GAME_NAMES = { tetris:'Gravats', pong:'Les Gardiens', derby:'Derby', naval:'Armada', mole:'Tape-taupe', curling:'Curling', chairs:'Chaises musicales', master:'Code secret', kabaddi:'Kabaddi', dodge:'Balle au prisonnier', tank:'Chars', sheep:'Les bergers', drakkar:'Drakkars', lumber:'Bûcherons', agility:'Agility', galop:'Galop', meduse:'Méduse', racer:'Grand Prix Baston', blob:'Blob', leo:'L\'Atelier de Léonard', mino:'Le Minotaure' };
+const GAME_NAMES = { tetris:'Gravats', pong:'Les Gardiens', derby:'Derby', naval:'Armada', mole:'Tape-taupe', curling:'Curling', chairs:'Chaises musicales', master:'Code secret', kabaddi:'Kabaddi', dodge:'Balle au prisonnier', tank:'Chars', sheep:'Les bergers', drakkar:'Drakkars', lumber:'Bûcherons', agility:'Agility', galop:'Galop', meduse:'Méduse', racer:'Grand Prix Baston', blob:'Blob', leo:'L\'Atelier de Léonard', mino:'Le Minotaure' , carrom:'Carrom' };
 // the gist in two lines, for the rules slides before a game (the full text stays on the game card)
 const GAME_SHORT = {
   tetris:'Empilez les pièces et effacez des lignes : chacune envoie des briques fendues chez les autres. Le dernier en jeu gagne.',
@@ -1487,6 +1509,7 @@ const GAME_SHORT = {
   meduse:'Empilez vos naufragés sur le radeau de Géricault : le plus haut fait signe à l\'Argus et marque des points.',
   blob:'Votre blob pousse là où vous tracez : prenez les flocons d\'avoine, envahissez les autres, couvrez la plus grande part de la boîte.',
   mino:'Un joueur est le Minotaure et voit tout le labyrinthe. Les autres fuient à la lueur d\'une torche : sortez avant la fin, ou il vous attrape.',
+  carrom:'Le billard indien à pichenettes : envoyez le palet, rentrez les pions dans les coins. Blanc 1 point, noir 2, la reine rouge 5.',
   leo:'En équipe, coloriez trois tableaux de Léonard de Vinci tirés au sort, 30 secondes chacun, avec chacun vos pots de couleur.',
   racer:'Course de voitures vue du dessus : pilotez au volant, dosez votre essence, passez aux stands et percutez les autres.'
 };
@@ -1511,6 +1534,7 @@ const GAME_STORY = {
   meduse:'1816 : le radeau de la Méduse dérive depuis des jours. À l\'horizon, une voile, l\'Argus. Il faut grimper le plus haut possible pour être vu.',
   blob:'Au labo, quelqu\'un a réveillé plusieurs blobs dans la même boîte de Petri. Les flocons d\'avoine sont comptés.',
   mino:'Crète, il y a très longtemps. Le roi Minos enferme un monstre mi-homme mi-taureau dans un labyrinthe immense. Vous venez d\'y être jetés, avec une torche.',
+  carrom:'Un soir d\'été en Inde, sur une terrasse. La planche de carrom est sortie, poudrée, et toute la famille attend son tour autour.',
   leo:'Milan, 1495. Léonard a dessiné trois tableaux pour une commande, mais rien n\'est peint et le client arrive demain. Les apprentis, c\'est vous.',
   racer:'Grand Prix Baston, deux tours, cinq voitures, et un règlement qui autorise les coups de pare-chocs. Les stands sont ouverts.'
 };
@@ -1534,6 +1558,7 @@ const GAME_IDEA = {
   meduse:'Lâcher ses naufragés au bon moment pour bâtir le plus haut, tenir le sommet le plus longtemps, surtout quand passe l\'Argus, et faire tomber les autres de la pile.',
   blob:'Tracer les bons chemins vers les flocons, couper les autres de leur nourriture et renforcer ce qu\'on tient, sans grandir plus vite que son énergie.',
   mino:'Trouver l\'une des deux sorties dans le noir avant la fin du temps. Pour le Minotaure : attraper tout le monde.',
+  carrom:'Rentrer le plus de pions possible avec son palet : blanc 1 point, noir 2, la reine 5 à condition de la couvrir.',
   leo:'Se partager le tableau entre apprentis, chacun avec ses pots, et peindre vite, juste et sans déborder : 30 secondes par tableau.',
   racer:'Prendre les virages sans glisser, brûler son essence au bon moment, s\'arrêter aux stands quand il faut, et frapper les autres avant qu\'ils vous frappent.'
 };
@@ -1558,6 +1583,7 @@ const GAME_DESC = {
   derby:'Course de chevaux : tout le monde reçoit la même série de figures à tracer. Chaque figure réussie fait avancer votre cheval, plus loin si elle est complexe et bien tracée. Le premier à la ligne gagne.',
   blob:'Le blob, ce drôle d\'organisme qui se réveille dans une boîte de Petri : chaque joueur en a un, dans la même boîte. Tracez du doigt un chemin depuis votre blob, il pousse le long du tracé en dépensant son énergie. Tracez jusque dans un autre blob et vous l\'envahissez, plus cher, d\'autant plus qu\'il a d\'énergie. Votre énergie revient doucement, d\'autant moins que votre blob est grand, et plus du tout passé la moitié de la boîte : il faut alors tenir des gros flocons d\'avoine, qui l\'accélèrent tant que vous les couvrez. Le laborantin en ajoute de temps en temps, n\'importe où. Les miettes se mangent d\'un coup. Tout morceau coupé de la partie qui porte le visage de votre blob dépérit. Touchez votre blob pour y poser un renfort qui durcit avec le temps. Au bout de 3 minutes, le plus grand blob gagne. Des robots complètent seul ou à deux.',
   mino:'Un jeu de chasse dans un labyrinthe. Un joueur, tiré au sort, est le Minotaure : il voit tout le labyrinthe et tous les joueurs. Les autres ne voient que la lueur de leur torche, une flèche verte qui pointe vers la sortie la plus proche (à vol d\'oiseau, pas le chemin) et une jauge 🐂 qui se remplit quand le Minotaure approche par les couloirs. Le cœur bat de plus en plus vite, et le téléphone vibre. Il y a toujours deux sorties, à l\'opposé l\'une de l\'autre : le Minotaure ne peut pas garder les deux. Les coureurs ont 50 secondes à 3, 60 secondes à 4 pour sortir. Le Minotaure gagne s\'il attrape tout le monde. Des robots complètent jusqu\'à 4 joueurs.',
+  carrom:'Le carrom, le jeu de plateau préféré des familles en Inde, en version bande dessinée. Chacun joue à son tour depuis son côté de la planche : on glisse le palet sur sa ligne, on le tire vers soi comme un lance-pierre, on lâche. Chaque pion rentré dans un coin rapporte des points (blanc 1, noir 2) et fait rejouer. La reine rouge vaut 5, mais il faut rentrer un autre pion juste après, sinon elle revient au centre. Si votre palet tombe dans un trou, c\'est une faute : vous perdez un point et les pions rentrés reviennent au centre. Quatre à sept coups chacun, le plus de points gagne. Seul, vous jouez contre un robot.',
   leo:'Un jeu coopératif : vous êtes les apprentis de Léonard de Vinci et vous coloriez ensemble trois de ses tableaux, tirés au sort parmi les plus célèbres : La Joconde, La Dame à l\'hermine, L\'Annonciation, La Vierge aux rochers, La Cène… Chaque tableau vous est d\'abord montré en couleurs pendant 10 secondes, puis il redevient noir et blanc et vous avez 30 secondes pour le peindre du doigt ou à la souris, tous en même temps. Chaque apprenti n\'a que quelques pots de couleur, et l\'un d\'eux est aussi entre les mains d\'un autre apprenti, sans qu\'on sache lequel. Chaque tableau est noté sur la part peinte de la bonne couleur. À la fin, si la moyenne atteint 80 %, Léonard valide la commande ; sinon, il se met en colère. Des robots apprentis complètent seul ou à deux.',
   racer:'Une course de voitures vue du dessus, entre Mario Kart et course auto. Choisissez l\'une des 5 voitures, toutes armées d\'un pare-chocs de combat à l\'avant, et ajoutez un bonus : turbo, aérodynamisme, pneus qui collent ou super coup de latte. Pilotez avec un volant à glisser qui revient au centre : trop vite dans un virage, les pneus crissent et la voiture glisse vers l\'extérieur. Accélérer brûle l\'essence, qui revient doucement, bien plus vite dans les deux stands à côté de la piste. Frapper vers l\'avant prend une courte charge visible : celui qui ne l\'esquive pas perd 20 % de sa vitesse et 15 % de son essence, puis clignote 3 s, le temps que les autres lui passent à travers. Deux tours sur l\'un des 5 circuits, à 5 voitures, des robots complètent.'
 };
@@ -1567,7 +1593,7 @@ const cleanName = s => String(s || '').replace(/[\u0000-\u001f<>]/g,'').trim().s
 // names shown to everyone in the public list: anything that looks like a link or an address is replaced
 const publicName = s => { const n = cleanName(s); return /https?|www|\.\s*[a-z]{2,}|@|\/\/|discord|t\.me|bit\.ly/i.test(n) ? (LANG === 'en' ? 'Player' : 'Joueur') : n; };
 const genCode = () => { const a='ABCDEFGHJKMNPQRSTUVWXYZ23456789'; let s=''; for(let i=0;i<4;i++) s+=a[Math.floor(Math.random()*a.length)]; return s; };
-const show = id => { for (const s of ['scrMenu','scrStats','scrLobby','scrGame','scrPong','scrDerby','scrNaval','scrMole','scrCurl','scrChairs','scrMaster','scrKabaddi','scrDodge','scrTank','scrSheep','scrDrakkar','scrLumber','scrAgility','scrGalop','scrMeduse','scrBlob','scrLeo','scrRacer','scrMino']) $(s).hidden = s !== id; if (id === 'scrKabaddi') try { window.scrollTo(0, 0); } catch(_){} document.documentElement.classList.toggle('joyon', ['scrKabaddi','scrDodge','scrTank','scrSheep'].includes(id)); };
+const show = id => { for (const s of ['scrMenu','scrStats','scrLobby','scrGame','scrPong','scrDerby','scrNaval','scrMole','scrCurl','scrChairs','scrMaster','scrKabaddi','scrDodge','scrTank','scrSheep','scrDrakkar','scrLumber','scrAgility','scrGalop','scrMeduse','scrBlob','scrLeo','scrRacer','scrMino','scrCarrom']) $(s).hidden = s !== id; if (id === 'scrKabaddi') try { window.scrollTo(0, 0); } catch(_){} document.documentElement.classList.toggle('joyon', ['scrKabaddi','scrDodge','scrTank','scrSheep'].includes(id)); };
 const store = { get(k){ try { return localStorage.getItem(k); } catch(_) { return null; } }, set(k,v){ try { localStorage.setItem(k,v); } catch(_){} } };
 
 $('nameIn').value = store.get('tm-name') || ((LANG === 'en' ? 'Player' : 'Joueur') + Math.floor(Math.random()*90+10));
@@ -1641,7 +1667,7 @@ function teardown(){
   if (HN && HN.timer) clearTimeout(HN.timer);
   if (HM) moleClearTimers();
   if (HC) clearTimeout(HC.timer);
-  HC = null; CU = null; mcClear(); HMC = null; MC = null; mmClear(); HMM = null; MM = null; kbClear(); HKB = null; KB = null; dbClear(); HDB = null; DB = null; tkClear(); HTK = null; TK = null; shClear(); HSH = null; SHV = null; dkClear(); HDK = null; ljClear(); HLJ = null; LJ = null; sawStop(); agClear(); HAG = null; AG = null; gpClear(); HGP = null; GP = null; DK = null; mdClear(); HMD = null; MD = null; blClear(); HBL = null; BL = null; rcClear(); HRC = null; RC = null; laClear(); HLA = null; LA = null; mnClear(); HMN = null; MN = null;
+  HC = null; CU = null; mcClear(); HMC = null; MC = null; mmClear(); HMM = null; MM = null; kbClear(); HKB = null; KB = null; dbClear(); HDB = null; DB = null; tkClear(); HTK = null; TK = null; shClear(); HSH = null; SHV = null; dkClear(); HDK = null; ljClear(); HLJ = null; LJ = null; sawStop(); agClear(); HAG = null; AG = null; gpClear(); HGP = null; GP = null; DK = null; mdClear(); HMD = null; MD = null; blClear(); HBL = null; BL = null; rcClear(); HRC = null; RC = null; laClear(); HLA = null; LA = null; mnClear(); HMN = null; MN = null; cmClear(); HCM = null; CM = null;
   CHAT.length = 0; renderChat();
   net = null; H = null; G = null; PG = null; D = null; NV = null; HN = null; cur = null; me.host = false; me.id = null; players = []; opps.clear();
 }
@@ -1667,7 +1693,7 @@ function soloCreate(){
 }
 // arriving from a game's page (?jeu=galop): once the room (or the solo game) is open, that game's card opens
 const GAME_SLUGS = { gravats:'tetris', gardiens:'pong', armada:'naval', 'tape-taupe':'mole', 'chaises-musicales':'chairs', 'code-secret':'master',
-  'balle-au-prisonnier':'dodge', chars:'tank', bergers:'sheep', drakkars:'drakkar', bucherons:'lumber', 'grand-prix':'racer', 'atelier-de-leonard':'leo', minotaure:'mino' };
+  'balle-au-prisonnier':'dodge', chars:'tank', bergers:'sheep', drakkars:'drakkar', bucherons:'lumber', 'grand-prix':'racer', 'atelier-de-leonard':'leo', minotaure:'mino', 'carrom':'carrom' };
 let PENDING_GAME = null;
 (() => {
   let g = null; try { g = (new URLSearchParams(location.search).get('jeu') || '').trim().toLowerCase(); } catch(_){}
@@ -1869,7 +1895,7 @@ function hostDrop(conn){
   net.conns.delete(id);
   if (phase === 'lobby'){ const p = players.find(x => x.id === id); players = players.filter(p => p.id !== id); if (VOTES[id]){ delete VOTES[id]; broadcast({ t:'votes', v:VOTES }); } sendLobby(false); briefCheck(); if (BR) briefStatus(); if (p) chatSys(p.name + ' a quitté le salon'); return; }
   if (H && H.alive.has(id)){
-    if (H.game === 'pong') pongDrop(id); else if (H.game === 'curling') curlDrop(id); else if (H.game === 'chairs') chairsDrop(id); else if (H.game === 'master') masterDrop(id); else if (H.game === 'kabaddi') kabaddiDrop(id); else if (H.game === 'dodge') dodgeDrop(id); else if (H.game === 'tank') tankDrop(id); else if (H.game === 'sheep') sheepDrop(id); else if (H.game === 'drakkar') drakkarDrop(id); else if (H.game === 'lumber') lumberDrop(id); else if (H.game === 'agility') agilityDrop(id); else if (H.game === 'galop') galopDrop(id); else if (H.game === 'meduse') meduseDrop(id); else if (H.game === 'blob') blobDrop(id); else if (H.game === 'leo') leoDrop(id); else if (H.game === 'mino') minoDrop(id); else if (H.game === 'racer') racerDrop(id); else if (H.game === 'derby') derbyDrop(id); else if (H.game === 'naval') navalDrop(id); else if (H.game === 'mole') moleDrop(id); else hostHandle(id, { t:'dead', left:true });
+    if (H.game === 'carrom') carromDrop(id); else if (H.game === 'pong') pongDrop(id); else if (H.game === 'curling') curlDrop(id); else if (H.game === 'chairs') chairsDrop(id); else if (H.game === 'master') masterDrop(id); else if (H.game === 'kabaddi') kabaddiDrop(id); else if (H.game === 'dodge') dodgeDrop(id); else if (H.game === 'tank') tankDrop(id); else if (H.game === 'sheep') sheepDrop(id); else if (H.game === 'drakkar') drakkarDrop(id); else if (H.game === 'lumber') lumberDrop(id); else if (H.game === 'agility') agilityDrop(id); else if (H.game === 'galop') galopDrop(id); else if (H.game === 'meduse') meduseDrop(id); else if (H.game === 'blob') blobDrop(id); else if (H.game === 'leo') leoDrop(id); else if (H.game === 'mino') minoDrop(id); else if (H.game === 'racer') racerDrop(id); else if (H.game === 'derby') derbyDrop(id); else if (H.game === 'naval') navalDrop(id); else if (H.game === 'mole') moleDrop(id); else hostHandle(id, { t:'dead', left:true });
   }
 }
 
@@ -1935,6 +1961,7 @@ function hostLaunch(){
   if (gameKind === 'blob') return blobHostStart();
   if (gameKind === 'leo') return leoHostStart();
   if (gameKind === 'mino') return minoHostStart();
+  if (gameKind === 'carrom') return carromHostStart();
   if (gameKind === 'racer') return racerHostStart();
   unannounce();                                   // a started game leaves the public list at once
   broadcast({ t:'start', players, game:gameKind, seed:Math.floor(Math.random() * 2**31) });
@@ -1994,6 +2021,10 @@ function hostHandle(id, m){
     racerInput(id, m);
   } else if (m.t === 'rc_hit'){
     racerHit(id);
+  } else if (m.t === 'cm_mv'){
+    carromMove(id, m.u);
+  } else if (m.t === 'cm_shot'){
+    carromShoot(id, m.u, m.a, m.p);
   } else if (m.t === 'mn_in'){
     minoInput(id, m);
   } else if (m.t === 'bl_path'){
@@ -2074,9 +2105,9 @@ function clientRecv(m){
       players = (Array.isArray(m.players) ? m.players : []).slice(0, MAXP).filter(p => p && typeof p.id === 'string').map(p => ({ ...p, id:p.id.slice(0, 12), name:cleanName(p.name), color:PALETTE.includes(p.color) ? p.color : '#888' }));
       if (m.you) me.id = m.you;
       if (net && !net.solo && !me.host) try { sessionStorage.setItem('ba-room', net.code); } catch(_){}   // after an accidental reload, come straight back
-      if (['tetris','pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber','agility','galop','meduse','blob','racer','leo','mino'].includes(m.game)) gameKind = m.game;
+      if (['tetris','pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber','agility','galop','meduse','blob','racer','leo','mino','carrom','carrom'].includes(m.game)) gameKind = m.game;
       if (phase === 'menu' || phase === 'lobby' || m.back){
-        phase = 'lobby'; $('scrEnd').hidden = true; G = null; PG = null; D = null; NV = null; ML = null; CU = null; MC = null; MM = null; KB = null; DB = null; TK = null; SHV = null; DK = null; if (LJ){ LJ = null; sawStop(); } AG = null; GP = null; MD = null; BL = null; RC = null; LA = null; MN = null; cur = null; show('scrLobby'); renderLobby();
+        phase = 'lobby'; $('scrEnd').hidden = true; G = null; PG = null; D = null; NV = null; ML = null; CU = null; MC = null; MM = null; KB = null; DB = null; TK = null; SHV = null; DK = null; if (LJ){ LJ = null; sawStop(); } AG = null; GP = null; MD = null; BL = null; RC = null; LA = null; MN = null; CM = null; cur = null; show('scrLobby'); renderLobby();
       }
       break;
     case 'nv_start': startNaval(m); break;
@@ -2107,6 +2138,7 @@ function clientRecv(m){
     case 'bl_round': case 'bl_go': case 'bl_s': case 'bl_ev': case 'bl_res': blobRecv(m); break;
     case 'la_round': case 'la_go': case 'la_p': case 'la_judge': case 'la_ev': case 'la_res': leoRecv(m); break;
     case 'rc_pick': case 'rc_picks': case 'rc_round': case 'rc_go': case 'rc_s': case 'rc_ev': case 'rc_res': racerRecv(m); break;
+    case 'cm_turn': case 'cm_pos': case 'cm_go': case 'cm_s': case 'cm_in': case 'cm_res': case 'cm_skip': carromRecv(m); break;
     case 'mn_go': case 'mn_s': case 'mn_ev': case 'mn_res': minoRecv(m); break;
     case 'gp_pick': case 'gp_race': case 'gp_go': case 'gp_s': case 'gp_fin': case 'gp_photo': galopRecv(m); break;
     case 'brief': if (phase === 'lobby') openBrief(m.game, m.ready); break;
@@ -2114,7 +2146,7 @@ function clientRecv(m){
     case 'peek': if (!me.host){ PEEK = GAME_NAMES[m.g] ? m.g : null; renderVotes(); } break;
     case 'brief_st': if (BR){ BR.ready = new Set(m.ready || []); briefStatus(); } break;
     case 'brief_off': closeBrief(); break;
-    case 'start': closeGameSheet(); closeBrief(); PEEK = null; VOTES = {}; $('colPick').hidden = true; if (m.game === 'galop') startGalop(m); else if (m.game === 'meduse') startMeduse(m); else if (m.game === 'blob') startBlob(m); else if (m.game === 'leo') startLeo(m); else if (m.game === 'mino') startMino(m); else if (m.game === 'racer') startRacer(m); else if (m.game === 'agility') startAgility(m); else if (m.game === 'lumber') startLumber(m); else if (m.game === 'drakkar') startDrakkar(m); else if (m.game === 'sheep') startSheep(m); else if (m.game === 'tank') startTank(m); else if (m.game === 'dodge') startDodge(m); else if (m.game === 'kabaddi') startKabaddi(m); else if (m.game === 'master') startMaster(m); else if (m.game === 'chairs') startChairs(m); else if (m.game === 'curling') startCurling(m); else if (m.game === 'pong') startPong(m.players); else if (m.game === 'derby') startDerby(m.players, m.seed|0); else startGame(m.players); break;
+    case 'start': closeGameSheet(); closeBrief(); PEEK = null; VOTES = {}; $('colPick').hidden = true; if (m.game === 'galop') startGalop(m); else if (m.game === 'meduse') startMeduse(m); else if (m.game === 'blob') startBlob(m); else if (m.game === 'leo') startLeo(m); else if (m.game === 'mino') startMino(m); else if (m.game === 'carrom') startCarrom(m); else if (m.game === 'racer') startRacer(m); else if (m.game === 'agility') startAgility(m); else if (m.game === 'lumber') startLumber(m); else if (m.game === 'drakkar') startDrakkar(m); else if (m.game === 'sheep') startSheep(m); else if (m.game === 'tank') startTank(m); else if (m.game === 'dodge') startDodge(m); else if (m.game === 'kabaddi') startKabaddi(m); else if (m.game === 'master') startMaster(m); else if (m.game === 'chairs') startChairs(m); else if (m.game === 'curling') startCurling(m); else if (m.game === 'pong') startPong(m.players); else if (m.game === 'derby') startDerby(m.players, m.seed|0); else startGame(m.players); break;
     case 'dr': derbyRemote(m); break;
     case 'ps': pongState(m); break;
     case 'pg': pongGoalFx(m.side|0); break;
@@ -2402,7 +2434,7 @@ function showEnd(ranking, game){
   phase = 'end';
   if (G) G.p = null;
   if (PG) PG.ph = 'over';
-  const pong = game === 'pong', derby = game === 'derby', naval = game === 'naval', mole = game === 'mole', curl = game === 'curling', chairs = game === 'chairs', master = game === 'master', kab = game === 'kabaddi', dodge = game === 'dodge', tank = game === 'tank', coop = game === 'sheep', viking = game === 'drakkar', lumber = game === 'lumber', agil = game === 'agility', galop = game === 'galop', medu = game === 'meduse', blob = game === 'blob', racer = game === 'racer', leo = game === 'leo', mino = game === 'mino';
+  const pong = game === 'pong', derby = game === 'derby', naval = game === 'naval', mole = game === 'mole', curl = game === 'curling', chairs = game === 'chairs', master = game === 'master', kab = game === 'kabaddi', dodge = game === 'dodge', tank = game === 'tank', coop = game === 'sheep', viking = game === 'drakkar', lumber = game === 'lumber', agil = game === 'agility', galop = game === 'galop', medu = game === 'meduse', blob = game === 'blob', racer = game === 'racer', leo = game === 'leo', mino = game === 'mino', carr = game === 'carrom';
   if (ML) ML.over = true;
   if (NV) NV.over = true;
   if (D) D.over = true;
@@ -2419,10 +2451,10 @@ function showEnd(ranking, game){
   if (GP) GP.over = true;
   if (MD){ MD.over = true; MD.ph = 'end'; }
   const hd = $('rankHead'); hd.textContent = '';
-  for (const h of ['#','Joueur', ...(mino ? ['Rôle','Résultat','Temps'] : leo ? ['Peint juste','Débordé','Coups de pinceau'] : racer ? ['Temps','Meilleur tour','Frappes','Encaissées'] : blob ? ['Surface','Flocons','Volé','Miettes'] : medu ? ['Points','Au sommet','Lâchés','À l\'eau'] : galop ? ['Cheval','Temps','Écart'] : agil ? ['Temps','Fautes','Total'] : lumber ? ['Points','Précision','Manches'] : viking ? ['Rôle','Coups','Synchro'] : coop ? ['Manches','Moutons','Ouaf'] : tank ? ['Char','Rôle','Touches'] : dodge ? ['Vies','Touches','Arrêts'] : kab ? ['Points','Raids réussis','Plaquages'] : master ? ['Points','Trouvés','Essais'] : chairs ? ['Vies','Chaises','Réflexe'] : curl ? ['Points','Maison','Meilleure'] : pong ? ['Vies','Arrêts'] : derby ? ['Figures','Distance','Temps'] : naval ? ['Tirs','Touchés','À flot'] : mole ? ['Points','Tapées','Échappées'] : ['Lignes','Briques','Score'])]){
+  for (const h of ['#','Joueur', ...(carr ? ['Points','Blancs','Noirs','Reine'] : mino ? ['Rôle','Résultat','Temps'] : leo ? ['Peint juste','Débordé','Coups de pinceau'] : racer ? ['Temps','Meilleur tour','Frappes','Encaissées'] : blob ? ['Surface','Flocons','Volé','Miettes'] : medu ? ['Points','Au sommet','Lâchés','À l\'eau'] : galop ? ['Cheval','Temps','Écart'] : agil ? ['Temps','Fautes','Total'] : lumber ? ['Points','Précision','Manches'] : viking ? ['Rôle','Coups','Synchro'] : coop ? ['Manches','Moutons','Ouaf'] : tank ? ['Char','Rôle','Touches'] : dodge ? ['Vies','Touches','Arrêts'] : kab ? ['Points','Raids réussis','Plaquages'] : master ? ['Points','Trouvés','Essais'] : chairs ? ['Vies','Chaises','Réflexe'] : curl ? ['Points','Maison','Meilleure'] : pong ? ['Vies','Arrêts'] : derby ? ['Figures','Distance','Temps'] : naval ? ['Tirs','Touchés','À flot'] : mole ? ['Points','Tapées','Échappées'] : ['Lignes','Briques','Score'])]){
     const th = document.createElement('th'); th.textContent = h; hd.append(th);
   }
-  $('rankNote').textContent = mino ? '« Temps » : moment de la sortie, ou temps tenu avant d\'être attrapé. Le Minotaure gagne s\'il attrape tout le monde ; sinon, ceux qui sont sortis gagnent.' : leo ? '« Peint juste » : part des tableaux peinte de la bonne couleur par cet apprenti (total des tableaux). « Débordé » : part peinte de la mauvaise couleur. La commande est validée si la moyenne des tableaux atteint ' + LA_OK + ' %.' : racer ? '« Temps » : temps de course (– si pas arrivé). « Meilleur tour » : le tour le plus rapide. « Frappes » : coups réussis. « Encaissées » : coups reçus.' : blob ? '« Surface » : part de la boîte couverte à la fin. « Flocons » : gros flocons tenus. « Volé » : morceaux pris aux autres blobs. « Miettes » : miettes mangées.' : medu ? '« Points » : 1 par seconde au sommet, 5 pendant le passage de l\'Argus. « Au sommet » : temps passé tout en haut. « Lâchés » : naufragés lâchés. « À l\'eau » : naufragés tombés à la mer.' : galop ? '« Écart » : retard sur le vainqueur à l\'arrivée, en secondes. Les chevaux des robots sont classés avec les autres.' : agil ? '« Total » : temps du parcours plus 5 s par faute. Un chien qui n\'a pas fini est classé après les autres.' : lumber ? '« Précision » : moyenne de vos coupes. « Manches » : manches finies sans rien écraser. Un joueur qui écrase quelque chose est éliminé.' : viking ? 'Deux drakkars, deux équipages. « Synchro » : coups de rame donnés en rythme avec le tambour.' : coop ? 'Partie en équipe : tout le monde partage le score. « Moutons » : moutons rentrés au total, « Ouaf » : aboiements.' : tank ? 'Les deux membres d\'un équipage partagent la même place. « Touches » : obus du canonnier qui ont fait mouche.' : dodge ? '« Touches » : balles qui ont atteint un adversaire. « Arrêts » : balles attrapées.' : kab ? '« Raids réussis » : raids rentrés avec au moins un défenseur touché. « Plaquages » : attaquants retenus jusqu\'au bout du souffle.' : master ? '« Trouvés » : codes trouvés. « Essais » : total des essais sur la partie.' : chairs ? '« Chaises » : chaises gagnées. « Réflexe » : votre plus rapide, de l\'arrêt du disque à la chaise.' : curl ? '« Maison » : pierres dans la maison en fin de manche. « Meilleure » : pierre la plus proche du centre.' : mole ? '« Tapées » : taupes adverses tapées. « Échappées » : vos taupes que personne n\'a eues.' : naval ? '« À flot » : cases de bateau encore intactes à la fin.' : pong ? '« Arrêts » : ballons repoussés par le gardien.' : derby ? '« Temps » : durée pour franchir la ligne, pour ceux qui l\'ont franchie.' : '« Briques » : nombre de briques envoyées aux adversaires.';
+  $('rankNote').textContent = carr ? '« Points » : blanc 1, noir 2, reine couverte 5, moins 1 par faute (palet tombé). Les colonnes comptent les pions rentrés.' : mino ? '« Temps » : moment de la sortie, ou temps tenu avant d\'être attrapé. Le Minotaure gagne s\'il attrape tout le monde ; sinon, ceux qui sont sortis gagnent.' : leo ? '« Peint juste » : part des tableaux peinte de la bonne couleur par cet apprenti (total des tableaux). « Débordé » : part peinte de la mauvaise couleur. La commande est validée si la moyenne des tableaux atteint ' + LA_OK + ' %.' : racer ? '« Temps » : temps de course (– si pas arrivé). « Meilleur tour » : le tour le plus rapide. « Frappes » : coups réussis. « Encaissées » : coups reçus.' : blob ? '« Surface » : part de la boîte couverte à la fin. « Flocons » : gros flocons tenus. « Volé » : morceaux pris aux autres blobs. « Miettes » : miettes mangées.' : medu ? '« Points » : 1 par seconde au sommet, 5 pendant le passage de l\'Argus. « Au sommet » : temps passé tout en haut. « Lâchés » : naufragés lâchés. « À l\'eau » : naufragés tombés à la mer.' : galop ? '« Écart » : retard sur le vainqueur à l\'arrivée, en secondes. Les chevaux des robots sont classés avec les autres.' : agil ? '« Total » : temps du parcours plus 5 s par faute. Un chien qui n\'a pas fini est classé après les autres.' : lumber ? '« Précision » : moyenne de vos coupes. « Manches » : manches finies sans rien écraser. Un joueur qui écrase quelque chose est éliminé.' : viking ? 'Deux drakkars, deux équipages. « Synchro » : coups de rame donnés en rythme avec le tambour.' : coop ? 'Partie en équipe : tout le monde partage le score. « Moutons » : moutons rentrés au total, « Ouaf » : aboiements.' : tank ? 'Les deux membres d\'un équipage partagent la même place. « Touches » : obus du canonnier qui ont fait mouche.' : dodge ? '« Touches » : balles qui ont atteint un adversaire. « Arrêts » : balles attrapées.' : kab ? '« Raids réussis » : raids rentrés avec au moins un défenseur touché. « Plaquages » : attaquants retenus jusqu\'au bout du souffle.' : master ? '« Trouvés » : codes trouvés. « Essais » : total des essais sur la partie.' : chairs ? '« Chaises » : chaises gagnées. « Réflexe » : votre plus rapide, de l\'arrêt du disque à la chaise.' : curl ? '« Maison » : pierres dans la maison en fin de manche. « Meilleure » : pierre la plus proche du centre.' : mole ? '« Tapées » : taupes adverses tapées. « Échappées » : vos taupes que personne n\'a eues.' : naval ? '« À flot » : cases de bateau encore intactes à la fin.' : pong ? '« Arrêts » : ballons repoussés par le gardien.' : derby ? '« Temps » : durée pour franchir la ligne, pour ceux qui l\'ont franchie.' : '« Briques » : nombre de briques envoyées aux adversaires.';
   const tb = $('rankBody'); tb.textContent = '';
   (ranking || []).forEach(r => {
     const tr = document.createElement('tr'); if (r.place === 1) tr.className = 'win';
@@ -2433,6 +2465,7 @@ function showEnd(ranking, game){
     w.append(d, s); nm.append(w);
     if (racer) tr.append(td(r.place), nm, td(r.time ? r.time.toFixed(1).replace('.', ',') + ' s' : '–'), td(r.best ? r.best.toFixed(1).replace('.', ',') + ' s' : '–'), td(r.hits|0), td(r.hit|0));
     else if (blob) tr.append(td(r.place), nm, td((r.pct|0) + ' %'), td(r.farms|0), td(r.stolen|0), td(r.crumbs|0));
+    else if (carr) tr.append(td(r.place), nm, td(r.pts|0), td(r.w|0), td(r.b|0), td(r.q ? '👑' : '–'));
     else if (mino) tr.append(td(r.place), nm, td(r.role === 'Minotaure' ? '🐂 Minotaure' : '🔦 Coureur'), td(r.res || ''), td(r.role === 'Minotaure' || !r.t ? '–' : (+r.t).toFixed(1).replace('.', ',') + ' s'));
     else if (leo) tr.append(td(r.place), nm, td((r.ok|0) + ' %'), td((r.bad|0) + ' %'), td(r.strokes|0));
     else if (medu) tr.append(td(r.place), nm, td(r.pts|0), td((r.top|0) + ' s'), td(r.drops|0), td(r.lost|0));
@@ -2464,7 +2497,7 @@ function showEnd(ranking, game){
   $('winPanel').style.background = mino ? (iWon ? '#3DDC97' : '#FF8A8A') : leo ? (iWon ? '#3DDC97' : '#FF8A8A') : viking ? (iWon ? '#3DDC97' : '#8A84B0') : coop ? '#3DDC97' : win ? win.color : '#FFD93B';
   $('winName').textContent = mino ? ((win && win.role === 'Minotaure') ? (iWon ? 'Personne ne vous a échappé !' : 'Personne n\'est sorti : le Minotaure gagne') : (iWon ? 'Vous êtes sorti du labyrinthe !' : (mine && mine.role === 'Minotaure') ? 'Ils vous ont échappé' : 'Vous êtes resté dans le labyrinthe')) : leo ? 'Moyenne des tableaux : ' + ((win && win.avg) | 0) + ' %' : viking ? (iWon ? 'L\'Angleterre est à vous !' : 'L\'autre drakkar arrive avant vous') : coop ? 'Score d\'équipe : ' + ((win && win.score) | 0) : win ? (iWon ? 'Vous gagnez !' : (galop && win.bot && win.horse ? win.horse : win.name) + ' gagne !') : '';
   $('myPlace').textContent = leo ? 'L\'Atelier de Léonard · ' + ((win && win.good) | 0) + '/' + ((win && win.scores && win.scores.length) || LA_N) + ' tableaux réussis' : viking ? 'Drakkars' + (iWon && win.t ? ' · ' + fmtSec(win.t) : '') : coop ? 'Les bergers · ' + ((win && win.rounds) | 0) + '/' + SH_ROUNDS + ' manches réussies' : (GAME_NAMES[game] || 'Gravats') + (mine ? ' · vous finissez ' + (mine.place === 1 ? '1er' : mine.place + 'e') + ' sur ' + ranking.length : '');
-  (mino ? (() => {}) : leo ? laToast : racer ? rcToast : blob ? blToast : medu ? (t => { const el = $('mdMsg'); if (el) el.textContent = t || ''; }) : galop ? (t => { const el = $('gpMsg'); if (el) el.textContent = t || ''; }) : agil ? agMsg : lumber ? ljMsg : viking ? drakkarMsg : coop ? sheepMsg : tank ? tankMsg : dodge ? dodgeMsg : kab ? kabaddiMsg : master ? masterMsg : chairs ? chairsMsg : curl ? curlMsg : pong ? pongMsg : derby ? derbyMsg : naval ? navalMsg : mole ? moleMsg : setMsg)('', '');
+  (mino || carr ? (() => {}) : leo ? laToast : racer ? rcToast : blob ? blToast : medu ? (t => { const el = $('mdMsg'); if (el) el.textContent = t || ''; }) : galop ? (t => { const el = $('gpMsg'); if (el) el.textContent = t || ''; }) : agil ? agMsg : lumber ? ljMsg : viking ? drakkarMsg : coop ? sheepMsg : tank ? tankMsg : dodge ? dodgeMsg : kab ? kabaddiMsg : master ? masterMsg : chairs ? chairsMsg : curl ? curlMsg : pong ? pongMsg : derby ? derbyMsg : naval ? navalMsg : mole ? moleMsg : setMsg)('', '');
   $('btnAgain').hidden = false; $('btnReplay').hidden = !me.host; $('btnAgain').classList.toggle('ghost', me.host);
   $('endHint').textContent = me.host ? '' : 'Le créateur choisit la suite : rejouer ou revenir au salon.';
   $('btnAgain').style.gridColumn = me.host ? '' : '1 / -1';
@@ -2668,7 +2701,7 @@ function release(a){
 const KEYMAP = { arrowleft:'left', arrowright:'right', arrowdown:'down', arrowup:'rotr', x:'rotr', z:'rotl', w:'rotl', control:'rotl', ' ':'drop' };
 addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT') return;
-  if (cur === 'curl' || cur === 'chairs' || cur === 'master' || cur === 'kabaddi' || cur === 'dodge' || cur === 'tank' || cur === 'sheep' || cur === 'drakkar' || cur === 'lumber' || cur === 'agility' || cur === 'galop' || cur === 'meduse' || cur === 'blob' || cur === 'racer' || cur === 'leo' || cur === 'mino') return;
+  if (cur === 'curl' || cur === 'chairs' || cur === 'master' || cur === 'kabaddi' || cur === 'dodge' || cur === 'tank' || cur === 'sheep' || cur === 'drakkar' || cur === 'lumber' || cur === 'agility' || cur === 'galop' || cur === 'meduse' || cur === 'blob' || cur === 'racer' || cur === 'leo' || cur === 'mino' || cur === 'carrom') return;
   if (cur === 'pong'){ const k = PKEYS[e.key.toLowerCase()]; if (k){ e.preventDefault(); pin[k] = true; } return; }
   const a = KEYMAP[e.key.toLowerCase()]; if (!a) return;
   e.preventDefault();
@@ -9777,7 +9810,7 @@ function drawGalop(now){
 const BOOM_COLORS = [['#FFD93B','#E6262B'], ['#FFFFFF','#1E5BFF'], ['#E6262B','#FFFFFF'], ['#1E5BFF','#FFD93B']];
 function gameWrap(){
   return cur === 'tetris' ? document.querySelector('#play .well') : cur === 'pong' ? $('pwrap') : cur === 'derby' ? $('padwrap')
-    : cur === 'naval' ? document.querySelector('#scrNaval .nvwrap') : cur === 'mole' ? $('mlWrap') : cur === 'curl' ? $('cuWrap') : cur === 'chairs' ? $('mcWrap') : cur === 'master' ? $('mmWrap') : cur === 'kabaddi' ? $('kbWrap') : cur === 'dodge' ? $('dbWrap') : cur === 'tank' ? $('tkWrap') : cur === 'sheep' ? $('shWrap') : cur === 'drakkar' ? $('dkWrap') : cur === 'lumber' ? $('ljWrap') : cur === 'agility' ? $('agWrap') : cur === 'galop' ? $('gpWrap') : cur === 'meduse' ? $('mdWrap') : cur === 'blob' ? $('blWrap') : cur === 'racer' ? $('rcWrap') : cur === 'leo' ? $('laWrap') : cur === 'mino' ? $('mnWrap') : null;
+    : cur === 'naval' ? document.querySelector('#scrNaval .nvwrap') : cur === 'mole' ? $('mlWrap') : cur === 'carrom' ? $('cmWrap') : cur === 'curl' ? $('cuWrap') : cur === 'chairs' ? $('mcWrap') : cur === 'master' ? $('mmWrap') : cur === 'kabaddi' ? $('kbWrap') : cur === 'dodge' ? $('dbWrap') : cur === 'tank' ? $('tkWrap') : cur === 'sheep' ? $('shWrap') : cur === 'drakkar' ? $('dkWrap') : cur === 'lumber' ? $('ljWrap') : cur === 'agility' ? $('agWrap') : cur === 'galop' ? $('gpWrap') : cur === 'meduse' ? $('mdWrap') : cur === 'blob' ? $('blWrap') : cur === 'racer' ? $('rcWrap') : cur === 'leo' ? $('laWrap') : cur === 'mino' ? $('mnWrap') : null;
 }
 // x, y: position in the wrap (0..1); size in px; pal: one of BOOM_COLORS
 function boom(text, o = {}){
@@ -9978,7 +10011,7 @@ async function resultCard(){
   // footer: where to play
   c.fillStyle = '#000'; c.fillRect(0, H - 120, W, 120);
   c.fillStyle = '#FFD93B'; c.textAlign = 'center'; c.font = '58px Bangers, Impact, sans-serif'; c.fillText('Viens jouer : bastonarcade.com', W/2, H - 64);
-  c.fillStyle = '#fff'; c.font = '700 26px Nunito, sans-serif'; c.fillText('21 jeux à plusieurs, gratuits, sans compte, sans pub', W/2, H - 22);
+  c.fillStyle = '#fff'; c.font = '700 26px Nunito, sans-serif'; c.fillText('22 jeux à plusieurs, gratuits, sans compte, sans pub', W/2, H - 22);
   return cv;
 }
 $('btnShare').onclick = async () => {
@@ -12886,6 +12919,527 @@ function mnDraw(ctx, now){
   ctx.restore();
 }
 
+// ================= CARROM : flick the striker, pocket the coins, white 1, black 2, the queen 5 if you cover it =================
+// The host simulates every coin; the shooter only sends where the striker sits on their line, the angle and the power.
+// Board in units of 600; each player shoots from one side (2 players face each other), the view turns so that mine is at the bottom.
+const CM_S = 600, CM_C = 300, CM_R = 13, CM_RS = 19, CM_MS = 2.2, CM_POCKET = [[24, 24], [576, 24], [24, 576], [576, 576]], CM_CATCH = 22;
+const CM_BASE_Y = 516, CM_BASE_X0 = 150, CM_BASE_X1 = 450, CM_VMAX = 1550, CM_FRIC = 330, CM_WALL = .72, CM_E = .92;
+const CM_TURN_MS = 20000, CM_SIDES = [0, 2, 1, 3], CM_VAL = { w:1, b:2, q:5 }, CM_MAXA = 1.38;
+let HCM = null, CM = null;
+
+// local (my side at the bottom) <-> board, for side 0..3 turned a quarter each
+function cmRot(side, x, y, inv){
+  const t = (inv ? -1 : 1) * side * Math.PI/2, c = Math.round(Math.cos(t)), s = Math.round(Math.sin(t)), dx = x - CM_C, dy = y - CM_C;
+  return [CM_C + dx*c - dy*s, CM_C + dx*s + dy*c];
+}
+function cmLayout(){
+  const C = [{ id:0, k:'q', x:CM_C, y:CM_C }], d = 2*CM_R + .6;
+  let id = 1;
+  for (let i = 0; i < 6; i++){ const a = i*Math.PI/3; C.push({ id:id++, k:i % 2 ? 'b' : 'w', x:CM_C + Math.cos(a)*d, y:CM_C + Math.sin(a)*d }); }
+  for (let i = 0; i < 12; i++){
+    const a = i*Math.PI/6, r = i % 2 ? d*Math.sqrt(3) : 2*d;       // the outer ring: alternately on the points and in the gaps
+    C.push({ id:id++, k:i % 2 ? 'w' : 'b', x:CM_C + Math.cos(a)*r, y:CM_C + Math.sin(a)*r });
+  }
+  return C.map(c => ({ ...c, vx:0, vy:0, r:CM_R, m:1 }));
+}
+// one physics step for a set of bodies; returns the bodies that fell in a pocket, and counts the knocks
+function cmStep(B, h, ev){
+  for (const b of B){
+    if (!b.vx && !b.vy) continue;
+    const sp = Math.hypot(b.vx, b.vy), ns = sp - CM_FRIC*h - sp*.25*h;
+    if (ns <= 4){ b.vx = 0; b.vy = 0; continue; }
+    b.vx *= ns/sp; b.vy *= ns/sp;
+    b.x += b.vx*h; b.y += b.vy*h;
+  }
+  for (let i = 0; i < B.length; i++) for (let j = i + 1; j < B.length; j++){
+    const A = B[i], C = B[j], dx = C.x - A.x, dy = C.y - A.y, rr = A.r + C.r;
+    if (Math.abs(dx) >= rr || Math.abs(dy) >= rr) continue;
+    const d = Math.hypot(dx, dy); if (d >= rr || d === 0) continue;
+    const nx = dx/d, ny = dy/d, ov = rr - d, wa = C.m/(A.m + C.m), wc = A.m/(A.m + C.m);
+    A.x -= nx*ov*wa; A.y -= ny*ov*wa; C.x += nx*ov*wc; C.y += ny*ov*wc;
+    const rel = (A.vx - C.vx)*nx + (A.vy - C.vy)*ny;
+    if (rel <= 0) continue;
+    const J = rel*(1 + CM_E)/(1/A.m + 1/C.m);
+    A.vx -= J/A.m*nx; A.vy -= J/A.m*ny; C.vx += J/C.m*nx; C.vy += J/C.m*ny;
+    if (ev){ ev.clack++; if (A.s || C.s) ev.hit = true; }
+  }
+  const out = [];
+  for (const b of B){
+    for (const [px, py] of CM_POCKET) if (Math.hypot(b.x - px, b.y - py) < CM_CATCH){ out.push(b); break; }
+    if (out[out.length - 1] === b) continue;
+    if (b.x < b.r){ b.x = b.r; if (b.vx < 0){ b.vx = -b.vx*CM_WALL; if (ev) ev.wall++; } }
+    if (b.x > CM_S - b.r){ b.x = CM_S - b.r; if (b.vx > 0){ b.vx = -b.vx*CM_WALL; if (ev) ev.wall++; } }
+    if (b.y < b.r){ b.y = b.r; if (b.vy < 0){ b.vy = -b.vy*CM_WALL; if (ev) ev.wall++; } }
+    if (b.y > CM_S - b.r){ b.y = CM_S - b.r; if (b.vy > 0){ b.vy = -b.vy*CM_WALL; if (ev) ev.wall++; } }
+  }
+  return out;
+}
+// where a striker may sit on a side: on the line, and not on top of a coin
+function cmStrikerAt(side, u, coins){
+  let lx = CM_BASE_X0 + Math.max(0, Math.min(1, +u || 0))*(CM_BASE_X1 - CM_BASE_X0);
+  const free = x => { const [bx, by] = cmRot(side, x, CM_BASE_Y); return !coins.some(c => Math.hypot(c.x - bx, c.y - by) < CM_R + CM_RS + 1); };
+  if (!free(lx)) for (let k = 2; k < 320; k += 2){ if (lx + k <= CM_BASE_X1 && free(lx + k)){ lx += k; break; } if (lx - k >= CM_BASE_X0 && free(lx - k)){ lx -= k; break; } }
+  const [x, y] = cmRot(side, lx, CM_BASE_Y);
+  return { x, y, lx };
+}
+const cmShotVel = (side, a, p) => { const [vx, vy] = cmRot(side, CM_C + Math.sin(a), CM_C - Math.cos(a)); const v = (.12 + .88*Math.max(0, Math.min(1, p)))*CM_VMAX; return [(vx - CM_C)*v, (vy - CM_C)*v]; };
+
+// ---- host side ----
+function cmLater(fn, ms){ const hc = HCM; HCM.timers.push(setTimeout(() => { if (HCM === hc && H && !H.over) fn(); }, ms)); }
+function cmClear(){ if (HCM){ HCM.timers.forEach(t => clearTimeout(t)); clearTimeout(HCM.timer); } }
+function carromHostStart(){
+  const n = players.length;
+  const order = players.map(p => p.id); for (let i = order.length - 1; i > 0; i--){ const j = Math.floor(Math.random()*(i + 1)); [order[i], order[j]] = [order[j], order[i]]; }
+  const side = {}; players.forEach((p, i) => side[p.id] = CM_SIDES[i % 4]);
+  HCM = { order, side, coins:cmLayout(), k:0, turns:n <= 2 ? 7 : n === 3 ? 5 : 4, shots:{}, ph:'wait', shooter:null, st:null, timers:[], timer:null,
+    lastSend:0, runT:0, ev:null, pot:[], queen:null, extra:0 };
+  players.forEach(p => { HCM.shots[p.id] = 0; Object.assign(H.stats[p.id], { pts:0, w:0, b:0, q:0, fouls:0 }); });
+  broadcast({ t:'start', players, game:'carrom', side, turns:HCM.turns, c:cmSnap() });
+  cmLater(() => cmNextTurn(null), 3400);
+}
+const cmSnap = () => HCM.coins.map(c => [c.id, Math.round(c.x*10)/10, Math.round(c.y*10)/10]);
+const cmScores = () => players.map(p => H.stats[p.id].pts);
+function cmNextTurn(again){
+  if (!H || H.over || !HCM) return;
+  clearTimeout(HCM.timer);
+  if (!HCM.coins.length) return carromFinish();
+  let id = again;
+  if (!id){
+    const n = HCM.order.length;
+    for (let tries = 0; tries <= n; tries++){
+      const c = HCM.order[HCM.k % n]; HCM.k++;
+      if (!H.stats[c].left && HCM.shots[c] < HCM.turns){ id = c; break; }
+    }
+    if (!id) return carromFinish();
+    HCM.shots[id]++; HCM.extra = 0;
+  } else HCM.extra++;
+  HCM.ph = 'aim'; HCM.shooter = id; HCM.st = null;
+  const lastRound = HCM.order.every(c => H.stats[c].left || HCM.shots[c] >= HCM.turns);
+  broadcast({ t:'cm_turn', id, side:HCM.side[id], ms:CM_TURN_MS, again:!!again, last:lastRound && !again, shots:players.map(p => HCM.turns - (HCM.shots[p.id] || 0)), q:HCM.queen, c:cmSnap() });
+  if (players.find(p => p.id === id && p.bot)) botLater(() => botCarrom(id), 1300 + Math.random()*900);
+  const hc = HCM;
+  HCM.timer = setTimeout(() => {                        // nobody shot in time: the turn passes
+    if (HCM !== hc || !H || H.over || HCM.ph !== 'aim' || HCM.shooter !== id) return;
+    broadcast({ t:'cm_skip', id });
+    if (HCM.queen === id){ cmQueenBack(); }
+    cmNextTurn(null);
+  }, CM_TURN_MS + 400);
+}
+// the striker slides along my line while I aim: everyone sees it move
+function carromMove(id, u){
+  if (!HCM || HCM.ph !== 'aim' || HCM.shooter !== id) return;
+  u = +u; if (!isFinite(u)) return;
+  const now = performance.now(); if (HCM.lastMove && now - HCM.lastMove < 60) return; HCM.lastMove = now;
+  broadcast({ t:'cm_pos', id, u:Math.round(Math.max(0, Math.min(1, u))*1000)/1000 });
+}
+function carromShoot(id, u, a, p){
+  if (!H || H.over || !HCM || HCM.ph !== 'aim' || HCM.shooter !== id) return;
+  u = +u; a = +a; p = +p; if (!isFinite(u) || !isFinite(a) || !isFinite(p)) return;
+  a = Math.max(-CM_MAXA, Math.min(CM_MAXA, a)); p = Math.max(0, Math.min(1, p));
+  clearTimeout(HCM.timer);
+  const side = HCM.side[id], S = cmStrikerAt(side, u, HCM.coins), [vx, vy] = cmShotVel(side, a, p);
+  HCM.st = { id:-1, s:true, x:S.x, y:S.y, vx, vy, r:CM_RS, m:CM_MS };
+  HCM.ph = 'run'; HCM.runT = 0; HCM.ev = { clack:0, wall:0, hit:false }; HCM.pot = []; HCM.stIn = false;
+  broadcast({ t:'cm_go', id, x:Math.round(S.x*10)/10, y:Math.round(S.y*10)/10 });
+}
+function carromHostFrame(dt, now){
+  if (!HCM || HCM.ph !== 'run' || !H || H.over) return;
+  const n = Math.ceil(dt/(1/240)), h = dt/n;
+  for (let i = 0; i < n; i++){
+    const B = HCM.stIn ? HCM.coins : HCM.coins.concat([HCM.st]);
+    const out = cmStep(B, h, HCM.ev);
+    for (const b of out){
+      if (b.s){ HCM.stIn = true; broadcast({ t:'cm_in', s:1, x:Math.round(b.x), y:Math.round(b.y) }); continue; }
+      HCM.coins = HCM.coins.filter(c => c !== b); HCM.pot.push(b);
+      broadcast({ t:'cm_in', id:b.id, k:b.k, x:Math.round(b.x), y:Math.round(b.y), by:HCM.shooter });
+    }
+  }
+  HCM.runT += dt;
+  const moving = HCM.coins.some(c => c.vx || c.vy) || (!HCM.stIn && (HCM.st.vx || HCM.st.vy));
+  if (now - HCM.lastSend > 33){
+    HCM.lastSend = now;
+    broadcast({ t:'cm_s', c:cmSnap(), st:HCM.stIn ? null : [Math.round(HCM.st.x*10)/10, Math.round(HCM.st.y*10)/10], cl:HCM.ev.clack, wl:HCM.ev.wall });
+  }
+  if (moving && HCM.runT < 9) return;
+  for (const c of HCM.coins){ c.vx = 0; c.vy = 0; }
+  HCM.ph = 'rest';
+  cmSettle();
+}
+function cmQueenBack(){
+  HCM.queen = null;
+  const q = { id:0, k:'q', x:CM_C, y:CM_C, vx:0, vy:0, r:CM_R, m:1 };
+  cmPlaceFree(q); HCM.coins.push(q);
+}
+function cmPlaceFree(c){                                  // back to the centre, or as near as it is free
+  for (let r = 0; r < 200; r += 3) for (let a = 0; a < 6.28; a += .35){
+    const x = CM_C + Math.cos(a)*r, y = CM_C + Math.sin(a)*r;
+    if (!HCM.coins.some(o => Math.hypot(o.x - x, o.y - y) < 2*CM_R + .5)){ c.x = x; c.y = y; return; }
+  }
+}
+// after the shot: points, the queen and its cover, the foul, and who plays next
+function cmSettle(){
+  const id = HCM.shooter, st = H.stats[id], pot = HCM.pot, foul = HCM.stIn;
+  let gain = 0, msg = [], again = false;
+  const plain = pot.filter(c => c.k !== 'q'), queenNow = pot.some(c => c.k === 'q');
+  if (foul){
+    for (const c of pot){ if (c.k === 'q'){ continue; } const b = { ...c, vx:0, vy:0 }; cmPlaceFree(b); HCM.coins.push(b); }
+    if (queenNow || HCM.queen === id){ cmQueenBack(); }
+    const lose = Math.min(1, st.pts); st.pts -= lose; st.fouls++; gain = -lose;
+    msg.push('foul');
+  } else {
+    for (const c of plain){ gain += CM_VAL[c.k]; st[c.k]++; }
+    if (HCM.queen === id){                                // the queen was waiting for her cover
+      if (plain.length){ gain += CM_VAL.q; st.q++; msg.push('cover'); } else { cmQueenBack(); msg.push('nocover'); }
+      HCM.queen = null;
+    }
+    if (queenNow){
+      if (plain.length){ gain += CM_VAL.q; st.q++; msg.push('cover'); }       // pocketed with another coin: covered at once
+      else { HCM.queen = id; msg.push('queen'); }
+    }
+    st.pts += gain;
+    again = pot.length > 0 && HCM.extra < 6;
+  }
+  broadcast({ t:'cm_res', id, gain, msg, foul, again, scores:cmScores(), c:cmSnap(), q:HCM.queen });
+  if (!HCM.coins.length && HCM.queen == null) return cmLater(carromFinish, 1600);
+  if (!HCM.coins.length && HCM.queen != null){ cmQueenBack(); }
+  cmLater(() => cmNextTurn(again ? id : null), again ? 1300 : 1700);
+}
+function carromFinish(){
+  if (!H || H.over) return;
+  H.over = true; cmClear();
+  const ids = Object.keys(H.stats).sort((a, b) => {
+    const A = H.stats[a], B = H.stats[b];
+    if (A.left !== B.left) return A.left ? 1 : -1;
+    return B.pts - A.pts || (B.w + B.b + B.q) - (A.w + A.b + A.q) || A.fouls - B.fouls;
+  });
+  const ranking = ids.map((pid, i) => { const p = players.find(x => x.id === pid) || { name:'?', color:'#888' }; return { id:pid, name:p.name, color:p.color, place:i + 1, ...H.stats[pid] }; });
+  setTimeout(() => broadcast({ t:'end', ranking, game:'carrom' }), 900);
+}
+function carromDrop(id){
+  if (!H || H.over || !H.stats[id]) return;
+  H.stats[id].left = true;
+  broadcast({ t:'cm_skip', id, left:true });
+  const alive = players.filter(p => !H.stats[p.id].left);
+  if (alive.length <= 1 || !alive.some(p => !p.bot)) return carromFinish();
+  if (HCM && HCM.ph === 'aim' && HCM.shooter === id){ if (HCM.queen === id) cmQueenBack(); cmNextTurn(null); }
+}
+
+// ---- robot: picks a coin and a pocket (aim at the "ghost" spot behind the coin), checks the shot in a quick simulation, then misses a little ----
+function cmSimShot(coins, side, u, a, p){
+  const B = coins.map(c => ({ ...c })), S = cmStrikerAt(side, u, B), [vx, vy] = cmShotVel(side, a, p);
+  const st = { s:true, x:S.x, y:S.y, vx, vy, r:CM_RS, m:CM_MS };
+  let all = B.concat([st]), pts = 0, foul = false;
+  for (let i = 0; i < 1100; i++){
+    const out = cmStep(all, 1/120, null);
+    for (const b of out){ if (b.s) foul = true; else pts += b.k === 'q' ? 2 : CM_VAL[b.k]; }
+    if (out.length) all = all.filter(b => !out.includes(b));
+    if (!all.some(b => b.vx || b.vy)) break;
+  }
+  return foul ? -3 : pts;
+}
+function botCarrom(id){
+  if (!HCM || HCM.ph !== 'aim' || HCM.shooter !== id) return;
+  const side = HCM.side[id], coins = HCM.coins, cands = [];
+  for (const c of coins) for (const [px, py] of CM_POCKET){
+    const dl = Math.hypot(px - c.x, py - c.y), dx = (px - c.x)/dl, dy = (py - c.y)/dl, gx = c.x - dx*(CM_R + CM_RS), gy = c.y - dy*(CM_R + CM_RS);
+    const [lgx, lgy] = cmRot(side, gx, gy, true);
+    if (lgy > CM_BASE_Y - 20) continue;                  // the ghost spot must be in front of my line
+    if (coins.some(o => o !== c && Math.hypot(o.x - px, o.y - py) < dl && Math.abs((o.x - c.x)*dy - (o.y - c.y)*dx) < 2*CM_R && (o.x - c.x)*dx + (o.y - c.y)*dy > 0)) continue;   // the way to the pocket is blocked
+    for (let u = 0; u <= 1.001; u += 1/12){
+      const lx = CM_BASE_X0 + u*(CM_BASE_X1 - CM_BASE_X0), vx = lgx - lx, vy = lgy - CM_BASE_Y, L = Math.hypot(vx, vy);
+      const a = Math.atan2(vx, -vy); if (Math.abs(a) > CM_MAXA - .05) continue;
+      const [ldx, ldy] = cmRot(side, CM_C + dx, CM_C + dy, true), cut = (vx/L)*(ldx - CM_C) + (vy/L)*(ldy - CM_C);
+      if (cut < .45) continue;
+      const [sx, sy] = cmRot(side, lx, CM_BASE_Y);
+      const bx = (gx - sx)/L, by = (gy - sy)/L;
+      if (coins.some(o => o !== c && (o.x - sx)*bx + (o.y - sy)*by > 0 && (o.x - sx)*bx + (o.y - sy)*by < L && Math.abs((o.x - sx)*by - (o.y - sy)*bx) < CM_R + CM_RS)) continue;
+      cands.push({ u, a, sc:cut*(c.k === 'q' ? 2.5 : CM_VAL[c.k]) - (L + dl)/900, need:Math.min(1, .3 + (L + dl*1.6)/1100) });
+    }
+  }
+  cands.sort((x, y) => y.sc - x.sc);
+  let best = null;
+  if (cands.length && Math.random() < .25){ const c = cands[Math.floor(Math.random()*Math.min(5, cands.length))]; best = { u:c.u, a:c.a, p:c.need + .1, r:1 }; }   // sometimes it does not check its shot
+  else for (const c of cands.slice(0, 10)) for (const p of [c.need, c.need + .15, c.need + .3]){
+    const r = cmSimShot(coins, side, c.u, c.a, Math.min(1, p));
+    if (!best || r > best.r || (r === best.r && c.sc > best.sc)) best = { u:c.u, a:c.a, p:Math.min(1, p), r, sc:c.sc };
+  }
+  if (!best || best.r <= 0){                               // nothing clean: a strong shot into the pack
+    const u = .3 + Math.random()*.4, lx = CM_BASE_X0 + u*(CM_BASE_X1 - CM_BASE_X0), t = coins[Math.floor(Math.random()*coins.length)] || { x:CM_C, y:CM_C };
+    const [ltx, lty] = cmRot(side, t.x, t.y, true);
+    best = { u, a:Math.max(-CM_MAXA, Math.min(CM_MAXA, Math.atan2(ltx - lx, -(lty - CM_BASE_Y)))), p:.85 };
+  }
+  carromMove(id, best.u);
+  botLater(() => carromShoot(id, best.u, best.a + (Math.random() - .5)*.17, best.p + (Math.random() - .5)*.4), 700);   // medium level: a human-sized error
+}
+
+// ---- my view ----
+const cmcv = $('cmCv'), cmctx = cmcv.getContext('2d');
+function startCarrom(m){
+  lastCountShown = null;
+  players = m.players; cur = 'carrom'; G = null; PG = null; D = null; phase = 'count';
+  $('scrEnd').hidden = true; show('scrCarrom');
+  const side = m.side && typeof m.side === 'object' ? m.side : {};
+  CM = { side, my:Number.isInteger(side[me.id]) ? side[me.id] : 0, coins:new Map(), st:null, shooter:null, deadline:0, count:3.2, ph:'wait',
+    u:.5, aim:null, drag:null, kbd:false, ka:0, kp:.6, charge:0, scores:players.map(() => 0), shots:players.map(() => m.turns|0), turns:m.turns|0,
+    fx:[], cl:0, wl:0, q:null, over:false, lastMove:0 };
+  cmSetCoins(m.c, true);
+  gameHelp($('cmHelp'), 'carrom');
+  renderCmPlayers(); cmHeader();
+}
+function cmSetCoins(arr, snap){
+  if (!CM || !Array.isArray(arr)) return;
+  const seen = new Set();
+  for (const a of arr){
+    if (!Array.isArray(a)) continue;
+    const [id, x, y] = a; seen.add(id|0);
+    const c = CM.coins.get(id|0), k = (id|0) === 0 ? 'q' : cmKindOf(id|0);
+    if (c){ c.tx = +x; c.ty = +y; if (snap){ c.x = c.tx; c.y = c.ty; } }
+    else CM.coins.set(id|0, { x:+x, y:+y, tx:+x, ty:+y, k });
+  }
+  for (const id of [...CM.coins.keys()]) if (!seen.has(id)) CM.coins.delete(id);
+}
+const cmKindOf = id => id === 0 ? 'q' : id <= 6 ? (id % 2 ? 'w' : 'b') : ((id - 7) % 2 ? 'w' : 'b');
+let cmToastT = null;
+function cmToast(t){ const el = $('cmToast'); el.textContent = t; el.classList.add('on'); clearTimeout(cmToastT); cmToastT = setTimeout(() => el.classList.remove('on'), 2000); }
+const cmName = id => { const p = players.find(x => x.id === id); return p ? p.name : '?'; };
+function renderCmPlayers(){
+  const ul = $('cmPlayers'); ul.textContent = '';
+  players.forEach((p, i) => {
+    const li = document.createElement('li');
+    if (CM.shooter === p.id) li.classList.add('turn');
+    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color;
+    const t = document.createElement('span');
+    t.textContent = p.name + (p.id === me.id ? ' (vous)' : '') + ' · ' + CM.scores[i] + ' pt' + (Math.abs(CM.scores[i]) > 1 ? 's' : '');
+    const st = document.createElement('span'); st.className = 'cust'; const left = Math.max(0, CM.shots[i] | 0);
+    st.textContent = '●'.repeat(Math.min(9, left)); st.title = 'coups restants';
+    li.append(d, t, st); ul.append(li);
+  });
+}
+function cmHeader(){
+  const el = $('cmTurn'); el.textContent = '';
+  const mine = CM.shooter === me.id;
+  if (CM.shooter){
+    const i = players.findIndex(p => p.id === CM.shooter);
+    const d = document.createElement('span'); d.className = 'dot'; d.style.background = players[i] ? players[i].color : '#888';
+    const t = document.createElement('span');
+    t.textContent = mine ? (CM.ph === 'run' ? 'Ça roule…' : 'À vous de jouer !') : (CM.ph === 'run' ? 'Coup de ' : 'Tour de ') + cmName(CM.shooter);
+    el.append(d, t);
+  } else el.textContent = CM.over ? 'Plateau vide !' : 'Préparation…';
+  el.classList.toggle('mine', mine && CM.ph === 'aim');
+  $('cmLeft').textContent = CM.coins.size + ' pions';
+}
+function carromRecv(m){
+  if (!CM) return;
+  switch (m.t){
+    case 'cm_turn': {
+      if (phase === 'count'){ phase = 'play'; }
+      CM.shooter = m.id; CM.ph = 'aim'; CM.deadline = performance.now() + (m.ms|0); CM.st = null; CM.aim = null; CM.drag = null; CM.charge = 0;
+      CM.shSide = m.side|0; CM.u = .5; CM.q = m.q || null;
+      if (Array.isArray(m.shots)) CM.shots = m.shots;
+      cmSetCoins(m.c, true);
+      if (m.id === me.id){ sfx('myturn'); CM.ka = 0; if (m.again) boom('ENCORE !', { size:34, x:.5, y:.62, pal:BOOM_COLORS[0], ms:900 }); else if (m.last) cmToast('Dernier coup !'); }
+      else if (m.again) cmToast(cmName(m.id) + ' rejoue');
+      renderCmPlayers(); cmHeader();
+      break;
+    }
+    case 'cm_pos': if (m.id !== me.id && CM.shooter === m.id) CM.u = Math.max(0, Math.min(1, +m.u || 0)); break;
+    case 'cm_go':
+      CM.ph = 'run'; CM.deadline = 0; $('cmTime').textContent = '';
+      CM.st = { x:+m.x, y:+m.y, tx:+m.x, ty:+m.y };
+      sfx('slide'); cmHeader();
+      break;
+    case 'cm_s':
+      cmSetCoins(m.c);
+      if (Array.isArray(m.st) && CM.st){ CM.st.tx = +m.st[0]; CM.st.ty = +m.st[1]; }
+      if ((m.cl|0) > CM.cl){ CM.cl = m.cl|0; sfx('clack'); }
+      if ((m.wl|0) > CM.wl){ CM.wl = m.wl|0; sfx('wall'); }
+      break;
+    case 'cm_in': {
+      if (m.s){ CM.st = null; CM.fx.push({ x:+m.x, y:+m.y, t:0, txt:'' }); sfx('fail'); boom('FAUTE !', { size:34, x:.5, y:.3, pal:BOOM_COLORS[2], ms:1100 }); break; }
+      CM.coins.delete(m.id|0);
+      const k = m.k === 'q' ? 'q' : m.k === 'b' ? 'b' : 'w';
+      CM.fx.push({ x:+m.x, y:+m.y, t:0, txt:k === 'q' ? 'REINE' : '+' + CM_VAL[k] });
+      sfx('pop'); tone(110, .18, 'sine', .12, 60);
+      cmHeader();
+      break;
+    }
+    case 'cm_res': {
+      CM.ph = 'rest'; CM.st = null;
+      if (Array.isArray(m.scores)) CM.scores = m.scores;
+      cmSetCoins(m.c); CM.q = m.q || null;
+      const mine = m.id === me.id, who = cmName(m.id), msg = Array.isArray(m.msg) ? m.msg : [];
+      if (msg.includes('foul')) cmToast(mine ? 'Palet tombé : faute, les pions reviennent au centre' : 'Faute de ' + who + ' : palet tombé');
+      else if (msg.includes('queen')) cmToast(mine ? 'La reine ! Rentrez un autre pion pour la garder' : who + ' rentre la reine : il doit la couvrir');
+      else if (msg.includes('nocover')) cmToast(mine ? 'Reine pas couverte : elle revient au centre' : 'Reine pas couverte : retour au centre');
+      else if (msg.includes('cover')) { cmToast(mine ? 'Reine couverte : +5 !' : who + ' couvre la reine : +5'); boom('REINE !', { size:40, x:.5, y:.4, pal:BOOM_COLORS[0], ms:1300 }); }
+      if ((m.gain|0) > 0){ boom('+' + (m.gain|0), { size:44, x:.5, y:.5, pal:mine ? BOOM_COLORS[0] : BOOM_COLORS[3], ms:1100 }); sfx(mine ? 'finish' : 'ok'); }
+      else if (!msg.length && mine) sfx('thud');
+      renderCmPlayers(); cmHeader();
+      break;
+    }
+    case 'cm_skip': cmToast(m.left ? cmName(m.id) + ' a quitté la partie' : cmName(m.id) + ' n\'a pas joué à temps'); break;
+  }
+}
+
+// ---- input: slide along my line to place the striker, pull back from it to aim, let go to shoot ----
+const cmMine = () => CM && CM.shooter === me.id && CM.ph === 'aim' && phase === 'play' && !CM.over;
+function cmPoint(e){ const r = cmcv.getBoundingClientRect(); return [(e.clientX - r.left)/r.width*CM_S, (e.clientY - r.top)/r.height*CM_S]; }   // in my view = local coordinates
+const cmLX = u => CM_BASE_X0 + u*(CM_BASE_X1 - CM_BASE_X0);
+function cmAimOf(){
+  if (CM.aim){
+    const dx = CM.aim.x0 - CM.aim.x, dy = CM.aim.y0 - CM.aim.y, L = Math.hypot(dx, dy);
+    if (L < 10 || dy >= 0) return { a:0, p:0, ok:false };
+    return { a:Math.max(-CM_MAXA, Math.min(CM_MAXA, Math.atan2(dx, -dy))), p:Math.min(1, L/210), ok:true };
+  }
+  return CM.kbd ? { a:CM.ka, p:CM.charge, ok:CM.charge > 0 } : null;
+}
+function cmSendPos(){ const now = performance.now(); if (now - CM.lastMove > 70){ CM.lastMove = now; toHost({ t:'cm_mv', u:Math.round(CM.u*1000)/1000 }); } }
+cmcv.addEventListener('pointerdown', e => {
+  if (!cmMine()) return;
+  e.preventDefault(); cmcv.setPointerCapture(e.pointerId);
+  const [x, y] = cmPoint(e), sx = cmLX(CM.u);
+  CM.kbd = false;
+  if (Math.hypot(x - sx, y - CM_BASE_Y) < CM_RS*2.6) CM.aim = { x0:sx, y0:CM_BASE_Y, x, y };
+  else { CM.drag = { x0:x, u0:CM.u }; CM.u = Math.max(0, Math.min(1, (x - CM_BASE_X0)/(CM_BASE_X1 - CM_BASE_X0))); cmSendPos(); }
+});
+cmcv.addEventListener('pointermove', e => {
+  if (!CM) return;
+  const [x, y] = cmPoint(e);
+  if (CM.aim){ CM.aim.x = x; CM.aim.y = y; }
+  else if (CM.drag && cmMine()){ CM.u = Math.max(0, Math.min(1, (x - CM_BASE_X0)/(CM_BASE_X1 - CM_BASE_X0))); cmSendPos(); }
+});
+function cmRelease(){
+  if (!CM) return;
+  CM.drag = null;
+  if (!CM.aim) return;
+  const r = cmAimOf(); CM.aim = null;
+  if (!cmMine()) return;
+  if (!r.ok || r.p < .08){ cmToast('Tirez le palet vers vous, puis lâchez'); return; }
+  cmShootNow(r);
+}
+function cmShootNow(r){ CM.ph = 'sent'; CM.kbd = false; toHost({ t:'cm_shot', u:Math.round(CM.u*1000)/1000, a:Math.round(r.a*10000)/10000, p:Math.round(r.p*1000)/1000 }); }
+cmcv.addEventListener('pointerup', cmRelease);
+cmcv.addEventListener('pointercancel', cmRelease);
+addEventListener('keydown', e => {
+  if (cur !== 'carrom' || !CM || e.target.tagName === 'INPUT' || !cmMine()) return;
+  const k = e.key.toLowerCase();
+  if (k === 'arrowleft' || k === 'arrowright' || k === 'q' || k === 'd'){ e.preventDefault(); CM.u = Math.max(0, Math.min(1, CM.u + (k === 'arrowleft' || k === 'q' ? -.02 : .02))); cmSendPos(); CM.kbd = true; }
+  else if (k === 'arrowup' || k === 'arrowdown' || k === 'z' || k === 's'){ e.preventDefault(); CM.kbd = true; CM.ka = Math.max(-CM_MAXA, Math.min(CM_MAXA, CM.ka + (k === 'arrowup' || k === 'z' ? -.02 : .02))); }
+  else if (k === ' '){ e.preventDefault(); CM.kbd = true; if (!e.repeat){ CM.charging = true; CM.charge = 0; CM.chT = performance.now(); } }
+});
+addEventListener('keyup', e => {
+  if (cur !== 'carrom' || !CM || e.key !== ' ' || !CM.charging) return;
+  CM.charging = false;
+  if (cmMine() && CM.charge > .05) cmShootNow({ a:CM.ka, p:CM.charge });
+  CM.charge = 0;
+});
+
+// ---- loop ----
+function carromFrame(dtMs, now){
+  if (!CM) return;
+  const dt = dtMs/1000;
+  if (phase === 'count'){ CM.count -= dt; if (CM.count > 0) countBeep(Math.ceil(CM.count)); else countBeep(0); }
+  if (me.host) carromHostFrame(dt, now);
+  if (CM.deadline && CM.ph === 'aim'){
+    const left = Math.max(0, CM.deadline - now), el = $('cmTime');
+    el.textContent = '⏱ ' + Math.ceil(left/1000); el.classList.toggle('low', left < 6000);
+  }
+  if (CM.charging){ const t = (now - CM.chT)/1100; CM.charge = Math.min(1, t); }
+  const k = Math.min(1, dt*20);
+  for (const c of CM.coins.values()){ c.x += (c.tx - c.x)*k; c.y += (c.ty - c.y)*k; }
+  if (CM.st){ CM.st.x += (CM.st.tx - CM.st.x)*k; CM.st.y += (CM.st.ty - CM.st.y)*k; }
+  for (const f of CM.fx) f.t += dt;
+  CM.fx = CM.fx.filter(f => f.t < 1);
+  drawCarrom(now);
+}
+
+// ---- drawing ----
+function cmCoin(ctx, x, y, k, r){
+  ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.beginPath(); ctx.arc(x + 2, y + 3, r, 0, Math.PI*2); ctx.fill();
+  const col = k === 'q' ? '#E6262B' : k === 'b' ? '#2B2B33' : '#FFF4D6', ring = k === 'b' ? '#55555F' : k === 'q' ? '#FF8A8A' : '#D9C79A';
+  ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI*2); ctx.fillStyle = col; ctx.fill(); ctx.strokeStyle = '#000'; ctx.lineWidth = 2; ctx.stroke();
+  ctx.beginPath(); ctx.arc(x, y, r*.62, 0, Math.PI*2); ctx.strokeStyle = ring; ctx.lineWidth = 2; ctx.stroke();
+  ctx.beginPath(); ctx.arc(x, y, r*.28, 0, Math.PI*2); ctx.stroke();
+}
+function cmStriker(ctx, x, y, col, ghost){
+  ctx.globalAlpha = ghost ? .55 : 1;
+  ctx.fillStyle = 'rgba(0,0,0,.28)'; ctx.beginPath(); ctx.arc(x + 3, y + 4, CM_RS, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(x, y, CM_RS, 0, Math.PI*2); ctx.fillStyle = '#FFFFFF'; ctx.fill(); ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.stroke();
+  ctx.beginPath(); ctx.arc(x, y, CM_RS*.62, 0, Math.PI*2); ctx.fillStyle = col; ctx.fill(); ctx.lineWidth = 2; ctx.stroke();
+  ctx.fillStyle = '#FFFFFF'; ctx.beginPath(); star(ctx, x, y, CM_RS*.42); ctx.fill();
+  ctx.globalAlpha = 1;
+}
+function drawCarrom(now){
+  const ctx = cmctx, W = CM_S, P = CM_C;
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.fillStyle = '#7A4A22'; ctx.fillRect(0, 0, W, W);
+  // the board, turned so that my side is at the bottom
+  ctx.save(); ctx.translate(P, P); ctx.rotate(-CM.my*Math.PI/2); ctx.translate(-P, -P);
+  const g = ctx.createRadialGradient(P, P, 60, P, P, 420); g.addColorStop(0, '#F6DCA6'); g.addColorStop(1, '#E2B877');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, W);
+  ctx.strokeStyle = 'rgba(120,70,20,.10)'; ctx.lineWidth = 1; for (let y = 6; y < W; y += 9){ ctx.beginPath(); ctx.moveTo(0, y); ctx.bezierCurveTo(200, y + 4, 400, y - 4, W, y + 2); ctx.stroke(); }
+  // the four base lines with their red circles, and the arrows to the pockets
+  for (let s = 0; s < 4; s++){
+    ctx.save(); ctx.translate(P, P); ctx.rotate(s*Math.PI/2); ctx.translate(-P, -P);
+    ctx.strokeStyle = '#3A2410'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(CM_BASE_X0, CM_BASE_Y - CM_RS); ctx.lineTo(CM_BASE_X1, CM_BASE_Y - CM_RS); ctx.moveTo(CM_BASE_X0, CM_BASE_Y + CM_RS); ctx.lineTo(CM_BASE_X1, CM_BASE_Y + CM_RS); ctx.stroke();
+    for (const x of [CM_BASE_X0, CM_BASE_X1]){ ctx.beginPath(); ctx.arc(x, CM_BASE_Y, CM_RS, 0, Math.PI*2); ctx.fillStyle = '#C8282E'; ctx.fill(); ctx.stroke(); }
+    ctx.strokeStyle = '#3A2410'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(118, 482); ctx.lineTo(62, 538); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(62, 538); ctx.lineTo(64, 524); ctx.moveTo(62, 538); ctx.lineTo(76, 536); ctx.stroke();
+    ctx.restore();
+  }
+  ctx.strokeStyle = '#3A2410'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(P, P, 72, 0, Math.PI*2); ctx.stroke(); ctx.beginPath(); ctx.arc(P, P, 18, 0, Math.PI*2); ctx.stroke();
+  ctx.fillStyle = 'rgba(200,40,46,.85)'; star(ctx, P, P, 14); ctx.fill();
+  // pockets
+  for (const [x, y] of CM_POCKET){ ctx.beginPath(); ctx.arc(x, y, 24, 0, Math.PI*2); ctx.fillStyle = '#1A0E05'; ctx.fill(); ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.stroke(); }
+  // coins
+  for (const c of CM.coins.values()) cmCoin(ctx, c.x, c.y, c.k, CM_R);
+  // the striker: shot, or waiting on the shooter's line
+  const shooterIdx = players.findIndex(p => p.id === CM.shooter), col = players[shooterIdx] ? players[shooterIdx].color : '#888';
+  if (CM.st) cmStriker(ctx, CM.st.x, CM.st.y, col, false);
+  ctx.restore();
+  // what follows is drawn in my view (local coordinates of the shooter turned to my view)
+  if (CM.ph === 'aim' && CM.shooter){
+    const rel = ((CM.shSide - CM.my) % 4 + 4) % 4;      // the shooter's side, as I see it
+    ctx.save(); ctx.translate(P, P); ctx.rotate(rel*Math.PI/2); ctx.translate(-P, -P);
+    const mine = CM.shooter === me.id, sx = cmLX(CM.u), sy = CM_BASE_Y, r = mine ? cmAimOf() : null;
+    if (r && r.p > 0){
+      const L = 60 + r.p*330, ex = sx + Math.sin(r.a)*L, ey = sy - Math.cos(r.a)*L;
+      ctx.setLineDash([10, 8]); ctx.lineCap = 'round';
+      ctx.strokeStyle = '#000'; ctx.lineWidth = 7; ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey); ctx.stroke();
+      ctx.strokeStyle = r.p > .8 ? '#E6262B' : r.p > .45 ? '#FFD21F' : '#3DDC97'; ctx.lineWidth = 3.5; ctx.stroke(); ctx.setLineDash([]);
+      if (CM.aim){ ctx.strokeStyle = 'rgba(0,0,0,.5)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(CM.aim.x, CM.aim.y); ctx.stroke(); }
+    }
+    cmStriker(ctx, sx, sy, col, !mine);
+    if (mine && !CM.aim && !CM.drag && !(r && r.p)){
+      const b = (Math.sin(now/260) + 1)/2;
+      ctx.strokeStyle = 'rgba(255,255,255,' + (.4 + b*.5) + ')'; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(sx, sy, CM_RS + 6 + b*4, 0, Math.PI*2); ctx.stroke();
+    }
+    ctx.restore();
+  }
+  // pocket puffs and points, upright
+  for (const f of CM.fx){
+    const [vx, vy] = cmRot(CM.my, f.x, f.y, true);
+    ctx.globalAlpha = 1 - f.t; ctx.fillStyle = '#fff'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2;
+    star(ctx, vx, vy, 14 + f.t*26); ctx.fill(); ctx.stroke();
+    if (f.txt){ ctx.font = '26px Bangers, Impact, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineWidth = 4; ctx.strokeText(f.txt, vx, vy - 26 - f.t*20); ctx.fillStyle = '#FFD21F'; ctx.fillText(f.txt, vx, vy - 26 - f.t*20); }
+    ctx.globalAlpha = 1;
+  }
+  // the queen waiting for her cover
+  if (CM.q){ ctx.font = '900 14px Nunito, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.lineWidth = 4; ctx.strokeStyle = '#000'; ctx.fillStyle = '#FF8A8A';
+    const t = 'Reine à couvrir : ' + cmName(CM.q); ctx.strokeText(t, P, 44); ctx.fillText(t, P, 44); }
+  // the help line for the shooter
+  if (cmMine() && !CM.aim){
+    ctx.font = '900 15px Nunito, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.lineWidth = 4; ctx.strokeStyle = '#000'; ctx.fillStyle = '#fff';
+    const t = CM.drag ? 'Placez le palet sur la ligne' : 'Glissez pour placer · tirez le palet vers vous'; ctx.strokeText(t, P, W - 6); ctx.fillText(t, P, W - 6);
+  }
+  // keyboard power gauge
+  if (cmMine() && CM.kbd && (CM.charging || CM.charge)){
+    const x = W - 30, top = 330, h = 220; ctx.fillStyle = '#fff'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.fillRect(x, top, 18, h); ctx.strokeRect(x, top, 18, h);
+    ctx.fillStyle = CM.charge > .8 ? '#E6262B' : CM.charge > .45 ? '#FFD21F' : '#3DDC97'; ctx.fillRect(x + 2, top + h*(1 - CM.charge), 14, h*CM.charge - 2);
+  }
+}
+
 // ================= before each game: the rules in 2-3 slides, then everyone taps "Prêt" =================
 // The creator's "start" opens this briefing for the whole room; the game really starts once every player is ready
 // (or when the creator decides not to wait). "Rejouer" skips it: everybody already knows the game.
@@ -12913,6 +13467,7 @@ const HELP = {
   meduse:{ g:'Tenez le sommet de la pile, surtout au passage de l\'Argus (×5).', t:['Glissez pour viser, relâchez pour lâcher'], k:[['← →', 'viser'], ['Espace', 'lâcher']], tip:'Couché, un corps tient mieux ; debout, il monte plus haut mais bascule.' },
   racer:{ g:'2 tours : frappez, gérez l\'essence, passez aux stands.', t:['Volant à gauche', 'Accélérer, Freiner, Frapper à droite'], k:[['← →', 'tourner'], ['↑', 'accélérer'], ['↓', 'freiner'], ['Espace', 'frapper']], tip:'Freinez avant les virages, pas dedans.' },
   mino:{ g:'Minotaure : attrapez-les tous. Les autres : sortez avant la fin.', t:['Doigt appuyé, glissez vers où aller'], k:[['ZQSD ou flèches', 'courir']], x:['🐂', 'la jauge et le cœur montent quand il approche'], tip:'La flèche verte montre la sortie, pas le chemin. Cul-de-sac ? Faites demi-tour tout de suite.' },
+  carrom:{ g:'Rentrez les pions : blanc 1, noir 2, reine 5 (à couvrir).', t:['Glissez pour placer le palet', 'Tirez-le vers vous, lâchez'], k:[['← →', 'placer'], ['↑ ↓', 'viser'], ['Espace maintenu', 'puissance']], x:['🎯', 'un pion rentré : vous rejouez'], tip:'Visez le côté du pion opposé au trou : il part dans la direction du choc.' },
   leo:{ g:'Coloriez chaque tableau en 30 s, ensemble. Moyenne de 80 % : commande validée.', t:['Touchez un de vos pots', 'Peignez du doigt', 'Glissez la réglette si le tableau dépasse'], k:[['1 à 7', 'choisir un pot'], ['Souris', 'peindre'], ['Molette', 'faire défiler le tableau']], tip:'Vous ne pouvez pas tout peindre : annoncez vos couleurs et partagez-vous les zones.' },
   blob:{ g:'Le plus grand blob au bout de 3 minutes gagne.', t:['Glissez depuis votre blob pour pousser', 'Touchez-le pour le renforcer'], k:[['Souris', 'glisser pour pousser'], ['Clic', 'renforcer']], tip:'Passé la moitié de la boîte, seuls les flocons vous nourrissent : volez ceux des autres.' }
 };
@@ -12972,6 +13527,8 @@ const BRIEF = {
     tip:'Freinez avant les virages serrés plutôt que dedans. Gardez de l\'essence pour la dernière ligne droite, et passez aux stands quand la jauge rougit.' },
   mino:{ ctl:[['📱', 'Gardez le doigt appuyé et glissez vers où vous voulez aller : votre personnage suit les couloirs tout seul.'], ['💻', 'Flèches ou ZQSD.']],
     tip:'Coureurs : la flèche verte pointe vers la sortie la plus proche, à vol d\'oiseau. Quand le cœur s\'emballe, changez de couloir. Minotaure : il y a deux sorties très loin l\'une de l\'autre, inutile d\'en garder une, chassez !' },
+  carrom:{ ctl:[['📱', 'Glissez le doigt sur votre ligne pour placer le palet. Puis posez le doigt sur le palet, tirez vers vous comme un lance-pierre et lâchez : plus vous tirez, plus il part fort.'], ['💻', '← → pour placer, ↑ ↓ pour viser, Espace maintenu puis relâché pour tirer.']],
+    tip:'Un pion rentré fait rejouer. La reine rouge ne compte que si vous rentrez un autre pion juste après. Et gare au palet : s\'il tombe, c\'est une faute.' },
   leo:{ ctl:[['📱', 'Touchez un de vos pots de couleur, puis peignez du doigt sur le tableau. Si le tableau est plus grand que l\'écran, faites-le défiler avec la réglette.'], ['💻', 'Choisissez un pot (clic ou touches 1 à 7) et peignez à la souris. La molette fait défiler les grands tableaux.']],
     tip:'Grandes zones d\'abord : un fond bien couvert rapporte plus qu\'un visage soigné. Et parlez-vous : « qui a le bleu ? »' },
   meduse:{ ctl:[['📱', 'Glissez le doigt au-dessus du radeau pour viser, relâchez pour lâcher votre naufragé.'], ['💻', 'Visez à la souris et cliquez, ou ← → puis Espace.']],
@@ -12980,7 +13537,7 @@ const BRIEF = {
     tip:'Partir au galop donne un départ rapide mais entame l\'énergie. Collé derrière un cheval, vous récupérez plus vite.' }
 };
 let HB = null, BR = null;
-const BR_VIDS = new Set(['tetris', 'pong', 'derby', 'naval', 'mole', 'curling', 'chairs', 'master', 'kabaddi', 'dodge', 'tank', 'sheep', 'drakkar', 'lumber', 'agility', 'galop', 'meduse', 'blob', 'racer', 'leo', 'mino']);
+const BR_VIDS = new Set(['tetris', 'pong', 'derby', 'naval', 'mole', 'curling', 'chairs', 'master', 'kabaddi', 'dodge', 'tank', 'sheep', 'drakkar', 'lumber', 'agility', 'galop', 'meduse', 'blob', 'racer', 'leo', 'mino', 'carrom']);
 // ---- host ----
 function hostStart(){
   if (!me.host || phase !== 'lobby' || HB) return;
@@ -13194,7 +13751,8 @@ const MUS_GAME = {
   blob:{ k:60, m:'wt', bpm:96, deg:[0, 1, 2, 1], dr:'soft', rh:0, lw:'sine', lv:.08, aw:'sine', av:.03 },
   racer:{ k:64, m:'min', bpm:152, deg:[0, 5, 6, 6], dr:'pop', rh:2, lw:'sawtooth', lv:.035, bass8:true },
   leo:{ k:62, m:'dor', bpm:88, deg:[0, 6, 3, 4], dr:'soft', steps:12, rh:3, lw:'triangle', lv:.08, aw:'triangle', av:.03 },
-  mino:{ k:64, m:'phr', bpm:76, deg:[0, 1, 0, 6], dr:'heart', rh:0, lw:'sine', lv:.07, aw:'sine', av:.02, up:-12 }
+  mino:{ k:64, m:'phr', bpm:76, deg:[0, 1, 0, 6], dr:'heart', rh:0, lw:'sine', lv:.07, aw:'sine', av:.02, up:-12 },
+  carrom:{ k:62, m:'mix', bpm:96, deg:[0, 6, 3, 0], dr:'tabla', steps:16, rh:2, lw:'triangle', lv:.08, aw:'sine', av:.03, drone:true }
 };
 const MUS_RH = [   // where the notes fall in a bar (1 = a note), by feel
   [1,0,0,0, 1,0,0,0, 1,0,1,0, 1,0,0,0], [1,0,1,0, 0,0,1,0, 1,0,1,0, 1,0,0,0], [1,0,0,1, 0,0,1,0, 1,0,1,0, 1,0,0,0],
@@ -13372,7 +13930,7 @@ function saveGame(ranking, game){
   if (!Array.isArray(ranking) || !ranking.length || lastSaved === ranking) return;
   lastSaved = ranking;
   const h = loadHist();
-  h.unshift({ at:Date.now(), game:['pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber','agility','galop','meduse','blob','racer','leo','mino'].includes(game) ? game : 'tetris', n:ranking.length,
+  h.unshift({ at:Date.now(), game:['pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber','agility','galop','meduse','blob','racer','leo','mino','carrom'].includes(game) ? game : 'tetris', n:ranking.length,
     p:ranking.map(r => ({ name:String(r.name).slice(0,14), color:r.color, place:r.place|0, sc:r.sc|0, ln:r.ln|0, sent:r.sent|0, score:r.score|0, sync:r.sync|0, lives:r.lives|0, seats:r.seats|0, catches:r.catches|0, tank:r.tank|0, role:String(r.role || '').slice(0, 8), hits:r.hits|0, pts:r.pts|0, whacks:r.whacks|0, shots:r.shots|0, afloat:r.afloat|0, shapes:r.shapes|0, d:Math.round(r.d||0), t:+r.t||0, me:r.id === me.id })) });
   store.set(HIST_KEY, JSON.stringify(h.slice(0, HIST_MAX)));
 }
@@ -13388,13 +13946,13 @@ function renderBoard(){
     a.games++; if (p.place === 1 && g.n > 1) a.wins++;
     a.pts += Math.max(0, g.n - p.place);                  // 1 point per player finished ahead of
     if (g.game === 'derby' || g.game === 'agility' || g.game === 'galop'){ if (p.t > 0 && (!a.bestT || p.t < a.bestT)) a.bestT = p.t; }
-    else a.best = Math.max(a.best, (g.game === 'pong' || g.game === 'naval') ? p.hits : g.game === 'mole' ? (p.whacks || 0) : g.game === 'curling' ? (p.pts || 0) : g.game === 'chairs' ? (p.seats || 0) : (g.game === 'dodge' || g.game === 'tank') ? (p.hits || 0) : g.game === 'sheep' ? (p.score || 0) : g.game === 'drakkar' ? (p.sync || 0) : (g.game === 'master' || g.game === 'kabaddi' || g.game === 'lumber' || g.game === 'meduse' || g.game === 'blob' || g.game === 'racer' || g.game === 'leo' || g.game === 'mino') ? (p.pts || 0) : p.sc);
+    else a.best = Math.max(a.best, (g.game === 'pong' || g.game === 'naval') ? p.hits : g.game === 'mole' ? (p.whacks || 0) : g.game === 'curling' ? (p.pts || 0) : g.game === 'chairs' ? (p.seats || 0) : (g.game === 'dodge' || g.game === 'tank') ? (p.hits || 0) : g.game === 'sheep' ? (p.score || 0) : g.game === 'drakkar' ? (p.sync || 0) : (g.game === 'master' || g.game === 'kabaddi' || g.game === 'lumber' || g.game === 'meduse' || g.game === 'blob' || g.game === 'racer' || g.game === 'leo' || g.game === 'mino' || g.game === 'carrom') ? (p.pts || 0) : p.sc);
     agg.set(k, a);
   }
   const rows = [...agg.values()].sort((x, y) => y.pts - x.pts || y.wins - x.wins || x.games - y.games);
   const showBest = lbFilter !== 'all';
   const hd = $('lbHead'); hd.textContent = '';
-  for (const t of ['#','Joueur','Parties','Victoires','Points', ...(showBest ? [lbFilter === 'pong' ? 'Arrêts max' : (lbFilter === 'derby' || lbFilter === 'agility' || lbFilter === 'galop') ? 'Meilleur temps' : lbFilter === 'naval' ? 'Touchés max' : lbFilter === 'mole' ? 'Taupes tapées max' : lbFilter === 'curling' ? 'Points max' : lbFilter === 'chairs' ? 'Chaises max' : (lbFilter === 'dodge' || lbFilter === 'tank') ? 'Touches max' : lbFilter === 'sheep' ? 'Record d\'équipe' : lbFilter === 'drakkar' ? 'Synchro max (%)' : (lbFilter === 'master' || lbFilter === 'kabaddi' || lbFilter === 'lumber' || lbFilter === 'meduse' || lbFilter === 'blob' || lbFilter === 'racer' || lbFilter === 'leo' || lbFilter === 'mino') ? 'Points max' : 'Meilleur score'] : [])]){
+  for (const t of ['#','Joueur','Parties','Victoires','Points', ...(showBest ? [lbFilter === 'pong' ? 'Arrêts max' : (lbFilter === 'derby' || lbFilter === 'agility' || lbFilter === 'galop') ? 'Meilleur temps' : lbFilter === 'naval' ? 'Touchés max' : lbFilter === 'mole' ? 'Taupes tapées max' : lbFilter === 'curling' ? 'Points max' : lbFilter === 'chairs' ? 'Chaises max' : (lbFilter === 'dodge' || lbFilter === 'tank') ? 'Touches max' : lbFilter === 'sheep' ? 'Record d\'équipe' : lbFilter === 'drakkar' ? 'Synchro max (%)' : (lbFilter === 'master' || lbFilter === 'kabaddi' || lbFilter === 'lumber' || lbFilter === 'meduse' || lbFilter === 'blob' || lbFilter === 'racer' || lbFilter === 'leo' || lbFilter === 'mino' || lbFilter === 'carrom') ? 'Points max' : 'Meilleur score'] : [])]){
     const th = document.createElement('th'); th.textContent = t; hd.append(th);
   }
   const tb = $('lbBody'); tb.textContent = '';
@@ -13460,6 +14018,7 @@ function frame(now){
   if (cur === 'blob') blobFrame(dt, now);
   if (cur === 'leo') leoFrame(dt, now);
   if (cur === 'mino') minoFrame(dt, now);
+  if (cur === 'carrom') carromFrame(dt, now);
   if (cur === 'racer') racerFrame(dt, now);   // one bad frame must not freeze the race
   if (cur === 'tetris' && G && phase === 'count'){
     G.count -= dt/1000;
@@ -13612,11 +14171,11 @@ $('btnQuit').onclick = () => toMenu('');
 function backToLobby(){
   if (me.host){
     if (H) H.over = true;
-    H = null; if (HC) clearTimeout(HC.timer); HC = null; mcClear(); HMC = null; mmClear(); HMM = null; kbClear(); HKB = null; dbClear(); HDB = null; tkClear(); HTK = null; shClear(); HSH = null; dkClear(); HDK = null; ljClear(); HLJ = null; agClear(); HAG = null; gpClear(); HGP = null; mdClear(); HMD = null; blClear(); HBL = null; rcClear(); HRC = null; laClear(); HLA = null; mnClear(); HMN = null;
+    H = null; if (HC) clearTimeout(HC.timer); HC = null; mcClear(); HMC = null; mmClear(); HMM = null; kbClear(); HKB = null; dbClear(); HDB = null; tkClear(); HTK = null; shClear(); HSH = null; dkClear(); HDK = null; ljClear(); HLJ = null; agClear(); HAG = null; gpClear(); HGP = null; mdClear(); HMD = null; blClear(); HBL = null; rcClear(); HRC = null; laClear(); HLA = null; mnClear(); HMN = null; cmClear(); HCM = null;
     players = players.filter(p => p.id === 'h' || net.conns.has(p.id));
     sendLobby(true);                                       // everyone goes back
   } else {
-    phase = 'lobby'; $('scrEnd').hidden = true; G = null; PG = null; D = null; NV = null; ML = null; CU = null; MC = null; MM = null; KB = null; DB = null; TK = null; SHV = null; DK = null; if (LJ){ LJ = null; sawStop(); } AG = null; GP = null; MD = null; BL = null; RC = null; LA = null; MN = null; cur = null;
+    phase = 'lobby'; $('scrEnd').hidden = true; G = null; PG = null; D = null; NV = null; ML = null; CU = null; MC = null; MM = null; KB = null; DB = null; TK = null; SHV = null; DK = null; if (LJ){ LJ = null; sawStop(); } AG = null; GP = null; MD = null; BL = null; RC = null; LA = null; MN = null; CM = null; cur = null;
     if (HM) moleClearTimers();
     show('scrLobby'); renderLobby();                      // wait there for the creator
   }
