@@ -853,7 +853,7 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
       <button class="peekbar" id="peekBar" type="button" hidden>👀 <span id="peekTxt"></span></button>
       <div class="votesum" id="voteSum" hidden></div>
     <div class="tiles" id="gamePick" role="group" aria-label="Choix du jeu">
-      <button data-g="tetris" aria-pressed="true"><img src="img/t/gravats.webp" alt="" width="360" height="270" loading="lazy" decoding="async"><span>Gravats</span></button>
+      <button data-g="tetris" aria-pressed="false"><img src="img/t/gravats.webp" alt="" width="360" height="270" loading="lazy" decoding="async"><span>Gravats</span></button>
       <button data-g="pong" aria-pressed="false"><img src="img/t/gardiens.webp" alt="" width="360" height="270" loading="lazy" decoding="async"><span>Gardiens</span></button>
       <button data-g="derby" aria-pressed="false"><img src="img/t/derby.webp" alt="" width="360" height="270" loading="lazy" decoding="async"><span>Derby</span></button>
       <button data-g="naval" aria-pressed="false"><img src="img/t/naval.webp" alt="" width="360" height="270" loading="lazy" decoding="async"><span>Armada</span></button>
@@ -14285,6 +14285,10 @@ function sortTiles(){
   const tiles = [...box.querySelectorAll(':scope > button[data-g]')];
   tiles.sort((a, b) => (cnt[b.dataset.g] || 0) - (cnt[a.dataset.g] || 0) || name(a).localeCompare(name(b), LANG, { sensitivity:'base' }));
   for (const t of tiles) box.append(t);
+  // the scrolling strip on the menu: same order, in both of its copies
+  const run = $('gameStripRun'), idx = Object.create(null); tiles.forEach((t, i) => idx[t.dataset.g] = i);
+  if (run){ const all = [...run.children], n = all.length/2;
+    for (const half of [all.slice(0, n), all.slice(n)]){ half.sort((a, b) => (idx[a.dataset.g] ?? 99) - (idx[b.dataset.g] ?? 99)); for (const c of half) run.append(c); } }
 }
 sortTiles();
 let lbFilter = 'all', clearArmed = false;
