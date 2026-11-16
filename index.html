@@ -14273,7 +14273,20 @@ function saveGame(ranking, game){
   h.unshift({ at:Date.now(), game:['pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber','agility','galop','meduse','blob','racer','leo','mino','carrom','dahi'].includes(game) ? game : 'tetris', n:ranking.length,
     p:ranking.map(r => ({ name:String(r.name).slice(0,14), color:r.color, place:r.place|0, sc:r.sc|0, ln:r.ln|0, sent:r.sent|0, score:r.score|0, sync:r.sync|0, lives:r.lives|0, seats:r.seats|0, catches:r.catches|0, tank:r.tank|0, role:String(r.role || '').slice(0, 8), hits:r.hits|0, pts:r.pts|0, whacks:r.whacks|0, shots:r.shots|0, afloat:r.afloat|0, shapes:r.shapes|0, d:Math.round(r.d||0), t:+r.t||0, me:r.id === me.id })) });
   store.set(HIST_KEY, JSON.stringify(h.slice(0, HIST_MAX)));
+  sortTiles();
 }
+// the game tiles: the ones I play most first (from the games kept in this browser), the others in alphabetical order of their name in my language
+function sortTiles(){
+  const box = $('gamePick'); if (!box) return;
+  const cnt = Object.create(null);
+  for (const g of loadHist()) if (g && typeof g.game === 'string') cnt[g.game] = (cnt[g.game] || 0) + 1;
+  const name = b => { const sp = b.querySelector('span'); if (!b.dataset.n) b.dataset.n = sp ? sp.textContent.trim() : b.dataset.g;
+    return tr(b.dataset.n).toLocaleLowerCase().replace(/^(le |la |les |l['’]|the )/, ''); };
+  const tiles = [...box.querySelectorAll(':scope > button[data-g]')];
+  tiles.sort((a, b) => (cnt[b.dataset.g] || 0) - (cnt[a.dataset.g] || 0) || name(a).localeCompare(name(b), LANG, { sensitivity:'base' }));
+  for (const t of tiles) box.append(t);
+}
+sortTiles();
 let lbFilter = 'all', clearArmed = false;
 function renderBoard(){
   for (const b of $('boardTabs').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.f === lbFilter));
