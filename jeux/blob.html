@@ -41,16 +41,17 @@ ul{padding-left:20px}
 .others a{display:inline-block;background:#fff;border:2px solid #000;padding:4px 10px;font-weight:800;color:#000;text-decoration:none}
 .ctl b{font-weight:800}
 footer{text-align:center;font-size:14px}
-footer a{color:#000;font-weight:800}</style>
+footer a{color:#000;font-weight:800}.cta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}.cta a{display:flex;align-items:center;justify-content:center;gap:6px;text-align:center;font-family:"Bangers",Impact,sans-serif;letter-spacing:.04em;font-size:24px;border:3px solid #000;box-shadow:4px 4px 0 #000;padding:12px 6px;text-decoration:none;line-height:1.1}.cta .go{background:#D91F25;color:#fff}.cta .friends{background:#1E5BFF;color:#fff}.artlink{display:block;position:relative}.artlink::after{content:"▶";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:64px;height:64px;border-radius:50%;background:#D91F25;color:#fff;border:3px solid #000;box-shadow:3px 3px 0 #000;font-size:28px;display:flex;align-items:center;justify-content:center;padding-left:4px;box-sizing:border-box}</style>
 </head>
 <body>
 <main>
-<div class="top"><a class="btn" href="../?lang=fr">← Baston Arcade</a><span><a class="btn" href="../en/games/blob.html" hreflang="en">English</a> <a class="btn" href="../?jeu=blob&lang=fr">▶ Jouer</a></span></div>
+<div class="top"><a class="btn" href="../?lang=fr">← Baston Arcade</a><span><a class="btn" href="../en/games/blob.html" hreflang="en">English</a> <a class="btn" href="../?jeu=blob&lang=fr&mode=solo">▶ Jouer</a></span></div>
 <article>
 <h1>Blob<small>Tracez, mangez les flocons, envahissez les autres</small></h1>
-<img class="art" src="../img/blob.webp" alt="Blob : illustration du jeu" width="1280" height="714">
+<a class="artlink" href="../?jeu=blob&lang=fr&mode=solo" aria-label="Jouer seul tout de suite contre des robots"><img class="art" src="../img/blob.webp" alt="Blob : illustration du jeu" width="1280" height="714"></a>
+<div class="cta"><a class="go" href="../?jeu=blob&lang=fr&mode=solo">▶ Jouer maintenant</a><a class="friends" href="../?jeu=blob&lang=fr&mode=salon">👥 Avec des amis</a></div>
 <p>Le blob, ce drôle d&#x27;organisme qui se réveille dans une boîte de Petri : chaque joueur en a un, dans la même boîte. Tracez du doigt un chemin depuis votre blob, il pousse le long du tracé en dépensant son énergie. Tracez jusque dans un autre blob et vous l&#x27;envahissez, plus cher, d&#x27;autant plus qu&#x27;il a d&#x27;énergie. Votre énergie revient doucement, d&#x27;autant moins que votre blob est grand, et plus du tout passé la moitié de la boîte : il faut alors tenir des gros flocons d&#x27;avoine, qui l&#x27;accélèrent tant que vous les couvrez. Le laborantin en ajoute de temps en temps, n&#x27;importe où. Les miettes se mangent d&#x27;un coup. Tout morceau coupé de la partie qui porte le visage de votre blob dépérit. Touchez votre blob pour y poser un renfort qui durcit avec le temps. Au bout de 3 minutes, le plus grand blob gagne. Des robots complètent seul ou à deux.</p>
-<a class="play" href="../?jeu=blob&lang=fr">Jouer à Blob</a>
+<a class="play" href="../?jeu=blob&lang=fr&mode=solo">Jouer à Blob</a>
 <h2>Les commandes</h2>
 <ul class="ctl"><li><b>Sur téléphone : </b>Glissez le doigt depuis votre blob pour tracer où il doit pousser, jusque dans un autre blob pour l&#x27;attaquer. Touchez votre blob pour poser un renfort.</li><li><b>Sur ordinateur : </b>Pareil à la souris : glissez pour tracer, cliquez sur votre blob pour renforcer.</li></ul>
 <h2>En vidéo</h2>

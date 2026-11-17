@@ -41,16 +41,17 @@ ul{padding-left:20px}
 .others a{display:inline-block;background:#fff;border:2px solid #000;padding:4px 10px;font-weight:800;color:#000;text-decoration:none}
 .ctl b{font-weight:800}
 footer{text-align:center;font-size:14px}
-footer a{color:#000;font-weight:800}</style>
+footer a{color:#000;font-weight:800}.cta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}.cta a{display:flex;align-items:center;justify-content:center;gap:6px;text-align:center;font-family:"Bangers",Impact,sans-serif;letter-spacing:.04em;font-size:24px;border:3px solid #000;box-shadow:4px 4px 0 #000;padding:12px 6px;text-decoration:none;line-height:1.1}.cta .go{background:#D91F25;color:#fff}.cta .friends{background:#1E5BFF;color:#fff}.artlink{display:block;position:relative}.artlink::after{content:"▶";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:64px;height:64px;border-radius:50%;background:#D91F25;color:#fff;border:3px solid #000;box-shadow:3px 3px 0 #000;font-size:28px;display:flex;align-items:center;justify-content:center;padding-left:4px;box-sizing:border-box}</style>
 </head>
 <body>
 <main>
-<div class="top"><a class="btn" href="../?lang=fr">← Baston Arcade</a><span><a class="btn" href="../en/games/carrom.html" hreflang="en">English</a> <a class="btn" href="../?jeu=carrom&lang=fr">▶ Jouer</a></span></div>
+<div class="top"><a class="btn" href="../?lang=fr">← Baston Arcade</a><span><a class="btn" href="../en/games/carrom.html" hreflang="en">English</a> <a class="btn" href="../?jeu=carrom&lang=fr&mode=solo">▶ Jouer</a></span></div>
 <article>
 <h1>Carrom<small>Tirez le palet, rentrez les pions</small></h1>
-<img class="art" src="../img/carrom.webp" alt="Carrom : illustration du jeu" width="1280" height="714">
+<a class="artlink" href="../?jeu=carrom&lang=fr&mode=solo" aria-label="Jouer seul tout de suite contre des robots"><img class="art" src="../img/carrom.webp" alt="Carrom : illustration du jeu" width="1280" height="714"></a>
+<div class="cta"><a class="go" href="../?jeu=carrom&lang=fr&mode=solo">▶ Jouer maintenant</a><a class="friends" href="../?jeu=carrom&lang=fr&mode=salon">👥 Avec des amis</a></div>
 <p>Le carrom, le jeu de plateau préféré des familles en Inde, en version bande dessinée. Chacun joue à son tour depuis son côté de la planche : on glisse le palet sur sa ligne, on le tire vers soi comme un lance-pierre, on lâche. Chaque pion rentré dans un coin rapporte des points (blanc 1, noir 2) et fait rejouer. La reine rouge vaut 5, mais il faut rentrer un autre pion juste après, sinon elle revient au centre. Si votre palet tombe dans un trou, c&#x27;est une faute : vous perdez un point et les pions rentrés reviennent au centre. Trois à six coups chacun, le plus de points gagne. Seul, vous jouez contre un robot.</p>
-<a class="play" href="../?jeu=carrom&lang=fr">Jouer à Carrom</a>
+<a class="play" href="../?jeu=carrom&lang=fr&mode=solo">Jouer à Carrom</a>
 <h2>Les commandes</h2>
 <ul class="ctl"><li><b>Sur téléphone : </b>Glissez le doigt sur votre ligne pour placer le palet. Puis posez le doigt sur le palet, tirez vers vous comme un lance-pierre et lâchez : plus vous tirez, plus il part fort.</li><li><b>Sur ordinateur : </b>← → pour placer, ↑ ↓ pour viser, Espace maintenu puis relâché pour tirer.</li></ul>
 <h2>En vidéo</h2>

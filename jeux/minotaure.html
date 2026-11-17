@@ -41,16 +41,17 @@ ul{padding-left:20px}
 .others a{display:inline-block;background:#fff;border:2px solid #000;padding:4px 10px;font-weight:800;color:#000;text-decoration:none}
 .ctl b{font-weight:800}
 footer{text-align:center;font-size:14px}
-footer a{color:#000;font-weight:800}</style>
+footer a{color:#000;font-weight:800}.cta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}.cta a{display:flex;align-items:center;justify-content:center;gap:6px;text-align:center;font-family:"Bangers",Impact,sans-serif;letter-spacing:.04em;font-size:24px;border:3px solid #000;box-shadow:4px 4px 0 #000;padding:12px 6px;text-decoration:none;line-height:1.1}.cta .go{background:#D91F25;color:#fff}.cta .friends{background:#1E5BFF;color:#fff}.artlink{display:block;position:relative}.artlink::after{content:"▶";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:64px;height:64px;border-radius:50%;background:#D91F25;color:#fff;border:3px solid #000;box-shadow:3px 3px 0 #000;font-size:28px;display:flex;align-items:center;justify-content:center;padding-left:4px;box-sizing:border-box}</style>
 </head>
 <body>
 <main>
-<div class="top"><a class="btn" href="../?lang=fr">← Baston Arcade</a><span><a class="btn" href="../en/games/the-minotaur.html" hreflang="en">English</a> <a class="btn" href="../?jeu=minotaure&lang=fr">▶ Jouer</a></span></div>
+<div class="top"><a class="btn" href="../?lang=fr">← Baston Arcade</a><span><a class="btn" href="../en/games/the-minotaur.html" hreflang="en">English</a> <a class="btn" href="../?jeu=minotaure&lang=fr&mode=solo">▶ Jouer</a></span></div>
 <article>
 <h1>Le Minotaure<small>Fuyez à la torche, ou soyez le monstre</small></h1>
-<img class="art" src="../img/mino.webp" alt="Le Minotaure : illustration du jeu" width="1280" height="714">
+<a class="artlink" href="../?jeu=minotaure&lang=fr&mode=solo" aria-label="Jouer seul tout de suite contre des robots"><img class="art" src="../img/mino.webp" alt="Le Minotaure : illustration du jeu" width="1280" height="714"></a>
+<div class="cta"><a class="go" href="../?jeu=minotaure&lang=fr&mode=solo">▶ Jouer maintenant</a><a class="friends" href="../?jeu=minotaure&lang=fr&mode=salon">👥 Avec des amis</a></div>
 <p>Un jeu de chasse dans un labyrinthe. Un joueur, tiré au sort, est le Minotaure : il voit tout le labyrinthe et tous les joueurs. Les autres ne voient que la lueur de leur torche, une flèche verte qui pointe vers la sortie la plus proche (à vol d&#x27;oiseau, pas le chemin) et une jauge 🐂 qui se remplit quand le Minotaure approche par les couloirs. Le cœur bat de plus en plus vite, et le téléphone vibre. Il y a toujours deux sorties, à l&#x27;opposé l&#x27;une de l&#x27;autre : le Minotaure ne peut pas garder les deux. Les coureurs ont 50 secondes à 3, 60 secondes à 4 pour sortir. Le Minotaure gagne s&#x27;il attrape tout le monde. Des robots complètent jusqu&#x27;à 4 joueurs.</p>
-<a class="play" href="../?jeu=minotaure&lang=fr">Jouer à Le Minotaure</a>
+<a class="play" href="../?jeu=minotaure&lang=fr&mode=solo">Jouer à Le Minotaure</a>
 <h2>Les commandes</h2>
 <ul class="ctl"><li><b>Sur téléphone : </b>Gardez le doigt appuyé et glissez vers où vous voulez aller : votre personnage suit les couloirs tout seul.</li><li><b>Sur ordinateur : </b>Flèches ou ZQSD.</li></ul>
 <h2>En vidéo</h2>

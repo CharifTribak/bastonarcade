@@ -1722,15 +1722,15 @@ function soloCreate(){
 // arriving from a game's page (?jeu=galop): once the room (or the solo game) is open, that game's card opens
 const GAME_SLUGS = { gravats:'tetris', gardiens:'pong', armada:'naval', 'tape-taupe':'mole', 'chaises-musicales':'chairs', 'code-secret':'master',
   'balle-au-prisonnier':'dodge', chars:'tank', bergers:'sheep', drakkars:'drakkar', bucherons:'lumber', 'grand-prix':'racer', 'atelier-de-leonard':'leo', minotaure:'mino', 'carrom':'carrom', 'dahi-handi':'dahi' };
-let PENDING_GAME = null;
+let PENDING_GAME = null, PENDING_MODE = '';
 (() => {
-  let g = null; try { g = (new URLSearchParams(location.search).get('jeu') || '').trim().toLowerCase(); } catch(_){}
+  let g = null; try { const q = new URLSearchParams(location.search); g = (q.get('jeu') || '').trim().toLowerCase(); PENDING_MODE = /^(solo|salon)$/.test(q.get('mode') || '') ? q.get('mode') : ''; } catch(_){}
   if (!g) return;
   g = (Object.prototype.hasOwnProperty.call(GAME_SLUGS, g) && GAME_SLUGS[g]) || g;
   if (!isGame(g)) return;
   PENDING_GAME = g;
   try { history.replaceState(null, '', keepRef()); } catch(_){}
-  setTimeout(() => { if (phase === 'menu') menuHint('Jeu choisi : ' + GAME_NAMES[g] + '. Jouez seul, ou à plusieurs en créant un salon.'); }, 0);
+  if (!PENDING_MODE) setTimeout(() => { if (phase === 'menu') menuHint('Jeu choisi : ' + GAME_NAMES[g] + '. Jouez seul, ou à plusieurs en créant un salon.'); }, 0);
 })();
 function pendingGame(){
   const g = PENDING_GAME; PENDING_GAME = null;
@@ -9963,7 +9963,8 @@ if (GC_ON){
   sc.dataset.goatcounter = NET_CFG.goatcounter; document.head.append(sc);
 }
 // events: what people do, never who they are (no names, no room codes)
-function track(name){ if (!GC_ON) return; try { if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path:name, title:name, event:true }); } catch(_){} }
+// GoatCounter's script loads after the page: an event sent before it is ready waits for it (up to 10 s) instead of being lost
+function track(name, tries = 0){ if (!GC_ON) return; try { if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path:name, title:name, event:true }); else if (tries < 20) setTimeout(() => track(name, tries + 1), 500); } catch(_){} }
 
 // ---- QR code of the room ----
 // label: drawn in the middle (the room code), readable by eye; level H error correction keeps the code scannable
@@ -14417,6 +14418,12 @@ function readName(){ me.name = cleanName($('nameIn').value); $('nameIn').value =
 const iceReady = () => Promise.race([icePromise, new Promise(r => setTimeout(r, 2500))]);     // wait briefly for the relay credentials
 $('btnCreate').onclick = async () => { readName(); $('btnCreate').disabled = true; $('btnJoin').disabled = true; menuHint('Ouverture du salon…'); await iceReady(); hostCreate(); };
 $('btnSolo').onclick = () => soloCreate();
+// arriving from a game's page with "play now" or "with friends": straight in, no second choice to make
+if (PENDING_GAME && PENDING_MODE) setTimeout(() => {
+  if (phase !== 'menu') return;
+  track('page-jeu/' + PENDING_MODE);
+  if (PENDING_MODE === 'solo') soloCreate(); else { menuView(true); $('btnCreate').click(); }
+}, 60);
 $('btnJoin').onclick = () => {
   const c = $('codeIn').value.trim().toUpperCase();
   if (c === ST_SECRET){ $('codeIn').value = ''; return openStats(); }
