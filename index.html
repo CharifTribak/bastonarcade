@@ -66,6 +66,98 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .hint.err{color:var(--danger);font-weight:800}
 .dot{width:14px;height:14px;border-radius:50%;flex:none;border:2px solid var(--line)}
 
+/* ---- home: a comic page under an arcade marquee. The games come first; the two ways in stay at hand. ---- */
+#scrMenu.home{display:block;min-height:100%;margin:calc(-1*max(12px,env(safe-area-inset-top,0px))) calc(-1*max(16px,env(safe-area-inset-right,0px))) 0 calc(-1*max(16px,env(safe-area-inset-left,0px)));padding-bottom:96px}
+.hmq{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#1B1440;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.05) 0 2px,transparent 2px 4px);
+  border-bottom:4px solid #000;box-shadow:0 4px 0 #FF3EA5;padding:max(10px,env(safe-area-inset-top,0px)) 14px 8px}
+#scrMenu .hmq .logosvg{width:118px;margin:0;align-self:center;flex:none}
+.hmq .iconbar{gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.hmq .iconbar button{width:54px;height:48px;border-radius:10px;border:2px solid #34E3FF;background:rgba(52,227,255,.1);color:#fff;box-shadow:none;font-size:17px;line-height:1;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:0}
+.hmq .iconbar button::after{content:attr(data-l);font:900 8px/1 var(--body);letter-spacing:.06em;color:#34E3FF}
+.hmq .iconbar #btnLang{font-family:var(--display);font-size:20px;color:#34E3FF}
+.hmq .iconbar #btnLang::after{content:none}
+.hwrap{max-width:1240px;margin:0 auto;padding:0 16px}
+.hside{display:flex;flex-direction:column;gap:14px;padding-top:14px}
+.hplayer{display:flex;align-items:center;gap:10px;background:#fff;border:3px solid #000;box-shadow:4px 4px 0 #000;padding:6px 10px 6px 6px}
+.havbtn{flex:none;width:58px;height:58px;padding:0;border:0;background:none;box-shadow:none;border-radius:50%;position:relative}
+.havbtn img{width:100%;height:100%;border-radius:50%;display:block}
+.havbtn::after{content:"✎";position:absolute;right:-4px;bottom:-4px;width:22px;height:22px;border-radius:50%;background:#FFD21F;border:2px solid #000;color:#000;font:900 12px/18px var(--body);text-align:center}
+.hplayer .hello{justify-content:flex-start;flex:1;min-width:0;font-size:17px}
+.hplayer .hello b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hplayer .field{flex:1;min-width:0}
+.avpick{background:#fff;border:3px solid #000;box-shadow:4px 4px 0 #000;padding:10px}
+.avpick b{font-family:var(--display);font-weight:400;font-size:20px;letter-spacing:.04em}
+.avgrid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;margin-top:6px}
+.avgrid button{padding:0;border:3px solid transparent;border-radius:50%;background:none;box-shadow:none;aspect-ratio:1}
+.avgrid button[aria-pressed="true"]{border-color:#E3262B}
+.avgrid img{width:100%;height:100%;display:block;border-radius:50%}
+/* the two ways in: a bar fixed at the bottom of a phone, a panel on a wide screen */
+#scrMenu #menuMain{position:fixed;left:0;right:0;bottom:0;z-index:40;flex-direction:row;gap:10px;background:#1B1440;border-top:4px solid #000;box-shadow:0 -4px 0 #34E3FF;
+  padding:12px max(16px,env(safe-area-inset-right,0px)) max(14px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+#scrMenu #menuMain .choice{flex:1;font-size:22px;padding:12px 8px;display:flex;align-items:center;justify-content:center;gap:8px}
+#scrMenu #btnMulti{background:#E3262B;box-shadow:4px 4px 0 #FF3EA5}
+#scrMenu #btnSolo{background:#2059FF;box-shadow:4px 4px 0 #34E3FF}
+#scrMenu .multi{background:#fff;border:3px solid #000;box-shadow:4px 4px 0 #000;padding:12px}
+.hday{position:relative;background:#fff;border:4px solid #000;box-shadow:7px 7px 0 #000;transform:rotate(-1deg);margin-top:8px}
+.hdaytag{position:absolute;top:-14px;left:-10px;z-index:2;background:#FF3EA5;color:#fff;border:3px solid #000;font:400 20px var(--display);letter-spacing:.05em;padding:3px 12px;transform:rotate(-6deg);box-shadow:3px 3px 0 #000}
+.hdayart{display:block;width:100%;padding:0;border:0;border-bottom:4px solid #000;box-shadow:none;background:#000}
+.hdayart img,.mscard>img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}
+.hdaybody,.msbody{padding:12px 14px 14px;display:flex;flex-direction:column;gap:10px}
+.hdayhead{display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.hdayhead h2{font-size:38px;color:#E3262B;text-shadow:2px 2px 0 #000}
+.hdaybody p,.msbody p{margin:0;font-size:15px;font-weight:700;line-height:1.35}
+.hdaybtns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.hdaybtns button{font-size:22px;padding:12px 6px}
+.hbsolo{background:#2059FF}.hbmulti{background:#E3262B}
+.hcat{background:#111;color:#FFD21F;font:900 11px var(--body);letter-spacing:.05em;padding:3px 7px;border-radius:4px;text-transform:uppercase}
+.hmain{padding-top:58px}
+.hwallhead{position:relative;min-height:60px;display:flex;align-items:flex-end}
+.hwallhead h2{font-size:30px;letter-spacing:.04em}
+.hhost{position:absolute;right:0;bottom:-4px;width:82px;height:auto;transform:rotate(4deg);pointer-events:none;animation:hhop 2.6s ease-in-out infinite}
+.hbubble{position:absolute;right:84px;top:-18px;background:#fff;border:3px solid #000;border-radius:14px 14px 2px 14px;padding:4px 10px;font-weight:900;font-size:13px;box-shadow:2px 2px 0 #000}
+@keyframes hhop{0%,100%{transform:rotate(4deg) translateY(0)}45%{transform:rotate(1deg) translateY(-6px)}55%{transform:rotate(5deg) translateY(-6px)}}
+@media (prefers-reduced-motion:reduce){.hhost{animation:none}}
+.hchips{display:flex;gap:8px;overflow-x:auto;padding:12px 2px 8px;scrollbar-width:none}
+.hchips::-webkit-scrollbar{display:none}
+.hchips button{flex:none;font:900 14px var(--body);letter-spacing:0;padding:8px 14px;border-radius:999px;background:#fff;color:#000;box-shadow:2px 2px 0 #000}
+.hchips button[aria-pressed="true"]{background:#111;color:#FFD21F}
+.hwall{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 14px;padding:8px 2px 4px}
+.hwall button{display:block;padding:0;background:#fff;color:#000;border:3px solid #000;box-shadow:5px 5px 0 #000;text-align:center;font-family:var(--display);letter-spacing:.03em}
+.hwall button:nth-child(4n+1){transform:rotate(-1deg)}.hwall button:nth-child(4n+2){transform:rotate(1deg)}
+.hwall button:nth-child(4n+3){transform:rotate(.7deg)}.hwall button:nth-child(4n){transform:rotate(-.7deg)}
+.hwall button:hover{transform:rotate(0) scale(1.03)}
+.hwall .hart{position:relative;display:block;border-bottom:3px solid #000}
+.hwall .hart img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover}
+.hwall .hname{display:block;padding:7px 6px 8px;font-size:21px;line-height:1.05}
+.hwall .hcat{position:absolute;right:6px;bottom:6px}
+.hstick{position:absolute;top:6px;left:-6px;color:#fff;border:2px solid #000;font:400 14px var(--display);letter-spacing:.05em;padding:1px 7px;transform:rotate(-5deg)}
+.hstick.new{background:#FF3EA5}.hstick.fav{background:#34E3FF;color:#000}
+.hfoot{display:flex;flex-direction:column;gap:12px;margin-top:26px}
+.hlinks{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 16px}
+.hlink{display:inline-flex;align-items:center;gap:6px;color:#000;font-weight:900;font-size:14px;text-decoration:underline;padding:8px 4px}
+.hlink .ic{width:16px;height:16px}
+#scrMenu .strip,#scrMenu .gamepop{display:none!important}
+.msheet{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center;padding:16px}
+.mscard{position:relative;width:100%;max-width:440px;background:#fff;border:4px solid #000;box-shadow:7px 7px 0 #000;max-height:calc(100dvh - 32px);overflow-y:auto}
+.mscard>img{border-bottom:4px solid #000}
+.msclose{position:absolute;top:8px;right:8px;width:44px;height:44px;padding:0;font-size:18px;z-index:2}
+@media (min-width:900px){
+  #scrMenu.home{padding-bottom:40px}
+  .hmq{background:#1B1440 url(img/marquee.webp) center/100% 100% no-repeat;padding:42px 8% 48px;box-shadow:0 4px 0 #FF3EA5}
+  #scrMenu .hmq .logosvg{width:170px}
+  .hwrap{display:grid;grid-template-columns:minmax(320px,380px) minmax(0,1fr);gap:32px;align-items:start;padding-top:10px}
+  .hside{position:sticky;top:16px}
+  #scrMenu #menuMain{position:static;flex-direction:column;background:none;border:0;box-shadow:none;padding:0;gap:12px}
+  #scrMenu #menuMain .choice{font-size:24px;padding:14px}
+  .hwall{grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:22px 18px}
+  .hwallhead h2{font-size:40px}
+  .hmain{padding-top:84px}
+  .hhost{width:104px;bottom:-8px}
+  .hbubble{right:108px;top:-24px}
+  .msheet{align-items:center}
+}
+
 /* ---- menu & lobby ---- */
 .center{min-height:100%;display:flex;align-items:center;justify-content:center}
 .card{width:100%;max-width:400px;display:flex;flex-direction:column;gap:16px;background:var(--panel);border:3px solid var(--line);box-shadow:7px 7px 0 var(--line);padding:22px 18px}
@@ -742,20 +834,33 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
 
 <main id="app">
 <!-- MENU -->
-<section id="scrMenu" class="center">
-  <div class="card">
+<section id="scrMenu" class="home">
+  <header class="hmq">
     <h1 class="logosvg" data-appname><svg viewBox="0 0 520 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Baston Arcade"><polygon points="260,8 292,62 352,22 356,86 428,58 404,118 494,120 438,166 508,214 428,226 456,292 384,270 372,322 318,276 262,318 222,270 156,306 152,248 76,262 104,206 18,184 92,148 36,92 116,94 102,30 172,62 204,8 228,58" fill="#000" transform="translate(7,7)"/><polygon points="260,8 292,62 352,22 356,86 428,58 404,118 494,120 438,166 508,214 428,226 456,292 384,270 372,322 318,276 262,318 222,270 156,306 152,248 76,262 104,206 18,184 92,148 36,92 116,94 102,30 172,62 204,8 228,58" fill="#E6262B" stroke="#000" stroke-width="5" stroke-linejoin="round"/><g transform="rotate(-6 260 168)"><text x="264" y="196" text-anchor="middle" font-family="Bangers, Impact, sans-serif" font-size="112" letter-spacing="3" fill="#000">BASTON !</text><text x="258" y="190" text-anchor="middle" font-family="Bangers, Impact, sans-serif" font-size="112" letter-spacing="3" fill="#fff" stroke="#000" stroke-width="6" paint-order="stroke" stroke-linejoin="round">BASTON !</text><text x="383" y="252" text-anchor="end" font-family="Bangers, Impact, sans-serif" font-size="52" letter-spacing="6" fill="#000">ARCADE</text><text x="379" y="248" text-anchor="end" font-family="Bangers, Impact, sans-serif" font-size="52" letter-spacing="6" fill="#FFD93B" stroke="#000" stroke-width="5" paint-order="stroke" stroke-linejoin="round">ARCADE</text></g><path d="M60 46 l26 14 M44 76 l30 6 M462 260 l-26 -12 M476 232 l-30 -4" stroke="#000" stroke-width="5" stroke-linecap="round"/></svg></h1>
-    <p class="tagline">Vingt-trois jeux, de 1 à 5 joueurs</p>
-    <div class="hello" id="helloBox" hidden><span>Salut</span> <b id="helloName"></b><button id="btnName" class="ghost" type="button" aria-label="Changer de nom">✎</button></div>
-    <div class="field" id="nameField">
+    <div class="iconbar">
+      <button id="btnBoard" class="ghost" type="button" aria-label="Classement général" title="Classement général">🏆</button>
+      <button id="btnSound" class="ghost" type="button" aria-label="Son : activé" title="Son : activé">🔊</button>
+      <button id="btnMusic" class="ghost" type="button" aria-label="Musique : activée" title="Musique : activée">🎵</button>
+      <button id="btnInstall" class="ghost" type="button" aria-label="Installer l'appli" title="Installer l'appli" hidden>📲</button>
+      <button id="btnLang" class="ghost" type="button" translate="no" aria-label="English" title="English">EN</button>
+    </div>
+  </header>
+  <div class="hwrap">
+    <div class="hside">
+      <div class="hplayer">
+        <button id="btnAvatar" class="havbtn" type="button" aria-label="Choisir ma tête"><img id="myAv" src="img/av/av10.webp" alt="" width="52" height="52"></button>
+        <div class="hello" id="helloBox" hidden><span>Salut</span> <b id="helloName"></b><button id="btnName" class="ghost" type="button" aria-label="Changer de nom">✎</button></div>
+        <div class="field" id="nameField">
       <label for="nameIn">Votre nom</label>
       <input id="nameIn" maxlength="14" autocomplete="nickname" placeholder="Votre nom">
     </div>
-    <div class="choices" id="menuMain">
-      <button id="btnMulti" class="choice" type="button"><svg class="ic" aria-hidden="true"><use href="#i-users"/></svg><span>Jouer à plusieurs</span></button>
-      <button id="btnSolo" class="choice" type="button"><svg class="ic" aria-hidden="true"><use href="#i-pad"/></svg><span>Jouer seul</span></button>
+      </div>
+      <div class="avpick" id="avPick" hidden><b>Choisis ta tête</b><div class="avgrid" id="avGrid"></div></div>
+      <div class="choices" id="menuMain">
+      <button id="btnMulti" class="choice" type="button"><svg class="ic" aria-hidden="true"><use href="#i-users"/></svg><span>Entre amis</span></button>
+      <button id="btnSolo" class="choice" type="button"><svg class="ic" aria-hidden="true"><use href="#i-pad"/></svg><span>Seul</span></button>
     </div>
-    <div class="multi" id="menuMulti" hidden>
+      <div class="multi" id="menuMulti" hidden>
       <div class="salons mc1" id="salons" hidden>
         <div class="salonshead"><b>Rejoindre un salon public</b><button id="btnSalons" class="ghost" type="button" aria-label="Actualiser">↻</button></div>
         <ul id="salonList"></ul>
@@ -773,22 +878,44 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
       </div>
       <button id="btnMultiBack" class="ghost backlink" type="button">← Retour</button>
     </div>
-    <p class="hint" id="menuHint"></p>
-    <div class="strip" id="gameStrip" aria-label="Les jeux"><div class="striprun" id="gameStripRun"></div></div>
-    <div class="gamepop" id="gamePop" hidden><div class="feature"><img id="gamePopArt" class="gameart" alt=""><div class="featbody"><h2 id="gamePopTitle"></h2><p id="gamePopDesc"></p><small>Touchez pour fermer</small></div></div></div>
-    <div class="support">
-      <a class="btn coffee" id="btnCoffee" href="https://ko-fi.com/bastonarcade" target="_blank" rel="noopener"><svg class="ic" aria-hidden="true"><use href="#i-cup"/></svg><span>Offrir un café au développeur</span></a>
-      <a class="btn ghost idea" id="btnIdea" href="mailto:contact@bastonarcade.com?subject=Id%C3%A9e%20de%20jeu%20pour%20Baston%20Arcade&body=Nom%20du%20jeu%20%3A%0A%0APrincipe%20en%20quelques%20lignes%20%3A%0A%0ANombre%20de%20joueurs%20%3A%0A%0AComment%20on%20joue%20(boutons%2C%20gestes)%20%3A%0A%0A---%0AEn%20envoyant%20cette%20id%C3%A9e%2C%20j'accepte%20les%20conditions%20des%20propositions%20d'id%C3%A9es%20%3A%20https%3A%2F%2Fbastonarcade.com%2Flegal.html"><svg class="ic" aria-hidden="true"><use href="#i-bulb"/></svg><span>Proposer une idée de jeu</span></a>
+      <p class="hint" id="menuHint"></p>
+      <div class="hday" id="hDay" hidden>
+        <span class="hdaytag">Jeu du jour</span>
+        <button class="hdayart" id="hDayArt" type="button"><img id="hDayImg" alt="" width="640" height="357"></button>
+        <div class="hdaybody">
+          <div class="hdayhead"><h2 id="hDayName"></h2><span class="hcat" id="hDayCat"></span></div>
+          <p id="hDayDesc"></p>
+          <div class="hdaybtns"><button id="hDaySolo" class="hbsolo" type="button">▶ Seul</button><button id="hDayMulti" class="hbmulti" type="button">Entre amis</button></div>
+        </div>
+      </div>
     </div>
-    <div class="iconbar">
-      <button id="btnBoard" class="ghost" type="button" aria-label="Classement général" title="Classement général">🏆</button>
-      <button id="btnSound" class="ghost" type="button" aria-label="Son : activé" title="Son : activé">🔊</button>
-      <button id="btnMusic" class="ghost" type="button" aria-label="Musique : activée" title="Musique : activée">🎵</button>
-      <button id="btnInstall" class="ghost" type="button" aria-label="Installer l'appli" title="Installer l'appli" hidden>📲</button>
-      <button id="btnLang" class="ghost" type="button" translate="no" aria-label="English" title="English">EN</button>
+    <div class="hmain">
+      <div class="hwallhead">
+        <img class="hhost" src="img/host/main.webp" alt="" width="104" height="152">
+        <span class="hbubble">À toi de choisir !</span>
+        <h2>Choisis ta baston</h2>
+      </div>
+      <div class="hchips" id="hChips" role="group" aria-label="Filtrer les jeux"></div>
+      <div class="hwall" id="hWall"></div>
+      <footer class="hfoot">
+        <div class="hlinks"><a class="hlink coffee" id="btnCoffee" href="https://ko-fi.com/bastonarcade" target="_blank" rel="noopener"><svg class="ic" aria-hidden="true"><use href="#i-cup"/></svg><span>Offrir un café au développeur</span></a><a class="hlink idea" id="btnIdea" href="mailto:contact@bastonarcade.com?subject=Id%C3%A9e%20de%20jeu%20pour%20Baston%20Arcade&body=Nom%20du%20jeu%20%3A%0A%0APrincipe%20en%20quelques%20lignes%20%3A%0A%0ANombre%20de%20joueurs%20%3A%0A%0AComment%20on%20joue%20(boutons%2C%20gestes)%20%3A%0A%0A---%0AEn%20envoyant%20cette%20id%C3%A9e%2C%20j'accepte%20les%20conditions%20des%20propositions%20d'id%C3%A9es%20%3A%20https%3A%2F%2Fbastonarcade.com%2Flegal.html"><svg class="ic" aria-hidden="true"><use href="#i-bulb"/></svg><span>Proposer une idée de jeu</span></a></div>
+        <details class="seolist"><summary>Les 23 jeux en détail</summary><ul><li><a href="jeux/gravats.html"><b>Gravats</b></a> : Empilez les pièces et effacez des lignes : chacune envoie des briques fendues chez les autres. Le dernier en jeu gagne.</li><li><a href="jeux/gardiens.html"><b>Les Gardiens</b></a> : Chacun garde son but, avec 5 vies. Arrêtez les ballons : le dernier gardien debout gagne.</li><li><a href="jeux/derby.html"><b>Derby</b></a> : Tracez les figures au doigt : plus c&#x27;est propre, plus votre cheval avance. Le premier à la ligne gagne.</li><li><a href="jeux/armada.html"><b>Armada</b></a> : Bataille navale sur une seule mer, chacun son tour. Le dernier bateau à flot gagne.</li><li><a href="jeux/tape-taupe.html"><b>Tape-taupe</b></a> : Tapez vite les taupes des autres quand elles sortent, jamais les vôtres. Premier à 20 points.</li><li><a href="jeux/curling.html"><b>Curling</b></a> : Lancez vos pierres vers la cible et frottez la glace pour les guider. Le plus proche du centre marque.</li><li><a href="jeux/chaises-musicales.html"><b>Chaises musicales</b></a> : Quand le disque s&#x27;arrête, touchez vite une chaise libre. Gare aux faux arrêts !</li><li><a href="jeux/code-secret.html"><b>Code secret</b></a> : Trouvez avant les autres le code secret de 4 couleurs, grâce à vos indices. Trois manches.</li><li><a href="jeux/kabaddi.html"><b>Kabaddi</b></a> : Attaquez en retenant votre souffle, touchez des défenseurs et rentrez chez vous à temps.</li><li><a href="jeux/balle-au-prisonnier.html"><b>Balle au prisonnier</b></a> : Ramassez, lancez, esquivez, attrapez. Chaque balle reçue coûte un cœur : le dernier debout gagne.</li><li><a href="jeux/chars.html"><b>Chars</b></a> : Deux par char, l&#x27;un pilote, l&#x27;autre tire, sans se parler. Le dernier char debout gagne.</li><li><a href="jeux/bergers.html"><b>Les bergers</b></a> : Ensemble, rabattez le troupeau dans l&#x27;enclos avant la nuit, et chassez les loups.</li><li><a href="jeux/drakkars.html"><b>Drakkars</b></a> : Deux drakkars font la course : chaque équipage rame en rythme avec le tambour, le plus synchro arrive le premier.</li><li><a href="jeux/bucherons.html"><b>Bûcherons</b></a> : Choisissez où tombe votre arbre, puis sciez-le proprement. N&#x27;écrasez rien !</li><li><a href="jeux/agility.html"><b>Agility</b></a> : Choisissez un chien et guidez-le sur le parcours : chaque obstacle a son geste. Le meilleur temps gagne.</li><li><a href="jeux/galop.html"><b>Galop</b></a> : Choisissez un cheval, placez-vous et dosez son énergie sur 3000 m. Le premier à la ligne gagne.</li><li><a href="jeux/meduse.html"><b>Méduse</b></a> : Lâchez vos naufragés sur le radeau qui tangue. Le plus haut, une fois posé, marque des points, et cinq fois plus quand passe l'Argus.</li><li><a href="jeux/blob.html"><b>Blob</b></a> : Tracez où votre blob doit pousser dans la boîte de Petri, prenez les flocons d'avoine et envahissez les autres. Le plus grand gagne.</li><li><a href="jeux/grand-prix.html"><b>Grand Prix Baston</b></a> : Course de voitures vue du dessus : pilotez, dosez l'essence, passez aux stands et percutez les autres. Deux tours, cinq voitures.</li><li><a href="jeux/atelier-de-leonard.html"><b>L'Atelier de Léonard</b></a> : En équipe, coloriez trois tableaux de Léonard de Vinci tirés au sort, 30 secondes chacun, avec chacun vos pots de couleur.</li><li><a href="jeux/minotaure.html"><b>Le Minotaure</b></a> : Un joueur est le Minotaure et voit tout le labyrinthe. Les autres fuient à la lueur d'une torche : sortez avant la fin, ou il vous attrape.</li><li><a href="jeux/carrom.html"><b>Carrom</b></a> : Le billard indien à pichenettes : envoyez le palet, rentrez les pions dans les coins. Blanc 1 point, noir 2, la reine rouge 5.</li><li><a href="jeux/dahi-handi.html"><b>Dahi Handi</b></a> : Une pyramide humaine en équipe : chacun garde son étage bien droit pendant que le petit grimpe casser le pot. Un étage qui penche trop, et tout s'écroule.</li></ul><p>Tous les jeux sont gratuits, sans compte, sans application et sans publicité. Créez un salon, vos amis scannent le QR code ou tapent le code, et c'est parti. Seul, vous jouez contre des robots.</p></details>
+        <p class="legal"><a href="legal.html">Mentions légales et confidentialité</a> · <a href="https://chariftribak.itch.io/bastonarcade" target="_blank" rel="noopener">Aussi sur itch.io</a></p>
+      </footer>
+      <div class="strip" id="gameStrip" aria-label="Les jeux"><div class="striprun" id="gameStripRun"></div></div>
+      <div class="gamepop" id="gamePop" hidden><div class="feature"><img id="gamePopArt" class="gameart" alt=""><div class="featbody"><h2 id="gamePopTitle"></h2><p id="gamePopDesc"></p><small>Touchez pour fermer</small></div></div></div>
     </div>
-    <details class="seolist"><summary>Les 23 jeux en détail</summary><ul><li><a href="jeux/gravats.html"><b>Gravats</b></a> : Empilez les pièces et effacez des lignes : chacune envoie des briques fendues chez les autres. Le dernier en jeu gagne.</li><li><a href="jeux/gardiens.html"><b>Les Gardiens</b></a> : Chacun garde son but, avec 5 vies. Arrêtez les ballons : le dernier gardien debout gagne.</li><li><a href="jeux/derby.html"><b>Derby</b></a> : Tracez les figures au doigt : plus c&#x27;est propre, plus votre cheval avance. Le premier à la ligne gagne.</li><li><a href="jeux/armada.html"><b>Armada</b></a> : Bataille navale sur une seule mer, chacun son tour. Le dernier bateau à flot gagne.</li><li><a href="jeux/tape-taupe.html"><b>Tape-taupe</b></a> : Tapez vite les taupes des autres quand elles sortent, jamais les vôtres. Premier à 20 points.</li><li><a href="jeux/curling.html"><b>Curling</b></a> : Lancez vos pierres vers la cible et frottez la glace pour les guider. Le plus proche du centre marque.</li><li><a href="jeux/chaises-musicales.html"><b>Chaises musicales</b></a> : Quand le disque s&#x27;arrête, touchez vite une chaise libre. Gare aux faux arrêts !</li><li><a href="jeux/code-secret.html"><b>Code secret</b></a> : Trouvez avant les autres le code secret de 4 couleurs, grâce à vos indices. Trois manches.</li><li><a href="jeux/kabaddi.html"><b>Kabaddi</b></a> : Attaquez en retenant votre souffle, touchez des défenseurs et rentrez chez vous à temps.</li><li><a href="jeux/balle-au-prisonnier.html"><b>Balle au prisonnier</b></a> : Ramassez, lancez, esquivez, attrapez. Chaque balle reçue coûte un cœur : le dernier debout gagne.</li><li><a href="jeux/chars.html"><b>Chars</b></a> : Deux par char, l&#x27;un pilote, l&#x27;autre tire, sans se parler. Le dernier char debout gagne.</li><li><a href="jeux/bergers.html"><b>Les bergers</b></a> : Ensemble, rabattez le troupeau dans l&#x27;enclos avant la nuit, et chassez les loups.</li><li><a href="jeux/drakkars.html"><b>Drakkars</b></a> : Deux drakkars font la course : chaque équipage rame en rythme avec le tambour, le plus synchro arrive le premier.</li><li><a href="jeux/bucherons.html"><b>Bûcherons</b></a> : Choisissez où tombe votre arbre, puis sciez-le proprement. N&#x27;écrasez rien !</li><li><a href="jeux/agility.html"><b>Agility</b></a> : Choisissez un chien et guidez-le sur le parcours : chaque obstacle a son geste. Le meilleur temps gagne.</li><li><a href="jeux/galop.html"><b>Galop</b></a> : Choisissez un cheval, placez-vous et dosez son énergie sur 3000 m. Le premier à la ligne gagne.</li><li><a href="jeux/meduse.html"><b>Méduse</b></a> : Lâchez vos naufragés sur le radeau qui tangue. Le plus haut, une fois posé, marque des points, et cinq fois plus quand passe l'Argus.</li><li><a href="jeux/blob.html"><b>Blob</b></a> : Tracez où votre blob doit pousser dans la boîte de Petri, prenez les flocons d'avoine et envahissez les autres. Le plus grand gagne.</li><li><a href="jeux/grand-prix.html"><b>Grand Prix Baston</b></a> : Course de voitures vue du dessus : pilotez, dosez l'essence, passez aux stands et percutez les autres. Deux tours, cinq voitures.</li><li><a href="jeux/atelier-de-leonard.html"><b>L'Atelier de Léonard</b></a> : En équipe, coloriez trois tableaux de Léonard de Vinci tirés au sort, 30 secondes chacun, avec chacun vos pots de couleur.</li><li><a href="jeux/minotaure.html"><b>Le Minotaure</b></a> : Un joueur est le Minotaure et voit tout le labyrinthe. Les autres fuient à la lueur d'une torche : sortez avant la fin, ou il vous attrape.</li><li><a href="jeux/carrom.html"><b>Carrom</b></a> : Le billard indien à pichenettes : envoyez le palet, rentrez les pions dans les coins. Blanc 1 point, noir 2, la reine rouge 5.</li><li><a href="jeux/dahi-handi.html"><b>Dahi Handi</b></a> : Une pyramide humaine en équipe : chacun garde son étage bien droit pendant que le petit grimpe casser le pot. Un étage qui penche trop, et tout s'écroule.</li></ul><p>Tous les jeux sont gratuits, sans compte, sans application et sans publicité. Créez un salon, vos amis scannent le QR code ou tapent le code, et c'est parti. Seul, vous jouez contre des robots.</p></details>
-    <p class="legal"><a href="legal.html">Mentions légales et confidentialité</a> · <a href="https://chariftribak.itch.io/bastonarcade" target="_blank" rel="noopener">Aussi sur itch.io</a></p>
+  </div>
+  <div class="msheet" id="modeSheet" hidden>
+    <div class="mscard" role="dialog" aria-modal="true" aria-labelledby="msName">
+      <button class="msclose ghost" id="msClose" type="button" aria-label="Fermer">✕</button>
+      <img id="msImg" alt="" width="640" height="357">
+      <div class="msbody">
+        <div class="hdayhead"><h2 id="msName"></h2><span class="hcat" id="msCat"></span></div>
+        <p id="msDesc"></p>
+        <div class="hdaybtns"><button id="msSolo" class="hbsolo" type="button">▶ Seul</button><button id="msMulti" class="hbmulti" type="button">Entre amis</button></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -1637,6 +1764,98 @@ if (LANG === 'en') $('btnIdea').href = 'mailto:contact@bastonarcade.com?subject=
 const menuView = multi => { $('menuMain').hidden = multi; $('menuMulti').hidden = !multi; };
 $('btnMulti').onclick = () => { menuView(true); menuHint(''); if (typeof loadSalons === 'function') loadSalons(); };
 $('btnMultiBack').onclick = () => { menuView(false); menuHint(''); };
+
+// ---- home: the wall of games, the game of the day, my avatar, the mode sheet ----
+const HOME_CAT = { tetris:'refl', pong:'refl', mole:'refl', chairs:'refl', dodge:'refl', lumber:'refl', meduse:'refl', blob:'refl',
+  naval:'tete', master:'tete', carrom:'tete', curling:'tete', mino:'tete',
+  derby:'course', agility:'course', galop:'course', racer:'course',
+  sheep:'coop', dahi:'coop', leo:'coop', tank:'equipe', drakkar:'equipe', kabaddi:'equipe' };
+const HOME_CAT_NAME = { refl:'Réflexes', tete:'Réflexion', course:'Course', coop:'Coop', equipe:'Équipes' };
+const HOME_NEW = { carrom:'2026-11-15', dahi:'2026-11-15' };          // shown as new for 30 days
+const HOME_FILTERS = [['all', 'Tous'], ['team', 'En équipe'], ['course', 'Courses'], ['tete', 'Réflexion'], ['refl', 'Réflexes'], ['new', 'Nouveaux']];
+let homeFilter = 'all';
+const isNewGame = g => HOME_NEW[g] && (Date.now() - Date.parse(HOME_NEW[g])) < 30*864e5;
+const homeTiles = () => [...document.querySelectorAll('#gamePick > button[data-g]')];
+const homeArt = b => { const im = b.querySelector('img'); return im ? im.getAttribute('src').replace('img/t/', 'img/') : ''; };
+const homeName = b => tr((b.querySelector('span') || {}).textContent || GAME_NAMES[b.dataset.g] || '');
+function homeFav(){
+  const cnt = Object.create(null); let best = null, n = 0;
+  try { for (const h of loadHist()) if (h && typeof h.game === 'string') cnt[h.game] = (cnt[h.game] || 0) + 1; } catch(_){}
+  for (const g in cnt) if (cnt[g] > n){ n = cnt[g]; best = g; }
+  return n >= 3 ? best : null;
+}
+function homeWall(){
+  const wall = $('hWall'); if (!wall) return;
+  const fav = homeFav(); wall.textContent = '';
+  for (const b of homeTiles()){
+    const g = b.dataset.g, cat = HOME_CAT[g] || 'refl';
+    if (homeFilter === 'new' ? !isNewGame(g) : homeFilter === 'team' ? !(cat === 'coop' || cat === 'equipe') : (homeFilter !== 'all' && cat !== homeFilter)) continue;
+    const t = document.createElement('button'), art = document.createElement('span'), im = document.createElement('img'), nm = document.createElement('span'), c = document.createElement('span');
+    t.type = 'button'; t.dataset.g = g; art.className = 'hart';
+    im.src = b.querySelector('img').getAttribute('src'); im.alt = ''; im.loading = 'lazy'; im.width = 360; im.height = 270;
+    c.className = 'hcat'; c.textContent = tr(HOME_CAT_NAME[cat]);
+    art.append(im, c);
+    if (isNewGame(g) || g === fav){ const st = document.createElement('span'); st.className = 'hstick ' + (isNewGame(g) ? 'new' : 'fav'); st.textContent = tr(isNewGame(g) ? 'Nouveau' : 'Ton préféré'); art.append(st); }
+    nm.className = 'hname'; nm.textContent = homeName(b);
+    t.append(art, nm); t.onclick = () => openModeSheet(g); wall.append(t);
+  }
+}
+(() => {
+  const box = $('hChips');
+  for (const [k, label] of HOME_FILTERS){
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = tr(label); b.setAttribute('aria-pressed', k === homeFilter ? 'true' : 'false');
+    b.onclick = () => { homeFilter = k; for (const x of box.children) x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); homeWall(); };
+    box.append(b);
+  }
+  const L = { btnBoard:'TOP', btnSound:'SON', btnMusic:'MUSIQUE', btnInstall:'APPLI' };
+  for (const id in L) if ($(id)) $(id).dataset.l = tr(L[id]);
+})();
+// the game of the day: a new game first while it is new, otherwise one per day, the same for everyone
+function homeDay(){
+  const tiles = homeTiles(); if (!tiles.length) return;
+  const day = Math.floor(Date.now()/864e5), fresh = tiles.filter(b => isNewGame(b.dataset.g));
+  const pool = fresh.length ? fresh : tiles.slice().sort((a, b) => a.dataset.g < b.dataset.g ? -1 : 1);
+  const b = pool[day % pool.length], g = b.dataset.g;
+  $('hDayImg').src = homeArt(b); $('hDayName').textContent = homeName(b); $('hDayCat').textContent = tr(HOME_CAT_NAME[HOME_CAT[g] || 'refl']);
+  $('hDayDesc').textContent = tr(GAME_SHORT[g] || '');
+  $('hDaySolo').onclick = () => homePlay(g, 'solo'); $('hDayMulti').onclick = () => homePlay(g, 'salon'); $('hDayArt').onclick = () => openModeSheet(g);
+  $('hDay').hidden = false;
+}
+function homePlay(g, mode){
+  closeModeSheet(); PENDING_GAME = g; track('accueil/' + mode + '/' + g);
+  if (mode === 'solo') soloCreate(); else { menuView(true); $('btnCreate').click(); }
+}
+let msLast = null;
+function openModeSheet(g){
+  const b = homeTiles().find(x => x.dataset.g === g); if (!b) return;
+  msLast = document.activeElement;
+  $('msImg').src = homeArt(b); $('msName').textContent = homeName(b); $('msCat').textContent = tr(HOME_CAT_NAME[HOME_CAT[g] || 'refl']);
+  $('msDesc').textContent = tr(GAME_SHORT[g] || '');
+  $('msSolo').onclick = () => homePlay(g, 'solo'); $('msMulti').onclick = () => homePlay(g, 'salon');
+  $('modeSheet').hidden = false; $('msSolo').focus();
+}
+function closeModeSheet(){ if ($('modeSheet').hidden) return; $('modeSheet').hidden = true; if (msLast && msLast.focus) try { msLast.focus(); } catch(_){} }
+$('msClose').onclick = closeModeSheet;
+$('modeSheet').addEventListener('click', e => { if (e.target === $('modeSheet')) closeModeSheet(); });
+addEventListener('keydown', e => { if (e.key === 'Escape' && !$('modeSheet').hidden) closeModeSheet(); });
+// my face: twelve comic heads, kept in this browser
+const AV_N = 12;
+let MY_AV = (() => { const v = parseInt(store.get('tm-av'), 10); return v >= 0 && v < AV_N ? v : Math.floor(Math.random()*AV_N); })();
+const avSrc = i => 'img/av/av' + String((i % AV_N) + 1).padStart(2, '0') + '.webp';
+(() => {
+  const grid = $('avGrid');
+  const sync = () => { $('myAv').src = avSrc(MY_AV); for (const x of grid.children) x.setAttribute('aria-pressed', +x.dataset.i === MY_AV ? 'true' : 'false'); };
+  for (let i = 0; i < AV_N; i++){
+    const b = document.createElement('button'), im = document.createElement('img');
+    b.type = 'button'; b.dataset.i = i; b.setAttribute('aria-label', tr('Tête') + ' ' + (i + 1));
+    im.src = avSrc(i); im.alt = ''; im.loading = 'lazy'; im.width = 64; im.height = 64; b.append(im);
+    b.onclick = () => { MY_AV = i; store.set('tm-av', String(i)); sync(); $('avPick').hidden = true; };
+    grid.append(b);
+  }
+  sync();
+  $('btnAvatar').onclick = () => { $('avPick').hidden = !$('avPick').hidden; };
+})();
+$('btnMulti').addEventListener('click', () => { try { scrollTo({ top:0, behavior:'smooth' }); } catch(_){} });
 // the game strip: scrolls by itself, can be swiped or flung (mouse drag too), a tap opens the game's card, a second tap closes it
 (() => {
   const strip = $('gameStrip'), run = $('gameStripRun'), pop = $('gamePop'), items = [...document.querySelectorAll('#gamePick button')];
@@ -14286,6 +14505,7 @@ function sortTiles(){
   const tiles = [...box.querySelectorAll(':scope > button[data-g]')];
   tiles.sort((a, b) => (cnt[b.dataset.g] || 0) - (cnt[a.dataset.g] || 0) || name(a).localeCompare(name(b), LANG, { sensitivity:'base' }));
   for (const t of tiles) box.append(t);
+  homeWall(); homeDay();
   // the scrolling strip on the menu: same order, in both of its copies
   const run = $('gameStripRun'), idx = Object.create(null); tiles.forEach((t, i) => idx[t.dataset.g] = i);
   if (run){ const all = [...run.children], n = all.length/2;
