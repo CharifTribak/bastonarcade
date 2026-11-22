@@ -21,7 +21,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       # the published copy has its code shrunk (see tools/build_site.js); the repository keeps the readable source
       - run: npm i --no-save --no-audit --no-fund terser@5.31.6
       - run: node tools/build_site.js
