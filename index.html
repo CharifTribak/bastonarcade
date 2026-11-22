@@ -260,6 +260,22 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .brdots button.on{background:transparent}
 .brdots button.on::before{background:var(--accent)}
 #brReady{height:60px;font-size:28px}
+/* ---- the game brief, in the comic style: a stamped title, a speech bubble, the mascot explaining ---- */
+.briefcard{border:4px solid #000;box-shadow:7px 7px 0 #000;background:#FFFBEA}
+.briefhead b{background:#E3262B;color:#fff;border:3px solid #000;box-shadow:4px 4px 0 #000;padding:2px 14px 0;transform:rotate(-2deg);text-shadow:2px 2px 0 #000;font-size:32px;line-height:1.1}
+.brfig{position:relative}
+.brfig .brart{display:block;box-shadow:4px 4px 0 #000}
+.brcat{position:absolute;right:-6px;top:-10px;background:#111;color:#FFD21F;border:2px solid #000;font-family:var(--display);font-size:16px;letter-spacing:1px;padding:2px 9px;transform:rotate(4deg)}
+.brbubble{position:relative;background:#fff;border:3px solid #000;border-radius:16px;padding:10px 12px;box-shadow:3px 3px 0 #000;margin-top:8px!important;font-style:normal!important;font-weight:700}
+.brbubble::before{content:"";position:absolute;left:28px;top:-13px;width:18px;height:18px;background:#fff;border-left:3px solid #000;border-top:3px solid #000;transform:rotate(45deg)}
+.brhost{display:flex;justify-content:center}
+.brhost img{width:min(150px,40vw);height:auto;filter:drop-shadow(3px 3px 0 rgba(0,0,0,.3))}
+.brhost + .brtip{position:relative;background:#fff;border:3px solid #000;border-radius:16px;padding:10px 12px;box-shadow:3px 3px 0 #000}
+.brhost + .brtip::before{content:"";position:absolute;left:50%;top:-13px;width:18px;height:18px;margin-left:-9px;background:#fff;border-left:3px solid #000;border-top:3px solid #000;transform:rotate(45deg)}
+.brslide{overflow:hidden;padding:12px 8px 8px 2px}
+.brctl{background:#1B1440;color:#fff;border-color:#000;box-shadow:3px 3px 0 #34E3FF}
+.brctl b{color:#34E3FF}
+.brwho i.face{width:24px;height:24px;border:3px solid;box-shadow:0 0 0 1.5px #000}
 #brReady:disabled{background:#3DDC97;color:#000;opacity:1}
 .brwait{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:center;font-size:14px;font-weight:700;text-align:center}
 .brwho{display:inline-flex;align-items:center;gap:5px;border:2px solid var(--line);border-radius:12px;padding:2px 9px;background:#fff}
@@ -836,6 +852,27 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
 .hist .who{display:flex;flex-wrap:wrap;gap:4px 12px}
 .hist .who span{display:inline-flex;align-items:center;gap:5px}
 .hist .dot{width:12px;height:12px}
+/* ---- the leaderboard: an arcade high-score screen ---- */
+#scrBoard .board{background:#1B1440 repeating-linear-gradient(0deg,rgba(255,255,255,.04) 0 2px,transparent 2px 4px);color:#fff;border:4px solid #000;box-shadow:6px 6px 0 #FF3EA5;padding:16px 14px}
+#scrBoard .bdtitle{margin:0 0 10px;font-family:var(--display);font-size:clamp(28px,8vw,38px);letter-spacing:2px;color:#FFD21F;text-shadow:0 0 12px rgba(255,210,31,.55),3px 3px 0 #000;text-align:center}
+#scrBoard .bdtitle::before{content:"🏆 "}
+#boardTabs{flex-wrap:nowrap;overflow-x:auto;gap:8px;border:0;background:none;padding:2px 2px 10px;scrollbar-width:thin;scroll-snap-type:x proximity}
+#boardTabs button{flex:none;border:3px solid #000;border-radius:999px;background:#fff;color:#111;font-family:var(--body);font-weight:900;font-size:14px;padding:7px 14px;box-shadow:2px 2px 0 #34E3FF;scroll-snap-align:center}
+#boardTabs button[aria-pressed="true"]{background:#FFD21F;color:#111;box-shadow:2px 2px 0 #FF3EA5}
+#scrBoard .rank{background:#fff;color:#111;border:3px solid #000;margin-top:4px}
+#scrBoard .rank th{color:#111;white-space:normal;font-size:12px;line-height:1.1;padding:6px 4px}
+#scrBoard .rank td{padding:6px 4px}
+#scrBoard .rank .nm{gap:6px}
+#scrBoard .rank td:first-child{font-size:20px}
+#scrBoard .rank .dot.face{width:30px;height:30px;border:3px solid;box-shadow:0 0 0 2px #000;flex:none}
+#scrBoard tr.empty td{padding:0!important}
+#scrBoard .bdempty{display:flex;align-items:center;gap:12px;font-family:var(--body);font-weight:800;font-size:15px;text-transform:none;letter-spacing:0;padding:10px;text-align:left}
+#scrBoard .bdempty img{width:84px;height:auto;flex:none}
+#scrBoard .hint{color:#B9B3E0}
+#scrBoard label{color:#34E3FF;font-family:var(--display);letter-spacing:1px;font-size:20px}
+#scrBoard .hist li{color:#111}
+#scrBoard .hist .dot.face{width:22px;height:22px;border:2px solid;box-shadow:0 0 0 1.5px #000}
+#scrBoard #btnClear{background:#fff;color:#111}
 
 /* shake when hit */
 .shake{animation:shake .32s ease-out}
@@ -1497,10 +1534,10 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
 </div>
 
 <!-- LEADERBOARD -->
-<div class="overlay" id="scrBoard" hidden style="z-index:6">
+<div class="overlay" id="scrBoard" hidden style="z-index:60">
   <div class="card board">
-    <h1 style="font-size:24px">Classement général</h1>
-    <div class="seg" id="boardTabs">
+    <h1 class="bdtitle">Classement général</h1>
+    <div class="seg" id="boardTabs" role="group" aria-label="Filtrer par jeu">
       <button data-f="all" aria-pressed="true">Tous</button>
       <button data-f="tetris" aria-pressed="false">Gravats</button>
       <button data-f="pong" aria-pressed="false">Gardiens</button>
@@ -14163,6 +14200,8 @@ function briefCheck(){
 }
 function briefCancel(){ if (HB){ HB = null; broadcast({ t:'brief_off' }); } }
 // ---- everyone ----
+// the mascot, explaining: on top of the principle and the tip
+function brHost(pose){ const d = document.createElement('div'); d.className = 'brhost'; const im = document.createElement('img'); im.src = 'img/host/' + pose + '.webp'; im.alt = ''; im.width = 140; im.height = 140; d.append(im); return d; }
 function openBrief(game, ready, mode){
   const B = BRIEF[game]; if (!B){ closeBrief(); return; }
   mode = mode || 'ready';
@@ -14173,9 +14212,11 @@ function openBrief(game, ready, mode){
   $('brTitle').textContent = GAME_NAMES[game] || '';
   const tr0 = $('brTrack'); tr0.textContent = '';
   const slide = (title, body) => { const s = document.createElement('div'); s.className = 'brslide'; const h = document.createElement('h3'); h.textContent = title; s.append(h, ...body); tr0.append(s); };
+  // the story: the art with the game's kind stamped on it, then the tale in a speech bubble
   const im = document.createElement('img'); im.className = 'brart'; im.alt = ''; im.src = gameImg(game);
-  const p1 = document.createElement('p'); p1.className = 'brstory'; p1.textContent = GAME_STORY[game] || GAME_SHORT[game] || '';
-  slide('L\'histoire', [im, p1]);
+  const fig = document.createElement('div'); fig.className = 'brfig'; const cat = document.createElement('span'); cat.className = 'brcat'; cat.textContent = tr(HOME_CAT_NAME[HOME_CAT[game] || 'refl']); fig.append(im, cat);
+  const p1 = document.createElement('p'); p1.className = 'brstory brbubble'; p1.textContent = GAME_STORY[game] || GAME_SHORT[game] || '';
+  slide('L\'histoire', [fig, p1]);
   // a short silent film of the real game, a finger showing the moves: for those who will not read
   if (BR_VIDS.has(game)){
     const v = document.createElement('video'); v.className = 'brvid'; v.muted = true; v.loop = true; v.playsInline = true; v.preload = 'none';
@@ -14184,12 +14225,12 @@ function openBrief(game, ready, mode){
     const vb = document.createElement('div'); vb.className = 'brvbox'; vb.append(v);
     slide('Comment on joue', [vb]);
   }
-  const big0 = document.createElement('div'); big0.className = 'brbig'; big0.textContent = '🎯';
+  const big0 = brHost('main');
   const p2 = document.createElement('p'); p2.className = 'brtip'; p2.textContent = GAME_IDEA[game] || GAME_SHORT[game] || '';
   slide('Le principe', [big0, p2]);
   const rows = B.ctl.map(([ic, t]) => { const r = document.createElement('div'); r.className = 'brctl'; const i = document.createElement('span'); i.className = 'bric'; i.textContent = ic; const l = document.createElement('div'); const k = document.createElement('b'); k.textContent = ic === '📱' ? 'Téléphone' : 'Ordinateur'; const x = document.createElement('p'); x.textContent = t; l.append(k, x); r.append(i, l); return r; });
   slide('Les commandes', rows);
-  if (B.tip){ const p = document.createElement('p'); p.className = 'brtip'; p.textContent = B.tip; const big = document.createElement('div'); big.className = 'brbig'; big.textContent = '💡'; slide('L\'astuce', [big, p]); }
+  if (B.tip){ const p = document.createElement('p'); p.className = 'brtip'; p.textContent = B.tip; const big = brHost('tip'); slide('L\'astuce', [big, p]); }
   const dots = $('brDots'); dots.textContent = '';
   for (let k = 0; k < BR.n; k++){ const d = document.createElement('button'); d.type = 'button'; d.setAttribute('aria-label', String(k + 1)); d.onclick = () => briefGo(k); dots.append(d); }
   briefGo(0); briefStatus();
@@ -14226,7 +14267,7 @@ function briefStatus(){
   const w = $('brWait'); w.textContent = '';
   if (mine && waiting.length){
     const t = document.createElement('b'); t.textContent = 'On attend :'; w.append(t);
-    for (const p of waiting){ const c = document.createElement('span'); c.className = 'brwho'; const d = document.createElement('i'); d.style.background = p.color; const n = document.createElement('span'); n.textContent = p.name; n.setAttribute('translate', 'no'); c.append(d, n); w.append(c); }
+    for (const p of waiting){ const c = document.createElement('span'); c.className = 'brwho'; const d = document.createElement('i'); d.style.background = p.color; if (avIdx(p.av) !== null){ d.className = 'face'; d.style.borderColor = p.color; d.style.backgroundImage = 'url(' + avSrc(p.av) + ')'; d.style.backgroundSize = 'cover'; } const n = document.createElement('span'); n.textContent = p.name; n.setAttribute('translate', 'no'); c.append(d, n); w.append(c); }
   } else if (!mine){ const t = document.createElement('span'); t.textContent = BR.ready.size ? BR.ready.size + ' joueur' + (BR.ready.size > 1 ? 's' : '') + ' prêt' + (BR.ready.size > 1 ? 's' : '') + ' sur ' + players.length : 'Lisez les règles, puis touchez « Prêt ».'; w.append(t); }
   $('brForce').hidden = !(me.host && mine && waiting.length);
 }
@@ -14597,7 +14638,7 @@ function saveGame(ranking, game){
   lastSaved = ranking;
   const h = loadHist();
   h.unshift({ at:Date.now(), game:['pong','derby','naval','mole','curling','chairs','master','kabaddi','dodge','tank','sheep','drakkar','lumber','agility','galop','meduse','blob','racer','leo','mino','carrom','dahi'].includes(game) ? game : 'tetris', n:ranking.length,
-    p:ranking.map(r => ({ name:String(r.name).slice(0,14), color:r.color, place:r.place|0, sc:r.sc|0, ln:r.ln|0, sent:r.sent|0, score:r.score|0, sync:r.sync|0, lives:r.lives|0, seats:r.seats|0, catches:r.catches|0, tank:r.tank|0, role:String(r.role || '').slice(0, 8), hits:r.hits|0, pts:r.pts|0, whacks:r.whacks|0, shots:r.shots|0, afloat:r.afloat|0, shapes:r.shapes|0, d:Math.round(r.d||0), t:+r.t||0, me:r.id === me.id })) });
+    p:ranking.map(r => ({ name:String(r.name).slice(0,14), color:r.color, place:r.place|0, sc:r.sc|0, ln:r.ln|0, sent:r.sent|0, score:r.score|0, sync:r.sync|0, lives:r.lives|0, seats:r.seats|0, catches:r.catches|0, tank:r.tank|0, role:String(r.role || '').slice(0, 8), hits:r.hits|0, pts:r.pts|0, whacks:r.whacks|0, shots:r.shots|0, afloat:r.afloat|0, shapes:r.shapes|0, d:Math.round(r.d||0), t:+r.t||0, me:r.id === me.id, av:avOf(r) })) });
   store.set(HIST_KEY, JSON.stringify(h.slice(0, HIST_MAX)));
   sortTiles();
 }
@@ -14620,13 +14661,13 @@ function sortTiles(){
 sortTiles();
 let lbFilter = 'all', clearArmed = false;
 function renderBoard(){
-  for (const b of $('boardTabs').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.f === lbFilter));
+  for (const b of $('boardTabs').querySelectorAll('button')){ b.setAttribute('aria-pressed', String(b.dataset.f === lbFilter)); if (b.dataset.f === lbFilter && !$('scrBoard').hidden) try { b.scrollIntoView({ block:'nearest', inline:'center', behavior:'smooth' }); } catch(_){} }
   const games = loadHist().filter(g => lbFilter === 'all' || g.game === lbFilter);
   // aggregate by player name (case-insensitive)
   const agg = new Map();
   for (const g of games) for (const p of g.p){
     const k = p.name.toLowerCase();
-    const a = agg.get(k) || { name:p.name, color:p.color, games:0, wins:0, pts:0, best:0, bestT:0 };
+    const a = agg.get(k) || { name:p.name, color:p.color, av:avIdx(p.av), games:0, wins:0, pts:0, best:0, bestT:0 };
     a.games++; if (p.place === 1 && g.n > 1) a.wins++;
     a.pts += Math.max(0, g.n - p.place);                  // 1 point per player finished ahead of
     if (g.game === 'derby' || g.game === 'agility' || g.game === 'galop'){ if (p.t > 0 && (!a.bestT || p.t < a.bestT)) a.bestT = p.t; }
@@ -14634,6 +14675,7 @@ function renderBoard(){
     agg.set(k, a);
   }
   const rows = [...agg.values()].sort((x, y) => y.pts - x.pts || y.wins - x.wins || x.games - y.games);
+  const face = (d, av, col) => { if (avIdx(av) === null) return; d.classList.add('face'); d.style.borderColor = col || '#000'; d.style.backgroundImage = 'url(' + avSrc(av) + ')'; d.style.backgroundSize = 'cover'; d.style.backgroundPosition = 'center'; };
   const showBest = lbFilter !== 'all';
   const hd = $('lbHead'); hd.textContent = '';
   for (const t of ['#','Joueur','Parties','Victoires','Points', ...(showBest ? [lbFilter === 'pong' ? 'Arrêts max' : (lbFilter === 'derby' || lbFilter === 'agility' || lbFilter === 'galop') ? 'Meilleur temps' : lbFilter === 'naval' ? 'Touchés max' : lbFilter === 'mole' ? 'Taupes tapées max' : lbFilter === 'curling' ? 'Points max' : lbFilter === 'chairs' ? 'Chaises max' : (lbFilter === 'dodge' || lbFilter === 'tank') ? 'Touches max' : lbFilter === 'sheep' ? 'Record d\'équipe' : lbFilter === 'drakkar' ? 'Synchro max (%)' : (lbFilter === 'master' || lbFilter === 'kabaddi' || lbFilter === 'lumber' || lbFilter === 'meduse' || lbFilter === 'blob' || lbFilter === 'racer' || lbFilter === 'leo' || lbFilter === 'mino' || lbFilter === 'carrom' || lbFilter === 'dahi') ? 'Points max' : 'Meilleur score'] : [])]){
@@ -14644,14 +14686,17 @@ function renderBoard(){
   rows.forEach((r, i) => {
     const tr = document.createElement('tr'); if (i === 0) tr.className = 'win';
     const nm = document.createElement('td'); const w = document.createElement('div'); w.className = 'nm';
-    const d = document.createElement('span'); d.className = 'dot'; d.style.background = r.color;
+    const d = document.createElement('span'); d.className = 'dot'; d.style.background = r.color; face(d, r.av, r.color);
     const s = document.createElement('span'); s.textContent = r.name;
     w.append(d, s); nm.append(w);
-    tr.append(td(i+1), nm, td(r.games), td(r.wins), td(r.pts));
+    tr.append(td(['🥇', '🥈', '🥉'][i] || i+1), nm, td(r.games), td(r.wins), td(r.pts));
     if (showBest) tr.append(td((lbFilter === 'derby' || lbFilter === 'agility' || lbFilter === 'galop') ? (r.bestT ? fmtSec(r.bestT) : '–') : r.best.toLocaleString('fr-FR')));
     tb.append(tr);
   });
-  if (!rows.length){ const tr = document.createElement('tr'); const c = td('Aucune partie terminée sur cet appareil pour l\'instant.'); c.colSpan = 6; c.style.textAlign = 'left'; tr.append(c); tb.append(tr); }
+  if (!rows.length){ const tr = document.createElement('tr'); tr.className = 'empty'; const c = document.createElement('td'); c.colSpan = 6;
+    const im = document.createElement('img'); im.src = 'img/host/tip.webp'; im.alt = ''; im.width = 90; im.height = 90;
+    const t = document.createElement('span'); t.textContent = 'Aucune partie terminée sur cet appareil pour l\'instant.';
+    const box = document.createElement('div'); box.className = 'bdempty'; box.append(im, t); c.append(box); tr.append(c); tb.append(tr); }
   $('lbNote').textContent = games.length + (games.length > 1 ? ' parties enregistrées' : ' partie enregistrée') + ' sur cet appareil. Points : 1 par adversaire terminé derrière soi.';
   const ol = $('histList'); ol.textContent = '';
   for (const g of games.slice(0, 15)){
@@ -14661,7 +14706,7 @@ function renderBoard(){
     const who = document.createElement('div'); who.className = 'who';
     for (const p of g.p.slice().sort((a, b) => a.place - b.place)){
       const sp = document.createElement('span');
-      const d = document.createElement('i'); d.className = 'dot'; d.style.background = p.color;
+      const d = document.createElement('i'); d.className = 'dot'; d.style.background = p.color; face(d, p.av, p.color);
       const t = document.createElement('b'); t.style.fontWeight = p.place === 1 ? '700' : '400';
       t.textContent = p.place + '. ' + p.name + (g.game === 'pong' || g.game === 'naval' ? '' : g.game === 'mole' ? ' (' + (p.pts || 0) + ' pts)' : g.game === 'derby' ? (p.t ? ' (' + fmtSec(p.t) + ')' : '') : ' (' + p.sc.toLocaleString('fr-FR') + ')');
       sp.append(d, t); who.append(sp);
