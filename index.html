@@ -14295,6 +14295,7 @@ function mHat(c, t, vol){
   src.connect(f).connect(g).connect(MUS.g); src.start(t);
 }
 function musStep(c, s, t){
+  if (MUS.T && MUS.T.menu) return menuStep(c, s, t);
   const T = MUS.T || MUS_TRACKS[MUS.track], N = T.steps || 16, i = s % N, bar = Math.floor(s/N) % 4, loop = Math.floor(s/(N*4)) % 2, ch = T.ch[bar], sps = MUS_SPS;
   const dr = T.dr || 'pop', beat = N === 12 ? 3 : 4;
   // drums, in the style of the game
@@ -14313,6 +14314,33 @@ function musStep(c, s, t){
   if (T.aw !== null) mNote(c, mHz(ch[i % 3] + (loop ? 12 : 0)), t, sps*.7, T.aw || 'square', T.av || .018);
   const m = T.lead[bar*N + i];
   if (m){ let n = 1; while (n < 4 && !T.lead[(bar*N + i + n) % (N*4)]) n++; mNote(c, mHz(m + (T.up || 0)), t, sps*n*.85, T.lw || 'square', T.lv || .045); }
+}
+// ---- the menu theme: 80s adventure, 130 bpm, galloping bass + arpeggios + drums, no lead (Cm Ab Eb Bb) ----
+const MUS_MENU = { menu:true, sps:60/130/4, steps:16 };
+const MENU_CH = [[130.81, 155.56, 196.00], [103.83, 130.81, 155.56], [155.56, 196.00, 233.08], [116.54, 146.83, 174.61]];
+const MENU_ARP = [0, 1, 2, 1, 0, 2, 1, 2, 0, 1, 2, 1, 2, 1, 2, 0];
+let menuNoise = null, menuBus = null;
+function menuOut(c){ if (!menuBus || menuBus.context !== c || menuBus._to !== MUS.g){ menuBus = c.createGain(); menuBus.gain.value = .35; menuBus.connect(MUS.g); menuBus._to = MUS.g; } return menuBus; }
+function menuEnv(c, node, t, vol, dur){ const g = c.createGain(); g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.001, t + dur); node.connect(g).connect(menuOut(c)); }
+function menuNoiseSrc(c, t, dur, hp){
+  if (!menuNoise || menuNoise.sampleRate !== c.sampleRate){ const n = Math.floor(c.sampleRate*1.5); menuNoise = c.createBuffer(1, n, c.sampleRate); const d = menuNoise.getChannelData(0); for (let i = 0; i < n; i++) d[i] = Math.random()*2 - 1; }
+  const src = c.createBufferSource(), f = c.createBiquadFilter(); src.buffer = menuNoise; f.type = 'highpass'; f.frequency.setValueAtTime(hp, t);
+  src.connect(f); src.start(t); src.stop(t + dur); return f;
+}
+function menuStep(c, s, t){
+  const bar = Math.floor(s/16) % 4, i = s % 16, ch = MENU_CH[bar];
+  // galloping bass: root and octave on every sixteenth, a closing filter on a sawtooth
+  { const o = c.createOscillator(), f = c.createBiquadFilter(), d = .12; o.type = 'sawtooth'; o.frequency.setValueAtTime(ch[0]/2*(i % 2 ? 2 : 1), t);
+    f.type = 'lowpass'; f.frequency.setValueAtTime(900, t); f.frequency.exponentialRampToValueAtTime(180, t + d); o.connect(f); menuEnv(c, f, t, .28, d); o.start(t); o.stop(t + d); }
+  // arpeggio an octave up
+  { const o = c.createOscillator(), d = .1; o.type = 'triangle'; o.frequency.setValueAtTime(ch[MENU_ARP[i]]*2, t); menuEnv(c, o, t, .14, d); o.start(t); o.stop(t + d); }
+  // kick on every beat, plus a push before the loop comes round
+  if (i % 4 === 0 || (bar === 3 && i === 14)){ const o = c.createOscillator(); o.type = 'sine'; o.frequency.setValueAtTime(140, t); o.frequency.exponentialRampToValueAtTime(38, t + .12); menuEnv(c, o, t, .45, .25); o.start(t); o.stop(t + .25); }
+  // snare on 2 and 4: a falling body and some noise
+  if (i === 4 || i === 12){ const o = c.createOscillator(); o.type = 'triangle'; o.frequency.setValueAtTime(180, t); o.frequency.exponentialRampToValueAtTime(70, t + .1); menuEnv(c, o, t, .25, .15); o.start(t); o.stop(t + .15);
+    menuEnv(c, menuNoiseSrc(c, t, .22, 800), t, .3, .22); }
+  // hi-hat on every sixteenth, open on the off-beats
+  const open = i % 4 === 2; menuEnv(c, menuNoiseSrc(c, t, open ? .12 : .04, 7000), t, open ? .08 : .03, open ? .12 : .04);
 }
 function musTrack(k){ MUS.T = null; MUS.track = k % MUS_TRACKS.length; const T = MUS_TRACKS[MUS.track]; MUS_SPS = T.sps; MUS_CH = T.ch; MUS_LEAD = T.lead; }
 // ---- one theme per game, played while its presentation is open ----
@@ -14381,7 +14409,7 @@ function musStart(theme){
   MUS.theme = theme || 'menu';
   MUS.g = c.createGain(); MUS.g.gain.setValueAtTime(0.0001, c.currentTime); MUS.g.gain.exponentialRampToValueAtTime(.8, c.currentTime + 1.2);
   MUS.g.connect(c.destination); MUS.next = c.currentTime + .1; MUS.step = 0; musTrack(MUS.track);
-  const gt = theme && theme !== 'menu' && musGameTrack(theme); if (gt){ MUS.T = gt; MUS_SPS = gt.sps; }
+  const gt = theme && theme !== 'menu' ? musGameTrack(theme) : MUS_MENU; if (gt){ MUS.T = gt; MUS_SPS = gt.sps; }   // the menu has one theme of its own
   MUS.timer = setInterval(musSched, 60); musSched();
 }
 function musStop(){
