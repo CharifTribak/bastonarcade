@@ -541,6 +541,27 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .salons .salonshead b{font-size:15px}
 .mcardtxt{flex:1;font-size:13px;font-weight:800;color:var(--muted)}
 #salonList .none{color:var(--muted);display:block}
+/* ---- "with friends": create first, the code on an arcade keypad, public rooms as cabinets ---- */
+#menuMulti .mc3{order:-1}
+#menuMulti .salonshead b{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:.5px;line-height:1.05}
+#menuMulti .mc3{background:#E3262B;box-shadow:5px 5px 0 #000}
+#menuMulti .mc3 #btnCreate{background:#FFD21F;color:#111;font-family:var(--display);font-size:22px;letter-spacing:1px;box-shadow:3px 3px 0 #000;min-height:52px;padding:0 18px}
+#menuMulti .mc2{background:#1B1440 repeating-linear-gradient(0deg,rgba(255,255,255,.05) 0 2px,transparent 2px 4px);box-shadow:5px 5px 0 #FF3EA5}
+#menuMulti .mc2 .salonshead b{color:#34E3FF}
+#menuMulti #codeIn{background:#000;color:#FFD21F;border:3px solid #34E3FF;font-family:var(--display);font-size:30px;letter-spacing:10px;text-align:center;text-transform:uppercase;min-height:54px;box-shadow:0 0 10px rgba(52,227,255,.3)}
+#menuMulti #codeIn::placeholder{color:#5D568F}
+#menuMulti #btnJoin{background:#FFD21F;color:#111;font-family:var(--display);font-size:22px;letter-spacing:1px;min-height:54px;box-shadow:3px 3px 0 #FF3EA5}
+#menuMulti .mc1{background:#FFFBEA}
+#menuMulti .mc1 .salonshead b{color:#111;text-shadow:none}
+#menuMulti .mc1 .none{color:#111}
+.salonrow{grid-template-columns:72px 1fr auto;padding:6px 8px 6px 6px}
+.salonrow .sthumb{width:72px;height:54px;object-fit:cover;border:2px solid #000;display:block}
+.salonrow small{color:#E3262B;font-family:var(--display);font-weight:400;font-size:17px;letter-spacing:.5px}
+.salonrow .sdots{display:flex;gap:3px;margin-top:3px}
+.salonrow .sdots i{width:12px;height:12px;border-radius:50%;border:2px solid #000;background:#fff}
+.salonrow .sdots i.on{background:#2059FF}
+.salonrow .sright{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.salonrow .sright b{font-size:15px;color:var(--muted)}
 
 /* ---- lobby colours ---- */
 .colpick{display:grid;grid-template-columns:repeat(6,40px);gap:10px;justify-content:center;align-items:center;padding:4px 0 2px}
@@ -2200,9 +2221,14 @@ async function loadSalons(){
     const b = document.createElement('button'); b.type = 'button'; b.className = 'salonrow' + (free ? '' : ' full');
     const c = document.createElement('b'); c.textContent = String(r.code || '').slice(0, 4); c.setAttribute('translate', 'no');
     const info = document.createElement('span'); const hn = publicName(r.host); info.textContent = (/^[aeiouyàâäéèêëîïôöùûü]/i.test(hn) ? 'Salon d\'' : 'Salon de ') + hn;
-    const sm = document.createElement('small'); sm.textContent = (GAME_NAMES[r.game] || 'Jeu') + ' · ' + n + ' joueur' + (n > 1 ? 's' : '') + ' sur ' + MAXP; info.append(sm);
+    // the game's picture, the host, the game's name, then one seat per place (filled or free) and the room code
+    const sm = document.createElement('small'); sm.textContent = GAME_NAMES[r.game] || 'Jeu'; info.append(sm);
+    const dots = document.createElement('span'); dots.className = 'sdots'; dots.setAttribute('aria-label', n + ' / ' + MAXP);
+    for (let k = 0; k < MAXP; k++){ const i = document.createElement('i'); if (k < n) i.className = 'on'; dots.append(i); } info.append(dots);
+    const th = document.createElement('img'); th.className = 'sthumb'; th.alt = ''; th.width = 72; th.height = 54; const ti = document.querySelector('#gamePick button[data-g="' + r.game + '"] img'); th.src = ti ? ti.getAttribute('src') : gameImg(r.game);
     const st = document.createElement('span'); st.className = 'seats'; st.textContent = free ? free + ' place' + (free > 1 ? 's' : '') : 'Plein';
-    b.append(c, info, st);
+    const right = document.createElement('span'); right.className = 'sright'; right.append(st, c);
+    b.append(th, info, right);
     if (free) b.onclick = () => { $('codeIn').value = String(r.code || '').slice(0, 4); $('btnJoin').click(); };
     else b.setAttribute('aria-disabled', 'true');
     li.append(b); ul.append(li);
