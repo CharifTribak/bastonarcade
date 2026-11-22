@@ -279,6 +279,23 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 #lobbyList li.slot{border-style:dashed;box-shadow:none;background:transparent;color:var(--muted);cursor:pointer;justify-content:center;font-size:14px;min-height:44px}
 #lobbyList li.slot.ok{background:#13A35B;color:#fff;border-style:solid}
 #lobbyList li.new{animation:pjoin .55s cubic-bezier(.2,1.6,.4,1)}
+/* ---- lobby: the room code on an arcade bar, the players as fighter cards, faces on the votes ---- */
+#scrLobby .lobbyhead{background:#1B1440 repeating-linear-gradient(0deg,rgba(255,255,255,.05) 0 2px,transparent 2px 4px);border:4px solid #000;box-shadow:5px 5px 0 #FF3EA5;padding:10px 12px;color:#fff;border-radius:0}
+#lobbyList{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}
+#lobbyList li{flex-direction:column;justify-content:flex-start;align-items:center;gap:5px;padding:8px 3px 5px;border-radius:0;border:3px solid var(--line);box-shadow:3px 3px 0 var(--line);background:#fff;min-width:0;position:relative;text-align:center}
+#lobbyList li .pav{width:56px;height:56px;border:5px solid;box-shadow:0 0 0 2.5px var(--line);font-size:26px;overflow:hidden;padding:0}
+#lobbyList li .pav img{width:100%;height:100%;display:block;object-fit:cover}
+#lobbyList li .pname{flex:none;width:100%;box-sizing:border-box;font-size:12px;font-weight:900;padding:2px 3px;border:2px solid var(--line)}
+#lobbyList li .pbadge{position:absolute;top:-9px;left:-6px;font-size:10px;padding:0 5px;transform:rotate(-6deg)}
+#lobbyList li .pbadge.you{left:auto;right:-6px;transform:rotate(6deg)}
+#lobbyList li .pbadge + .pbadge.you{top:auto;bottom:22px}
+#lobbyList li.me{background:#FFF6C9}
+#lobbyList li.me::after{position:absolute;right:2px;top:40px;font-size:14px}
+#lobbyList li.slot{background:rgba(255,255,255,.45);border-style:dashed;box-shadow:none;min-height:0;font-size:12px}
+#lobbyList li.slot .pav{border:3px dashed var(--line);box-shadow:none;background:#fff;color:var(--line);font-family:var(--body);font-weight:900;width:50px;height:50px;margin:3px}
+#lobbyList li.slot .pname{border:0;background:none;color:var(--line)}
+#lobbyList li.slot.ok .pname{color:#fff}
+@media (max-width:360px){#lobbyList li .pav{width:44px;height:44px;border-width:4px}}
 @keyframes pjoin{from{transform:scale(.6) rotate(-4deg);opacity:0}}
 .pphint{margin:0;font-size:13px;color:var(--muted);font-weight:700}
 .privbox{display:flex;gap:7px;align-items:center;font-size:13px;font-weight:900;cursor:pointer;user-select:none}
@@ -349,6 +366,10 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 #gamePick .vbadge{width:auto!important;overflow:visible!important;position:absolute;top:-8px;right:-8px;display:flex;align-items:center;gap:2px;background:#3DDC97;color:#000;border:3px solid var(--line);border-radius:14px;padding:1px 6px 1px 4px;font-family:var(--body);font-weight:900;font-size:13px;box-shadow:2px 2px 0 var(--line);z-index:2}
 #gamePick .vbadge i{width:10px;height:10px;border-radius:50%;border:2px solid var(--line)}
 #gamePick .vbadge.top{background:#FFD93B}
+/* the voters' faces, in their colour ring */
+#gamePick .vbadge{padding:2px 4px 2px 6px;gap:0;white-space:nowrap;flex-wrap:nowrap}
+#gamePick .vbadge i{width:30px;height:30px;border-width:3px;background-size:cover!important;background-position:center!important;margin-left:-7px;box-shadow:0 0 0 2px var(--line)}
+#gamePick .vbadge i:first-of-type{margin-left:4px}
 .peekbar{width:100%;min-height:44px;background:var(--blue);color:#fff;font-size:15px;padding:8px 10px;margin-bottom:10px;animation:popin .2s ease-out}
 .votesum{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:10px;font-weight:900;font-size:14px}
 .votesum button{font-size:13px;padding:4px 10px;background:#fff;color:#000}
@@ -1842,6 +1863,7 @@ addEventListener('keydown', e => { if (e.key === 'Escape' && !$('modeSheet').hid
 const AV_N = 12;
 let MY_AV = (() => { const v = parseInt(store.get('tm-av'), 10); return v >= 0 && v < AV_N ? v : Math.floor(Math.random()*AV_N); })();
 const avSrc = i => 'img/av/av' + String((i % AV_N) + 1).padStart(2, '0') + '.webp';
+const avIdx = v => Number.isInteger(v) && v >= 0 && v < AV_N ? v : null;   // anything else from the network: no face, the initial instead
 (() => {
   const grid = $('avGrid');
   const sync = () => { $('myAv').src = avSrc(MY_AV); for (const x of grid.children) x.setAttribute('aria-pressed', +x.dataset.i === MY_AV ? 'true' : 'false'); };
@@ -1933,7 +1955,7 @@ function soloCreate(){
   readName();
   net = { peer:null, code:'SOLO', conns:new Map(), solo:true };
   me.host = true; me.id = 'h';
-  players = [{ id:'h', name:me.name, color:pickColor() }];
+  players = [{ id:'h', name:me.name, color:pickColor(), av:MY_AV }];
   phase = 'lobby';
   $('scrLobby').classList.add('solo'); $('btnLeaveLobby').textContent = 'Retour au menu'; track('solo');
   show('scrLobby'); renderLobby(); pendingGame();
@@ -1963,7 +1985,7 @@ function hostCreate(retry = 0){
   menuHint('Ouverture du salon…');
   peer.on('open', () => {
     me.host = true; me.id = 'h';
-    players = [{ id:'h', name:me.name, color:pickColor() }];
+    players = [{ id:'h', name:me.name, color:pickColor(), av:MY_AV }];
     phase = 'lobby'; show('scrLobby'); renderLobby(); announce(); track('salon-cree'); pendingGame();
   });
   peer.on('connection', conn => {
@@ -1989,7 +2011,7 @@ function guestJoin(code){
   peer.on('open', () => {
     const conn = peer.connect(PREFIX + code.toLowerCase(), { reliable:true });
     net.conn = conn;
-    conn.on('open', () => { opened = true; clearTimeout(timer); lastPing = performance.now(); conn.send({ t:'hello', name:me.name }); track('salon-rejoint'); });
+    conn.on('open', () => { opened = true; clearTimeout(timer); lastPing = performance.now(); conn.send({ t:'hello', name:me.name, av:MY_AV }); track('salon-rejoint'); });
     conn.on('data', d => clientRecv(d));
     conn.on('close', () => { if (net && net.conn === conn) toMenu('Le créateur a quitté le salon.'); });
   });
@@ -2015,7 +2037,7 @@ function hostRecv(conn, d){
     if (players.length >= MAXP){ conn.send({ t:'refused', why:'Salon complet (5 joueurs).' }); setTimeout(() => conn.close(), 400); return; }
     const id = 'p' + (++seq);
     conn._pid = id; net.conns.set(id, conn);
-    players.push({ id, name:cleanName(d.name), color:pickColor() });
+    players.push({ id, name:cleanName(d.name), color:pickColor(), av:avIdx(d.av) });
     sendLobby(false);
     try { conn.send({ t:'chatlog', items:CHAT.slice(-30) }); } catch(_){}
     if (HB) try { conn.send({ t:'brief', game:HB.game, ready:[...HB.ready] }); } catch(_){}
@@ -2177,7 +2199,7 @@ function hostLaunch(){
   players = players.filter(p => p.id === 'h' || net.conns.has(p.id));
   BOT = null;
   if (players.length === 1){                             // alone: a medium-level robot joins
-    players.push({ id:'ai', name:'Robot', color:pickColor(), bot:true });
+    players.push({ id:'ai', name:'Robot', color:pickColor(), bot:true, av:5 });
   }
   H = { game:gameKind, alive:new Set(players.map(p => p.id)), deaths:[], stats:{}, n:players.length, over:false };
   for (const p of players) H.stats[p.id] = gameKind === 'pong' ? { lives:PONG_LIVES, hits:0, left:false }
@@ -2423,8 +2445,11 @@ function renderLobby(){
   const seen = renderLobby.seen || (renderLobby.seen = new Set());
   players.forEach(p => {
     const li = document.createElement('li');
-    const av = document.createElement('span'); av.className = 'pav'; av.style.background = p.color; av.style.color = inkOn(p.color); av.textContent = (p.name || '?').slice(0, 1).toUpperCase(); av.setAttribute('translate', 'no');
-    const n = document.createElement('span'); n.className = 'pname'; n.textContent = p.name; n.setAttribute('translate', 'no');
+    // a fighter card: the face inside a thick ring of the player's colour, the name on a strip of the same colour
+    const av = document.createElement('span'); av.className = 'pav'; av.style.background = p.color; av.style.borderColor = p.color; av.style.color = inkOn(p.color); av.setAttribute('translate', 'no');
+    if (avIdx(p.av) !== null){ const im = document.createElement('img'); im.src = avSrc(p.av); im.alt = ''; im.width = 64; im.height = 64; av.append(im); av.classList.add('img'); }
+    else av.textContent = (p.name || '?').slice(0, 1).toUpperCase();
+    const n = document.createElement('span'); n.className = 'pname'; n.textContent = p.name; n.setAttribute('translate', 'no'); n.style.background = p.color; n.style.color = inkOn(p.color);
     li.append(av, n);
     if (p.id === 'h'){ const b = document.createElement('span'); b.className = 'pbadge'; b.textContent = '👑 Hôte'; li.append(b); }
     if (p.id === me.id){ const b = document.createElement('span'); b.className = 'pbadge you'; b.textContent = 'Vous'; li.append(b);
@@ -2434,8 +2459,13 @@ function renderLobby(){
   });
   for (const id of [...seen]) if (!players.some(p => p.id === id)) seen.delete(id);
   if (net && !net.solo && players.length < MAXP){
-    const li = document.createElement('li'); li.className = 'slot'; li.textContent = '＋ Inviter un ami (' + (MAXP - players.length) + (MAXP - players.length > 1 ? ' places libres)' : ' place libre)');
-    li.onclick = () => $('btnInvite').click(); ul.append(li);
+    // one dashed card per free seat, so the five places always show
+    for (let k = players.length; k < MAXP; k++){
+      const li = document.createElement('li'); li.className = 'slot'; li.setAttribute('aria-label', tr('Inviter un ami'));
+      const plus = document.createElement('span'); plus.className = 'pav'; plus.textContent = '＋'; plus.setAttribute('aria-hidden', 'true');
+      const tx = document.createElement('span'); tx.className = 'pname'; tx.textContent = tr(k === players.length ? 'Inviter' : 'Libre');
+      li.append(plus, tx); li.onclick = () => $('btnInvite').click(); ul.append(li);
+    }
   }
   const cp = $('colPick'); cp.textContent = '';
   const mineP = players.find(p => p.id === me.id);
@@ -14698,7 +14728,7 @@ function renderVotes(){
     b.setAttribute('aria-pressed', 'false');
     const old = b.querySelector('.vbadge'); if (old) old.remove();
     const v = count[b.dataset.g];
-    if (v && v.length && !solo){ const d = document.createElement('span'); d.className = 'vbadge' + (v.length === top ? ' top' : ''); d.append('👍' + v.length); for (const p of v){ if (!p) continue; const i = document.createElement('i'); i.style.background = p.color; d.append(i); } b.append(d); }
+    if (v && v.length && !solo){ const d = document.createElement('span'); d.className = 'vbadge' + (v.length === top ? ' top' : ''); d.append('👍' + v.length); for (const p of v){ if (!p) continue; const i = document.createElement('i'); i.style.background = p.color; i.style.borderColor = p.color; if (avIdx(p.av) !== null) i.style.backgroundImage = 'url(' + avSrc(p.av) + ')'; d.append(i); } b.append(d); }
     b.classList.toggle('peek', !solo && !me.host && PEEK === b.dataset.g);
   }
   const pb = $('peekBar'); pb.hidden = solo || me.host || !PEEK;
@@ -14738,9 +14768,9 @@ $('btnInvite').onclick = async () => {
   }
   if (!ok){ window.prompt(tr('Copiez ce lien et envoyez-le à vos amis :'), url); return; }
   b.textContent = '✔ Lien copié !'; b.classList.add('ok');
-  const slot = document.querySelector('#lobbyList li.slot'), was = slot && slot.textContent;
-  if (slot){ slot.textContent = tr('✔ Lien copié : envoyez-le à vos amis'); slot.classList.add('ok'); }
-  clearTimeout(inviteT); inviteT = setTimeout(() => { b.textContent = '🔗 Copier le lien'; b.classList.remove('ok'); const s2 = document.querySelector('#lobbyList li.slot.ok'); if (s2){ s2.textContent = was; s2.classList.remove('ok'); } }, 2400); track('lien-copie');
+  const slot = document.querySelector('#lobbyList li.slot .pname'), was = slot && slot.textContent;
+  if (slot){ slot.textContent = tr('✔ Copié'); slot.parentNode.classList.add('ok'); }
+  clearTimeout(inviteT); inviteT = setTimeout(() => { b.textContent = '🔗 Copier le lien'; b.classList.remove('ok'); const s2 = document.querySelector('#lobbyList li.slot.ok'); if (s2){ s2.querySelector('.pname').textContent = was; s2.classList.remove('ok'); } }, 2400); track('lien-copie');
 };
 (() => {
   let c = null;
