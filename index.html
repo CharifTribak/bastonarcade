@@ -14314,6 +14314,7 @@ function mHat(c, t, vol){
 }
 function musStep(c, s, t){
   if (MUS.T && MUS.T.menu) return menuStep(c, s, t);
+  if (MUS.T && MUS.T.retro) return retroStep(c, MUS.T, s, t);
   const T = MUS.T || MUS_TRACKS[MUS.track], N = T.steps || 16, i = s % N, bar = Math.floor(s/N) % 4, loop = Math.floor(s/(N*4)) % 2, ch = T.ch[bar], sps = MUS_SPS;
   const dr = T.dr || 'pop', beat = N === 12 ? 3 : 4;
   // drums, in the style of the game
@@ -14359,6 +14360,38 @@ function menuStep(c, s, t){
     menuEnv(c, menuNoiseSrc(c, t, .22, 800), t, .3, .22); }
   // hi-hat on every sixteenth, open on the off-beats
   const open = i % 4 === 2; menuEnv(c, menuNoiseSrc(c, t, open ? .12 : .04, 7000), t, open ? .08 : .03, open ? .12 : .04);
+}
+// ---- the games' themes in the same 80s adventure style: galloping filtered bass, triangle arpeggios, punchy drums,
+// plus each game's own tune on a soft pulse lead. Key, chords, tempo, metre and drum feel stay the game's own. ----
+function r80Kick(c, t, vol, lo){ const o = c.createOscillator(); o.type = 'sine'; o.frequency.setValueAtTime(lo ? 110 : 140, t); o.frequency.exponentialRampToValueAtTime(lo ? 32 : 38, t + (lo ? .2 : .12)); menuEnv(c, o, t, vol, lo ? .4 : .25); o.start(t); o.stop(t + (lo ? .4 : .25)); }
+function r80Snare(c, t, vol, len){ len = len || .22; const o = c.createOscillator(); o.type = 'triangle'; o.frequency.setValueAtTime(180, t); o.frequency.exponentialRampToValueAtTime(70, t + .1); menuEnv(c, o, t, .25*vol, .15); o.start(t); o.stop(t + .15); menuEnv(c, menuNoiseSrc(c, t, len, 800), t, .3*vol, len); }
+function r80Hat(c, t, open, vol){ vol = vol == null ? 1 : vol; menuEnv(c, menuNoiseSrc(c, t, open ? .12 : .04, 7000), t, (open ? .08 : .03)*vol, open ? .12 : .04); }
+function r80Tabla(c, t, hi){ const o = c.createOscillator(); o.type = 'sine'; o.frequency.setValueAtTime(hi ? 420 : 95, t); o.frequency.exponentialRampToValueAtTime(hi ? 330 : 70, t + .12); menuEnv(c, o, t, hi ? .16 : .3, hi ? .1 : .2); o.start(t); o.stop(t + .2); }
+const R80_ARP12 = [0, 1, 2, 1, 2, 0, 0, 1, 2, 1, 2, 1];
+function retroStep(c, T, s, t){
+  const N = T.steps, i = s % N, bar = Math.floor(s/N) % 4, beat = N === 12 ? 3 : 4, b = Math.floor(i/beat), ib = i % beat, ch = T.ch[bar], sps = T.sps, dr = T.dr, calm = T.bpm < 100;
+  // drums: the menu's kit, played with the game's feel
+  if (dr === 'pop' || dr === 'gallop'){ if (ib === 0) r80Kick(c, t, .45); if (ib === 0 && (b === 1 || b === 3)) r80Snare(c, t, 1); r80Hat(c, t, beat === 4 ? ib === 2 : false, beat === 4 ? 1 : .8); if (bar === 3 && i === N - 2) r80Kick(c, t, .4); }
+  else if (dr === 'march'){ if (ib === 0 && (b === 0 || b === 2)) r80Kick(c, t, .45); if (ib === 0 && (b === 1 || b === 3)) r80Snare(c, t, 1); if (i === N - 1 || (bar === 3 && i === N - 2)) r80Snare(c, t, .4, .1); if (i % 2 === 0) r80Hat(c, t, false); }
+  else if (dr === 'waltz'){ if (i === 0 || (ib === 0 && b === 2)) r80Kick(c, t, .45); if (ib === 0 && (b === 1 || b === 3)) r80Snare(c, t, .8); r80Hat(c, t, ib === 2, .8); }
+  else if (dr === 'tabla'){ if (i === 0 || i === Math.round(N*11/16)) r80Kick(c, t, .4); if (ib === 0 && b === 3) r80Snare(c, t, .7); if (i % beat === 2 || i === 7) r80Tabla(c, t, true); if (i % 8 === 4) r80Tabla(c, t, false); if (i % 2) r80Hat(c, t, false, .7); }
+  else if (dr === 'heart'){ if (i === 0 || i === 3) r80Kick(c, t, i ? .3 : .45, true); if (i === N/2 || i === N/2 + 3) r80Kick(c, t, i === N/2 ? .35 : .25, true); if (i % 4 === 2) r80Hat(c, t, false, .5); }
+  else if (dr === 'viking'){ if (ib === 0 && (b === 0 || b === 2)) r80Kick(c, t, .55, true); if (ib === 0 && b === 3) r80Snare(c, t, 1, .45); if (ib === 0 && b === 1) r80Kick(c, t, .25, true); }
+  else { if (ib === 0 && (b === 0 || b === 2)) r80Kick(c, t, .35); if (ib === 0 && (b === 1 || b === 3)) r80Snare(c, t, .6); if (i % 2 === 0) r80Hat(c, t, false, .7); }   // soft
+  // galloping bass, root and octave (eighths when the tempo is slow, a held drone under the Indian themes)
+  const root = mHz(ch[0] - 12);
+  if (!calm || i % 2 === 0){ const oct = beat === 3 ? ib === 2 : (calm ? i % 4 === 2 : i % 2 === 1), o = c.createOscillator(), f = c.createBiquadFilter(), d = calm ? .2 : .12;
+    o.type = 'sawtooth'; o.frequency.setValueAtTime(root*(oct ? 2 : 1), t); f.type = 'lowpass'; f.frequency.setValueAtTime(900, t); f.frequency.exponentialRampToValueAtTime(180, t + d); o.connect(f); menuEnv(c, f, t, .28, d); o.start(t); o.stop(t + d); }
+  if (T.drone && i === 0){ const o = c.createOscillator(), f = c.createBiquadFilter(), d = sps*N*.95; o.type = 'sawtooth'; o.frequency.setValueAtTime(root, t); f.type = 'lowpass'; f.frequency.value = 500; o.connect(f);
+    const g = c.createGain(); g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.07, t + .3); g.gain.exponentialRampToValueAtTime(.0001, t + d); f.connect(g).connect(menuOut(c)); o.start(t); o.stop(t + d); }
+  // arpeggio an octave up (not on the drum-only themes)
+  if (T.aw !== null){ const o = c.createOscillator(); o.type = 'triangle'; o.frequency.setValueAtTime(mHz(ch[(beat === 3 ? R80_ARP12 : MENU_ARP)[i]]) * 2, t); menuEnv(c, o, t, dr === 'heart' ? .07 : .12, .1); o.start(t); o.stop(t + .1); }
+  // the game's own tune, on a filtered pulse (a softer triangle for the gentle themes)
+  const m = T.lead[bar*N + i];
+  if (m){ let n = 1; while (n < 4 && !T.lead[(bar*N + i + n) % (N*4)]) n++;
+    const soft = T.lw === 'sine', o = c.createOscillator(), d = sps*n*.85; o.type = soft ? 'triangle' : 'square'; o.frequency.setValueAtTime(mHz(m + (T.up || 0)), t);
+    const f = c.createBiquadFilter(); f.type = 'lowpass'; f.frequency.setValueAtTime(soft ? 4000 : 2600, t); o.connect(f);
+    const g = c.createGain(); g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(soft ? .13 : .07, t + .01); g.gain.setValueAtTime(soft ? .13 : .07, t + d*.6); g.gain.exponentialRampToValueAtTime(.0001, t + d); f.connect(g).connect(menuOut(c)); o.start(t); o.stop(t + d + .02); }
 }
 function musTrack(k){ MUS.T = null; MUS.track = k % MUS_TRACKS.length; const T = MUS_TRACKS[MUS.track]; MUS_SPS = T.sps; MUS_CH = T.ch; MUS_LEAD = T.lead; }
 // ---- one theme per game, played while its presentation is open ----
@@ -14411,7 +14444,7 @@ function musGameTrack(g){
       else lead.push(i === 0 ? note(base + 2) : i === N/4 ? note(base + 1) : i === N/2 ? note(0) : 0);   // cadence: home on the root
     }
   });
-  return musTheme[g] = { sps:60/P.bpm/(N === 12 ? 3 : 4), ch, lead, steps:N, dr:P.dr, lw:P.lw, lv:P.lv, aw:P.aw, av:P.av, drone:P.drone, bass8:P.bass8, up:P.up || 0 };
+  return musTheme[g] = { retro:true, bpm:P.bpm, sps:60/P.bpm/(N === 12 ? 3 : 4), ch, lead, steps:N, dr:P.dr, lw:P.lw, lv:P.lv, aw:P.aw, av:P.av, drone:P.drone, bass8:P.bass8, up:P.up || 0 };
 }
 
 function musSched(){
@@ -14426,7 +14459,9 @@ function musStart(theme){
   const c = sndCtx(); if (!c || c.state !== 'running' || MUS.g) return;
   MUS.theme = theme || 'menu';
   MUS.g = c.createGain(); MUS.g.gain.setValueAtTime(0.0001, c.currentTime); MUS.g.gain.exponentialRampToValueAtTime(.8, c.currentTime + 1.2);
-  MUS.g.connect(c.destination); MUS.next = c.currentTime + .1; MUS.step = 0; musTrack(MUS.track);
+  // a safety limiter: only the rare peaks where kick, bass and tune land together get caught, so nothing crackles
+  const lim = c.createDynamicsCompressor(); lim.threshold.value = -2; lim.knee.value = 0; lim.ratio.value = 20; lim.attack.value = .002; lim.release.value = .1;
+  MUS.g.connect(lim).connect(c.destination); MUS.g._lim = lim; MUS.next = c.currentTime + .1; MUS.step = 0; musTrack(MUS.track);
   const gt = theme && theme !== 'menu' ? musGameTrack(theme) : MUS_MENU; if (gt){ MUS.T = gt; MUS_SPS = gt.sps; }   // the menu has one theme of its own
   MUS.timer = setInterval(musSched, 60); musSched();
 }
@@ -14434,7 +14469,7 @@ function musStop(){
   if (!MUS.g) return;
   const g = MUS.g, c = SND.ctx; MUS.g = null; clearInterval(MUS.timer);
   try { g.gain.cancelScheduledValues(c.currentTime); g.gain.setValueAtTime(Math.max(.0001, g.gain.value), c.currentTime); g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + .5); } catch(_){}
-  setTimeout(() => { try { g.disconnect(); } catch(_){} }, 700);
+  setTimeout(() => { try { g.disconnect(); if (g._lim) g._lim.disconnect(); } catch(_){} }, 700);
 }
 // on the menu, the scores and the room, with sound and music on and the page in view
 const musWanted = () => SND.on && MUS.on && !document.hidden && ['scrMenu', 'scrStats', 'scrLobby'].some(id => !$(id).hidden);
