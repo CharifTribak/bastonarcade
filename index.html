@@ -795,6 +795,19 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
 .nvplayers li{display:flex;align-items:center;gap:6px;background:#fff;border:3px solid #000;border-radius:16px;padding:3px 10px 3px 5px;font-weight:800}
 .nvplayers li.dead{opacity:.5;text-decoration:line-through}
 .nvplayers li.turn{background:#FFF3B0;box-shadow:2px 2px 0 #000}
+/* ---- in-game frame, shared by the games: an arcade marquee for the status, LED counters, faces on the player chips ---- */
+.dot.face{width:26px;height:26px;border:3px solid;box-shadow:0 0 0 1.5px #000}
+.nvhead{background:#1B1440 repeating-linear-gradient(0deg,rgba(255,255,255,.05) 0 2px,transparent 2px 4px);border:3px solid #000;box-shadow:4px 4px 0 #FF3EA5;padding:6px 10px;box-sizing:border-box}
+.nvturn{color:#FFD21F;text-shadow:0 0 10px rgba(255,210,31,.45),2px 2px 0 #000}
+.nvturn.mine{color:#FF5CB8;-webkit-text-stroke:0;text-shadow:0 0 10px rgba(255,62,165,.6),2px 2px 0 #000}
+.nvtime,.nvhead .cuend{background:#000;color:#FFD21F;border:2px solid #34E3FF;font-family:var(--display);font-weight:400;letter-spacing:1px;box-shadow:0 0 8px rgba(52,227,255,.35)}
+.nvhead .cuend{font-size:17px;padding:2px 9px}
+.nvtime.low{background:#E3262B;color:#fff;border-color:#fff}
+.nvplayers{font-size:14px}
+.nvplayers li{padding:3px 11px 3px 3px;box-shadow:2px 2px 0 #000}
+.nvplayers li.turn{background:#FFD21F;box-shadow:3px 3px 0 #FF3EA5;transform:translateY(-1px)}
+.abort{background:#1B1440;color:#FFD21F;border:2px solid #000;box-shadow:2px 2px 0 #34E3FF;font-family:var(--display);font-weight:400;font-size:17px;letter-spacing:1px;padding:4px 12px}
+.abort::before{content:"◀ "}
 #mlCv{display:block;width:100%;height:auto;aspect-ratio:1;touch-action:manipulation;cursor:pointer;border:3px solid #000;box-shadow:6px 6px 0 #000}
 .mlscores{list-style:none;margin:0;padding:10px;width:min(100%,72vh,700px);display:flex;flex-direction:column;gap:7px;font-size:14px;background:#fff;border:3px solid #000;box-shadow:4px 4px 0 #000}
 .mlscores li{display:grid;grid-template-columns:minmax(0,9em) 1fr 3em;align-items:center;gap:8px}
@@ -1909,7 +1922,8 @@ const AV_N = 12;
 let MY_AV = (() => { const v = parseInt(store.get('tm-av'), 10); return v >= 0 && v < AV_N ? v : Math.floor(Math.random()*AV_N); })();
 const avSrc = i => 'img/av/av' + String((i % AV_N) + 1).padStart(2, '0') + '.webp';
 const avIdx = v => Number.isInteger(v) && v >= 0 && v < AV_N ? v : null;
-const avOf = r => { if (!r) return null; if (avIdx(r.av) !== null) return r.av; const p = players.find(q => q.id === r.id); return p ? avIdx(p.av) : null; };   // ranking rows carry an id; the face comes from the room   // anything else from the network: no face, the initial instead
+const pface = (d, p) => { const fa = avOf(p); if (fa === null) return; d.classList.add('face'); d.style.borderColor = p.color || '#000'; d.style.backgroundImage = 'url(' + avSrc(fa) + ')'; d.style.backgroundSize = 'cover'; d.style.backgroundPosition = 'center'; };   // a player's dot becomes their face in its colour ring
+const avOf = r => { if (!r) return null; if (avIdx(r.av) !== null) return r.av; const p = players.find(q => q.id === r.id) || r; return avIdx(p.av) !== null ? p.av : p.bot ? 5 : null; };   // robots all wear the robot face   // ranking rows carry an id; the face comes from the room   // anything else from the network: no face, the initial instead
 (() => {
   const grid = $('avGrid');
   const sync = () => { $('myAv').src = avSrc(MY_AV); for (const x of grid.children) x.setAttribute('aria-pressed', +x.dataset.i === MY_AV ? 'true' : 'false'); };
@@ -2493,7 +2507,7 @@ function renderLobby(){
     const li = document.createElement('li');
     // a fighter card: the face inside a thick ring of the player's colour, the name on a strip of the same colour
     const av = document.createElement('span'); av.className = 'pav'; av.style.background = p.color; av.style.borderColor = p.color; av.style.color = inkOn(p.color); av.setAttribute('translate', 'no');
-    if (avIdx(p.av) !== null){ const im = document.createElement('img'); im.src = avSrc(p.av); im.alt = ''; im.width = 64; im.height = 64; av.append(im); av.classList.add('img'); }
+    if (avOf(p) !== null){ const im = document.createElement('img'); im.src = avSrc(avOf(p)); im.alt = ''; im.width = 64; im.height = 64; av.append(im); av.classList.add('img'); }
     else av.textContent = (p.name || '?').slice(0, 1).toUpperCase();
     const n = document.createElement('span'); n.className = 'pname'; n.textContent = p.name; n.setAttribute('translate', 'no'); n.style.background = p.color; n.style.color = inkOn(p.color);
     li.append(av, n);
@@ -2730,7 +2744,7 @@ function buildOpps(){
     if (p.id === me.id) continue;
     const el = document.createElement('div'); el.className = 'opp';
     const who = document.createElement('div'); who.className = 'who';
-    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color;
+    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color; pface(d, p);
     const n = document.createElement('span'); n.textContent = p.name;
     who.append(d, n);
     const cv = document.createElement('canvas'); cv.width = COLS*8; cv.height = VIS*8;
@@ -3907,7 +3921,7 @@ function renderNvPlayers(){
     const li = document.createElement('li');
     if (!NV.alive[i]) li.classList.add('dead');
     if (NV.turnId === p.id) li.classList.add('turn');
-    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color;
+    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color; pface(d, p);
     const t = document.createElement('span'); t.textContent = p.name + (p.id === me.id ? ' (vous)' : '') + ' · ' + NV.afloat[i];
     t.title = 'cases de bateau intactes';
     li.append(d, t); ul.append(li);
@@ -4354,7 +4368,7 @@ function renderMoleScores(){
   players.slice().sort((a, b) => (ML.scores[b.id] || 0) - (ML.scores[a.id] || 0)).forEach(p => {
     const li = document.createElement('li');
     const nm = document.createElement('span'); nm.className = 'nm';
-    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color;
+    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color; pface(d, p);
     const t = document.createElement('span'); t.textContent = p.name + (p.id === me.id ? ' (vous)' : '');
     nm.append(d, t);
     const bar = document.createElement('span'); bar.className = 'bar';
@@ -4837,7 +4851,7 @@ function renderCuPlayers(){
   players.forEach((p, i) => {
     const li = document.createElement('li');
     if (CU.turnId === p.id) li.classList.add('turn');
-    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color;
+    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color; pface(d, p);
     const t = document.createElement('span');
     t.textContent = p.name + (p.id === me.id ? ' (vous)' : '') + ' · ' + CU.scores[i] + ' pt' + (CU.scores[i] > 1 ? 's' : '');
     const st = document.createElement('span'); st.className = 'cust'; st.textContent = '●'.repeat(Math.max(0, CU.left[i])) + '○'.repeat(Math.max(0, CU.spp - CU.left[i]));
@@ -5197,7 +5211,7 @@ function renderMcPlayers(){
   for (const p of players){
     const li = document.createElement('li');
     if (!MC.alive.has(p.id)) li.classList.add('dead');
-    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color;
+    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color; pface(d, p);
     const t = document.createElement('span'); t.textContent = p.name + (p.id === me.id ? ' (vous)' : '');
     const h = document.createElement('span'); h.className = 'mclife'; const n = Math.max(0, MC.lives[p.id] | 0);
     h.textContent = '♥'.repeat(n) + '♡'.repeat(Math.max(0, MC.max - n));
@@ -5537,7 +5551,7 @@ function renderMmOthers(){
   players.forEach((p, i) => {
     const pr = MM.prog[p.id] || { n:0, b:0, w:0 };
     const li = document.createElement('li'); if (pr.solved) li.classList.add('turn'); if (pr.out || pr.left) li.classList.add('dead');
-    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color;
+    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color; pface(d, p);
     const t = document.createElement('span'); t.textContent = p.name + (p.id === me.id ? ' (vous)' : '') + ' · ' + MM.scores[i] + ' pt' + (MM.scores[i] > 1 ? 's' : '');
     const k = document.createElement('span'); k.className = 'mmtries'; k.textContent = pr.solved ? '✓ ' + pr.n : pr.n + '/' + MM_TRIES;
     li.append(d, t, k);
@@ -5929,7 +5943,7 @@ function renderKbPlayers(){
   const ul = $('kbPlayers'); ul.textContent = '';
   players.forEach((p, i) => {
     const li = document.createElement('li'); if (KB.raider === p.id) li.classList.add('turn'); if (p.left) li.classList.add('dead');
-    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color;
+    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color; pface(d, p);
     const t = document.createElement('span'); t.textContent = p.name + (p.id === me.id ? ' (vous)' : '') + ' · ' + KB.scores[i] + ' pt' + (KB.scores[i] > 1 ? 's' : '');
     li.append(d, t); ul.append(li);
   });
@@ -6288,7 +6302,7 @@ function renderDbPlayers(){
   const ul = $('dbPlayers'); ul.textContent = '';
   for (const p of players){
     const li = document.createElement('li'); if (!DB.alive.has(p.id)) li.classList.add('dead');
-    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color;
+    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color; pface(d, p);
     const t = document.createElement('span'); t.textContent = p.name + (p.id === me.id ? ' (vous)' : '');
     const h = document.createElement('span'); h.className = 'mclife'; const n = Math.max(0, DB.lives[p.id] | 0);
     h.textContent = '♥'.repeat(n) + '♡'.repeat(Math.max(0, DB.max - n));
@@ -7245,7 +7259,7 @@ function shHead(){
 function renderShPlayers(){
   const ul = $('shPlayers'); ul.textContent = '';
   for (const p of players){ const li = document.createElement('li'); if (p.left) li.classList.add('dead');
-    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color;
+    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color; pface(d, p);
     const t = document.createElement('span'); t.textContent = p.name + (p.id === me.id ? ' (vous)' : '');
     li.append(d, t); ul.append(li); }
 }
@@ -8251,7 +8265,7 @@ function renderLjPlayers(){
   const ul = $('ljPlayers'); ul.textContent = '';
   for (const p of players){
     const li = document.createElement('li'); if (LJ.out[p.id] || p.left) li.classList.add('dead');
-    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color;
+    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color; pface(d, p);
     const t = document.createElement('span'); const n = LJ.tot[p.id] | 0;
     t.textContent = p.name + (p.id === me.id ? ' (vous)' : '') + ' · ' + n + ' pt' + (n > 1 ? 's' : '') + (LJ.out[p.id] ? ' · écrasé' : '');
     li.append(d, t); ul.append(li);
@@ -9047,7 +9061,7 @@ function renderAgPlayers(){
   const ul = $('agPlayers'); ul.textContent = '';
   players.forEach((p, i) => {
     const li = document.createElement('li'); if (p.left) li.classList.add('dead');
-    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color;
+    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color; pface(d, p);
     const o = p.id === me.id ? { d:AG.d, done:AG.done, total:AG.t + AG.faults*AG_FAULT, faults:AG.faults } : AG.others.get(p.id) || {};
     const t = document.createElement('span');
     t.textContent = p.name + (p.id === me.id ? ' (vous)' : '') + ' · ' + agDogOf(p.id, i).breed + ' · ' + (o.done ? agFmt(o.total) : Math.round(100*(o.d || 0)/AG.C.len) + ' %');
@@ -10751,7 +10765,7 @@ function renderMdPlayers(){
     const li = document.createElement('li');
     if (p.left) li.classList.add('dead');
     if (p.id === me.id) li.classList.add('me');
-    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color;
+    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color; pface(d, p);
     const t = document.createElement('span'); t.textContent = p.name + ' · ' + Math.floor((MD.sc[i] || 0)/10) + (MD.topOwner === p.id ? ' 🏴' : '');
     li.append(d, t); ul.append(li);
   }
@@ -11395,7 +11409,7 @@ function renderBlPlayers(){
     const li = document.createElement('li');
     if (p.left || p.out) li.classList.add('dead');
     if (p.id === me.id) li.classList.add('me');
-    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color;
+    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color; pface(d, p);
     const t = document.createElement('span'); t.textContent = p.name + ' · ' + Math.round((BL.a[i] || 0)/BL.tot*100) + ' %';
     li.append(d, t); ul.append(li);
   }
@@ -11953,7 +11967,7 @@ function rcPickUI(){
   for (const p of players){
     const P = RC.pick[p.id]; if (!P) continue;
     const li = document.createElement('li'); if (p.id === me.id) li.classList.add('me');
-    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color;
+    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color; pface(d, p);
     const t = document.createElement('span'); t.textContent = p.name + ' · ' + RC_CARS[P.car].n + ' ' + RC_BONUS[P.bonus].ic + (P.ready ? ' ✔' : '');
     li.append(d, t); ul.append(li);
   }
@@ -12544,7 +12558,7 @@ function renderLaPlayers(){
     const li = document.createElement('li');
     if (p.left) li.classList.add('dead');
     if (p.id === me.id) li.classList.add('me');
-    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color;
+    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color; pface(d, p);
     const t = document.createElement('span'); t.textContent = p.name;
     li.append(d, t); ul.append(li);
   }
@@ -13553,7 +13567,7 @@ function renderCmPlayers(){
   players.forEach((p, i) => {
     const li = document.createElement('li');
     if (CM.shooter === p.id) li.classList.add('turn');
-    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color;
+    const d = document.createElement('span'); d.className = 'dot'; d.style.background = p.color; pface(d, p);
     const t = document.createElement('span');
     t.textContent = p.name + (p.id === me.id ? ' (vous)' : '') + ' · ' + CM.scores[i] + ' pt' + (Math.abs(CM.scores[i]) > 1 ? 's' : '');
     const st = document.createElement('span'); st.className = 'cust'; const left = Math.max(0, CM.shots[i] | 0);
