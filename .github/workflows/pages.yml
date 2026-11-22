@@ -26,7 +26,7 @@ jobs:
       - run: npm i --no-save --no-audit --no-fund terser@5.31.6
       - run: node tools/build_site.js
       - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: _site
       - id: deployment
