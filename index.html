@@ -14338,7 +14338,7 @@ const MUS_MENU = { menu:true, sps:60/130/4, steps:16 };
 const MENU_CH = [[130.81, 155.56, 196.00], [103.83, 130.81, 155.56], [155.56, 196.00, 233.08], [116.54, 146.83, 174.61]];
 const MENU_ARP = [0, 1, 2, 1, 0, 2, 1, 2, 0, 1, 2, 1, 2, 1, 2, 0];
 let menuNoise = null, menuBus = null;
-function menuOut(c){ if (!menuBus || menuBus.context !== c || menuBus._to !== MUS.g){ menuBus = c.createGain(); menuBus.gain.value = .35; menuBus.connect(MUS.g); menuBus._to = MUS.g; } return menuBus; }
+function menuOut(c){ if (!menuBus || menuBus.context !== c || menuBus._to !== MUS.g){ menuBus = c.createGain(); menuBus.gain.value = .9; menuBus.connect(MUS.g); menuBus._to = MUS.g; } return menuBus; }
 function menuEnv(c, node, t, vol, dur){ const g = c.createGain(); g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.001, t + dur); node.connect(g).connect(menuOut(c)); }
 function menuNoiseSrc(c, t, dur, hp){
   if (!menuNoise || menuNoise.sampleRate !== c.sampleRate){ const n = Math.floor(c.sampleRate*1.5); menuNoise = c.createBuffer(1, n, c.sampleRate); const d = menuNoise.getChannelData(0); for (let i = 0; i < n; i++) d[i] = Math.random()*2 - 1; }
