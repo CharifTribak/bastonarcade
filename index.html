@@ -824,6 +824,12 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
 .rank tr.win td{background:#FFF3B0}
 .rank tr.win td:first-child{color:var(--accent)}
 .rank .nm{display:flex;align-items:center;gap:8px}
+.wface{width:92px;height:92px;border-radius:50%;border:7px solid #000;box-shadow:0 0 0 3px #000,4px 4px 0 3px #000;overflow:hidden;background:#fff;margin-top:22px;flex:none}
+.wface img{width:100%;height:100%;display:block}
+.wface + .wname{margin-top:4px!important}
+.endhost{position:absolute;right:-20px;top:-26px;width:88px;height:auto;transform:rotate(6deg);pointer-events:none;filter:drop-shadow(3px 3px 0 rgba(0,0,0,.35))}
+.rank .dot.face{width:30px;height:30px;border:3px solid;box-shadow:0 0 0 2px #000;background-size:cover;background-position:center;flex:none}
+@media (max-height:700px){.wface{width:64px;height:64px;border-width:5px}.endhost{width:68px}}
 .hist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:13px}
 .hist li{border:3px solid #000;padding:8px 10px;display:flex;flex-direction:column;gap:4px;background:#FFFBEA}
 .hist .when{color:var(--muted);font-weight:800}
@@ -1468,7 +1474,9 @@ html,body{overscroll-behavior-y:none}   /* no pull-to-refresh: a reload would dr
   <div class="card" style="max-width:480px">
     <div class="winpanel" id="winPanel">
       <div class="endburst" id="endBurst"><span id="endWord">Victoire !</span></div>
+      <span class="wface" id="winFace" hidden><img alt="" width="96" height="96"></span>
       <div class="wname" id="winName"></div>
+      <img class="endhost" id="endHost" alt="" width="120" height="120" hidden>
       <p class="wsub" id="myPlace"></p>
     </div>
     <div class="rank"><table>
@@ -1863,7 +1871,8 @@ addEventListener('keydown', e => { if (e.key === 'Escape' && !$('modeSheet').hid
 const AV_N = 12;
 let MY_AV = (() => { const v = parseInt(store.get('tm-av'), 10); return v >= 0 && v < AV_N ? v : Math.floor(Math.random()*AV_N); })();
 const avSrc = i => 'img/av/av' + String((i % AV_N) + 1).padStart(2, '0') + '.webp';
-const avIdx = v => Number.isInteger(v) && v >= 0 && v < AV_N ? v : null;   // anything else from the network: no face, the initial instead
+const avIdx = v => Number.isInteger(v) && v >= 0 && v < AV_N ? v : null;
+const avOf = r => { if (!r) return null; if (avIdx(r.av) !== null) return r.av; const p = players.find(q => q.id === r.id); return p ? avIdx(p.av) : null; };   // ranking rows carry an id; the face comes from the room   // anything else from the network: no face, the initial instead
 (() => {
   const grid = $('avGrid');
   const sync = () => { $('myAv').src = avSrc(MY_AV); for (const x of grid.children) x.setAttribute('aria-pressed', +x.dataset.i === MY_AV ? 'true' : 'false'); };
@@ -2742,6 +2751,7 @@ function showEnd(ranking, game){
     const td = t => { const c = document.createElement('td'); c.textContent = t; return c; };
     const nm = document.createElement('td'); const w = document.createElement('div'); w.className = 'nm';
     const d = document.createElement('span'); d.className = 'dot'; d.style.background = r.color;
+    const fa = avOf(r); if (fa !== null){ d.classList.add('face'); d.style.borderColor = r.color || '#000'; d.style.backgroundImage = 'url(' + avSrc(fa) + ')'; d.style.backgroundSize = 'cover'; d.style.backgroundPosition = 'center'; }
     const s = document.createElement('span'); s.textContent = r.name + (r.id === me.id ? ' (vous)' : '') + (r.left ? ' · parti' : '');
     w.append(d, s); nm.append(w);
     if (racer) tr.append(td(r.place), nm, td(r.time ? r.time.toFixed(1).replace('.', ',') + ' s' : '–'), td(r.best ? r.best.toFixed(1).replace('.', ',') + ' s' : '–'), td(r.hits|0), td(r.hit|0));
@@ -2787,6 +2797,12 @@ function showEnd(ranking, game){
     $('winPanel').style.background = pots ? '#3DDC97' : '#FF8A8A';
     $('winName').textContent = pots ? (pots > 1 ? pots + ' pots cassés !' : '1 pot cassé !') : 'Aucun pot cassé';
     $('myPlace').textContent = 'Dahi Handi · ' + (tf > 1 ? tf + ' chutes' : tf + ' chute');
+  }
+  { // the winner's face in their colour ring (not for team results), and the mascot cheering or wincing
+    const team = coop || leo || viking || dahi || mino, wf = $('winFace'), fa = team ? null : avOf(win);
+    wf.hidden = fa === null; if (fa !== null){ wf.style.borderColor = win.color || '#000'; wf.firstElementChild.src = avSrc(fa); }
+    const good = dahi ? !!((win && win.pots) | 0) : coop ? ((win && win.rounds) | 0) >= SH_ROUNDS : iWon;
+    const eh = $('endHost'); eh.src = good ? 'img/host/win.webp' : 'img/host/oops.webp'; eh.hidden = false;
   }
   $('btnAgain').hidden = false; $('btnReplay').hidden = !me.host; $('btnAgain').classList.toggle('ghost', me.host);
   $('endHint').textContent = me.host ? '' : 'Le créateur choisit la suite : rejouer ou revenir au salon.';
@@ -10284,12 +10300,14 @@ async function resultCard(){
   c.lineWidth = 10; c.strokeStyle = '#000'; c.strokeText(head, W/2, hy); c.fillStyle = '#fff'; c.fillText(head, W/2, hy);
   // the podium
   c.font = '800 40px Nunito, sans-serif'; c.textAlign = 'left';
+  const faces = await Promise.all(ranking.slice(0, 5).map(r => new Promise(ok => { const fa = avOf(r); if (fa === null) return ok(null); const im = new Image(); im.onload = () => ok(im); im.onerror = () => ok(null); im.src = avSrc(fa); })));
   ranking.slice(0, 5).forEach((r, i) => {
     const y = hy + 80 + i*62, isMe = r.id === me.id;
     c.fillStyle = isMe ? '#fff' : 'rgba(255,255,255,.55)'; c.fillRect(70, y - 44, 650, 56);
     c.lineWidth = 4; c.strokeStyle = '#000'; c.strokeRect(70, y - 44, 650, 56);
     c.fillStyle = '#000'; c.font = '44px Bangers, Impact, sans-serif'; c.fillText(String(r.place), 90, y);
-    c.fillStyle = r.color || '#888'; c.beginPath(); c.arc(162, y - 16, 15, 0, Math.PI*2); c.fill(); c.stroke();
+    if (faces[i]){ c.save(); c.beginPath(); c.arc(162, y - 16, 24, 0, Math.PI*2); c.fillStyle = r.color || '#888'; c.fill(); c.lineWidth = 4; c.stroke(); c.beginPath(); c.arc(162, y - 16, 18, 0, Math.PI*2); c.clip(); c.drawImage(faces[i], 144, y - 34, 36, 36); c.restore(); }
+    else { c.fillStyle = r.color || '#888'; c.beginPath(); c.arc(162, y - 16, 15, 0, Math.PI*2); c.fill(); c.stroke(); }
     c.fillStyle = '#000'; c.font = '800 36px Nunito, sans-serif'; c.fillText(String(r.name).slice(0, 16) + (isMe ? ' (moi)' : ''), 194, y - 2);
   });
   // a QR code to the site, beside the podium
