@@ -541,6 +541,15 @@ label{font-size:13px;font-weight:900;color:var(--fg)}
 .salons .salonshead b{font-size:15px}
 .mcardtxt{flex:1;font-size:13px;font-weight:800;color:var(--muted)}
 #salonList .none{color:var(--muted);display:block}
+/* ---- messages on the menu as comic bubbles; errors with the mascot wincing ---- */
+#menuHint{position:relative;background:#fff;border:3px solid #000;border-radius:16px;box-shadow:3px 3px 0 #000;padding:10px 12px;font-weight:800;color:#111;font-size:15px}
+#menuHint.err{background:#FFE6E6 url(img/host/oops.webp) 6px 50%/auto 56px no-repeat;color:#B0141A;padding-left:74px;min-height:60px;display:flex;align-items:center}
+/* ---- the big QR code: a scan-me card under an arcade marquee ---- */
+#qrPop .qrcard{background:#FFD21F;border:4px solid #000;box-shadow:7px 7px 0 #FF3EA5;padding:14px;gap:10px;max-width:min(92vw,420px)}
+#qrPop .caption{background:none;border:0;box-shadow:none;padding:0;font-family:var(--display);font-size:24px;letter-spacing:.5px;line-height:1.1;color:#111}
+#qrPop .caption b{display:block;margin:8px auto 0;width:max-content;background:#000;color:#FFD21F;border:3px solid #34E3FF;font-size:40px;letter-spacing:8px;padding:2px 16px 0 24px;text-shadow:0 0 10px rgba(255,210,31,.5);box-shadow:0 0 10px rgba(52,227,255,.35)}
+#qrPop canvas{width:100%;height:auto;background:#fff;border:4px solid #000;box-shadow:4px 4px 0 #000;image-rendering:pixelated}
+#qrPop small{color:#111;font-weight:900}
 /* ---- "with friends": create first, the code on an arcade keypad, public rooms as cabinets ---- */
 #menuMulti .mc3{order:-1}
 #menuMulti .salonshead b{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:.5px;line-height:1.05}
@@ -2111,7 +2120,7 @@ function guestJoin(code){
   peer.on('error', e => {
     clearTimeout(timer);
     if (e.type === 'peer-unavailable') return toMenu('Aucun salon avec ce code.');
-    if (!opened) toMenu('Connexion impossible (' + e.type + ').');
+    if (!opened) toMenu('Connexion impossible : vérifiez Internet et réessayez (' + e.type + ').');
   });
 }
 
